@@ -101,7 +101,11 @@ val composeDestinationsVersion by extra("1.10.2")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-// Sandwich
+  // Compose settings
+  implementation(libs.composeSettings.ui.extended)
+  implementation(libs.composeSettings.ui)
+
+  // Sandwich
   implementation(libs.sandwich)
   implementation(libs.sandwich.retrofit) // For Retrofit (Android)
   implementation(libs.sandwich.retrofit.serialization)
@@ -200,4 +204,13 @@ dependencies {
   // Other
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.billing.ktx)
+}
+
+sentry {
+    org.set("ljz-apps")
+    projectName.set("questify")
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext.set(true)
 }
