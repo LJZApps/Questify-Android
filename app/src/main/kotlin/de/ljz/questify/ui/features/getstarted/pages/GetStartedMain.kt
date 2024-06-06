@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import arrow.core.const
 import com.akinci.androidtemplate.ui.navigation.animations.FadeInOutAnimation
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -29,6 +29,7 @@ import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.navigation.GetStartedNavGraph
 import de.ljz.questify.ui.navigation.NavGraphs
 import de.ljz.questify.util.bounceClick
+import de.ljz.questify.util.typewriterAnimation
 
 @GetStartedNavGraph(start = true)
 @Destination(style = FadeInOutAnimation::class)
@@ -43,57 +44,48 @@ fun GetStartedMain(
       .fillMaxSize()
   ) {
     val (
-      logoAndTitleRef,
+      titleRef,
+      buttonRef
     ) = createRefs()
 
-    Column(
+    Text(
+      text = "Du hast dich also dazu entschieden, dein Leben neu zu formen?",
       modifier = Modifier
-        .constrainAs(logoAndTitleRef) {
+        .constrainAs(titleRef) {
           top.linkTo(parent.top)
-          start.linkTo(parent.start)
-          end.linkTo(parent.end)
-          bottom.linkTo(parent.bottom)
+          start.linkTo(parent.start, 16.dp)
+          end.linkTo(parent.end, 16.dp)
+          bottom.linkTo(buttonRef.top)
 
           width = Dimension.fillToConstraints
         },
-      horizontalAlignment = Alignment.CenterHorizontally
+      textAlign = TextAlign.Center,
+      fontSize = 32.sp,
+      fontFamily = FontFamily(
+        Font(R.font.tine5_regular)
+      )
+    )
+
+    Button(
+      onClick = {
+        navigator.navigate(NavGraphs.loginAndRegister)
+      },
+      modifier = Modifier
+        .bounceClick()
+        .constrainAs(buttonRef) {
+          start.linkTo(parent.start, 10.dp)
+          end.linkTo(parent.end, 10.dp)
+          bottom.linkTo(parent.bottom)
+
+          width = Dimension.fillToConstraints
+        }
     ) {
       Text(
-        text = "Welcome to",
-        modifier = Modifier
-          .padding(bottom = 24.dp),
-        textAlign = TextAlign.Center,
-        fontSize = 32.sp,
+        "Yes",
         fontFamily = FontFamily(
-          Font(R.font.seymourone_regular)
+          Font(R.font.tine5_regular)
         )
       )
-
-      Text(
-        text = "Questify",
-        modifier = Modifier
-          .fillMaxWidth()
-          .clip(RoundedCornerShape(20.dp)),
-        fontSize = 60.sp,
-        textAlign = TextAlign.Center,
-        fontFamily = FontFamily(
-          Font(R.font.jersey10_regular)
-        )
-      )
-
-      Button(
-        onClick = {
-          navigator.navigate(NavGraphs.loginAndRegister)
-        },
-        modifier = Modifier
-          .padding(top = 24.dp)
-          .bounceClick()
-      ) {
-        Image(
-          imageVector = Icons.AutoMirrored.Filled.NavigateNext,
-          contentDescription = null,
-        )
-      }
     }
   }
 }

@@ -39,7 +39,6 @@ import de.ljz.questify.ui.navigation.destinations.RegisterScreenDestination
 import de.ljz.questify.ui.navigation.destinations.SetupAppThemeDestination
 import io.sentry.compose.SentryTraced
 
-@OptIn(ExperimentalComposeUiApi::class)
 @LoginAndRegisterNavGraph(start = true)
 @Destination(style = SlideHorizontallyAnimation::class)
 @Composable
@@ -95,11 +94,11 @@ private fun LoginAndRegisterScreenContent(
         imageVector = Icons.Outlined.AccountCircle,
         contentDescription = null,
         modifier = Modifier
-            .constrainAs(iconRef) {
-                top.linkTo(parent.top, 12.dp)
-                start.linkTo(parent.start, 12.dp)
-            }
-            .size(40.dp)
+          .constrainAs(iconRef) {
+            top.linkTo(parent.top, 12.dp)
+            start.linkTo(parent.start, 12.dp)
+          }
+          .size(40.dp)
       )
 
       Text(
