@@ -1,7 +1,6 @@
 package de.ljz.questify.ui.features.getstarted.pages
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,21 +12,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.akinci.androidtemplate.ui.navigation.animations.FadeInOutAnimation
-import com.alorma.compose.settings.ui.SettingsGroup
-import com.alorma.compose.settings.ui.SettingsSwitch
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.ljz.questify.R
@@ -35,7 +29,6 @@ import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.navigation.GetStartedNavGraph
 import de.ljz.questify.ui.navigation.NavGraphs
 import de.ljz.questify.util.bounceClick
-import io.sentry.compose.SentryTraced
 
 @GetStartedNavGraph(start = true)
 @Destination(style = FadeInOutAnimation::class)
@@ -71,15 +64,21 @@ fun GetStartedMain(
           .padding(bottom = 24.dp),
         textAlign = TextAlign.Center,
         fontSize = 32.sp,
+        fontFamily = FontFamily(
+          Font(R.font.seymourone_regular)
+        )
       )
 
-      Image(
-        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-        contentDescription = "Questify logo",
+      Text(
+        text = "Questify",
         modifier = Modifier
-          .fillMaxWidth(0.5f)
+          .fillMaxWidth()
           .clip(RoundedCornerShape(20.dp)),
-        contentScale = ContentScale.FillWidth
+        fontSize = 60.sp,
+        textAlign = TextAlign.Center,
+        fontFamily = FontFamily(
+          Font(R.font.jersey10_regular)
+        )
       )
 
       Button(
