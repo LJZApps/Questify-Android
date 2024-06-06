@@ -64,13 +64,11 @@ fun LoginAndRegisterScreen(
   }
 
   QuestifyTheme {
-    SentryTraced(tag = "login_and_register") {
-      LoginAndRegisterScreenContent(
-        uiState = uiState,
-        onAction = vm::onAction,
-        modifier = modifier
-      )
-    }
+    LoginAndRegisterScreenContent(
+      uiState = uiState,
+      onAction = vm::onAction,
+      modifier = modifier
+    )
   }
 }
 
@@ -97,11 +95,11 @@ private fun LoginAndRegisterScreenContent(
         imageVector = Icons.Outlined.AccountCircle,
         contentDescription = null,
         modifier = Modifier
-          .constrainAs(iconRef) {
-            top.linkTo(parent.top, 12.dp)
-            start.linkTo(parent.start, 12.dp)
-          }
-          .size(40.dp)
+            .constrainAs(iconRef) {
+                top.linkTo(parent.top, 12.dp)
+                start.linkTo(parent.start, 12.dp)
+            }
+            .size(40.dp)
       )
 
       Text(
