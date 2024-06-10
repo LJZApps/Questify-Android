@@ -14,12 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import dagger.hilt.android.AndroidEntryPoint
-import de.ljz.questify.core.main.MainViewContract.State
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.loginandregister.LoginViewModel
@@ -38,9 +36,7 @@ class ActivityMain : AppCompatActivity() {
       val navController = rememberNavController()
       val vm: AppViewModel by viewModels()
 
-      val uiState: androidx.compose.runtime.State<State> = vm.state.collectAsStateWithLifecycle()
-      val isSetupDone by uiState.value.isSetupDone.collectAsState(initial = false)
-      val isLoggedIn = uiState.value.isLoggedIn
+      val appUiState by vm.uiState.collectAsState()
 
       QuestifyTheme {
         Scaffold(
@@ -77,7 +73,7 @@ class ActivityMain : AppCompatActivity() {
               .fillMaxSize()
               .padding(innerPadding),
             //                                              Setup/Login done     Login done (no setup)      Not logged in
-            startRoute = if (isLoggedIn) if (isSetupDone) NavGraphs.getStarted else NavGraphs.setup else NavGraphs.getStarted
+            startRoute = if (appUiState.isLoggedIn) if (appUiState.isSetupDone) NavGraphs.getStarted else NavGraphs.setup else NavGraphs.getStarted
           )
         }
       }

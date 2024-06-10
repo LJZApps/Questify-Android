@@ -1,23 +1,27 @@
 package de.ljz.questify.core.main
 
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.main.MainViewContract.Action
-import de.ljz.questify.core.main.MainViewContract.Effect
-import de.ljz.questify.core.main.MainViewContract.State
-import de.ljz.questify.core.mvi.MviViewModel
 import de.ljz.questify.data.repositories.AppSettingsRepository
 import de.ljz.questify.data.sharedpreferences.SessionManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
   private val sessionManager: SessionManager,
   private val appSettingsRepository: AppSettingsRepository,
-) : MviViewModel<State, Action, Effect>(State()) {
+) : ViewModel() {
+  private val _uiState = MutableStateFlow(AppUiState())
+  val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
+
   init {
-    updateState {
-      copy(
+    _uiState.update {
+      it.copy(
         isLoggedIn = sessionManager.isAccessTokenPresent(),
         isSetupDone = appSettingsRepository.getAppSettings().map { it.setupDone }
       )
