@@ -37,6 +37,7 @@ class ActivityMain : AppCompatActivity() {
       val vm: AppViewModel by viewModels()
 
       val appUiState by vm.uiState.collectAsState()
+      val isSetupDone by appUiState.isSetupDone.collectAsState(initial = false)
 
       QuestifyTheme {
         Scaffold(
@@ -72,8 +73,8 @@ class ActivityMain : AppCompatActivity() {
             modifier = Modifier
               .fillMaxSize()
               .padding(innerPadding),
-            //                                              Setup/Login done     Login done (no setup)      Not logged in
-            startRoute = if (appUiState.isLoggedIn) if (appUiState.isSetupDone) NavGraphs.getStarted else NavGraphs.setup else NavGraphs.getStarted
+            //                                                        Setup/Login done      Login done (no setup)      Not logged in
+            startRoute = if (appUiState.isLoggedIn) if (isSetupDone) NavGraphs.getStarted else NavGraphs.setup else NavGraphs.getStarted
           )
         }
       }

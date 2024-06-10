@@ -1,14 +1,15 @@
 package de.ljz.questify.ui.features.loginandregister
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.coroutine.ContextProvider
-import de.ljz.questify.core.mvi.MviViewModel
 import de.ljz.questify.data.repositories.LoginRepository
 import de.ljz.questify.data.sharedpreferences.SessionManager
-import de.ljz.questify.ui.features.loginandregister.LoginViewContract.Action
-import de.ljz.questify.ui.features.loginandregister.LoginViewContract.Effect
-import de.ljz.questify.ui.features.loginandregister.LoginViewContract.State
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,93 +17,94 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
   private val loginRepository: LoginRepository,
   private val contextProvider: ContextProvider,
-  private val sessionManager: SessionManager
-) : MviViewModel<State, Action, Effect>(State()) {
+  private val sessionManager: SessionManager,
+) : ViewModel() {
 
-  override fun onAction(action: Action) {
-    when (action) {
-      Action.OnLoginButtonClick -> checkData()
+  private val _uiState = MutableStateFlow(LoginAndRegisterUiState())
+  val uiState: StateFlow<LoginAndRegisterUiState> = _uiState.asStateFlow()
 
-      Action.OnOpenRegisterButtonClick -> {
-        sendEffect(Effect.NavigateRegisterScreen)
-      }
-
-      Action.OnOpenLoginButtonClick -> {
-        sendEffect(Effect.NavigateLoginScreen)
-      }
-    }
-  }
-
-  fun checkData() {
-    val username = state.value.loginState.username
-    val password = state.value.loginState.password
+  fun checkData(
+    onSuccess: () -> Unit
+  ) {
+    val username = _uiState.value.loginState.username
+    val password = _uiState.value.loginState.password
 
     when {
       username.isEmpty() -> {
-        updateState {
-          copy(
-            loginState = loginState.copy(
+        _uiState.update {
+          it.copy(
+            loginState = it.loginState.copy(
               loginErrorMessage = "Username cannot be empty",
               isLoginErrorShown = true,
             )
           )
         }
       }
+
       password.isEmpty() -> {
-        updateState {
-          copy(
-            loginState = loginState.copy(
+        _uiState.update {
+          it.copy(
+            loginState = it.loginState.copy(
               loginErrorMessage = "Password cannot be empty",
               isLoginErrorShown = true,
             )
           )
         }
       }
+
       password.length < 8 -> {
-        updateState {
-          copy(
-            loginState = loginState.copy(
+        _uiState.update {
+          it.copy(
+            loginState = it.loginState.copy(
               loginErrorMessage = "Password must be at least 8 characters long",
               isLoginErrorShown = true,
             )
           )
         }
       }
+
       else -> {
         // Daten sind gültig, Login-Prozess starten
-        login()
+        login(onSuccess)
       }
     }
   }
 
-  private fun login() {
-    updateState { copy(isLoading = true, loadingText = "Logging in") }
+  private fun login(
+    onSuccess: () -> Unit
+  ) {
+    _uiState.update {
+      it.copy(
+        isLoading = true,
+        loadingText = "Logging in"
+      )
+    }
     viewModelScope.launch {
       loginRepository.login(
-        username = state.value.loginState.username,
-        password = state.value.loginState.password,
+        username = _uiState.value.loginState.username,
+        password = _uiState.value.loginState.password,
         onSuccess = {
           if (it.success) {
             sessionManager.setAccessToken(it.accessToken.token)
             sessionManager.setRefreshToken(it.refreshToken.token)
             sessionManager.setExpirationTime(it.accessToken.exp)
 
-            updateState {
-              copy(
+            _uiState.update {
+              it.copy(
                 loadingText = "Done! Now setup your app."
               )
             }
 
-            sendEffect(Effect.NavigateSetupScreen)
+            onSuccess.invoke()
           }
         },
-        onError = {
-          updateState {
-            copy(
+        onError = {errorResponse ->
+          _uiState.update {
+            it.copy(
               isLoading = false,
               loadingText = "",
-              loginState = loginState.copy(
-                loginErrorMessage = it.errorMessage.toString(),
+              loginState = it.loginState.copy(
+                loginErrorMessage = errorResponse.errorMessage.toString(),
                 isLoginErrorShown = true,
               )
             )
@@ -113,9 +115,9 @@ class LoginViewModel @Inject constructor(
   }
 
   fun dismissDialog() {
-    updateState {
-      copy(
-        loginState = loginState.copy(
+    _uiState.update {
+      it.copy(
+        loginState = it.loginState.copy(
           isLoginErrorShown = false,
           loginErrorMessage = ""
         )
@@ -124,14 +126,32 @@ class LoginViewModel @Inject constructor(
   }
 
   fun updatePassword(password: String) {
-    updateState { copy(loginState = loginState.copy(password = password)) }
+    _uiState.update {
+      it.copy(
+        loginState = it.loginState.copy(
+          password = password
+        )
+      )
+    }
   }
 
   fun updateUsername(username: String) {
-    updateState { copy(loginState = loginState.copy(username = username)) }
+    _uiState.update {
+      it.copy(
+        loginState = it.loginState.copy(
+          username = username
+        )
+      )
+    }
   }
 
   fun togglePasswordVisibility() {
-    updateState { copy(loginState = loginState.copy(passwordVisible = !loginState.passwordVisible)) }
+    _uiState.update {
+      it.copy(
+        loginState = it.loginState.copy(
+          passwordVisible = !it.loginState.passwordVisible
+        )
+      )
+    }
   }
 }

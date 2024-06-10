@@ -11,10 +11,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.ljz.questify.ui.state.ThemeBehavior
-import de.ljz.questify.ui.state.ThemeColor
-import de.ljz.questify.ui.theme.DarkTheme
-import de.ljz.questify.ui.theme.LightTheme
 import de.ljz.questify.ui.theme.getColorScheme
 
 
