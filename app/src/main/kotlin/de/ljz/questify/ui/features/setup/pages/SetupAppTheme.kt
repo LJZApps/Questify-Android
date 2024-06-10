@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.akinci.androidtemplate.ui.navigation.animations.SlideHorizontallyAnimation
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -24,7 +24,7 @@ import io.sentry.compose.SentryTraced
 fun SetupAppTheme(
   navigator: DestinationsNavigator,
   modifier: Modifier = Modifier,
-  vm: SetupViewModel = viewModel(),
+  vm: SetupViewModel = hiltViewModel(),
 ) {
   val setupUiState by vm.uiState.collectAsState()
 

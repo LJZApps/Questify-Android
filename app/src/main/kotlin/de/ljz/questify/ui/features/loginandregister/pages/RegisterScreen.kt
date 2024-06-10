@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.akinci.androidtemplate.ui.navigation.animations.SlideHorizontallyAnimation
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -17,7 +17,7 @@ import de.ljz.questify.ui.navigation.LoginAndRegisterNavGraph
 fun RegisterScreen(
   navigator: DestinationsNavigator,
   modifier: Modifier = Modifier,
-  vm: LoginViewModel = viewModel(),
+  vm: LoginViewModel = hiltViewModel(),
 ) {
   val loginAndRegisterUiState by vm.uiState.collectAsState()
 }

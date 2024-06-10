@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.akinci.androidtemplate.ui.navigation.animations.SlideHorizontallyAnimation
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -36,7 +36,7 @@ import de.ljz.questify.ui.navigation.destinations.RegisterScreenDestination
 fun LoginAndRegisterScreen(
   navigator: DestinationsNavigator,
   modifier: Modifier = Modifier,
-  vm: LoginViewModel = viewModel(),
+  vm: LoginViewModel = hiltViewModel(),
 ) {
   QuestifyTheme {
     Surface {

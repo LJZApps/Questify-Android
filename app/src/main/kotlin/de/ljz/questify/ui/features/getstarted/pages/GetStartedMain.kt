@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.akinci.androidtemplate.ui.navigation.animations.FadeInOutAnimation
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -27,7 +28,7 @@ import de.ljz.questify.util.bounceClick
 fun GetStartedMain(
   modifier: Modifier = Modifier,
   navigator: DestinationsNavigator,
-  vm: GetStartedViewModel,
+  vm: GetStartedViewModel = hiltViewModel(),
 ) {
   ConstraintLayout(
     modifier = modifier
