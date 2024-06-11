@@ -1,7 +1,6 @@
 package de.ljz.questify.data.repositories
 
 import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import de.ljz.questify.data.api.core.ApiClient
 import de.ljz.questify.data.api.responses.common.ErrorResponse
@@ -9,7 +8,7 @@ import de.ljz.questify.data.api.responses.login.LoginResponse
 import de.ljz.questify.data.api.responses.register.RegisterResponse
 import de.ljz.questify.data.mapper.ErrorResponseMapper
 import de.ljz.questify.data.sharedpreferences.SessionManager
-import de.ljz.questify.util.mySuspendOnException
+import de.ljz.questify.util.suspendMessageOnException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,7 +35,7 @@ class LoginRepository @Inject constructor(
       .suspendOnError(ErrorResponseMapper) {
         onError?.invoke(this)
       }
-      .mySuspendOnException {
+      .suspendMessageOnException {
         onError?.invoke(it)
       }
   }
@@ -55,8 +54,8 @@ class LoginRepository @Inject constructor(
       .suspendOnError(ErrorResponseMapper) {
         onError?.invoke(this)
       }
-      .suspendOnException {
-        onError?.invoke(ErrorResponse("unknown_error", this.message))
+      .suspendMessageOnException {
+        onError?.invoke(it)
       }
   }
 }

@@ -1,6 +1,4 @@
-import io.sentry.android.gradle.extensions.InstrumentationFeature
 import java.io.FileInputStream
-import java.util.EnumSet
 import java.util.Properties
 
 plugins {
@@ -183,7 +181,7 @@ dependencies {
 
   // Material
   implementation(libs.material)
-  implementation(libs.material3) // FIXME Remember Version 1.1.2
+  implementation(libs.material3)
   implementation(libs.material3.window.size)
 
   // androidx

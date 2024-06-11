@@ -11,7 +11,7 @@ import kotlin.contracts.contract
 @OptIn(ExperimentalContracts::class)
 @JvmSynthetic
 @SuspensionFunction
-public suspend inline fun <T> ApiResponse<T>.mySuspendOnException(
+public suspend inline fun <T> ApiResponse<T>.suspendMessageOnException(
   crossinline onError: suspend (ErrorResponse) -> Unit,
 ): ApiResponse<T> {
   contract { callsInPlace(onError, InvocationKind.AT_MOST_ONCE) }
