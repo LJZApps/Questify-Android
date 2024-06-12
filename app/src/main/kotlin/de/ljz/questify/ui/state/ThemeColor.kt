@@ -12,5 +12,5 @@ enum class ThemeColor {
   PASTEL_BLUE,
   PASTEL_YELLOW,
   PASTEL_ORANGE,
-  PASTEL_PURPLE,
+  PASTEL_PURPLE
 }

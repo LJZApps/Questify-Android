@@ -25,7 +25,12 @@ object ErrorResponseMapper : ApiErrorModelMapper<ErrorResponse> {
             ErrorResponse(errorCode, apiErrorResponse.statusCode.code.toString())
           } catch (e: Exception) {
             //ErrorResponse("UNKNOWN_ERROR", e.localizedMessage)
-            ErrorResponse("UNKNOWN_ERROR", apiErrorResponse.statusCode.code.toString())
+            when (apiErrorResponse.statusCode.code) {
+              404 -> ErrorResponse("NOT_FOUND", "This api call leads to nothing. Please try again later.")
+              503 -> ErrorResponse("SERVICE_UNAVAILABLE", "This service is currently unavailable. Please try again later.")
+              500 -> ErrorResponse("INTERNAL_SERVER_ERROR", "Internal server error occurred.")
+              else -> ErrorResponse("UNKNOWN_ERROR", "Unknown error occurred.")
+            }
           }
         } else {
           ErrorResponse("UNKNOWN_ERROR", "Unknown error occurred.")

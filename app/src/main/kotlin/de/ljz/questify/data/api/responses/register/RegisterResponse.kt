@@ -10,5 +10,9 @@ import kotlinx.serialization.Serializable
 data class RegisterResponse (
     @Json(name = "success")
     @SerializedName("success")
-    val success: Boolean
+    val success: Boolean,
+
+    @Json(name = "redirect_to")
+    @SerializedName("redirect_to")
+    val redirectTo: String
 )
