@@ -24,20 +24,23 @@ public suspend inline fun <T> ApiResponse<T>.suspendMessageOnException(
     onError(
       when (this.throwable) {
         is ConnectException -> {
+          Log.e(TAG, "suspendMessageOnException: ${this.throwable}")
+
           ErrorResponse("network_error", "The Server is currently unavailable.\nPlease try again later.")
         }
         is SocketTimeoutException -> {
+          Log.e(TAG, "suspendMessageOnException: ${this.throwable}")
+
           ErrorResponse("network_error", "We are having trouble connecting to the Server.\nPlease try again later.")
         }
-        is ProtocolException -> {
-          ErrorResponse("network_error", "Too many requests.\nPlease try again later.")
-        }
         is UnknownServiceException -> {
+          Log.e(TAG, "suspendMessageOnException: ${this.throwable}")
+
           ErrorResponse("network_error", "The Server is currently unavailable.\nPlease try again later.")
         }
         else -> {
           Log.e(TAG, "suspendMessageOnException: ${this.throwable}")
-          ErrorResponse("unknown_error", "An unknown network error occurred.\nPlease try again later.")
+          ErrorResponse("unknown_error", "An unknown network error occurred.\n\nError:\n${this.throwable}\n\nPlease try again later.")
         }
       }
     )
