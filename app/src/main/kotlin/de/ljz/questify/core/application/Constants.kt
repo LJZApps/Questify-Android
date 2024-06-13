@@ -1,6 +1,6 @@
 package de.ljz.questify.core.application
 
 /**
- * Logging tag: "TalkToMe"
+ * Logging tag: "Questify"
  */
-const val TAG = "TalkToMe"
+const val TAG = "Questify"
