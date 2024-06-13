@@ -117,6 +117,7 @@ dependencies {
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.serialization.json)
 
+
   // Compose destinations
   ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
   implementation(libs.compose.destinations.core)
