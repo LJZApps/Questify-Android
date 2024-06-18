@@ -14,6 +14,8 @@ data class RegisterUiState(
   val birthday: Long = 0,
   val passwordVisible: Boolean = false,
 
-  // Page count
-  val pageCount: Int = 4
+  // General page data
+  val pageCount: Int = 4,
+  val errorMessage: String = "",
+  val isLoading: Boolean = false,
 )

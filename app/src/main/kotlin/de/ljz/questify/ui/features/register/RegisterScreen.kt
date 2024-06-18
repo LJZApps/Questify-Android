@@ -57,12 +57,12 @@ fun RegisterScreen(
 
                   }
                 )
-
               },
               onBackButtonClick = {
                 navigator.popBackStack()
               },
-              email = registerUiState.email
+              email = registerUiState.email,
+              isLoading = registerUiState.isLoading
             )
           }
 

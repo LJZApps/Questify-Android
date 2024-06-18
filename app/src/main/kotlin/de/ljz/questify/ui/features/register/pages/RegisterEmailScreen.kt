@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -27,6 +28,7 @@ fun RegisterEmailScreen(
   onNextPage: () -> Unit,
   onBackButtonClick: () -> Unit,
   email: String,
+  isLoading: Boolean = false
 ) {
   ConstraintLayout(
     modifier = Modifier.fillMaxSize()
@@ -36,7 +38,7 @@ fun RegisterEmailScreen(
     ) = createRefs()
 
     Icon(
-      imageVector = Icons.Filled.Email,
+      imageVector = Icons.Outlined.Email,
       contentDescription = null,
       modifier = Modifier
         .constrainAs(iconRef) {
@@ -79,6 +81,7 @@ fun RegisterEmailScreen(
         Text(text = "Email")
       },
       shape = RoundedCornerShape(16.dp),
+      enabled = !isLoading
     )
 
     OutlinedButton(
@@ -88,7 +91,8 @@ fun RegisterEmailScreen(
       modifier = Modifier.constrainAs(backButtonRef) {
         start.linkTo(parent.start, 8.dp)
         bottom.linkTo(parent.bottom, 8.dp)
-      }
+      },
+      enabled = !isLoading
     ) {
       Text(text = "Back")
     }
@@ -100,7 +104,8 @@ fun RegisterEmailScreen(
       modifier = Modifier.constrainAs(nextButtonRef) {
         end.linkTo(parent.end, 8.dp)
         bottom.linkTo(parent.bottom, 8.dp)
-      }
+      },
+      enabled = !isLoading
     ) {
       Text("Next")
     }

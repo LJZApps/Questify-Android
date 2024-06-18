@@ -23,6 +23,12 @@ class RegisterViewModel @Inject constructor(
     onSuccess: () -> Unit,
     onFailure: (ErrorResponse) -> Unit
   ) {
+    _uiState.update {
+      it.copy(
+        isLoading = true
+      )
+    }
+
     val email = _uiState.value.email
     when {
       email.isEmpty() -> {
@@ -36,15 +42,29 @@ class RegisterViewModel @Inject constructor(
           registerRepository.validateEmail(
             email = email,
             onSuccess = {
+              _uiState.update {
+                it.copy(
+                  isLoading = true
+                )
+              }
               onSuccess()
             },
             onError = {
+              _uiState.update {
+                it.copy(
+                  isLoading = true
+                )
+              }
               onFailure(it)
             }
           )
         }
       }
     }
+  }
+
+  fun updateErrorMessage(errorMessage: String) {
+
   }
 
   fun updateEmail(email: String) {
