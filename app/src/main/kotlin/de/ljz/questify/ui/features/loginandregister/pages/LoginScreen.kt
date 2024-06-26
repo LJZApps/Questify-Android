@@ -56,7 +56,6 @@ fun LoginScreen(
   modifier: Modifier = Modifier,
   vm: LoginViewModel = hiltViewModel(),
 ) {
-
   val loginAndRegisterUiState by vm.uiState.collectAsState()
 
   QuestifyTheme {
@@ -213,7 +212,7 @@ fun LoginScreen(
                 ) {
                   Text(text = "Got it")
                 }
-              },
+              }
             )
           }
         }

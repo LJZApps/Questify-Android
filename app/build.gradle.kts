@@ -4,10 +4,11 @@ import java.util.Properties
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.jetbrains.kotlin.android)
+  alias(libs.plugins.jetbrainsCompose)
+  alias(libs.plugins.compose.compiler)
 
   id("com.google.devtools.ksp")
   id("com.google.firebase.crashlytics")
-  id("kotlin-android")
   id("kotlin-parcelize")
   id("androidx.navigation.safeargs.kotlin")
   id("kotlin-kapt")
@@ -99,73 +100,9 @@ val composeDestinationsVersion by extra("1.10.2")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-  // Compose settings
+  // Jetpack Compose
   implementation(libs.composeSettings.ui.extended)
   implementation(libs.composeSettings.ui)
-
-  // Sandwich
-  implementation(libs.sandwich)
-  implementation(libs.sandwich.retrofit) // For Retrofit (Android)
-  implementation(libs.sandwich.retrofit.serialization)
-
-  // Sentry
-  implementation(platform(libs.sentry.bom)) //import bom
-  implementation(libs.sentry.android) //no version specified
-  implementation(libs.sentry.compose.android)
-
-  // KotlinX Serialization
-  implementation(libs.kotlinx.collections.immutable)
-  implementation(libs.kotlinx.serialization.json)
-
-
-  // Compose destinations
-  ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
-  implementation(libs.compose.destinations.core)
-
-  // Arrow
-  implementation(platform(libs.arrow.stack))
-  implementation(libs.arrow.core)
-
-  // For AppWidgets support
-  implementation(libs.androidx.glance.appwidget)
-
-  // For interop APIs with Material 3
-  implementation(libs.androidx.glance.material3)
-
-  // OkHttp
-  implementation(libs.okhttp)
-  implementation(libs.logging.interceptor)
-
-  // Dagger & Hilt
-  kapt(libs.hilt.android.compiler)
-  kapt(libs.androidx.hilt.compiler)
-  implementation(libs.hilt.android)
-  implementation(libs.androidx.hilt.navigation.compose)
-
-  // Moshi
-  implementation(libs.moshi.kotlin)
-  implementation(libs.moshi.adapters)
-
-  // Retrofit
-  implementation(libs.retrofit)
-  implementation(libs.converter.moshi)
-
-  // Ktor Client
-  implementation("io.ktor:ktor-client-core:$ktorVersion")
-  implementation("io.ktor:ktor-client-cio:$ktorVersion")
-  implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
-  // Room
-  ksp(libs.androidx.room.compiler)
-  implementation(libs.androidx.room.rxjava2)
-  implementation(libs.androidx.room.rxjava3)
-  implementation(libs.androidx.room.guava)
-  implementation(libs.androidx.room.paging)
-  implementation(libs.androidx.room.runtime)
-  annotationProcessor("androidx.room:room-compiler:$roomVersion")
-
-  // Jetpack Compose
   implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
   implementation(libs.androidx.navigation.compose)
   implementation(libs.ui.graphics)
@@ -175,35 +112,61 @@ dependencies {
   implementation("androidx.compose.material:material-icons-extended:$composeVersion")
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.constraintlayout.compose)
-
-  // Google extensions
-  implementation(libs.gson)
-  implementation(libs.accompanist.swiperefresh)
-
-  // Material
   implementation(libs.material)
   implementation(libs.material3)
   implementation(libs.material3.window.size)
 
-  // androidx
+  // Andere Abhängigkeiten
+  implementation(libs.sandwich)
+  implementation(libs.sandwich.retrofit)
+  implementation(libs.sandwich.retrofit.serialization)
+  implementation(platform(libs.sentry.bom))
+  implementation(libs.sentry.android)
+  implementation(libs.sentry.compose.android)
+  implementation(libs.kotlinx.collections.immutable)
+  implementation(libs.kotlinx.serialization.json)
+  ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
+  implementation(libs.compose.destinations.core)
+  implementation(platform(libs.arrow.stack))
+  implementation(libs.arrow.core)
+  implementation(libs.androidx.glance.appwidget)
+  implementation(libs.androidx.glance.material3)
+  implementation(libs.okhttp)
+  implementation(libs.logging.interceptor)
+  kapt(libs.hilt.android.compiler)
+  kapt(libs.androidx.hilt.compiler)
+  implementation(libs.hilt.android)
+  implementation(libs.androidx.hilt.navigation.compose)
+  implementation(libs.moshi.kotlin)
+  implementation(libs.moshi.adapters)
+  implementation(libs.retrofit)
+  implementation(libs.converter.moshi)
+  implementation("io.ktor:ktor-client-core:$ktorVersion")
+  implementation("io.ktor:ktor-client-cio:$ktorVersion")
+  implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+  ksp(libs.androidx.room.compiler)
+  implementation(libs.androidx.room.rxjava2)
+  implementation(libs.androidx.room.rxjava3)
+  implementation(libs.androidx.room.guava)
+  implementation(libs.androidx.room.paging)
+  implementation(libs.androidx.room.runtime)
+  annotationProcessor("androidx.room:room-compiler:$roomVersion")
+  implementation(libs.gson)
+  implementation(libs.accompanist.swiperefresh)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.activity.ktx)
-
-  // Lifecycle
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)
-
-  // Firebase
   implementation(libs.firebase.analytics)
   implementation(libs.firebase.crashlytics)
   implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
-
-  // Other
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.billing.ktx)
 }
+
 
 sentry {
     org.set("ljz-apps")

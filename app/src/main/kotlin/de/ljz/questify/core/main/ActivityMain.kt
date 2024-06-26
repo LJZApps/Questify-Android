@@ -22,9 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.loginandregister.LoginViewModel
+import de.ljz.questify.ui.features.register.RegisterViewModel
 import de.ljz.questify.ui.features.setup.SetupViewModel
 import de.ljz.questify.ui.navigation.NavGraphs
-import de.ljz.questify.ui.navigation.destinations.ErrorDialogDestination
+import de.ljz.questify.ui.navigation.destinations.RegisterScreenDestination
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
@@ -69,8 +70,11 @@ class ActivityMain : AppCompatActivity() {
                 }
                 hiltViewModel<SetupViewModel>(parentEntry)
               }
-              dependency(ErrorDialogDestination) {
-
+              dependency(RegisterScreenDestination) {
+                val parentEntry = remember(navBackStackEntry) {
+                  navController.getBackStackEntry(RegisterScreenDestination.route)
+                }
+                hiltViewModel<RegisterViewModel>(parentEntry)
               }
             },
             modifier = Modifier

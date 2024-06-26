@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Questify</string>
+      <string name="title_data">data</string>
 </resources>

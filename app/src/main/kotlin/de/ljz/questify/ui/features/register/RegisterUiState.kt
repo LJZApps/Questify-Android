@@ -8,12 +8,15 @@ data class RegisterUiState(
   // Passwords
   val password: String = "",
   val confirmPassword: String = "",
+  val passwordVisible: Boolean = false,
+  val confirmPasswordVisible: Boolean = false,
 
   // Temporary user data saving
+  val displayName: String = "",
   val aboutMe: String = "",
   val birthday: Long = 0,
-  val passwordVisible: Boolean = false,
 
-  // Page count
-  val pageCount: Int = 4
+  // Page setup
+  val pageCount: Int = 4,
+  val backEnabled: Boolean = true
 )

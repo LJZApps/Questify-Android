@@ -18,10 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Questify"
         android:usesCleartextTraffic="true"
-        android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
         <activity
             android:name=".core.main.ActivityMain"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
