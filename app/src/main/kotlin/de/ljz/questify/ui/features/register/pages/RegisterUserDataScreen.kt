@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import de.ljz.questify.core.compose.UIModePreviews
 
 @Composable
 fun RegisterUserDataScreen(
@@ -218,4 +219,19 @@ fun RegisterUserDataScreen(
       Text("Finish setup")
     }
   }
+}
+
+@UIModePreviews
+@Composable
+fun RegisterUserDataScreenPreview() {
+  RegisterUserDataScreen(
+    onNextPage = { /*TODO*/ },
+    onUsernameChange = { },
+    onAboutMeChange = {},
+    onDisplayNameChange = {},
+    onBackButtonClick = { /*TODO*/ },
+    displayName = "",
+    username = "",
+    aboutMe = ""
+  )
 }

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import de.ljz.questify.core.compose.UIModePreviews
 
 @Composable
 fun RegisterEmailScreen(
@@ -145,10 +146,11 @@ fun RegisterEmailScreen(
       onClick = {
         onBackButtonClick()
       },
-      modifier = Modifier.constrainAs(backButtonRef) {
-        start.linkTo(parent.start, 8.dp)
-        bottom.linkTo(parent.bottom, 8.dp)
-      }
+      modifier = Modifier
+        .constrainAs(backButtonRef) {
+          start.linkTo(parent.start, 8.dp)
+          bottom.linkTo(parent.bottom, 8.dp)
+        }
         .imePadding()
     ) {
       Text(text = "Back")
@@ -158,13 +160,26 @@ fun RegisterEmailScreen(
       onClick = {
         onNextPage()
       },
-      modifier = Modifier.constrainAs(nextButtonRef) {
-        end.linkTo(parent.end, 8.dp)
-        bottom.linkTo(parent.bottom, 8.dp)
-      }
+      modifier = Modifier
+        .constrainAs(nextButtonRef) {
+          end.linkTo(parent.end, 8.dp)
+          bottom.linkTo(parent.bottom, 8.dp)
+        }
         .imePadding()
     ) {
       Text("Next")
     }
   }
+}
+
+@UIModePreviews
+@Composable
+fun RegisterEmailScreenPreview() {
+  RegisterEmailScreen(
+    onEmailChange = { },
+    onNextPage = { /*TODO*/ },
+    onBackButtonClick = { /*TODO*/ },
+    email = "",
+    error = ""
+  )
 }
