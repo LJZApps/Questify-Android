@@ -9,26 +9,5 @@ data class LoginResponse(
   val success: Boolean,
 
   @Json(name = "access_token")
-  val accessToken: AccessToken,
-
-  @Json(name = "refresh_token")
-  val refreshToken: RefreshToken
-)
-
-@JsonClass(generateAdapter = true)
-data class AccessToken(
-  @Json(name = "token")
-  val token: String,
-
-  @Json(name = "exp")
-  val exp: Long
-)
-
-@JsonClass(generateAdapter = true)
-data class RefreshToken(
-  @Json(name = "token")
-  val token: String,
-
-  @Json(name = "exp")
-  val exp: Long
+  val accessToken: String,
 )
