@@ -44,7 +44,7 @@ fun GetStartedMain(
       ) = createRefs()
 
       Text(
-        text = "Du hast dich also dazu entschieden, dein Leben neu zu formen?",
+        text = "PLACEHOLDER",
         modifier = Modifier
           .constrainAs(titleRef) {
             top.linkTo(parent.top)

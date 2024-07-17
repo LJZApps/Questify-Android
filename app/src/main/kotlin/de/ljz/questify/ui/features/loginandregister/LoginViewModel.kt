@@ -84,9 +84,7 @@ class LoginViewModel @Inject constructor(
         password = _uiState.value.loginState.password,
         onSuccess = {
           if (it.success) {
-            sessionManager.setAccessToken(it.accessToken.token)
-            sessionManager.setRefreshToken(it.refreshToken.token)
-            sessionManager.setExpirationTime(it.accessToken.exp)
+            sessionManager.setAccessToken(it.accessToken)
 
             _uiState.update {
               it.copy(

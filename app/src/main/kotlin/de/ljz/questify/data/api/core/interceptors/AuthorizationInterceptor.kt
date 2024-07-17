@@ -24,9 +24,7 @@ class AuthorizationInterceptor(
                             if (sessionManager.isRefreshTokenPresent()) {
                                 runBlocking {
                                     NetworkUtils.loginWithRefreshToken(sessionManager.getRefreshToken())?.let { loginResponse ->
-                                        sessionManager.setAccessToken(loginResponse.accessToken.token)
-                                        sessionManager.setRefreshToken(loginResponse.refreshToken.token)
-                                        sessionManager.setExpirationTime(loginResponse.accessToken.exp)
+                                        sessionManager.setAccessToken(loginResponse.accessToken)
                                     } ?: chain.proceed(request)
                                 }
                             } else {

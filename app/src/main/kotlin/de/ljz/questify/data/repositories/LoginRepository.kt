@@ -26,9 +26,7 @@ class LoginRepository @Inject constructor(
   ) {
     apiClient.loginService.login(username, password)
       .suspendOnSuccess {
-        sessionManager.setAccessToken(data.accessToken.token)
-        sessionManager.setRefreshToken(data.refreshToken.token)
-        sessionManager.setExpirationTime(data.accessToken.exp)
+        sessionManager.setAccessToken(data.accessToken)
 
         onSuccess?.invoke(data)
       }
