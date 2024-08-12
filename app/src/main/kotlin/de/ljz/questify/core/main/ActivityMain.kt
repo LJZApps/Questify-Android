@@ -73,8 +73,8 @@ class ActivityMain : AppCompatActivity() {
             },
             modifier = Modifier
               .fillMaxSize(),
-            //                                                        Setup/Login done      Login done (no setup)      Not logged in
-            startRoute = if (appUiState.isLoggedIn) if (isSetupDone) NavGraphs.getStarted else NavGraphs.setup else NavGraphs.getStarted
+            //                                  Setup done           Setup unfinished
+            startRoute =  if (isSetupDone) NavGraphs.setup else NavGraphs.getStarted
           )
         }
       }

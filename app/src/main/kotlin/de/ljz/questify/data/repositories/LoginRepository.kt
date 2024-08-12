@@ -47,6 +47,8 @@ class LoginRepository @Inject constructor(
   ) {
     apiClient.loginService.register(displayName, username, biography)
       .suspendOnSuccess {
+        sessionManager.setAccessToken(data.accessToken)
+
         onSuccess?.invoke(data)
       }
       .suspendOnError(ErrorResponseMapper) {

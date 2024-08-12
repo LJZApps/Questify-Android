@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.ljz.questify.ui.theme.getColorScheme
 
 @Composable
 fun QuestifyTheme(

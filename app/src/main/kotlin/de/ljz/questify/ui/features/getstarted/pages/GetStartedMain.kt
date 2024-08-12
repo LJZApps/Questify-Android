@@ -21,6 +21,7 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.navigation.GetStartedNavGraph
 import de.ljz.questify.ui.navigation.NavGraphs
+import de.ljz.questify.ui.navigation.destinations.GetStartedChooserScreenDestination
 import de.ljz.questify.util.bounceClick
 import io.sentry.compose.SentryTraced
 
@@ -63,7 +64,7 @@ fun GetStartedMain(
 
       Button(
         onClick = {
-          navigator.navigate(NavGraphs.loginAndRegister)
+          navigator.navigate(GetStartedChooserScreenDestination)
         },
         modifier = Modifier
           .bounceClick()
