@@ -3,8 +3,8 @@ package de.ljz.questify.data.datastore
 import android.util.Log
 import androidx.datastore.core.Serializer
 import de.ljz.questify.core.application.TAG
-import de.ljz.questify.ui.state.ThemeColor
 import de.ljz.questify.ui.state.ThemeBehavior
+import de.ljz.questify.ui.state.ThemeColor
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
