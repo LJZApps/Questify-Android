@@ -151,6 +151,7 @@ dependencies {
   implementation(libs.androidx.room.guava)
   implementation(libs.androidx.room.paging)
   implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
   annotationProcessor("androidx.room:room-compiler:$roomVersion")
   implementation(libs.gson)
   implementation(libs.accompanist.swiperefresh)
