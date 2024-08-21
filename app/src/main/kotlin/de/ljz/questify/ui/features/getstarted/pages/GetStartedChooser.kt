@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.navigate
 import de.ljz.questify.core.compose.UIModePreviews
+import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.getstarted.components.ChooserCard
 import de.ljz.questify.ui.navigation.GetStartedNavGraph
@@ -40,66 +41,68 @@ fun GetStartedChooserScreen(
   vm: GetStartedViewModel = hiltViewModel(),
 ) {
   SentryTraced(tag = "get_started_chooser") {
-    Surface {
-      ConstraintLayout (
-        modifier = modifier
-      ) {
-        val (
-          title,
-          buttonColumn
-        ) = createRefs()
+    QuestifyTheme {
+      Surface {
+        ConstraintLayout (
+          modifier = modifier
+        ) {
+          val (
+            title,
+            buttonColumn
+          ) = createRefs()
 
-        Text(
-          text = "Account stuff first or just start?",
-          modifier = Modifier.constrainAs(title) {
-            top.linkTo(parent.top, 12.dp)
-            start.linkTo(parent.start, 12.dp)
-            end.linkTo(parent.end, 12.dp)
-
-            width = Dimension.fillToConstraints
-          },
-          fontSize = 24.sp,
-          fontWeight = FontWeight.Bold,
-          textAlign = TextAlign.Left
-        )
-
-        Column (
-          modifier = Modifier
-            .constrainAs(buttonColumn) {
-              top.linkTo(title.bottom, 6.dp)
+          Text(
+            text = "Account stuff first or just start?",
+            modifier = Modifier.constrainAs(title) {
+              top.linkTo(parent.top, 12.dp)
               start.linkTo(parent.start, 12.dp)
               end.linkTo(parent.end, 12.dp)
-              bottom.linkTo(parent.bottom, 12.dp)
 
               width = Dimension.fillToConstraints
-              height = Dimension.fillToConstraints
-            }
-            .height(IntrinsicSize.Min),
-          verticalArrangement = Arrangement.SpaceBetween
-        ) {
-          ChooserCard(
-            title = "Login or create account",
-            text = "You can synchronize all your data between your other devices with an account.\nYou also have full access to our community network.",
-            onClick = {
-              navigator.navigate(NavGraphs.loginAndRegister)
             },
-            modifier = Modifier
-              .fillMaxWidth()
-              .weight(1f)
-              .padding(bottom = 6.dp)
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Left
           )
 
-          ChooserCard(
-            title = "Give me my quests",
-            text = "Skip the account stuff and just take me to my quests.\nPlease note that you will not be able to synchronize your quests as a result.",
-            onClick = {
-              navigator.navigate(NavGraphs.home)
-            },
+          Column (
             modifier = Modifier
-              .fillMaxWidth()
-              .weight(1f)
-              .padding(top = 6.dp)
-          )
+              .constrainAs(buttonColumn) {
+                top.linkTo(title.bottom, 6.dp)
+                start.linkTo(parent.start, 12.dp)
+                end.linkTo(parent.end, 12.dp)
+                bottom.linkTo(parent.bottom, 12.dp)
+
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+              }
+              .height(IntrinsicSize.Min),
+            verticalArrangement = Arrangement.SpaceBetween
+          ) {
+            ChooserCard(
+              title = "Login or create account",
+              text = "You can synchronize all your data between your other devices with an account.\nYou also have full access to our community network.",
+              onClick = {
+                navigator.navigate(NavGraphs.loginAndRegister)
+              },
+              modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(bottom = 6.dp)
+            )
+
+            ChooserCard(
+              title = "Give me my quests",
+              text = "Skip the account stuff and just take me to my quests.\nPlease note that you will not be able to synchronize your quests as a result.",
+              onClick = {
+                navigator.navigate(NavGraphs.home)
+              },
+              modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(top = 6.dp)
+            )
+          }
         }
       }
     }

@@ -13,7 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun QuestifyTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  // Dynamic color is available on Android 12+
+  transparentNavBar: Boolean = true,
   content: @Composable () -> Unit,
 ) {
   val vm: ThemeViewModel = hiltViewModel()
@@ -24,8 +24,13 @@ fun QuestifyTheme(
   if (!view.isInEditMode) {
     SideEffect {
       (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
-//            (view.context as Activity).window.navigationBarColor = colorScheme.surfaceColorAtElevation(3.dp).toArgb()
-      (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
+
+      if (!transparentNavBar) {
+        (view.context as Activity).window.navigationBarColor = colorScheme.surfaceContainer.toArgb()
+      } else {
+        (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
+      }
+
       ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme
     }
   }

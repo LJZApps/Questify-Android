@@ -18,9 +18,9 @@ import com.akinci.androidtemplate.ui.navigation.animations.FadeInOutAnimation
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import de.ljz.questify.R
+import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.navigation.GetStartedNavGraph
-import de.ljz.questify.ui.navigation.NavGraphs
 import de.ljz.questify.ui.navigation.destinations.GetStartedChooserScreenDestination
 import de.ljz.questify.util.bounceClick
 import io.sentry.compose.SentryTraced
@@ -35,53 +35,55 @@ fun GetStartedMain(
   vm: GetStartedViewModel = hiltViewModel(),
 ) {
   SentryTraced(tag = "get_started_main") {
-    ConstraintLayout(
-      modifier = modifier
-        .fillMaxSize()
-    ) {
-      val (
-        titleRef,
-        buttonRef
-      ) = createRefs()
-
-      Text(
-        text = "PLACEHOLDER",
-        modifier = Modifier
-          .constrainAs(titleRef) {
-            top.linkTo(parent.top)
-            start.linkTo(parent.start, 16.dp)
-            end.linkTo(parent.end, 16.dp)
-            bottom.linkTo(buttonRef.top)
-
-            width = Dimension.fillToConstraints
-          },
-        textAlign = TextAlign.Center,
-        fontSize = 32.sp,
-        fontFamily = FontFamily(
-          Font(R.font.tine5_regular)
-        )
-      )
-
-      Button(
-        onClick = {
-          navigator.navigate(GetStartedChooserScreenDestination)
-        },
-        modifier = Modifier
-          .bounceClick()
-          .constrainAs(buttonRef) {
-            start.linkTo(parent.start, 10.dp)
-            end.linkTo(parent.end, 10.dp)
-            bottom.linkTo(parent.bottom)
-
-            width = Dimension.fillToConstraints
-          }
+    QuestifyTheme {
+      ConstraintLayout(
+        modifier = modifier
+          .fillMaxSize()
       ) {
+        val (
+          titleRef,
+          buttonRef,
+        ) = createRefs()
+
         Text(
-          "Yes",
+          text = "PLACEHOLDER",
+          modifier = Modifier
+            .constrainAs(titleRef) {
+              top.linkTo(parent.top)
+              start.linkTo(parent.start, 16.dp)
+              end.linkTo(parent.end, 16.dp)
+              bottom.linkTo(buttonRef.top)
+
+              width = Dimension.fillToConstraints
+            },
+          textAlign = TextAlign.Center,
+          fontSize = 32.sp,
           fontFamily = FontFamily(
             Font(R.font.tine5_regular)
           )
         )
+
+        Button(
+          onClick = {
+            navigator.navigate(GetStartedChooserScreenDestination)
+          },
+          modifier = Modifier
+            .bounceClick()
+            .constrainAs(buttonRef) {
+              start.linkTo(parent.start, 10.dp)
+              end.linkTo(parent.end, 10.dp)
+              bottom.linkTo(parent.bottom)
+
+              width = Dimension.fillToConstraints
+            }
+        ) {
+          Text(
+            "Yes",
+            fontFamily = FontFamily(
+              Font(R.font.tine5_regular)
+            )
+          )
+        }
       }
     }
   }

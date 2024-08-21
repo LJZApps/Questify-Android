@@ -123,7 +123,9 @@ fun HomeScreen(
     )
   )
 
-  QuestifyTheme {
+  QuestifyTheme (
+    transparentNavBar = false
+  ) {
     SentryTraced(tag = "home_screen") {
       Scaffold(
         topBar = {
@@ -133,7 +135,9 @@ fun HomeScreen(
             },
             actions = {
               TextButton(
-                onClick = {}
+                onClick = {
+                  // TODO
+                }
               ) {
                 Text(
                   text = annotatedString,
