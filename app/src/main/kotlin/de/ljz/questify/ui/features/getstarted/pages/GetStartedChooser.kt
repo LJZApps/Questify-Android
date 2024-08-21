@@ -93,7 +93,7 @@ fun GetStartedChooserScreen(
             title = "Give me my quests",
             text = "Skip the account stuff and just take me to my quests.\nPlease note that you will not be able to synchronize your quests as a result.",
             onClick = {
-              // TODO
+              navigator.navigate(NavGraphs.home)
             },
             modifier = Modifier
               .fillMaxWidth()

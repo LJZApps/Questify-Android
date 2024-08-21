@@ -19,7 +19,7 @@ class ThemeViewModel @Inject constructor(
   var themeBehavior = ThemeBehavior.SYSTEM_STANDARD
 
   private val _themeColor = appSettingsRepository.getAppSettings().map { it.themeColor }
-  var themeColor = ThemeColor.RED
+  var themeColor = ThemeColor.PURPLE
 
   init {
     viewModelScope.launch {

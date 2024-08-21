@@ -23,6 +23,7 @@ import de.ljz.questify.ui.features.register.RegisterViewModel
 import de.ljz.questify.ui.features.setup.SetupViewModel
 import de.ljz.questify.ui.navigation.NavGraphs
 import de.ljz.questify.ui.navigation.destinations.RegisterScreenDestination
+import io.sentry.android.core.SentryAndroid
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
@@ -37,6 +38,18 @@ class ActivityMain : AppCompatActivity() {
 
       val appUiState by vm.uiState.collectAsState()
       val isSetupDone by appUiState.isSetupDone.collectAsState(initial = false)
+
+      SentryAndroid.init(this) { options ->
+        options.dsn = "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
+        options.isDebug = true
+
+        // Currently under experimental options:
+        options.experimental.sessionReplay.errorSampleRate = 1.0
+        options.experimental.sessionReplay.sessionSampleRate = 0.1
+        options.experimental.sessionReplay.redactAllText = true
+        options.experimental.sessionReplay.redactAllImages = true
+      }
+
 
       QuestifyTheme {
         Surface (

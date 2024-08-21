@@ -15,19 +15,19 @@ data class MainQuestEntity(
   val title: String,
 
   @ColumnInfo(name = "description")
-  val description: String?,
+  val description: String? = null,
 
   @ColumnInfo(name = "points")
   val points: Int,
 
   @ColumnInfo(name = "due_date")
-  val dueDate: Date?,
+  val dueDate: Date? = null,
 
   @ColumnInfo(name = "created_at")
   val createdAt: Date,
 
   @ColumnInfo(name = "updated_at")
-  val updatedAt: Date,
+  val updatedAt: Date? = null,
 
   @ColumnInfo(name = "lock_deletion")
   val lockDeletion: Boolean,

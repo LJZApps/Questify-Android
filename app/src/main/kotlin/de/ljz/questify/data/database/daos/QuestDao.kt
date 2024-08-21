@@ -14,6 +14,10 @@ interface QuestDao {
   @Query("SELECT * FROM main_quests WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%' ORDER BY title, description DESC")
   suspend fun searchQuests(query: String): List<MainQuestEntity>
 
+  @Transaction
+  @Query("SELECT * FROM sub_quests WHERE main_quest_id = :mainQuestId")
+  suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
+
   @Upsert
   suspend fun upsertMainQuest(value: MainQuestEntity)
 

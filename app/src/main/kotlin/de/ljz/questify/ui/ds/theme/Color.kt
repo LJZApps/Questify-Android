@@ -4,21 +4,51 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 
+// Funktion zur Anpassung von Farbhelligkeit
+fun Color.adjustBrightness(factor: Float): Color {
+  return copy(
+    red = (red * factor).coerceIn(0f, 1f),
+    green = (green * factor).coerceIn(0f, 1f),
+    blue = (blue * factor).coerceIn(0f, 1f)
+  )
+}
 
-fun createDarkColorScheme(primary: Color): ColorScheme {
+// Funktion zur Anpassung der Sättigung
+fun Color.adjustSaturation(factor: Float): Color {
+  val gray = (red + green + blue) / 3
+  return copy(
+    red = gray + factor * (red - gray),
+    green = gray + factor * (green - gray),
+    blue = gray + factor * (blue - gray)
+  )
+}
+
+// Funktion zur Generierung eines Farbschemas aus einer einzigen Farbe
+fun generateCompleteDarkColorScheme(baseColor: Color): ColorScheme {
+  val primary = baseColor
+  val primaryContainer = primary.adjustBrightness(0.7f)
+  val secondary = primary.adjustSaturation(0.8f).adjustBrightness(0.6f)
+  val secondaryContainer = secondary.adjustBrightness(0.5f)
+
+  val surface = primary.adjustBrightness(0.2f).copy(alpha = 0.1f)
+  val onSurface = if (surface.luminance() > 0.5f) Color.Black else Color.White
+  val background = surface.adjustBrightness(0.7f)
+  val onBackground = if (background.luminance() > 0.5f) Color.Black else Color.White
+
   return darkColorScheme(
     primary = primary,
-    onPrimary = ColorDarkTokens.OnPrimary,
-    primaryContainer = ColorDarkTokens.PrimaryContainer,
-    onPrimaryContainer = ColorDarkTokens.OnPrimaryContainer,
+    onPrimary = if (primary.luminance() > 0.5f) Color.Black else Color.White,
+    primaryContainer = primaryContainer,
+    onPrimaryContainer = if (primaryContainer.luminance() > 0.5f) Color.Black else Color.White,
+    secondary = secondary,
+    onSecondary = if (secondary.luminance() > 0.5f) Color.Black else Color.White,
+    secondaryContainer = secondaryContainer,
+    onSecondaryContainer = if (secondaryContainer.luminance() > 0.5f) Color.Black else Color.White,
     inversePrimary = ColorDarkTokens.InversePrimary,
-    secondary = ColorDarkTokens.Secondary,
-    onSecondary = ColorDarkTokens.OnSecondary,
-    secondaryContainer = ColorDarkTokens.SecondaryContainer,
-    onSecondaryContainer = ColorDarkTokens.OnSecondaryContainer,
     tertiary = ColorDarkTokens.Tertiary,
     onTertiary = ColorDarkTokens.OnTertiary,
     tertiaryContainer = ColorDarkTokens.TertiaryContainer,
@@ -49,17 +79,27 @@ fun createDarkColorScheme(primary: Color): ColorScheme {
   )
 }
 
-fun createLightColorScheme(primary: Color): ColorScheme {
+fun generateCompleteLightColorScheme(baseColor: Color): ColorScheme {
+  val primary = baseColor
+  val primaryContainer = primary.adjustBrightness(1.3f)
+  val secondary = primary.adjustSaturation(0.8f).adjustBrightness(1.2f)
+  val secondaryContainer = secondary.adjustBrightness(1.1f)
+
+  val surface = primary.adjustBrightness(1.5f).copy(alpha = 0.1f)
+  val onSurface = if (surface.luminance() > 0.5f) Color.Black else Color.White
+  val background = surface.adjustBrightness(1.5f)
+  val onBackground = if (background.luminance() > 0.5f) Color.Black else Color.White
+
   return lightColorScheme(
     primary = primary,
-    onPrimary = ColorLightTokens.OnPrimary,
-    primaryContainer = ColorLightTokens.PrimaryContainer,
-    onPrimaryContainer = ColorLightTokens.OnPrimaryContainer,
+    onPrimary = if (primary.luminance() > 0.5f) Color.Black else Color.White,
+    primaryContainer = primaryContainer,
+    onPrimaryContainer = if (primaryContainer.luminance() > 0.5f) Color.Black else Color.White,
+    onSecondary = if (secondary.luminance() > 0.5f) Color.Black else Color.White,
+    secondaryContainer = secondaryContainer,
+    onSecondaryContainer = if (secondaryContainer.luminance() > 0.5f) Color.Black else Color.White,
     inversePrimary = ColorLightTokens.InversePrimary,
     secondary = ColorLightTokens.Secondary,
-    onSecondary = ColorLightTokens.OnSecondary,
-    secondaryContainer = ColorLightTokens.SecondaryContainer,
-    onSecondaryContainer = ColorLightTokens.OnSecondaryContainer,
     tertiary = ColorLightTokens.Tertiary,
     onTertiary = ColorLightTokens.OnTertiary,
     tertiaryContainer = ColorLightTokens.TertiaryContainer,
@@ -92,41 +132,45 @@ fun createLightColorScheme(primary: Color): ColorScheme {
 
 class DarkTheme {
   companion object {
-    val Red = createDarkColorScheme(Color(0xFFB71C1C))
-    val Green = createDarkColorScheme(Color(0xFF388E3C))
-    val Blue = createDarkColorScheme(Color(0xFF1976D2))
-    val Yellow = createDarkColorScheme(Color(0xFFFBC02D))
-    val Orange = createDarkColorScheme(Color(0xFFF57C00))
-    val Purple = createDarkColorScheme(Color(0xFF8E24AA))
+    val Red = generateCompleteDarkColorScheme(Color(0xFFB71C1C))
+    val Green = generateCompleteDarkColorScheme(Color(0xFF388E3C))
+    val Blue = generateCompleteDarkColorScheme(Color(0xFF1976D2))
+    val Yellow = generateCompleteDarkColorScheme(Color(0xFFFBC02D))
+    val Orange = generateCompleteDarkColorScheme(Color(0xFFF57C00))
+    val Purple = generateCompleteDarkColorScheme(Color(0xFF8E24AA))
 
-    val PastelRed = createDarkColorScheme(Color(0xFFFFC1C1))
-    val PastelGreen = createDarkColorScheme(Color(0xFFB9E6B9))
-    val PastelBlue = createDarkColorScheme(Color(0xFFB9D7FF))
-    val PastelYellow = createDarkColorScheme(Color(0xFFFFF9C4))
-    val PastelOrange = createDarkColorScheme(Color(0xFFFFE0B2))
-    val PastelPurple = createDarkColorScheme(Color(0xFFE1BEE7))
+    val PastelRed = generateCompleteDarkColorScheme(Color(0xFFFFC1C1))
+    val PastelGreen = generateCompleteDarkColorScheme(Color(0xFFB9E6B9))
+    val PastelBlue = generateCompleteDarkColorScheme(Color(0xFFB9D7FF))
+    val PastelYellow = generateCompleteDarkColorScheme(Color(0xFFFFF9C4))
+    val PastelOrange = generateCompleteDarkColorScheme(Color(0xFFFFE0B2))
+    val PastelPurple = generateCompleteDarkColorScheme(Color(0xFFE1BEE7))
   }
 }
 
 class LightTheme {
   companion object {
-    val Red = createLightColorScheme(Color(0xFFB71C1C))
-    val Green = createLightColorScheme(Color(0xFF388E3C))
-    val Blue = createLightColorScheme(Color(0xFF1976D2))
-    val Yellow = createLightColorScheme(Color(0xFFFBC02D))
-    val Orange = createLightColorScheme(Color(0xFFF57C00))
-    val Purple = createLightColorScheme(Color(0xFF8E24AA))
+    val Red = generateCompleteLightColorScheme(Color(0xFFB71C1C))
+    val Green = generateCompleteLightColorScheme(Color(0xFF388E3C))
+    val Blue = generateCompleteLightColorScheme(Color(0xFF1976D2))
+    val Yellow = generateCompleteLightColorScheme(Color(0xFFFBC02D))
+    val Orange = generateCompleteLightColorScheme(Color(0xFFF57C00))
+    val Purple = generateCompleteLightColorScheme(Color(0xFF8E24AA))
 
-    val PastelRed = createLightColorScheme(Color(0xFFFFC1C1))
-    val PastelGreen = createLightColorScheme(Color(0xFFB9E6B9))
-    val PastelBlue = createLightColorScheme(Color(0xFFB9D7FF))
-    val PastelYellow = createLightColorScheme(Color(0xFFFFF9C4))
-    val PastelOrange = createLightColorScheme(Color(0xFFFFE0B2))
-    val PastelPurple = createLightColorScheme(Color(0xFFE1BEE7))
+    val PastelRed = generateCompleteLightColorScheme(Color(0xFFFFC1C1))
+    val PastelGreen = generateCompleteLightColorScheme(Color(0xFFB9E6B9))
+    val PastelBlue = generateCompleteLightColorScheme(Color(0xFFB9D7FF))
+    val PastelYellow = generateCompleteLightColorScheme(Color(0xFFFFF9C4))
+    val PastelOrange = generateCompleteLightColorScheme(Color(0xFFFFE0B2))
+    val PastelPurple = generateCompleteLightColorScheme(Color(0xFFE1BEE7))
   }
 }
 
-fun getColorScheme(themeBehavior: ThemeBehavior, themeColor: ThemeColor, isSystemInDarkTheme: Boolean): ColorScheme {
+fun getColorScheme(
+  themeBehavior: ThemeBehavior,
+  themeColor: ThemeColor,
+  isSystemInDarkTheme: Boolean,
+): ColorScheme {
   return when (themeBehavior) {
     ThemeBehavior.DARK -> getDarkColorScheme(themeColor)
     ThemeBehavior.LIGHT -> getLightColorScheme(themeColor)

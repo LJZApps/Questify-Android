@@ -23,7 +23,7 @@ data class AppSettings(
     val dynamicThemeColors: Boolean = false,
 
     @SerialName("theme_color")
-    val themeColor: ThemeColor = ThemeColor.RED
+    val themeColor: ThemeColor = ThemeColor.PURPLE
 )
 
 object AppSettingsSerializer : Serializer<AppSettings> {
