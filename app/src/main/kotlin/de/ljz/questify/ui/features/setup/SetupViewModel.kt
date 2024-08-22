@@ -22,5 +22,9 @@ class SetupViewModel @Inject constructor(
     viewModelScope.launch {
       appSettingsRepository.setDarkModeBehavior(ThemeBehavior.SYSTEM_STANDARD)
     }
+
+    viewModelScope.launch {
+      appSettingsRepository.setOnboardingDone()
+    }
   }
 }

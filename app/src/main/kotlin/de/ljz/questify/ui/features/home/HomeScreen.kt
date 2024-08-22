@@ -12,13 +12,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -29,10 +27,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +54,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import de.ljz.questify.R
 import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialog
 import de.ljz.questify.ui.features.home.pages.MapPage
 import de.ljz.questify.ui.features.home.pages.QuestPage
 import de.ljz.questify.ui.navigation.HomeNavGraph
@@ -66,10 +68,13 @@ import java.util.Date
 @Composable
 fun HomeScreen(
   navigator: NavController,
-  vm: HomeViewModel = hiltViewModel()
+  vm: HomeViewModel = hiltViewModel(),
 ) {
+  val homeUiState by vm.uiState.collectAsState()
+
+  val snackbarHostState = remember { SnackbarHostState() }
   val pagerState = rememberPagerState(pageCount = { 2 })
-  var selectedItem by remember{ mutableIntStateOf(0) }
+  var selectedItem by remember { mutableIntStateOf(0) }
   val scope = rememberCoroutineScope()
   val quests = listOf(
     MainQuestEntity(
@@ -83,19 +88,6 @@ fun HomeScreen(
     )
   )
   var showMenu by remember { mutableStateOf(false) }
-
-  val navigationItems = listOf(
-    mapOf(
-      "icon" to Icons.AutoMirrored.Outlined.List,
-      "label" to "Quests",
-      "page" to QuestPage(quests = quests)
-    ),
-    mapOf(
-      "icon" to Icons.Outlined.Map,
-      "label" to "Map",
-      "page" to MapPage()
-    ),
-  )
 
   val icon = "icon"
 
@@ -123,7 +115,7 @@ fun HomeScreen(
     )
   )
 
-  QuestifyTheme (
+  QuestifyTheme(
     transparentNavBar = false
   ) {
     SentryTraced(tag = "home_screen") {
@@ -163,10 +155,13 @@ fun HomeScreen(
                 DropdownMenuItem(
                   onClick = { /*TODO*/ },
                   text = {
-                    Text(text = "My profile")
+                    Text(text = "Connect account")
                   },
                   leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.AccountCircle, contentDescription = "Profile")
+                    Icon(
+                      imageVector = Icons.Outlined.ManageAccounts,
+                      contentDescription = "Profile"
+                    )
                   }
                 )
                 DropdownMenuItem(
@@ -209,7 +204,7 @@ fun HomeScreen(
           ) {
             FloatingActionButton(
               onClick = {
-                // TODO
+                vm.showCreateQuestDialog()
               }
             ) {
               Icon(imageVector = Icons.Filled.Add, contentDescription = null)
@@ -241,8 +236,24 @@ fun HomeScreen(
               }
             )
           }
+        },
+        snackbarHost = {
+          SnackbarHost(
+            hostState = snackbarHostState
+          )
         }
       )
+
+      if (homeUiState.createQuestDialogVisible) {
+        CreateQuestDialog(
+          onDismiss = {
+            vm.hideCreateQuestDialog()
+          },
+          onConfirm = { title, description ->
+            // TODO
+          }
+        )
+      }
     }
   }
 }

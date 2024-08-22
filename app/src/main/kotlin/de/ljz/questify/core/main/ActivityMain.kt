@@ -20,7 +20,6 @@ import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.loginandregister.LoginViewModel
 import de.ljz.questify.ui.features.register.RegisterViewModel
-import de.ljz.questify.ui.features.setup.SetupViewModel
 import de.ljz.questify.ui.navigation.NavGraphs
 import de.ljz.questify.ui.navigation.destinations.RegisterScreenDestination
 import io.sentry.android.core.SentryAndroid
@@ -71,12 +70,6 @@ class ActivityMain : AppCompatActivity() {
                 }
                 hiltViewModel<LoginViewModel>(parentEntry)
               }
-              dependency(NavGraphs.setup) {
-                val parentEntry = remember(navBackStackEntry) {
-                  navController.getBackStackEntry(NavGraphs.setup.route)
-                }
-                hiltViewModel<SetupViewModel>(parentEntry)
-              }
               dependency(RegisterScreenDestination) {
                 val parentEntry = remember(navBackStackEntry) {
                   navController.getBackStackEntry(RegisterScreenDestination.route)
@@ -86,8 +79,8 @@ class ActivityMain : AppCompatActivity() {
             },
             modifier = Modifier
               .fillMaxSize(),
-            //                                  Setup done           Setup unfinished
-            startRoute =  if (isSetupDone) NavGraphs.setup else NavGraphs.getStarted
+            //                              Setup done           Setup unfinished
+            startRoute =  if (isSetupDone) NavGraphs.home else NavGraphs.getStarted
           )
         }
       }

@@ -31,13 +31,8 @@ fun Color.adjustSaturation(factor: Float): Color {
 fun generateCompleteDarkColorScheme(baseColor: Color): ColorScheme {
   val primary = baseColor
   val primaryContainer = primary.adjustBrightness(0.7f)
-  val secondary = primary.adjustSaturation(0.8f).adjustBrightness(0.6f)
+  val secondary = primary.adjustSaturation(0.8f).adjustBrightness(1.2f)
   val secondaryContainer = secondary.adjustBrightness(0.5f)
-
-  val surface = primary.adjustBrightness(0.2f).copy(alpha = 0.1f)
-  val onSurface = if (surface.luminance() > 0.5f) Color.Black else Color.White
-  val background = surface.adjustBrightness(0.7f)
-  val onBackground = if (background.luminance() > 0.5f) Color.Black else Color.White
 
   return darkColorScheme(
     primary = primary,
@@ -84,11 +79,6 @@ fun generateCompleteLightColorScheme(baseColor: Color): ColorScheme {
   val primaryContainer = primary.adjustBrightness(1.3f)
   val secondary = primary.adjustSaturation(0.8f).adjustBrightness(1.2f)
   val secondaryContainer = secondary.adjustBrightness(1.1f)
-
-  val surface = primary.adjustBrightness(1.5f).copy(alpha = 0.1f)
-  val onSurface = if (surface.luminance() > 0.5f) Color.Black else Color.White
-  val background = surface.adjustBrightness(1.5f)
-  val onBackground = if (background.luminance() > 0.5f) Color.Black else Color.White
 
   return lightColorScheme(
     primary = primary,
