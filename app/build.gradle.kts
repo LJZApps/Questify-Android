@@ -25,7 +25,7 @@ android {
     load(FileInputStream(File(rootProject.rootDir, "app.properties")))
   }
 
-  compileSdk = 34
+  compileSdk = 35
 
   buildFeatures {
     viewBinding = true
@@ -49,7 +49,7 @@ android {
     namespace = "de.ljz.questify"
     applicationId = "de.ljz.questify"
     minSdk = 26
-    targetSdk = 34
+    targetSdk = 35
     versionCode = 1
     versionName = "0.1"
     resourceConfigurations += listOf("en", "de")
@@ -103,72 +103,81 @@ val composeDestinationsVersion by extra("1.10.2")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-  // Jetpack Compose
-  implementation(libs.composeSettings.ui.extended)
-  implementation(libs.composeSettings.ui)
+  implementation(libs.androidx.datastore.core.android)
+  ksp(libs.androidx.room.compiler)
+
+  ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
+
+  implementation(libs.androidx.datastore.preferences.core)
+
   implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
-  implementation(libs.androidx.navigation.compose)
-  implementation(libs.ui.graphics)
-  implementation(libs.ui.tooling.preview)
-  implementation("androidx.compose.ui:ui:$composeVersion")
-  implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-  implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+  implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
+
+  implementation(platform(libs.arrow.stack))
+  implementation(platform(libs.sentry.bom))
+
+  implementation(libs.accompanist.swiperefresh)
   implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.activity.ktx)
+  implementation(libs.androidx.appcompat)
   implementation(libs.androidx.constraintlayout.compose)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.hilt.navigation.compose)
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.navigation.compose)
+  implementation(libs.androidx.room.guava)
+  implementation(libs.androidx.room.ktx)
+  implementation(libs.androidx.room.paging)
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.rxjava2)
+  implementation(libs.androidx.room.rxjava3)
+  implementation(libs.arrow.core)
+  implementation(libs.billing.ktx)
+  implementation(libs.compose.destinations.core)
+  implementation(libs.composeSettings.ui)
+  implementation(libs.composeSettings.ui.extended)
+  implementation(libs.converter.moshi)
+  implementation(libs.firebase.analytics)
+  implementation(libs.firebase.crashlytics)
+  implementation(libs.gson)
+  implementation(libs.hilt.android)
+  implementation(libs.kotlin.stdlib.jdk8)
+  implementation(libs.kotlinx.collections.immutable)
+  implementation(libs.kotlinx.serialization.json)
+  implementation(libs.logging.interceptor)
   implementation(libs.material)
   implementation(libs.material3)
   implementation(libs.material3.window.size)
-
-  // Andere Abhängigkeiten
+  implementation(libs.moshi.adapters)
+  implementation(libs.moshi.kotlin)
+  implementation(libs.okhttp)
+  implementation(libs.retrofit)
   implementation(libs.sandwich)
   implementation(libs.sandwich.retrofit)
   implementation(libs.sandwich.retrofit.serialization)
-  implementation(platform(libs.sentry.bom))
   implementation(libs.sentry.android)
   implementation(libs.sentry.compose.android)
-  implementation(libs.kotlinx.collections.immutable)
-  implementation(libs.kotlinx.serialization.json)
-  ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
-  implementation(libs.compose.destinations.core)
-  implementation(platform(libs.arrow.stack))
-  implementation(libs.arrow.core)
-  implementation(libs.androidx.glance.appwidget)
-  implementation(libs.androidx.glance.material3)
-  implementation(libs.okhttp)
-  implementation(libs.logging.interceptor)
-  kapt(libs.hilt.android.compiler)
-  kapt(libs.androidx.hilt.compiler)
-  implementation(libs.hilt.android)
-  implementation(libs.androidx.hilt.navigation.compose)
-  implementation(libs.moshi.kotlin)
-  implementation(libs.moshi.adapters)
-  implementation(libs.retrofit)
-  implementation(libs.converter.moshi)
-  implementation("io.ktor:ktor-client-core:$ktorVersion")
+  implementation(libs.ui.graphics)
+  implementation(libs.ui.tooling.preview)
+  implementation(libs.voyager.navigator)
+  implementation(libs.voyager.transitions)
+  implementation(libs.voyager.screenModel)
+  implementation(libs.voyager.hilt)
+  implementation(libs.voyager.tabNavigator)
+
+  implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+  implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+  implementation("androidx.compose.ui:ui:$composeVersion")
   implementation("io.ktor:ktor-client-cio:$ktorVersion")
   implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+  implementation("io.ktor:ktor-client-core:$ktorVersion")
   implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-  ksp(libs.androidx.room.compiler)
-  implementation(libs.androidx.room.rxjava2)
-  implementation(libs.androidx.room.rxjava3)
-  implementation(libs.androidx.room.guava)
-  implementation(libs.androidx.room.paging)
-  implementation(libs.androidx.room.runtime)
-  implementation(libs.androidx.room.ktx)
+
+  kapt(libs.androidx.hilt.compiler)
+  kapt(libs.hilt.android.compiler)
   annotationProcessor("androidx.room:room-compiler:$roomVersion")
-  implementation(libs.gson)
-  implementation(libs.accompanist.swiperefresh)
-  implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.appcompat)
-  implementation(libs.androidx.activity.ktx)
-  implementation(libs.androidx.lifecycle.runtime.ktx)
-  implementation(libs.androidx.lifecycle.viewmodel.compose)
-  implementation(libs.androidx.lifecycle.runtime.compose)
-  implementation(libs.firebase.analytics)
-  implementation(libs.firebase.crashlytics)
-  implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
-  implementation(libs.kotlin.stdlib.jdk8)
-  implementation(libs.billing.ktx)
 }
 
 

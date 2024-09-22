@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +17,7 @@ import de.ljz.questify.data.datastore.PushSettings
 import de.ljz.questify.data.datastore.PushSettingsSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -31,7 +31,7 @@ object DatastoreModule {
         corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },
         migrations = listOf(),
         scope = CoroutineScope(Dispatchers.IO),
-        produceFile = { context.dataStoreFile("app_user.json") }
+        produceFile = { File(context.filesDir, "datastore/app_user.json") }
     )
 
     @Singleton
@@ -42,7 +42,7 @@ object DatastoreModule {
             corruptionHandler = ReplaceFileCorruptionHandler { AppSettings() },
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
-            produceFile = { context.dataStoreFile("app_settings.json") }
+            produceFile = { File(context.filesDir, "datastore/app_settings.json") }
         )
     }
 
@@ -54,7 +54,7 @@ object DatastoreModule {
             corruptionHandler = ReplaceFileCorruptionHandler { PushSettings() },
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
-            produceFile = { context.dataStoreFile("push_settings.json") }
+            produceFile = { File(context.filesDir, "datastore/push_settings.json") }
         )
     }
 

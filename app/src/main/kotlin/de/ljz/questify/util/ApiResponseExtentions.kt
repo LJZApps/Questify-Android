@@ -6,7 +6,6 @@ import com.skydoves.sandwich.SuspensionFunction
 import de.ljz.questify.core.application.TAG
 import de.ljz.questify.data.api.responses.common.ErrorResponse
 import java.net.ConnectException
-import java.net.ProtocolException
 import java.net.SocketTimeoutException
 import java.net.UnknownServiceException
 import kotlin.contracts.ExperimentalContracts

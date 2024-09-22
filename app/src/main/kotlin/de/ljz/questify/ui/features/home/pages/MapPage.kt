@@ -8,12 +8,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 
-
 @Composable
 fun MapPage(
   modifier: Modifier = Modifier,
 ) {
-  ConstraintLayout (
+  ConstraintLayout(
     modifier = modifier.fillMaxSize()
   ) {
     val (
@@ -31,5 +30,6 @@ fun MapPage(
       },
       textAlign = TextAlign.Center
     )
+
   }
 }

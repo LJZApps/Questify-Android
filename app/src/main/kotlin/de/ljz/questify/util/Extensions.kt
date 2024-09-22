@@ -1,5 +1,7 @@
 package de.ljz.questify.util
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -13,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-
 
 enum class ButtonState { Pressed, Idle }
 
@@ -45,4 +46,12 @@ fun Modifier.bounceClick() = composed {
         }
       }
     }
+}
+
+fun Context.longToast(message: String) {
+  Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun Context.shortToast(message: String) {
+  Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

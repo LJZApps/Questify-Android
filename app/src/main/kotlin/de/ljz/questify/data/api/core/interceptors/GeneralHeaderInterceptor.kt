@@ -7,7 +7,7 @@ import android.provider.Settings
 import de.ljz.questify.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.util.*
+import java.util.Locale
 
 class GeneralHeaderInterceptor(private val context: Context) : Interceptor {
     @SuppressLint("HardwareIds")

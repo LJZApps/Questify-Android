@@ -11,22 +11,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.dependency
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
-import de.ljz.questify.ui.features.loginandregister.LoginViewModel
-import de.ljz.questify.ui.features.register.RegisterViewModel
-import de.ljz.questify.ui.navigation.NavGraphs
-import de.ljz.questify.ui.navigation.destinations.RegisterScreenDestination
+import de.ljz.questify.ui.features.getstarted.pages.GetStartedChooserScreen
+import de.ljz.questify.ui.features.getstarted.pages.GetStartedMainScreen
 import io.sentry.android.core.SentryAndroid
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
 
+  @OptIn(ExperimentalVoyagerApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -49,39 +47,19 @@ class ActivityMain : AppCompatActivity() {
         options.experimental.sessionReplay.redactAllImages = true
       }
 
-
       QuestifyTheme {
         Surface (
           modifier = Modifier.fillMaxSize(),
         ) {
-          DestinationsNavHost(
-            navGraph = NavGraphs.root,
-            navController = navController,
-            dependenciesContainerBuilder = {
-              dependency(NavGraphs.getStarted) {
-                val parentEntry = remember(navBackStackEntry) {
-                  navController.getBackStackEntry(NavGraphs.getStarted.route)
-                }
-                hiltViewModel<GetStartedViewModel>(parentEntry)
-              }
-              dependency(NavGraphs.loginAndRegister) {
-                val parentEntry = remember(navBackStackEntry) {
-                  navController.getBackStackEntry(NavGraphs.loginAndRegister.route)
-                }
-                hiltViewModel<LoginViewModel>(parentEntry)
-              }
-              dependency(RegisterScreenDestination) {
-                val parentEntry = remember(navBackStackEntry) {
-                  navController.getBackStackEntry(RegisterScreenDestination.route)
-                }
-                hiltViewModel<RegisterViewModel>(parentEntry)
-              }
-            },
-            modifier = Modifier
-              .fillMaxSize(),
-            //                              Setup done           Setup unfinished
-            startRoute =  if (isSetupDone) NavGraphs.home else NavGraphs.getStarted
-          )
+          Navigator(
+            //                            navigate to Home              navigate to GetStarted
+            screen = if (isSetupDone) GetStartedChooserScreen() else GetStartedMainScreen()
+          ) { navigator ->
+            SlideTransition(
+              navigator = navigator,
+              disposeScreenAfterTransitionEnd = true
+            )
+          }
         }
       }
     }

@@ -1,19 +1,19 @@
 package de.ljz.questify.ui.features.getstarted
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import de.ljz.questify.data.repositories.AppSettingsRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class GetStartedViewModel @Inject constructor(
   private val appSettingsRepository: AppSettingsRepository,
-) : ViewModel() {
+) : ScreenModel {
+
   fun setSetupDone() {
-    viewModelScope.launch {
+    screenModelScope.launch {
       appSettingsRepository.setOnboardingDone()
     }
   }
+
 }

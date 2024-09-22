@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -37,186 +36,184 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.akinci.androidtemplate.ui.navigation.animations.SlideHorizontallyAnimation
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.hilt.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.loginandregister.LoginViewModel
-import de.ljz.questify.ui.navigation.LoginAndRegisterNavGraph
-import de.ljz.questify.ui.navigation.destinations.SetupAppThemeDestination
+import de.ljz.questify.ui.features.loginandregister.LoginScreenModel
 import io.sentry.compose.SentryTraced
 
-@OptIn(ExperimentalComposeUiApi::class)
-@LoginAndRegisterNavGraph
-@Destination(style = SlideHorizontallyAnimation::class)
-@Composable
-fun LoginScreen(
-  navigator: DestinationsNavigator,
-  modifier: Modifier = Modifier,
-  vm: LoginViewModel = hiltViewModel(),
-) {
-  val loginAndRegisterUiState by vm.uiState.collectAsState()
+class LoginScreen : Screen {
 
-  QuestifyTheme {
-    SentryTraced(tag = "login_screen") {
-      Surface {
-        ConstraintLayout(
-          modifier = modifier
-            .fillMaxSize()
-        ) {
-          val (
-            iconRef,
-            titleRef,
-            usernameRef,
-            passwordRef,
-            loginButtonRef,
-          ) = createRefs()
+  @OptIn(ExperimentalComposeUiApi::class)
+  @Composable
+  override fun Content() {
+    val navigator = LocalNavigator.currentOrThrow
+    val screenModel = getScreenModel<LoginScreenModel>()
+    val loginAndRegisterUiState = screenModel.state.collectAsState().value
 
-          Icon(
-            imageVector = Icons.AutoMirrored.Filled.Login,
-            contentDescription = null,
+    QuestifyTheme {
+      SentryTraced(tag = "login_screen") {
+        Surface {
+          ConstraintLayout(
             modifier = Modifier
-              .constrainAs(iconRef) {
-                top.linkTo(parent.top, 12.dp)
-                start.linkTo(parent.start, 12.dp)
-              }
-              .size(40.dp)
-          )
-
-          Text(
-            text = "Login with existing account",
-            modifier = Modifier.constrainAs(titleRef) {
-              top.linkTo(iconRef.bottom, 6.dp)
-              start.linkTo(parent.start, 12.dp)
-              end.linkTo(parent.end, 12.dp)
-
-              width = Dimension.fillToConstraints
-            },
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Left
-          )
-
-          OutlinedTextField(
-            modifier = Modifier
-              .constrainAs(usernameRef) {
-                top.linkTo(titleRef.bottom, 16.dp)
-                start.linkTo(parent.start, 12.dp)
-                end.linkTo(parent.end, 12.dp)
-
-                width = Dimension.fillToConstraints
-              },
-            value = loginAndRegisterUiState.loginState.username,
-            onValueChange = {
-              vm.updateUsername(it)
-            },
-            shape = RoundedCornerShape(16.dp),
-            label = { Text(text = "Email or username") },
-            keyboardOptions = KeyboardOptions(
-              keyboardType = KeyboardType.Email,
-              imeAction = ImeAction.Next
-            ),
-            singleLine = true,
-            enabled = !loginAndRegisterUiState.isLoading
-          )
-
-          OutlinedTextField(
-            modifier = Modifier
-              .constrainAs(passwordRef) {
-                top.linkTo(usernameRef.bottom, 8.dp)
-                start.linkTo(parent.start, 12.dp)
-                end.linkTo(parent.end, 12.dp)
-
-                width = Dimension.fillToConstraints
-              },
-            value = loginAndRegisterUiState.loginState.password,
-            onValueChange = { vm.updatePassword(it) },
-            shape = RoundedCornerShape(16.dp),
-            label = { Text(text = "Password") },
-            keyboardOptions = KeyboardOptions(
-              keyboardType = KeyboardType.Password,
-              imeAction = ImeAction.Done
-            ),
-            singleLine = true,
-            visualTransformation = if (loginAndRegisterUiState.loginState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            leadingIcon = {
-              val image = if (loginAndRegisterUiState.loginState.passwordVisible)
-                Icons.Filled.Visibility
-              else Icons.Filled.VisibilityOff
-
-              val description =
-                if (loginAndRegisterUiState.registerState.passwordVisible) "Hide password" else "Show password"
-
-              IconButton(
-                onClick = { vm.togglePasswordVisibility() }
-              ) {
-                Icon(imageVector = image, description)
-              }
-            },
-            enabled = !loginAndRegisterUiState.isLoading
-          )
-
-          Button(
-            onClick = {
-              vm.checkData {
-                navigator.navigate(SetupAppThemeDestination)
-              }
-            },
-            modifier = Modifier.constrainAs(loginButtonRef) {
-              bottom.linkTo(parent.bottom, 8.dp)
-              start.linkTo(parent.start, 12.dp)
-              end.linkTo(parent.end, 12.dp)
-
-              width = Dimension.fillToConstraints
-            },
-            enabled = !loginAndRegisterUiState.isLoading
+              .fillMaxSize()
           ) {
-            Row(
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(ButtonDefaults.IconSpacing)
-            ) {
-              AnimatedVisibility(visible = loginAndRegisterUiState.isLoading) {
-                CircularProgressIndicator(
-                  modifier = Modifier.size(ButtonDefaults.IconSize),
-                  strokeWidth = 2.dp
-                )
-              }
-              AnimatedVisibility(visible = !loginAndRegisterUiState.isLoading) {
-                Text("Login")
-              }
-              AnimatedVisibility(visible = loginAndRegisterUiState.loadingText.isNotEmpty()) {
-                Text(text = loginAndRegisterUiState.loadingText)
-              }
-            }
-          }
+            val (
+              iconRef,
+              titleRef,
+              usernameRef,
+              passwordRef,
+              loginButtonRef,
+            ) = createRefs()
 
-          if (loginAndRegisterUiState.loginState.isLoginErrorShown) {
-            AlertDialog(
-              onDismissRequest = {
-                vm.dismissDialog()
+            Icon(
+              imageVector = Icons.AutoMirrored.Filled.Login,
+              contentDescription = null,
+              modifier = Modifier
+                .constrainAs(iconRef) {
+                  top.linkTo(parent.top, 12.dp)
+                  start.linkTo(parent.start, 12.dp)
+                }
+                .size(40.dp)
+            )
+
+            Text(
+              text = "Login with existing account",
+              modifier = Modifier.constrainAs(titleRef) {
+                top.linkTo(iconRef.bottom, 6.dp)
+                start.linkTo(parent.start, 12.dp)
+                end.linkTo(parent.end, 12.dp)
+
+                width = Dimension.fillToConstraints
               },
-              title = {
-                Text(text = "Login failed")
+              fontSize = 24.sp,
+              fontWeight = FontWeight.Bold,
+              textAlign = TextAlign.Left
+            )
+
+            OutlinedTextField(
+              modifier = Modifier
+                .constrainAs(usernameRef) {
+                  top.linkTo(titleRef.bottom, 16.dp)
+                  start.linkTo(parent.start, 12.dp)
+                  end.linkTo(parent.end, 12.dp)
+
+                  width = Dimension.fillToConstraints
+                },
+              value = loginAndRegisterUiState.loginState.username,
+              onValueChange = {
+                screenModel.updateUsername(it)
               },
-              text = {
-                Text(
-                  text = loginAndRegisterUiState.loginState.loginErrorMessage
-                )
-              },
-              confirmButton = {
-                TextButton(
-                  onClick = {
-                    vm.dismissDialog()
-                  }
+              shape = RoundedCornerShape(16.dp),
+              label = { Text(text = "Email or username") },
+              keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+              ),
+              singleLine = true,
+              enabled = !loginAndRegisterUiState.isLoading
+            )
+
+            OutlinedTextField(
+              modifier = Modifier
+                .constrainAs(passwordRef) {
+                  top.linkTo(usernameRef.bottom, 8.dp)
+                  start.linkTo(parent.start, 12.dp)
+                  end.linkTo(parent.end, 12.dp)
+
+                  width = Dimension.fillToConstraints
+                },
+              value = loginAndRegisterUiState.loginState.password,
+              onValueChange = { screenModel.updatePassword(it) },
+              shape = RoundedCornerShape(16.dp),
+              label = { Text(text = "Password") },
+              keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+              ),
+              singleLine = true,
+              visualTransformation = if (loginAndRegisterUiState.loginState.passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+              leadingIcon = {
+                val image = if (loginAndRegisterUiState.loginState.passwordVisible)
+                  Icons.Filled.Visibility
+                else Icons.Filled.VisibilityOff
+
+                val description =
+                  if (loginAndRegisterUiState.registerState.passwordVisible) "Hide password" else "Show password"
+
+                IconButton(
+                  onClick = { screenModel.togglePasswordVisibility() }
                 ) {
-                  Text(text = "Got it")
+                  Icon(imageVector = image, description)
+                }
+              },
+              enabled = !loginAndRegisterUiState.isLoading
+            )
+
+            Button(
+              onClick = {
+                screenModel.checkData {
+                  //navigator.navigate(SetupAppThemeDestination)
+                }
+              },
+              modifier = Modifier.constrainAs(loginButtonRef) {
+                bottom.linkTo(parent.bottom, 8.dp)
+                start.linkTo(parent.start, 12.dp)
+                end.linkTo(parent.end, 12.dp)
+
+                width = Dimension.fillToConstraints
+              },
+              enabled = !loginAndRegisterUiState.isLoading
+            ) {
+              Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(ButtonDefaults.IconSpacing)
+              ) {
+                AnimatedVisibility(visible = loginAndRegisterUiState.isLoading) {
+                  CircularProgressIndicator(
+                    modifier = Modifier.size(ButtonDefaults.IconSize),
+                    strokeWidth = 2.dp
+                  )
+                }
+                AnimatedVisibility(visible = !loginAndRegisterUiState.isLoading) {
+                  Text("Login")
+                }
+                AnimatedVisibility(visible = loginAndRegisterUiState.loadingText.isNotEmpty()) {
+                  Text(text = loginAndRegisterUiState.loadingText)
                 }
               }
-            )
+            }
+
+            if (loginAndRegisterUiState.loginState.isLoginErrorShown) {
+              AlertDialog(
+                onDismissRequest = {
+                  screenModel.dismissDialog()
+                },
+                title = {
+                  Text(text = "Login failed")
+                },
+                text = {
+                  Text(
+                    text = loginAndRegisterUiState.loginState.loginErrorMessage
+                  )
+                },
+                confirmButton = {
+                  TextButton(
+                    onClick = {
+                      screenModel.dismissDialog()
+                    }
+                  ) {
+                    Text(text = "Got it")
+                  }
+                }
+              )
+            }
           }
         }
       }
     }
   }
+
 }
