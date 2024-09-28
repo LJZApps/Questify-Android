@@ -1,7 +1,6 @@
 package de.ljz.questify.ui.features.register
 
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import cafe.adriel.voyager.core.model.StateScreenModel
 import de.ljz.questify.data.api.responses.common.ErrorResponse
 import de.ljz.questify.data.repositories.RegisterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,13 +9,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-@HiltViewModel
-class RegisterViewModel @Inject constructor(
-  private val registerRepository: RegisterRepository,
-) : ViewModel() {
-  private val _uiState = MutableStateFlow(RegisterUiState())
-  val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
+class RegisterScreenModel @Inject constructor(
+  private val registerRepository: RegisterRepository,
+) : StateScreenModel<RegisterUiState>(RegisterUiState()) {
   private val _emailError = MutableStateFlow("")
   val emailError: StateFlow<String> = _emailError.asStateFlow()
 
@@ -32,7 +28,7 @@ class RegisterViewModel @Inject constructor(
   ) {
     _emailError.value = ""
 
-    val email = _uiState.value.email
+    val email = mutableState.value.email
     when {
       email.isEmpty() -> {
         _emailError.value = "Email cannot be empty"
@@ -59,17 +55,17 @@ class RegisterViewModel @Inject constructor(
     _confirmPasswordError.value = ""
 
     when {
-      _uiState.value.password.isEmpty() -> {
+      mutableState.value.password.isEmpty() -> {
         _passwordError.value = "Password cannot be empty"
         onFailure(ErrorResponse("empty_password", "Password cannot be empty"))
       }
 
-      _uiState.value.password.length < 8 -> {
+      mutableState.value.password.length < 8 -> {
         _passwordError.value = "Password must be at least 8 characters"
         onFailure(ErrorResponse("invalid_password", "Password must be at least 8 characters"))
       }
 
-      _uiState.value.password != _uiState.value.confirmPassword -> {
+      mutableState.value.password != mutableState.value.confirmPassword -> {
         _confirmPasswordError.value = "Passwords do not match"
         onFailure(ErrorResponse("password_mismatch", "Passwords do not match"))
       }
@@ -83,7 +79,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun togglePasswordVisibility() {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         passwordVisible = !it.passwordVisible
       )
@@ -91,7 +87,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun toggleConfirmPasswordVisibility() {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         confirmPasswordVisible = !it.confirmPasswordVisible
       )
@@ -99,7 +95,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun hideAllPasswords() {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         passwordVisible = false,
         confirmPasswordVisible = false
@@ -109,7 +105,7 @@ class RegisterViewModel @Inject constructor(
 
   fun updateEmail(email: String) {
     _emailError.value = ""
-    _uiState.update {
+    mutableState.update {
       it.copy(
         email = email
       )
@@ -120,7 +116,7 @@ class RegisterViewModel @Inject constructor(
     _passwordError.value = ""
     _confirmPasswordError.value = ""
 
-    _uiState.update {
+    mutableState.update {
       it.copy(
         password = password
       )
@@ -131,7 +127,7 @@ class RegisterViewModel @Inject constructor(
     _passwordError.value = ""
     _confirmPasswordError.value = ""
 
-    _uiState.update {
+    mutableState.update {
       it.copy(
         confirmPassword = confirmPassword
       )
@@ -139,7 +135,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateUsername(username: String) {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         username = username
       )
@@ -147,7 +143,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateAboutMe(aboutMe: String) {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         aboutMe = aboutMe
       )
@@ -155,7 +151,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateBirthday(birthday: Long) {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         birthday = birthday
       )
@@ -163,7 +159,7 @@ class RegisterViewModel @Inject constructor(
   }
 
   fun updateDisplayName(displayName: String) {
-    _uiState.update {
+    mutableState.update {
       it.copy(
         displayName = displayName
       )

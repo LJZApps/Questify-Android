@@ -31,8 +31,10 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import de.ljz.questify.R
 import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
+import de.ljz.questify.ui.components.rowScope.TabNavigationItem
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialog
+import de.ljz.questify.ui.features.home.pages.MapTab
 import de.ljz.questify.ui.features.home.pages.QuestTab
 import io.sentry.compose.SentryTraced
 import java.util.*
@@ -90,11 +92,11 @@ class HomeScreen : Screen {
     QuestifyTheme(
       transparentNavBar = false
     ) {
-      val tabNavigator = LocalTabNavigator.current
-
       SentryTraced(tag = "home_screen") {
 
         TabNavigator(QuestTab()) {
+          val tabNavigator = LocalTabNavigator.current
+
           Scaffold(
             topBar = {
               TopAppBar(
@@ -173,33 +175,9 @@ class HomeScreen : Screen {
             },
             bottomBar = {
               NavigationBar {
+                TabNavigationItem(QuestTab(Modifier, quests))
+                TabNavigationItem(MapTab(Modifier))
               }
-              /*
-              NavigationBar {
-                NavigationBarItem(
-                  icon = { Icon(Icons.Filled.Explore, contentDescription = null) },
-                  label = { Text("Quests") },
-                  selected = selectedItem == 0,
-                  onClick = {
-                    scope.launch {
-                      selectedItem = 0
-                      pagerState.scrollToPage(0)
-                    }
-                  }
-                )
-                NavigationBarItem(
-                  icon = { Icon(Icons.Filled.Map, contentDescription = null) },
-                  label = { Text("Map") },
-                  selected = selectedItem == 1,
-                  onClick = {
-                    scope.launch {
-                      selectedItem = 1
-                      pagerState.scrollToPage(1)
-                    }
-                  }
-                )
-              }
-              */
             },
             snackbarHost = {
               SnackbarHost(

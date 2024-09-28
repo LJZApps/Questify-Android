@@ -25,6 +25,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.register.RegisterScreen
 import io.sentry.compose.SentryTraced
 
 class LoginAndRegisterScreen : Screen {
@@ -90,6 +91,7 @@ class LoginAndRegisterScreen : Screen {
 
             Button(
               onClick = {
+                navigator.push(RegisterScreen())
                 //navigator.navigate(RegisterScreenDestination)
               },
               modifier = Modifier.constrainAs(registerButtonRef) {

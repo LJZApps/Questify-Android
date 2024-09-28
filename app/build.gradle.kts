@@ -166,6 +166,9 @@ dependencies {
   implementation(libs.voyager.screenModel)
   implementation(libs.voyager.hilt)
   implementation(libs.voyager.tabNavigator)
+  implementation(libs.voyager.bottomSheetNavigator)
+  implementation(libs.voyager.kodein)
+  implementation(libs.voyager.rxjava)
 
   implementation("androidx.compose.material:material-icons-extended:$composeVersion")
   implementation("androidx.compose.ui:ui-tooling:$composeVersion")
