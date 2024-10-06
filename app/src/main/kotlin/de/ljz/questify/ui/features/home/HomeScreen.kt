@@ -288,7 +288,6 @@ fun HomeScreen(
                 label = {
                   Text(text = "All Quests")
                 },
-                alwaysShowLabel = false,
                 icon = {
                   Icon(Icons.AutoMirrored.Default.List, contentDescription = null)
                 },
@@ -313,7 +312,6 @@ fun HomeScreen(
                 label = {
                   Text(text = "Repeating Quests")
                 },
-                alwaysShowLabel = false,
                 icon = {
                   Icon(Icons.Default.Repeat, contentDescription = null)
                 },

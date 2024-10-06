@@ -30,6 +30,10 @@ fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeScreenMo
     }
 
     composable<HomeBottomRoutes.RepeatingQuests> {
+      BackHandler {
+        // Spezifisches Verhalten, wenn der Benutzer zurück navigiert
+        navController.popBackStack()
+      }
       RepeatingQuestsPage(viewModel = viewModel)
     }
 
