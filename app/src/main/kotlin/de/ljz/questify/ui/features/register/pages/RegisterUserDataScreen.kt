@@ -45,7 +45,7 @@ fun RegisterUserDataScreen(
     modifier = Modifier.fillMaxSize()
   ) {
     val (
-      iconRef, titleRef, backButtonRef, nextButtonRef, displayNameTextFieldRef, usernameTextFieldRef, aboutMeTextFieldRef,
+      iconRef, titleRef, subtitleRef, backButtonRef, nextButtonRef, displayNameTextFieldRef, usernameTextFieldRef, aboutMeTextFieldRef,
     ) = createRefs()
 
     Icon(
@@ -73,6 +73,19 @@ fun RegisterUserDataScreen(
       textAlign = TextAlign.Left
     )
 
+    Text(
+      text = "Everything can be edited later",
+      modifier = Modifier.constrainAs(subtitleRef) {
+        start.linkTo(parent.start, 8.dp)
+        top.linkTo(titleRef.bottom)
+        end.linkTo(parent.end, 8.dp)
+
+        width = Dimension.fillToConstraints
+      },
+      fontSize = 14.sp,
+      textAlign = TextAlign.Left
+    )
+
     OutlinedTextField(
       value = displayName,
       onValueChange = onDisplayNameChange,
@@ -80,7 +93,7 @@ fun RegisterUserDataScreen(
         .constrainAs(displayNameTextFieldRef) {
           start.linkTo(parent.start, 8.dp)
           end.linkTo(parent.end, 8.dp)
-          top.linkTo(titleRef.bottom, 16.dp)
+          top.linkTo(subtitleRef.bottom, 16.dp)
 
           width = Dimension.fillToConstraints
         },
@@ -111,7 +124,7 @@ fun RegisterUserDataScreen(
           Text(text = "Error")
         }
         AnimatedVisibility(visible = true) {
-          Text(text = "This is how others will see you")
+          Text(text = "How others will see you")
         }
       },
       shape = RoundedCornerShape(16.dp),
@@ -158,6 +171,9 @@ fun RegisterUserDataScreen(
           )
         ) {
           Text(text = "Error")
+        }
+        AnimatedVisibility(visible = true) {
+          Text(text = "How others will find you")
         }
       },
       shape = RoundedCornerShape(16.dp),

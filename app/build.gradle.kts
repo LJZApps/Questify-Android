@@ -103,12 +103,9 @@ val composeDestinationsVersion by extra("1.10.2")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-  implementation(libs.androidx.datastore.core.android)
   ksp(libs.androidx.room.compiler)
 
   ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
-
-  implementation(libs.androidx.datastore.preferences.core)
 
   implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
   implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
@@ -122,6 +119,8 @@ dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.constraintlayout.compose)
   implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.datastore.core.android)
+  implementation(libs.androidx.datastore.preferences.core)
   implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -161,14 +160,15 @@ dependencies {
   implementation(libs.sentry.compose.android)
   implementation(libs.ui.graphics)
   implementation(libs.ui.tooling.preview)
-  implementation(libs.voyager.navigator)
-  implementation(libs.voyager.transitions)
-  implementation(libs.voyager.screenModel)
   implementation(libs.voyager.hilt)
+  implementation(libs.voyager.navigator)
+  implementation(libs.voyager.screenModel)
   implementation(libs.voyager.tabNavigator)
-  implementation(libs.voyager.bottomSheetNavigator)
-  implementation(libs.voyager.kodein)
-  implementation(libs.voyager.rxjava)
+  implementation(libs.voyager.transitions)
+  implementation(libs.voyager.koin)
+  implementation(project.dependencies.platform(libs.koin.bom))
+  implementation(libs.koin.core)
+  implementation(libs.koin.android)
 
   implementation("androidx.compose.material:material-icons-extended:$composeVersion")
   implementation("androidx.compose.ui:ui-tooling:$composeVersion")

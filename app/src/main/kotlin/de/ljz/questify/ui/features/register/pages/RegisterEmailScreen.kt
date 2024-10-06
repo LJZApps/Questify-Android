@@ -31,155 +31,145 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import de.ljz.questify.core.compose.UIModePreviews
+import cafe.adriel.voyager.core.screen.Screen
 
-@Composable
-fun RegisterEmailScreen(
-  onEmailChange: (String) -> Unit,
-  onNextPage: () -> Unit,
-  onBackButtonClick: () -> Unit,
-  email: String,
-  error: String
-) {
-  ConstraintLayout(
-    modifier = Modifier.fillMaxSize()
-  ) {
-    val (
-      iconRef, titleRef, backButtonRef, nextButtonRef, emailTextFieldRef
-    ) = createRefs()
+data class RegisterEmailScreen(
+  val onEmailChange: (String) -> Unit,
+  val onNextPage: () -> Unit,
+  val onBackButtonClick: () -> Unit,
+  val email: String,
+  val error: String
+) : Screen {
+ @Composable
+  override fun Content() {
+   ConstraintLayout(
+     modifier = Modifier.fillMaxSize()
+   ) {
+     val (
+       iconRef, titleRef, backButtonRef, nextButtonRef, emailTextFieldRef
+     ) = createRefs()
 
-    Icon(
-      imageVector = Icons.Outlined.Email,
-      contentDescription = null,
-      modifier = Modifier
-        .constrainAs(iconRef) {
-          top.linkTo(parent.top, 8.dp)
-          start.linkTo(parent.start, 8.dp)
-        }
-        .size(40.dp)
-    )
+     Icon(
+       imageVector = Icons.Outlined.Email,
+       contentDescription = null,
+       modifier = Modifier
+         .constrainAs(iconRef) {
+           top.linkTo(parent.top, 8.dp)
+           start.linkTo(parent.start, 8.dp)
+         }
+         .size(40.dp)
+     )
 
-    Text(
-      text = "Let's begin with your email",
-      modifier = Modifier.constrainAs(titleRef) {
-        start.linkTo(parent.start, 8.dp)
-        top.linkTo(iconRef.bottom, 8.dp)
-        end.linkTo(parent.end, 8.dp)
+     Text(
+       text = "Let's begin with your email",
+       modifier = Modifier.constrainAs(titleRef) {
+         start.linkTo(parent.start, 8.dp)
+         top.linkTo(iconRef.bottom, 8.dp)
+         end.linkTo(parent.end, 8.dp)
 
-        width = Dimension.fillToConstraints
-      },
-      fontSize = 24.sp,
-      fontWeight = FontWeight.Bold,
-      textAlign = TextAlign.Left
-    )
+         width = Dimension.fillToConstraints
+       },
+       fontSize = 24.sp,
+       fontWeight = FontWeight.Bold,
+       textAlign = TextAlign.Left
+     )
 
-    OutlinedTextField(
-      value = email,
-      onValueChange = onEmailChange,
-      modifier = Modifier
-        .constrainAs(emailTextFieldRef) {
-          start.linkTo(parent.start, 8.dp)
-          end.linkTo(parent.end, 8.dp)
-          top.linkTo(titleRef.bottom, 16.dp)
+     OutlinedTextField(
+       value = email,
+       onValueChange = onEmailChange,
+       modifier = Modifier
+         .constrainAs(emailTextFieldRef) {
+           start.linkTo(parent.start, 8.dp)
+           end.linkTo(parent.end, 8.dp)
+           top.linkTo(titleRef.bottom, 16.dp)
 
-          width = Dimension.fillToConstraints
-        },
-      label = {
-        Text(text = "Email")
-      },
-      isError = error.isNotEmpty(),
-      supportingText = {
-        AnimatedVisibility(
-          visible = error.isNotEmpty(),
-          enter = slideInVertically(
-            // Slide in from top
-            initialOffsetY = { -it },
-            animationSpec = tween(durationMillis = 250),
-          ),
-          exit = slideOutVertically(
-            // Slide out to top
-            targetOffsetY = { -it },
-            animationSpec = tween(durationMillis = 250)
-          )
-        ) {
-          Text(text = error)
-        }
-      },
-      shape = RoundedCornerShape(16.dp),
-      leadingIcon = {
-        error.isEmpty().let {
-          AnimatedVisibility(
-            visible = it,
-            enter = scaleIn(animationSpec = tween(250)),
-            exit = scaleOut(animationSpec = tween(250))
-            ) {
-            Icon(
-              imageVector = Icons.Filled.Email,
-              contentDescription = null
-            )
-          }
-          AnimatedVisibility(
-            visible = !it,
-            enter = scaleIn(animationSpec = tween(250)),
-            exit = scaleOut(animationSpec = tween(250))
-          ) {
-            Icon(
-              imageVector = Icons.Outlined.Error,
-              contentDescription = null
-            )
-          }
-        }
-      },
-      keyboardOptions = KeyboardOptions(
-        keyboardType = KeyboardType.Email,
-        imeAction = ImeAction.Next
-      ),
-      keyboardActions = KeyboardActions(
-        onNext = {
-          onNextPage()
-        }
-      ),
-      singleLine = true
-    )
+           width = Dimension.fillToConstraints
+         },
+       label = {
+         Text(text = "Email")
+       },
+       isError = error.isNotEmpty(),
+       supportingText = {
+         AnimatedVisibility(
+           visible = error.isNotEmpty(),
+           enter = slideInVertically(
+             // Slide in from top
+             initialOffsetY = { -it },
+             animationSpec = tween(durationMillis = 250),
+           ),
+           exit = slideOutVertically(
+             // Slide out to top
+             targetOffsetY = { -it },
+             animationSpec = tween(durationMillis = 250)
+           )
+         ) {
+           Text(text = error)
+         }
+       },
+       shape = RoundedCornerShape(16.dp),
+       leadingIcon = {
+         error.isEmpty().let {
+           AnimatedVisibility(
+             visible = it,
+             enter = scaleIn(animationSpec = tween(250)),
+             exit = scaleOut(animationSpec = tween(250))
+           ) {
+             Icon(
+               imageVector = Icons.Filled.Email,
+               contentDescription = null
+             )
+           }
+           AnimatedVisibility(
+             visible = !it,
+             enter = scaleIn(animationSpec = tween(250)),
+             exit = scaleOut(animationSpec = tween(250))
+           ) {
+             Icon(
+               imageVector = Icons.Outlined.Error,
+               contentDescription = null
+             )
+           }
+         }
+       },
+       keyboardOptions = KeyboardOptions(
+         keyboardType = KeyboardType.Email,
+         imeAction = ImeAction.Next
+       ),
+       keyboardActions = KeyboardActions(
+         onNext = {
+           onNextPage()
+         }
+       ),
+       singleLine = true
+     )
 
-    OutlinedButton(
-      onClick = {
-        onBackButtonClick()
-      },
-      modifier = Modifier
-        .constrainAs(backButtonRef) {
-          start.linkTo(parent.start, 8.dp)
-          bottom.linkTo(parent.bottom, 8.dp)
-        }
-        .imePadding()
-    ) {
-      Text(text = "Back")
-    }
+     OutlinedButton(
+       onClick = {
+         onBackButtonClick()
+       },
+       modifier = Modifier
+         .constrainAs(backButtonRef) {
+           start.linkTo(parent.start, 8.dp)
+           bottom.linkTo(parent.bottom, 8.dp)
+         }
+         .imePadding()
+     ) {
+       Text(text = "Back")
+     }
 
-    Button(
-      onClick = {
-        onNextPage()
-      },
-      modifier = Modifier
-        .constrainAs(nextButtonRef) {
-          end.linkTo(parent.end, 8.dp)
-          bottom.linkTo(parent.bottom, 8.dp)
-        }
-        .imePadding()
-    ) {
-      Text("Next")
-    }
+     Button(
+       onClick = {
+         onNextPage()
+       },
+       modifier = Modifier
+         .constrainAs(nextButtonRef) {
+           end.linkTo(parent.end, 8.dp)
+           bottom.linkTo(parent.bottom, 8.dp)
+         }
+         .imePadding()
+     ) {
+       Text("Next")
+     }
+   }
   }
-}
-
-@UIModePreviews
-@Composable
-fun RegisterEmailScreenPreview() {
-  RegisterEmailScreen(
-    onEmailChange = { },
-    onNextPage = { /*TODO*/ },
-    onBackButtonClick = { /*TODO*/ },
-    email = "",
-    error = ""
-  )
 }

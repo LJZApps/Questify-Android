@@ -1,7 +1,7 @@
 [versions]
 accompanistSwiperefresh = "0.35.0-alpha"
 activityKtx = "1.9.2"
-agp = "8.6.1"
+agp = "8.7.0"
 appcompat = "1.7.0"
 arrowStack = "1.2.4"
 billingKtx = "7.1.0"
@@ -15,11 +15,12 @@ gson = "2.11.0"
 hiltAndroid = "2.51.1"
 hiltAndroidCompiler = "2.51.1"
 hiltCompiler = "1.2.0"
-kotlin = "2.0.10"
+koinAndroid = "4.0.0"
+kotlin = "2.0.20"
 coreKtx = "1.13.1"
 kotlinStdlibJdk8 = "2.0.0"
 kotlinxCollectionsImmutable = "0.3.7"
-kotlinxSerializationJson = "1.6.3"
+kotlinxSerializationJson = "1.7.3"
 lifecycleRuntimeCompose = "2.8.6"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.2"
@@ -41,6 +42,7 @@ composeSettings = "2.4.0"
 composePlugin = "1.6.20-dev1673"
 voyager = "1.1.0-beta02"
 datastoreCoreAndroid = "1.1.1"
+koin-bom = "4.0.0"
 
 [libraries]
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
@@ -106,6 +108,9 @@ voyager-hilt = { module = "cafe.adriel.voyager:voyager-hilt", version.ref = "voy
 voyager-kodein = { module = "cafe.adriel.voyager:voyager-kodein", version.ref = "voyager" }
 voyager-rxjava = { module = "cafe.adriel.voyager:voyager-rxjava", version.ref = "voyager" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-bom" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

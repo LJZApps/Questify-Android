@@ -5,8 +5,8 @@ plugins {
   alias(libs.plugins.jetbrainsCompose) apply false
   alias(libs.plugins.compose.compiler) apply false
 
-  id("com.android.library") version "8.6.1" apply false
-  id("com.google.devtools.ksp") version "2.0.0-1.0.21" apply false
+  id("com.android.library") version "8.7.0" apply false
+  id("com.google.devtools.ksp") version "2.0.20-1.0.24" apply false
   id("com.google.gms.google-services") version "4.4.2" apply false
   id("com.google.firebase.crashlytics") version "3.0.2" apply false
   id("androidx.navigation.safeargs") version "2.8.1" apply false

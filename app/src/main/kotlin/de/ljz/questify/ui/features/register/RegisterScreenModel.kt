@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.register
 
+import android.util.Patterns
 import cafe.adriel.voyager.core.model.StateScreenModel
 import de.ljz.questify.data.api.responses.common.ErrorResponse
 import de.ljz.questify.data.repositories.RegisterRepository
@@ -35,7 +36,7 @@ class RegisterScreenModel @Inject constructor(
         onFailure(ErrorResponse("empty_email", "Email cannot be empty"))
       }
 
-      (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) -> {
+      (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) -> {
         _emailError.value = "Email is not valid"
         onFailure(ErrorResponse("invalid_email", "Email is not valid"))
       }

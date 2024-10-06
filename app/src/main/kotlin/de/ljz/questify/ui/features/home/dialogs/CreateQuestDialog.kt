@@ -14,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -21,14 +22,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 @Composable
 fun CreateQuestDialog(
   onDismiss: () -> Unit,
-  onConfirm: (String, String) -> Unit,
+  onConfirm: (CreateQuestDialogState) -> Unit,
 ) {
+  val _dialogState = MutableStateFlow(CreateQuestDialogState())
+  val state = _dialogState.asStateFlow().collectAsState().value
   val (title, setTitle) = remember { mutableStateOf("") }
   val (description, setDescription) = remember { mutableStateOf("") }
+
+
 
   Dialog(
     onDismissRequest = onDismiss,
@@ -43,7 +51,7 @@ fun CreateQuestDialog(
       Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Create quest")
         OutlinedTextField(
-          value = title,
+          value = state.title,
           onValueChange = setTitle,
           modifier = Modifier.fillMaxWidth(),
           label = {
@@ -53,8 +61,12 @@ fun CreateQuestDialog(
           singleLine = true
         )
         OutlinedTextField(
-          value = description,
-          onValueChange = setDescription,
+          value = state.desciption,
+          onValueChange = {newValue ->
+            _dialogState.update {
+              it.copy(desciption = newValue)
+            }
+          },
           modifier = Modifier.fillMaxWidth(),
           label = {
             Text(text = "Description")
@@ -71,7 +83,7 @@ fun CreateQuestDialog(
             Text("Dismiss")
           }
           Spacer(modifier = Modifier.width(8.dp))
-          TextButton(onClick = { onConfirm(title, description) }) {
+          TextButton(onClick = { onConfirm(state) }) {
             Text("Confirm")
           }
         }
@@ -85,7 +97,7 @@ fun CreateQuestDialog(
 private fun CreateQuestDialogPreview() {
   CreateQuestDialog(
     onDismiss = {},
-    onConfirm = {_, _ ->
+    onConfirm = {_ ->
 
     }
   )

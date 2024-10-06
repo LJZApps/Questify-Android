@@ -12,8 +12,26 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +55,7 @@ import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialog
 import de.ljz.questify.ui.features.home.pages.MapTab
 import de.ljz.questify.ui.features.home.pages.QuestTab
 import io.sentry.compose.SentryTraced
-import java.util.*
+import java.util.Date
 
 class HomeScreen : Screen {
 
@@ -61,33 +79,6 @@ class HomeScreen : Screen {
         done = false
       )
     )
-    var showMenu by remember { mutableStateOf(false) }
-
-    val icon = "icon"
-
-    val annotatedString = buildAnnotatedString {
-      append("0 ")
-
-      // Placeholder für das Icon
-      appendInlineContent(icon, "[icon]")
-    }
-
-    val inlineContent = mapOf(
-      icon to InlineTextContent(
-        // Höhe und Breite des Icons festlegen
-        placeholder = Placeholder(
-          width = 16.sp,
-          height = 16.sp,
-          placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-        ),
-        children = {
-          Icon(
-            imageVector = Icons.Default.Star,
-            contentDescription = null, // Beschreibung des Icons
-          )
-        }
-      )
-    )
 
     QuestifyTheme(
       transparentNavBar = false
@@ -98,66 +89,8 @@ class HomeScreen : Screen {
           val tabNavigator = LocalTabNavigator.current
 
           Scaffold(
-            topBar = {
-              TopAppBar(
-                title = {
-                  Text(text = "Questify")
-                },
-                actions = {
-                  TextButton(
-                    onClick = {
-                      // TODO
-                    }
-                  ) {
-                    Text(
-                      text = annotatedString,
-                      inlineContent = inlineContent,
-                    )
-                  }
-                  IconButton(
-                    onClick = {
-                      showMenu = !showMenu
-                    }
-                  ) {
-                    Image(
-                      painter = painterResource(id = R.drawable.no_profile_pic),
-                      contentDescription = null,
-                      modifier = Modifier.clip(CircleShape)
-                    )
-                  }
-
-                  DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false }
-                  ) {
-                    DropdownMenuItem(
-                      onClick = { /*TODO*/ },
-                      text = {
-                        Text(text = "Connect account")
-                      },
-                      leadingIcon = {
-                        Icon(
-                          imageVector = Icons.Outlined.ManageAccounts,
-                          contentDescription = "Profile"
-                        )
-                      }
-                    )
-                    DropdownMenuItem(
-                      onClick = { /*TODO*/ },
-                      text = {
-                        Text(text = "Settings")
-                      },
-                      leadingIcon = {
-                        Icon(imageVector = Icons.Outlined.Settings, contentDescription = "Settings")
-                      }
-                    )
-                  }
-                }
-              )
-            },
-            content = { innerPadding ->
-              CurrentTab()
-            },
+            topBar = { TopBar() },
+            content = { innerPadding -> CurrentTab() },
             floatingActionButton = {
               AnimatedVisibility(
                 visible = tabNavigator.current.options.index.toInt() == 0,
@@ -187,18 +120,105 @@ class HomeScreen : Screen {
           )
         }
 
-
         if (uiState.createQuestDialogVisible) {
           CreateQuestDialog(
             onDismiss = {
               screenModel.hideCreateQuestDialog()
             },
-            onConfirm = { _, _ ->
-              // TODO
+            onConfirm = { state ->
+
             }
           )
         }
       }
     }
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Composable
+  fun TopBar() {
+    var showMenu by remember { mutableStateOf(false) }
+
+    val icon = "icon"
+
+    val annotatedString = buildAnnotatedString {
+      append("0 ")
+
+      // Placeholder für das Icon
+      appendInlineContent(icon, "[icon]")
+    }
+
+    val inlineContent = mapOf(
+      icon to InlineTextContent(
+        // Höhe und Breite des Icons festlegen
+        placeholder = Placeholder(
+          width = 16.sp,
+          height = 16.sp,
+          placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+        ),
+        children = {
+          Icon(
+            imageVector = Icons.Default.Star,
+            contentDescription = null, // Beschreibung des Icons
+          )
+        }
+      )
+    )
+
+    TopAppBar(
+      title = {
+        Text(text = "Questify")
+      },
+      actions = {
+        TextButton(
+          onClick = {
+            // TODO
+          }
+        ) {
+          Text(
+            text = annotatedString,
+            inlineContent = inlineContent,
+          )
+        }
+        IconButton(
+          onClick = {
+            showMenu = !showMenu
+          }
+        ) {
+          Image(
+            painter = painterResource(id = R.drawable.no_profile_pic),
+            contentDescription = null,
+            modifier = Modifier.clip(CircleShape)
+          )
+        }
+
+        DropdownMenu(
+          expanded = showMenu,
+          onDismissRequest = { showMenu = false }
+        ) {
+          DropdownMenuItem(
+            onClick = { /*TODO*/ },
+            text = {
+              Text(text = "Connect account")
+            },
+            leadingIcon = {
+              Icon(
+                imageVector = Icons.Outlined.ManageAccounts,
+                contentDescription = "Profile"
+              )
+            }
+          )
+          DropdownMenuItem(
+            onClick = { /*TODO*/ },
+            text = {
+              Text(text = "Settings")
+            },
+            leadingIcon = {
+              Icon(imageVector = Icons.Outlined.Settings, contentDescription = "Settings")
+            }
+          )
+        }
+      }
+    )
   }
 }
