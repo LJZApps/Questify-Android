@@ -49,7 +49,7 @@ class LoginScreen : Screen {
   @OptIn(ExperimentalComposeUiApi::class)
   @Composable
   override fun Content() {
-    val navigator = LocalNavigator.currentOrThrow
+    /*val navigator = LocalNavigator.currentOrThrow
     val screenModel = getScreenModel<LoginScreenModel>()
     val loginAndRegisterUiState = screenModel.state.collectAsState().value
 
@@ -213,7 +213,7 @@ class LoginScreen : Screen {
           }
         }
       }
-    }
+    }*/
   }
 
 }

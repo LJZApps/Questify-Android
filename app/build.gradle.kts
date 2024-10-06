@@ -96,16 +96,12 @@ android {
   }
 }
 
-val okHttpVersion by extra("4.12.0")
 val roomVersion by extra("2.6.1")
 val composeVersion by extra("1.6.5")
-val composeDestinationsVersion by extra("1.10.2")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
   ksp(libs.androidx.room.compiler)
-
-  ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
 
   implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
   implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
@@ -133,8 +129,6 @@ dependencies {
   implementation(libs.androidx.room.rxjava2)
   implementation(libs.androidx.room.rxjava3)
   implementation(libs.arrow.core)
-  implementation(libs.billing.ktx)
-  implementation(libs.compose.destinations.core)
   implementation(libs.composeSettings.ui)
   implementation(libs.composeSettings.ui.extended)
   implementation(libs.converter.moshi)

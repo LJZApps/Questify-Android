@@ -3,6 +3,7 @@ package de.ljz.questify.data.database.models.entities.quests
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 import java.util.Date
 
 @Entity(tableName = "main_quests")

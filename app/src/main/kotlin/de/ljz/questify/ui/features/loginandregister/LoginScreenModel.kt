@@ -1,29 +1,39 @@
 package de.ljz.questify.ui.features.loginandregister
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.coroutine.ContextProvider
 import de.ljz.questify.data.repositories.LoginRepository
 import de.ljz.questify.data.sharedpreferences.SessionManager
+import de.ljz.questify.ui.features.home.HomeUiState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class LoginScreenModel @Inject constructor(
   private val loginRepository: LoginRepository,
   private val contextProvider: ContextProvider,
   private val sessionManager: SessionManager,
-) : StateScreenModel<LoginAndRegisterUiState>(LoginAndRegisterUiState()) {
+) : ViewModel() {
+  private val _uiState = MutableStateFlow(LoginAndRegisterUiState())
+  val uiState: StateFlow<LoginAndRegisterUiState> = _uiState.asStateFlow()
 
   fun checkData(
     onSuccess: () -> Unit
   ) {
-    val username = mutableState.value.loginState.username
-    val password = mutableState.value.loginState.password
+    val username = _uiState.value.loginState.username
+    val password = _uiState.value.loginState.password
 
     when {
       username.isEmpty() -> {
-        mutableState.update {
+        _uiState.update {
           it.copy(
             loginState = it.loginState.copy(
               loginErrorMessage = "Username cannot be empty",
@@ -34,7 +44,7 @@ class LoginScreenModel @Inject constructor(
       }
 
       password.isEmpty() -> {
-        mutableState.update {
+        _uiState.update {
           it.copy(
             loginState = it.loginState.copy(
               loginErrorMessage = "Password cannot be empty",
@@ -45,7 +55,7 @@ class LoginScreenModel @Inject constructor(
       }
 
       password.length < 8 -> {
-        mutableState.update {
+        _uiState.update {
           it.copy(
             loginState = it.loginState.copy(
               loginErrorMessage = "Password must be at least 8 characters long",
@@ -65,21 +75,21 @@ class LoginScreenModel @Inject constructor(
   private fun login(
     onSuccess: () -> Unit
   ) {
-    mutableState.update {
+    _uiState.update {
       it.copy(
         isLoading = true,
         loadingText = "Logging in"
       )
     }
-    screenModelScope.launch {
+    viewModelScope.launch {
       loginRepository.login(
-        username = mutableState.value.loginState.username,
-        password = mutableState.value.loginState.password,
+        username = _uiState.value.loginState.username,
+        password = _uiState.value.loginState.password,
         onSuccess = {
           if (it.success) {
             sessionManager.setAccessToken(it.accessToken)
 
-            mutableState.update {
+            _uiState.update {
               it.copy(
                 loadingText = "Done! Now setup your app."
               )
@@ -89,7 +99,7 @@ class LoginScreenModel @Inject constructor(
           }
         },
         onError = {errorResponse ->
-          mutableState.update {
+          _uiState.update {
             it.copy(
               isLoading = false,
               loadingText = "",
@@ -105,7 +115,7 @@ class LoginScreenModel @Inject constructor(
   }
 
   fun dismissDialog() {
-    mutableState.update {
+    _uiState.update {
       it.copy(
         loginState = it.loginState.copy(
           isLoginErrorShown = false,
@@ -116,7 +126,7 @@ class LoginScreenModel @Inject constructor(
   }
 
   fun updatePassword(password: String) {
-    mutableState.update {
+    _uiState.update {
       it.copy(
         loginState = it.loginState.copy(
           password = password
@@ -126,7 +136,7 @@ class LoginScreenModel @Inject constructor(
   }
 
   fun updateUsername(username: String) {
-    mutableState.update {
+    _uiState.update {
       it.copy(
         loginState = it.loginState.copy(
           username = username
@@ -136,7 +146,7 @@ class LoginScreenModel @Inject constructor(
   }
 
   fun togglePasswordVisibility() {
-    mutableState.update {
+    _uiState.update {
       it.copy(
         loginState = it.loginState.copy(
           passwordVisible = !it.loginState.passwordVisible

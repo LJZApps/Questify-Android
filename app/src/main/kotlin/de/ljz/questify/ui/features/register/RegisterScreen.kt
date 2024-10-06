@@ -134,7 +134,7 @@ fun RegisterScreenPager(
 
       3 -> RegisterDoneScreen(
         onNextPage = {
-          navigator.push(HomeScreen())
+          //navigator.push(HomeScreen())
         }
       )
     }

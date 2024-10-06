@@ -13,94 +13,74 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.hilt.getScreenModel
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.akinci.androidtemplate.ui.navigation.animations.FadeInOutAnimation
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
-import de.ljz.questify.ui.navigation.GetStartedNavGraph
+import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.util.bounceClick
 import io.sentry.compose.SentryTraced
 
-class GetStartedMainScreen : Screen {
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun GetStartedMainScreen(
+  viewModel: GetStartedViewModel = hiltViewModel(),
+  navController: NavHostController
+) {
+  SentryTraced(tag = "get_started_main") {
+    QuestifyTheme {
+      ConstraintLayout(
+        modifier = Modifier
+          .fillMaxSize()
+      ) {
+        val (
+          titleRef,
+          buttonRef,
+        ) = createRefs()
 
-  @OptIn(ExperimentalComposeUiApi::class)
-  @Composable
-  override fun Content() {
-    val navigator = LocalNavigator.currentOrThrow
-    val screenModel = getScreenModel<GetStartedViewModel>()
-
-    SentryTraced(tag = "get_started_main") {
-      QuestifyTheme {
-        ConstraintLayout(
+        Text(
+          text = "Are you ready for your next Adventure?",
           modifier = Modifier
-            .fillMaxSize()
+            .constrainAs(titleRef) {
+              top.linkTo(parent.top)
+              start.linkTo(parent.start, 16.dp)
+              end.linkTo(parent.end, 16.dp)
+              bottom.linkTo(buttonRef.top)
+
+              width = Dimension.fillToConstraints
+            },
+          textAlign = TextAlign.Center,
+          fontSize = 32.sp,
+          fontFamily = FontFamily(
+            Font(R.font.arcade)
+          )
+        )
+
+        Button(
+          onClick = {
+            viewModel.setSetupDone()
+            navController.navigate(Home)
+          },
+          modifier = Modifier
+            .bounceClick()
+            .constrainAs(buttonRef) {
+              start.linkTo(parent.start, 10.dp)
+              end.linkTo(parent.end, 10.dp)
+              bottom.linkTo(parent.bottom)
+
+              width = Dimension.fillToConstraints
+            }
         ) {
-          val (
-            titleRef,
-            buttonRef,
-          ) = createRefs()
-
           Text(
-            text = "PLACEHOLDER",
-            modifier = Modifier
-              .constrainAs(titleRef) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start, 16.dp)
-                end.linkTo(parent.end, 16.dp)
-                bottom.linkTo(buttonRef.top)
-
-                width = Dimension.fillToConstraints
-              },
-            textAlign = TextAlign.Center,
-            fontSize = 32.sp,
+            "Yes, let's start!",
             fontFamily = FontFamily(
-              Font(R.font.tine5_regular)
+              Font(R.font.arcade)
             )
           )
-
-          Button(
-            onClick = {
-              navigator.push(GetStartedChooserScreen())
-              //navigator.navigate(GetStartedChooserScreenDestination)
-            },
-            modifier = Modifier
-              .bounceClick()
-              .constrainAs(buttonRef) {
-                start.linkTo(parent.start, 10.dp)
-                end.linkTo(parent.end, 10.dp)
-                bottom.linkTo(parent.bottom)
-
-                width = Dimension.fillToConstraints
-              }
-          ) {
-            Text(
-              "Yes",
-              fontFamily = FontFamily(
-                Font(R.font.tine5_regular)
-              )
-            )
-          }
         }
       }
     }
   }
-
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@GetStartedNavGraph(start = true)
-@Destination(style = FadeInOutAnimation::class)
-@Composable
-fun GetStartedMain(
-  modifier: Modifier = Modifier,
-  navigator: DestinationsNavigator,
-  //vm: GetStartedViewModel = hiltViewModel(),
-) {
-
 }

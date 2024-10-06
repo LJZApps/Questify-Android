@@ -2,30 +2,25 @@ package de.ljz.questify.core.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.SlideTransition
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.getstarted.pages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.pages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
+import de.ljz.questify.ui.navigation.GetStartedMain
+import de.ljz.questify.ui.navigation.home.Home
+import de.ljz.questify.ui.navigation.home.HomeBottomRoutes
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
 
@@ -37,8 +32,6 @@ class ActivityMain : AppCompatActivity() {
     super.onCreate(savedInstanceState)
 
     setContent {
-      val snackbarHostState = remember { SnackbarHostState() }
-      val navController = rememberNavController()
       val vm: AppViewModel by viewModels()
 
       val appUiState by vm.uiState.collectAsState()
@@ -59,14 +52,21 @@ class ActivityMain : AppCompatActivity() {
         Surface (
           modifier = Modifier.fillMaxSize()
         ) {
-          Navigator(
-            //            navigate to Home              navigate to GetStarted
-            screen = if (isSetupDone) HomeScreen() else GetStartedMainScreen()
-          ) { navigator ->
-            SlideTransition(
-              navigator = navigator,
-              disposeScreenAfterTransitionEnd = true
-            )
+          val navController = rememberNavController()
+          NavHost(navController = navController, startDestination = if (isSetupDone) GetStartedMain else GetStartedMain) {
+            composable<GetStartedMain> {
+              GetStartedMainScreen(
+                navController = navController
+              )
+            }
+            composable<Home>{
+              HomeScreen(
+                navController = navController
+              )
+            }
+            dialog<HomeBottomRoutes.RepeatingQuests> {
+
+            }
           }
         }
       }

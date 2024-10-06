@@ -111,7 +111,7 @@ class LoginAndRegisterScreen : Screen {
 
             OutlinedButton(
               onClick = {
-                navigator.push(LoginScreen())
+                //navigator.push(LoginScreen())
               },
               modifier = Modifier.constrainAs(loginButtonRef) {
                 bottom.linkTo(parent.bottom, 12.dp)
