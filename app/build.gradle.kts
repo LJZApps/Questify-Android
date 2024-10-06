@@ -159,10 +159,7 @@ dependencies {
   implementation(libs.voyager.screenModel)
   implementation(libs.voyager.tabNavigator)
   implementation(libs.voyager.transitions)
-  implementation(libs.voyager.koin)
-  implementation(project.dependencies.platform(libs.koin.bom))
-  implementation(libs.koin.core)
-  implementation(libs.koin.android)
+  implementation(libs.androidx.core.splashscreen)
 
   implementation("androidx.compose.material:material-icons-extended:$composeVersion")
   implementation("androidx.compose.ui:ui-tooling:$composeVersion")
