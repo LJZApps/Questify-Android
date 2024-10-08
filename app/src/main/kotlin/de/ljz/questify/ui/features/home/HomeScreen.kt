@@ -10,27 +10,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Badge
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,8 +55,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,7 +64,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.get
 import androidx.navigation.navOptions
 import de.ljz.questify.R
-import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialog
 import de.ljz.questify.ui.navigation.home.Home
@@ -82,7 +72,6 @@ import de.ljz.questify.ui.navigation.home.HomeBottomRoutes
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import java.util.Date
 
 
 @OptIn(
@@ -100,18 +89,6 @@ fun HomeScreen(
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
   val snackbarHostState = remember { SnackbarHostState() }
-  val scope = rememberCoroutineScope()
-  val quests = listOf(
-    MainQuestEntity(
-      id = 0,
-      title = "test",
-      points = 20,
-      createdAt = Date(),
-      lockDeletion = false,
-      archived = false,
-      done = false
-    )
-  )
 
   QuestifyTheme(
     transparentNavBar = false
@@ -175,79 +152,6 @@ fun HomeScreen(
                   .padding(8.dp)
                   .fillMaxWidth()
               )
-
-              /* NavigationDrawerItem(
-                 label = { Text(text = "Achievements") },
-                 icon = {
-                   Icon(
-                     imageVector = Icons.Filled.EmojiEvents,
-                     contentDescription = "Achievements"
-                   )
-                 },
-                 selected = false,
-                 onClick = {
-                   navController.navigate("achievements")
-                 },
-                 modifier = Modifier.padding(vertical = 4.dp)
-               )
-
-               // Kategorie: Soziale Funktionen
-               // Coming Soon Hinweis für das Social-Feature
-
-
-               // Kategorie: Gesundheit und Einstellungen
-               Text(
-                 text = "Health & Settings",
-                 style = MaterialTheme.typography.titleMedium,
-                 modifier = Modifier.padding(vertical = 8.dp)
-               )
-
-               NavigationDrawerItem(
-                 label = { Text(text = "Health Stats") },
-                 icon = {
-                   Icon(
-                     imageVector = Icons.Filled.FitnessCenter,
-                     contentDescription = "Health Stats"
-                   )
-                 },
-                 selected = false,
-                 onClick = {
-                   navController.navigate("health_stats")
-                 },
-                 modifier = Modifier.padding(vertical = 4.dp)
-               )
-
-               NavigationDrawerItem(
-                 label = { Text(text = "Settings") },
-                 icon = {
-                   Icon(
-                     imageVector = Icons.Filled.Settings,
-                     contentDescription = "Settings"
-                   )
-                 },
-                 selected = false,
-                 onClick = {
-                   navController.navigate("settings")
-                 },
-                 modifier = Modifier.padding(vertical = 4.dp)
-               )
-
-               // Logout Button
-               HorizontalDivider()
-               NavigationDrawerItem(
-                 label = { Text(text = "Logout", color = Color.Red) },
-                 icon = {
-                   Icon(
-                     imageVector = Icons.Filled.ExitToApp,
-                     contentDescription = "Logout"
-                   )
-                 },
-                 selected = false,
-                 onClick = {
-                   // Logout-Logik hier
-                 },
-                 modifier = Modifier.padding(vertical = 4.dp)
-               )*/
             }
           }
         }
@@ -263,19 +167,13 @@ fun HomeScreen(
             }
           },
           floatingActionButton = {
-            /*AnimatedVisibility(
-              visible = ,
-              enter = scaleIn(),
-              exit = scaleOut(),
-            ) {
-              FloatingActionButton(
-                onClick = {
-                  viewModel.showCreateQuestDialog()
-                }
-              ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+            FloatingActionButton(
+              onClick = {
+                viewModel.showCreateQuestDialog()
               }
-            }*/
+            ) {
+              Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+            }
           },
           bottomBar = {
             NavigationBar(

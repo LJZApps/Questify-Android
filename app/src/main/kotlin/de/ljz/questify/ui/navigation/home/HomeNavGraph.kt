@@ -14,7 +14,8 @@ import de.ljz.questify.ui.features.home.pages.RepeatingQuestsPage
 @Composable
 fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeScreenModel) {
 
-  NavHost(navController = navController,
+  NavHost(
+    navController = navController,
     startDestination = HomeBottomRoutes.TodayQuests,
     enterTransition = {
       // you can change whatever you want transition
@@ -23,7 +24,8 @@ fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeScreenMo
     exitTransition = {
       // you can change whatever you want transition
       ExitTransition.None
-    }) {
+    }
+  ) {
 
     composable<HomeBottomRoutes.TodayQuests> {
       AllQuestsPage(viewModel = viewModel)
