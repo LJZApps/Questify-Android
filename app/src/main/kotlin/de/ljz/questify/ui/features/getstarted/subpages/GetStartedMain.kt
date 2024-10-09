@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.getstarted.pages
+package de.ljz.questify.ui.features.getstarted.subpages
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button

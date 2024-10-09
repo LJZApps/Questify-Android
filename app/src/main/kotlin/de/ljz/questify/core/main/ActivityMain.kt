@@ -12,9 +12,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.getstarted.pages.GetStartedMainScreen
+import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
@@ -24,7 +23,6 @@ import org.koin.android.ext.android.inject
 
 class ActivityMain : AppCompatActivity() {
 
-  @OptIn(ExperimentalVoyagerApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 

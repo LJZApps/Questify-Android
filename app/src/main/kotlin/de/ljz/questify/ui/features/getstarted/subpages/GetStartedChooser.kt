@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.getstarted.pages
+package de.ljz.questify.ui.features.getstarted.subpages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

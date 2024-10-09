@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.home.pages
+package de.ljz.questify.ui.features.home.subpages
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

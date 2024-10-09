@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LoginScreenModel(
+class LoginViewModel(
   private val loginRepository: LoginRepository,
   private val contextProvider: ContextProvider,
   private val sessionManager: SessionManager,

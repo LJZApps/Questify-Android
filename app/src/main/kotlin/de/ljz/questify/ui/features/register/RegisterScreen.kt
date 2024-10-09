@@ -13,17 +13,15 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavHostController
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.register.pages.RegisterDoneScreen
-import de.ljz.questify.ui.features.register.pages.RegisterEmailScreen
-import de.ljz.questify.ui.features.register.pages.RegisterPasswordScreen
-import de.ljz.questify.ui.features.register.pages.RegisterUserDataScreen
+import de.ljz.questify.ui.features.register.subpages.RegisterDoneScreen
+import de.ljz.questify.ui.features.register.subpages.RegisterEmailScreen
+import de.ljz.questify.ui.features.register.subpages.RegisterPasswordScreen
+import de.ljz.questify.ui.features.register.subpages.RegisterUserDataScreen
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -31,8 +29,6 @@ fun RegisterScreen(
   navHostController: NavHostController,
   viewModel: RegisterViewModel = koinViewModel()
 ) {
-  val navigator = LocalNavigator.currentOrThrow
-
   val uiState = viewModel.uiState.collectAsState().value
   val pagerState = rememberPagerState(pageCount = { uiState.pageCount })
 
@@ -43,7 +39,7 @@ fun RegisterScreen(
           pagerState = pagerState,
           screenModel = viewModel,
           uiState = uiState,
-          navigator = navigator
+          navController = navHostController
         )
       }
     }
@@ -55,7 +51,7 @@ fun RegisterScreenPager(
   pagerState: PagerState,
   screenModel: RegisterViewModel,
   uiState: RegisterUiState,
-  navigator: Navigator
+  navController: NavHostController
 ) {
   val keyboardController = LocalSoftwareKeyboardController.current
   val scope = rememberCoroutineScope()
@@ -82,7 +78,7 @@ fun RegisterScreenPager(
             }
           )
         },
-        onBackButtonClick = navigator::pop,
+        onBackButtonClick = navController::popBackStack,
         email = uiState.email,
         error = emailError
       )

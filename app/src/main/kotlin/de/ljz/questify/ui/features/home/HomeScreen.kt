@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Star
@@ -75,7 +74,8 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(
-  ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
+  ExperimentalComposeUiApi::class,
+  ExperimentalMaterial3Api::class,
   ExperimentalSerializationApi::class
 )
 @Composable
@@ -130,7 +130,7 @@ fun HomeScreen(
                 label = { Text(text = "Your Quests") },
                 icon = {
                   Icon(
-                    imageVector = Icons.Filled.List,
+                    imageVector = Icons.AutoMirrored.Filled.List,
                     contentDescription = "Your Quests"
                   )
                 },

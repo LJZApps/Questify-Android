@@ -15,7 +15,7 @@ plugins {
   id("kotlinx-serialization")
   kotlin("plugin.serialization")
 
-  id("io.sentry.android.gradle") version "4.5.1"
+  id("io.sentry.android.gradle") version "4.11.0"
 }
 
 android {
@@ -107,10 +107,8 @@ dependencies {
   implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
   implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
 
-  implementation(platform(libs.arrow.stack))
   implementation(platform(libs.sentry.bom))
 
-  implementation(libs.accompanist.swiperefresh)
   implementation(libs.androidx.activity.compose)
   implementation(libs.androidx.activity.ktx)
   implementation(libs.androidx.appcompat)
@@ -128,7 +126,6 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation(libs.androidx.room.rxjava2)
   implementation(libs.androidx.room.rxjava3)
-  implementation(libs.arrow.core)
   implementation(libs.composeSettings.ui)
   implementation(libs.composeSettings.ui.extended)
   implementation(libs.converter.moshi)
@@ -153,10 +150,6 @@ dependencies {
   implementation(libs.sentry.compose.android)
   implementation(libs.ui.graphics)
   implementation(libs.ui.tooling.preview)
-  implementation(libs.voyager.navigator)
-  implementation(libs.voyager.screenModel)
-  implementation(libs.voyager.tabNavigator)
-  implementation(libs.voyager.transitions)
   implementation(libs.androidx.core.splashscreen)
 
   implementation("androidx.compose.material:material-icons-extended:$composeVersion")
