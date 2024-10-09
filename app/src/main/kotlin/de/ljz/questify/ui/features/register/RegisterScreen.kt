@@ -22,7 +22,6 @@ import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(

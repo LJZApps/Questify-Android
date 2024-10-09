@@ -16,7 +16,10 @@ class ThemeViewModel(
   var themeBehavior = ThemeBehavior.SYSTEM_STANDARD
 
   private val _themeColor = appSettingsRepository.getAppSettings().map { it.themeColor }
-  var themeColor = ThemeColor.ORANGE
+  var themeColor = ThemeColor.RED
+
+  private val _dynamicColorEnabled = appSettingsRepository.getAppSettings().map { it.dynamicThemeColors }
+  var dynamicColorsEnabled = false
 
   init {
     viewModelScope.launch {
@@ -28,6 +31,12 @@ class ThemeViewModel(
     viewModelScope.launch {
       _themeColor.collectLatest {
         themeColor = it
+      }
+    }
+
+    viewModelScope.launch {
+      _dynamicColorEnabled.collectLatest {
+        dynamicColorsEnabled = it
       }
     }
   }

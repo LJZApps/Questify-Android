@@ -1,15 +1,21 @@
 package de.ljz.questify.ui.ds.theme
 
 import android.app.Activity
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import org.koin.androidx.compose.koinViewModel
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun QuestifyTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
@@ -17,8 +23,14 @@ fun QuestifyTheme(
   vm: ThemeViewModel = koinViewModel(),
   content: @Composable () -> Unit,
 ) {
+  val isDynamicColorEnabled = vm.dynamicColorsEnabled
 
-  val colorScheme = getColorScheme(vm.themeBehavior, vm.themeColor, isSystemInDarkTheme())
+  var colorScheme = getColorScheme(vm.themeBehavior, vm.themeColor, isSystemInDarkTheme())
+
+  if (isDynamicColorEnabled) {
+    colorScheme = if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(LocalContext.current)
+  }
+
 
   val view = LocalView.current
   if (!view.isInEditMode) {
