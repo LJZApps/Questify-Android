@@ -57,7 +57,6 @@ import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -72,6 +71,7 @@ import de.ljz.questify.ui.navigation.home.HomeBottomRoutes
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(
@@ -81,7 +81,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @Composable
 fun HomeScreen(
   navController: NavHostController,
-  viewModel: HomeScreenModel = hiltViewModel()
+  viewModel: HomeViewModel = koinViewModel()
 ) {
   val bottomNavController = rememberNavController()
   val uiState = viewModel.uiState.collectAsState().value

@@ -2,11 +2,8 @@ package de.ljz.questify.data.repositories
 
 import de.ljz.questify.data.api.core.ApiClient
 import de.ljz.questify.data.api.responses.login.LoginResponse
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PostRepository @Inject constructor(
+class PostRepository (
   private val apiClient: ApiClient
 ) : BaseRepository() {
 

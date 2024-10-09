@@ -1,18 +1,14 @@
 package de.ljz.questify.ui.features.home
 
 import androidx.lifecycle.ViewModel
-import cafe.adriel.voyager.core.model.StateScreenModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.coroutine.ContextProvider
 import de.ljz.questify.data.sharedpreferences.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeScreenModel @Inject constructor(
+class HomeViewModel(
   private val contextProvider: ContextProvider,
   private val sessionManager: SessionManager
 ) : ViewModel() {

@@ -17,18 +17,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.getstarted.components.ChooserCard
 import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.compose.SentryTraced
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GetStartedChooserScreen(
-  viewModel: GetStartedViewModel = hiltViewModel(),
+  viewModel: GetStartedViewModel = koinViewModel(),
   navController: NavController
 ) {
   SentryTraced(tag = "get_started_chooser") {

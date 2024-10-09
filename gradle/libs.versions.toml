@@ -1,7 +1,7 @@
 [versions]
 accompanistSwiperefresh = "0.35.0-alpha"
 activityKtx = "1.9.2"
-agp = "8.7.0"
+agp = "8.6.1"
 appcompat = "1.7.0"
 arrowStack = "1.2.4"
 constraintlayoutCompose = "1.0.1"
@@ -11,12 +11,13 @@ datastorePreferencesCore = "1.1.1"
 firebaseAnalytics = "22.1.2"
 firebaseCrashlytics = "19.2.0"
 gson = "2.11.0"
-hiltAndroid = "2.51.1"
+hiltAndroid = "2.52"
 hiltAndroidCompiler = "2.51.1"
 hiltCompiler = "1.2.0"
+koin = "4.0.0"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
-kotlinStdlibJdk8 = "2.0.0"
+kotlinStdlibJdk8 = "2.0.20"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinxSerializationJson = "1.7.3"
 lifecycleRuntimeCompose = "2.8.6"
@@ -71,6 +72,11 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltA
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinStdlibJdk8" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }

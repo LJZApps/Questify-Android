@@ -3,9 +3,7 @@ package de.ljz.questify.data.emitter
 import de.ljz.questify.data.api.core.NetworkError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Singleton
 
-@Singleton
 class NetworkErrorEmitter {
 
   private val _channel = MutableStateFlow<NetworkError?>(null)

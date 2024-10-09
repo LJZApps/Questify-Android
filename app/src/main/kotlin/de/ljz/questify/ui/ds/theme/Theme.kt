@@ -8,15 +8,15 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun QuestifyTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   transparentNavBar: Boolean = true,
+  vm: ThemeViewModel = koinViewModel(),
   content: @Composable () -> Unit,
 ) {
-  val vm: ThemeViewModel = hiltViewModel()
 
   val colorScheme = getColorScheme(vm.themeBehavior, vm.themeColor, isSystemInDarkTheme())
 

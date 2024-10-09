@@ -4,9 +4,7 @@ import androidx.annotation.StringRes
 import de.ljz.questify.data.shared.StringWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Singleton
 
-@Singleton
 class ErrorEmitter {
 
     private val _channel = MutableStateFlow<StringWrapper?>(null)

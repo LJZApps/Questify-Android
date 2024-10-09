@@ -7,13 +7,11 @@ plugins {
   alias(libs.plugins.jetbrainsCompose)
   alias(libs.plugins.compose.compiler)
 
-  id("com.google.devtools.ksp")
   id("com.google.firebase.crashlytics")
   id("kotlin-parcelize")
   id("androidx.navigation.safeargs.kotlin")
   id("kotlin-kapt")
   id("com.google.gms.google-services")
-  id("com.google.dagger.hilt.android")
   id("kotlinx-serialization")
   kotlin("plugin.serialization")
 
@@ -39,10 +37,6 @@ android {
 
   kotlinOptions {
     jvmTarget = "19"
-  }
-
-  ksp {
-    arg("compose-destinations.codeGenPackageName", "de.ljz.questify.ui.navigation")
   }
 
   defaultConfig {
@@ -101,7 +95,14 @@ val composeVersion by extra("1.6.5")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-  ksp(libs.androidx.room.compiler)
+  implementation(project.dependencies.platform(libs.koin.bom))
+  implementation(libs.koin.core)
+  implementation(libs.koin.androidx.compose)
+  implementation(libs.koin.android)
+  implementation(libs.koin.androidx.navigation)
+
+  //noinspection KaptUsageInsteadOfKsp
+  kapt(libs.androidx.room.compiler)
 
   implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
   implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
@@ -117,7 +118,6 @@ dependencies {
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.datastore.core.android)
   implementation(libs.androidx.datastore.preferences.core)
-  implementation(libs.androidx.hilt.navigation.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -135,7 +135,6 @@ dependencies {
   implementation(libs.firebase.analytics)
   implementation(libs.firebase.crashlytics)
   implementation(libs.gson)
-  implementation(libs.hilt.android)
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.kotlinx.collections.immutable)
   implementation(libs.kotlinx.serialization.json)
@@ -154,7 +153,6 @@ dependencies {
   implementation(libs.sentry.compose.android)
   implementation(libs.ui.graphics)
   implementation(libs.ui.tooling.preview)
-  implementation(libs.voyager.hilt)
   implementation(libs.voyager.navigator)
   implementation(libs.voyager.screenModel)
   implementation(libs.voyager.tabNavigator)
@@ -169,8 +167,6 @@ dependencies {
   implementation("io.ktor:ktor-client-core:$ktorVersion")
   implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
-  kapt(libs.androidx.hilt.compiler)
-  kapt(libs.hilt.android.compiler)
   annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }
 

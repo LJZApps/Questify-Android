@@ -8,14 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import de.ljz.questify.ui.features.home.HomeScreenModel
+import de.ljz.questify.ui.features.home.HomeViewModel
 
 @Composable
 fun AllQuestsPage(
   modifier: Modifier = Modifier,
-  viewModel: HomeScreenModel
+  viewModel: HomeViewModel
 ) {
   Column(
     modifier = modifier.fillMaxSize()

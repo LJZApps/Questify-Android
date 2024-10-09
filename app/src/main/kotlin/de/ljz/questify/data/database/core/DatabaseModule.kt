@@ -1,23 +1,13 @@
 package de.ljz.questify.data.database.core
 
-import android.content.Context
 import androidx.room.Room
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
-
-  @Singleton
-  @Provides
-  fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-    return Room.databaseBuilder(
-      context = context,
+val databaseModule = module {
+  single<AppDatabase> {
+    Room.databaseBuilder(
+      context = androidContext(),
       klass = AppDatabase::class.java,
       name = "questify_db"
     ).build()

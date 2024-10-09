@@ -7,12 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import de.ljz.questify.ui.features.home.HomeScreenModel
+import de.ljz.questify.ui.features.home.HomeViewModel
 
 @Composable
 fun RepeatingQuestsPage(
   modifier: Modifier = Modifier,
-  viewModel: HomeScreenModel
+  viewModel: HomeViewModel
 ) {
   ConstraintLayout(
     modifier = modifier.fillMaxSize()

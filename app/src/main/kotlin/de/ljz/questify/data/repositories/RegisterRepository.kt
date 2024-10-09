@@ -7,11 +7,8 @@ import de.ljz.questify.data.api.responses.common.ErrorResponse
 import de.ljz.questify.data.api.responses.register.ValidateEmailResponse
 import de.ljz.questify.data.mapper.ErrorResponseMapper
 import de.ljz.questify.util.suspendMessageOnException
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RegisterRepository @Inject constructor(
+class RegisterRepository(
   private val apiClient: ApiClient
 ) : BaseRepository() {
   suspend fun validateEmail(

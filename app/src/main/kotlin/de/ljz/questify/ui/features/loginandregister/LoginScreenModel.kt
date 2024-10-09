@@ -2,22 +2,16 @@ package de.ljz.questify.ui.features.loginandregister
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.coroutine.ContextProvider
 import de.ljz.questify.data.repositories.LoginRepository
 import de.ljz.questify.data.sharedpreferences.SessionManager
-import de.ljz.questify.ui.features.home.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class LoginScreenModel @Inject constructor(
+class LoginScreenModel(
   private val loginRepository: LoginRepository,
   private val contextProvider: ContextProvider,
   private val sessionManager: SessionManager,
@@ -98,7 +92,7 @@ class LoginScreenModel @Inject constructor(
             onSuccess.invoke()
           }
         },
-        onError = {errorResponse ->
+        onError = { errorResponse ->
           _uiState.update {
             it.copy(
               isLoading = false,

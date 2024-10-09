@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.home.HomeScreenModel
+import de.ljz.questify.ui.features.home.HomeViewModel
 import de.ljz.questify.ui.features.home.pages.AllQuestsPage
 import de.ljz.questify.ui.features.home.pages.RepeatingQuestsPage
 
 @Composable
-fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeScreenModel) {
+fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeViewModel) {
 
   NavHost(
     navController = navController,
