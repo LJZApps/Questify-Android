@@ -26,7 +26,6 @@ fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeViewMode
       ExitTransition.None
     }
   ) {
-
     composable<HomeBottomRoutes.TodayQuests> {
       AllQuestsPage(viewModel = viewModel)
     }
@@ -38,7 +37,5 @@ fun HomeBottomNavGraph(navController: NavHostController, viewModel: HomeViewMode
       }
       RepeatingQuestsPage(viewModel = viewModel)
     }
-
   }
-
 }
