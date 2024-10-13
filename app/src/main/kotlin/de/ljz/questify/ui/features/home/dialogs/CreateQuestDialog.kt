@@ -14,7 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,21 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 @Composable
 fun CreateQuestDialog(
   onDismiss: () -> Unit,
   onConfirm: (CreateQuestDialogState) -> Unit,
 ) {
-  val _dialogState = MutableStateFlow(CreateQuestDialogState())
-  val state = _dialogState.asStateFlow().collectAsState().value
-  val (title, setTitle) = remember { mutableStateOf("") }
-  val (description, setDescription) = remember { mutableStateOf("") }
-
-
+  // Verwende remember für den Zustand des Dialogs
+  val dialogState = remember { mutableStateOf(CreateQuestDialogState()) }
 
   Dialog(
     onDismissRequest = onDismiss,
@@ -51,26 +43,22 @@ fun CreateQuestDialog(
       Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "Create quest")
         OutlinedTextField(
-          value = state.title,
-          onValueChange = setTitle,
-          modifier = Modifier.fillMaxWidth(),
-          label = {
-            Text(text = "Title")
+          value = dialogState.value.title,
+          onValueChange = { newValue ->
+            dialogState.value = dialogState.value.copy(title = newValue)
           },
+          modifier = Modifier.fillMaxWidth(),
+          label = { Text(text = "Title") },
           shape = RoundedCornerShape(16.dp),
           singleLine = true
         )
         OutlinedTextField(
-          value = state.desciption,
-          onValueChange = {newValue ->
-            _dialogState.update {
-              it.copy(desciption = newValue)
-            }
+          value = dialogState.value.description, // Tippfehler 'desciption' korrigiert
+          onValueChange = { newValue ->
+            dialogState.value = dialogState.value.copy(description = newValue)
           },
           modifier = Modifier.fillMaxWidth(),
-          label = {
-            Text(text = "Description")
-          },
+          label = { Text(text = "Description") },
           shape = RoundedCornerShape(16.dp),
           singleLine = true
         )
@@ -83,7 +71,7 @@ fun CreateQuestDialog(
             Text("Dismiss")
           }
           Spacer(modifier = Modifier.width(8.dp))
-          TextButton(onClick = { onConfirm(state) }) {
+          TextButton(onClick = { onConfirm(dialogState.value) }) {
             Text("Confirm")
           }
         }
@@ -91,6 +79,7 @@ fun CreateQuestDialog(
     }
   }
 }
+
 
 @Preview
 @Composable

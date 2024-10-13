@@ -7,7 +7,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -16,22 +18,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.get
-import androidx.navigation.navOptions
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialog
+import de.ljz.questify.ui.features.quests.components.CreateQuestBottomSheet
+import de.ljz.questify.ui.features.quests.navigation.BottomNavigationRoute
+import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
-import de.ljz.questify.ui.navigation.home.HomeBottomRoutes
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.serializer
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class,
+  ExperimentalMaterial3Api::class
+)
 @Composable
 fun QuestScreen(
   drawerState: DrawerState,
@@ -41,6 +50,13 @@ fun QuestScreen(
 
   val bottomNavController = rememberNavController()
   val snackbarHostState = remember { SnackbarHostState() }
+  val sheetState = rememberModalBottomSheetState()
+
+  val bottomNavRoutes = listOf(
+    BottomNavigationRoute("All Quests", QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
+    BottomNavigationRoute("Today Quests", QuestBottomRoutes.TodayQuests, Icons.Default.Today),
+    BottomNavigationRoute("Repeating Quests", QuestBottomRoutes.RepeatingQuests, Icons.Default.Repeat)
+  )
 
   Scaffold(
     topBar = { TopBar(uiState.userPoints, drawerState) },
@@ -55,7 +71,7 @@ fun QuestScreen(
     floatingActionButton = {
       FloatingActionButton(
         onClick = {
-          viewModel.addPoint()
+          viewModel.showQuestCreation()
         }
       ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = null)
@@ -66,55 +82,30 @@ fun QuestScreen(
         modifier = Modifier.fillMaxWidth()
       ) {
         val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+        val currentDestination = navBackStackEntry?.destination
 
-        NavigationBarItem(
-          label = {
-            Text(text = "All Quests")
-          },
-          icon = {
-            Icon(Icons.AutoMirrored.Default.List, contentDescription = null)
-          },
-          selected = currentRoute == HomeBottomRoutes.TodayQuests.serializer().descriptor.serialName,
-          onClick = {
-            if (bottomNavController.currentDestination?.route != HomeBottomRoutes.TodayQuests.serializer().descriptor.serialName)
-              bottomNavController.navigate(
-                HomeBottomRoutes.TodayQuests,
-                navOptions = navOptions {
-                  popUpTo(bottomNavController.graph[HomeBottomRoutes.RepeatingQuests].id) {
-                    inclusive = true
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
+        bottomNavRoutes.forEach { bottomNavRoute ->
+          NavigationBarItem(
+            icon = { Icon(bottomNavRoute.icon, contentDescription = bottomNavRoute.name) },
+            label = { Text(bottomNavRoute.name) },
+            selected = currentDestination?.route == bottomNavRoute.route::class.serializer().descriptor.serialName,
+            onClick = {
+              bottomNavController.navigate(bottomNavRoute.route) {
+                // Pop up to the start destination of the graph to
+                // avoid building up a large stack of destinations
+                // on the back stack as users select items
+                popUpTo(bottomNavController.graph.findStartDestination().id) {
+                  saveState = true
                 }
-              )
-          },
-        )
-
-        NavigationBarItem(
-          label = {
-            Text(text = "Repeating Quests")
-          },
-          icon = {
-            Icon(Icons.Default.Repeat, contentDescription = null)
-          },
-          selected = currentRoute == HomeBottomRoutes.RepeatingQuests.serializer().descriptor.serialName,
-          onClick = {
-            if (bottomNavController.currentDestination?.route != HomeBottomRoutes.RepeatingQuests.serializer().descriptor.serialName)
-              bottomNavController.navigate(
-                HomeBottomRoutes.RepeatingQuests,
-                navOptions = navOptions {
-                  popUpTo(bottomNavController.graph[HomeBottomRoutes.RepeatingQuests].id) {
-                    inclusive = true
-                    saveState = true
-                  }
-                  launchSingleTop = true
-                  restoreState = true
-                }
-              )
-          },
-        )
+                // Avoid multiple copies of the same destination when
+                // reselecting the same item
+                launchSingleTop = true
+                // Restore state when reselecting a previously selected item
+                restoreState = true
+              }
+            }
+          )
+        }
       }
     },
     snackbarHost = {
@@ -123,4 +114,12 @@ fun QuestScreen(
       )
     }
   )
+
+  if (uiState.createQuestSheetOpen) {
+    CreateQuestBottomSheet (
+      sheetState = sheetState,
+      onDismiss = viewModel::hideQuestCreation,
+      onConfirm = {}
+    )
+  }
 }

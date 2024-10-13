@@ -3,6 +3,7 @@ package de.ljz.questify.ui.features.quests
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.ljz.questify.data.repositories.AppUserRepository
+import de.ljz.questify.data.shared.Points
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,12 +26,27 @@ class QuestsViewModel(
         }
       }
     }
+  }
 
+  fun showQuestCreation() {
+    _uiState.update {
+      it.copy(
+        createQuestSheetOpen = true
+      )
+    }
+  }
+
+  fun hideQuestCreation() {
+    _uiState.update {
+      it.copy(
+        createQuestSheetOpen = false
+      )
+    }
   }
 
   fun addPoint () {
     viewModelScope.launch {
-      appUserRepository.addPoint()
+      appUserRepository.addPoint(Points.EASY)
     }
   }
 }

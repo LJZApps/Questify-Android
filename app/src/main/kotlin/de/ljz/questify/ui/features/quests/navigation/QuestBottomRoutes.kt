@@ -1,9 +1,12 @@
-package de.ljz.questify.ui.navigation.home
+package de.ljz.questify.ui.features.quests.navigation
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-object HomeBottomRoutes {
+object QuestBottomRoutes {
+  @Serializable
+  object AllQuests
+
   @Serializable
   object TodayQuests
 

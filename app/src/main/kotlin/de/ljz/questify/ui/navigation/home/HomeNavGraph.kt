@@ -7,17 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.home.HomeViewModel
-import de.ljz.questify.ui.features.home.subpages.AllQuestsPage
-import de.ljz.questify.ui.features.home.subpages.RepeatingQuestsPage
+import de.ljz.questify.ui.features.quests.subpages.TodayQuestsPage
+import de.ljz.questify.ui.features.quests.subpages.RepeatingQuestsPage
 import de.ljz.questify.ui.features.quests.QuestsViewModel
+import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.subpages.AllQuestsPage
 
 @Composable
 fun HomeBottomNavGraph(navController: NavHostController, viewModel: QuestsViewModel) {
 
   NavHost(
     navController = navController,
-    startDestination = HomeBottomRoutes.TodayQuests,
+    startDestination = QuestBottomRoutes.AllQuests,
     enterTransition = {
       // you can change whatever you want transition
       EnterTransition.None
@@ -27,16 +28,16 @@ fun HomeBottomNavGraph(navController: NavHostController, viewModel: QuestsViewMo
       ExitTransition.None
     }
   ) {
-    composable<HomeBottomRoutes.TodayQuests> {
-      AllQuestsPage(viewModel = viewModel)
+    composable<QuestBottomRoutes.TodayQuests> {
+      TodayQuestsPage(viewModel = viewModel)
     }
 
-    composable<HomeBottomRoutes.RepeatingQuests> {
-      BackHandler {
-        // Spezifisches Verhalten, wenn der Benutzer zurück navigiert
-        navController.popBackStack()
-      }
+    composable<QuestBottomRoutes.RepeatingQuests> {
       RepeatingQuestsPage(viewModel = viewModel)
+    }
+
+    composable<QuestBottomRoutes.AllQuests> {
+      AllQuestsPage(viewModel = viewModel)
     }
   }
 }

@@ -58,18 +58,6 @@ fun HomeScreen(
           }
         }
       }
-
-
-      if (uiState.createQuestDialogVisible) {
-        CreateQuestDialog(
-          onDismiss = {
-            viewModel.hideCreateQuestDialog()
-          },
-          onConfirm = { state ->
-
-          }
-        )
-      }
     }
   }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import de.ljz.questify.data.shared.Points
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,9 +24,9 @@ class AppUserDataStore(
 
   val data: Flow<AppUser> = dataStore.data
 
-  suspend fun addPoint() {
+  suspend fun addPoint(points: Points) {
     dataStore.updateData { currentUser ->
-      currentUser.copy(points = currentUser.points + 1)
+      currentUser.copy(points = currentUser.points + points.points)
     }
   }
 }
