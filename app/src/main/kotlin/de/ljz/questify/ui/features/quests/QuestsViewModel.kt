@@ -1,23 +1,19 @@
-package de.ljz.questify.ui.features.home
+package de.ljz.questify.ui.features.quests
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.ljz.questify.core.coroutine.ContextProvider
 import de.ljz.questify.data.repositories.AppUserRepository
-import de.ljz.questify.data.sharedpreferences.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-  private val contextProvider: ContextProvider,
-  private val sessionManager: SessionManager,
+class QuestsViewModel(
   private val appUserRepository: AppUserRepository
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow(HomeUiState())
-  val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+  private val _uiState = MutableStateFlow(QuestsUIState())
+  val uiState: StateFlow<QuestsUIState> = _uiState.asStateFlow()
 
   init {
     viewModelScope.launch {
@@ -32,20 +28,9 @@ class HomeViewModel(
 
   }
 
-  fun showCreateQuestDialog() {
-    _uiState.update {
-      it.copy(
-        createQuestDialogVisible = true
-      )
+  fun addPoint () {
+    viewModelScope.launch {
+      appUserRepository.addPoint()
     }
   }
-
-  fun hideCreateQuestDialog() {
-    _uiState.update {
-      it.copy(
-        createQuestDialogVisible = false
-      )
-    }
-  }
-
 }

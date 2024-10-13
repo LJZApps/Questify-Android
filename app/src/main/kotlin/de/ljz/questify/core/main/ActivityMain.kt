@@ -20,6 +20,7 @@ import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
 import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 
 class ActivityMain : AppCompatActivity() {
 
@@ -30,7 +31,7 @@ class ActivityMain : AppCompatActivity() {
 
     setContent {
       splashScreen.setKeepOnScreenCondition { true }
-      val vm: AppViewModel by inject()
+      val vm: AppViewModel = koinViewModel()
 
       val appUiState by vm.uiState.collectAsState()
       val isSetupDone = appUiState.isSetupDone

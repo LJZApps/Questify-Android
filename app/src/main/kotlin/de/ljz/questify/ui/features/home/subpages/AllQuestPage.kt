@@ -9,27 +9,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import de.ljz.questify.ui.features.home.HomeViewModel
+import de.ljz.questify.ui.features.quests.QuestsViewModel
 
 @Composable
 fun AllQuestsPage(
   modifier: Modifier = Modifier,
-  viewModel: HomeViewModel
+  viewModel: QuestsViewModel
 ) {
   Column(
     modifier = modifier.fillMaxSize()
   ) {
-    Text(
-      text = viewModel.uiState.collectAsState().value.questItemCount.toString(),
-      textAlign = TextAlign.Center
-    )
 
-    Button(
-      onClick = viewModel::increaseQuestCount,
-    ) {
-      Text(
-        text = "Increase quest count",
-        textAlign = TextAlign.Center
-      )
-    }
   }
 }

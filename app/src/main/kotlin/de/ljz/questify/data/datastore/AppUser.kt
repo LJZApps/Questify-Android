@@ -25,6 +25,9 @@ data class AppUser(
 
     @SerialName(value = "profile_picture_url")
     val profilePictureUrl: String = "",
+
+    @SerialName(value = "points")
+    val points: Int = 0,
 )
 
 object AppUserSerializer : Serializer<AppUser> {

@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.ds.theme
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -15,7 +16,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import org.koin.androidx.compose.koinViewModel
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun QuestifyTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
@@ -27,6 +27,7 @@ fun QuestifyTheme(
 
   var colorScheme = getColorScheme(vm.themeBehavior, vm.themeColor, isSystemInDarkTheme())
 
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
   if (isDynamicColorEnabled) {
     colorScheme = if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(LocalContext.current)
   }
