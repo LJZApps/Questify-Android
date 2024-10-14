@@ -58,10 +58,10 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(properties.getProperty("STORE_FILE"))
-            storePassword = properties.getProperty("STORE_PASSWORD")
-            keyAlias = properties.getProperty("KEY_ALIAS")
-            keyPassword = properties.getProperty("KEY_PASSWORD")
+            storeFile = file(localProperties.getProperty("STORE_FILE"))
+            storePassword = localProperties.getProperty("STORE_PASSWORD")
+            keyAlias = localProperties.getProperty("KEY_ALIAS")
+            keyPassword = localProperties.getProperty("KEY_PASSWORD")
         }
     }
 
@@ -77,7 +77,7 @@ android {
             buildConfigField(
                 "String",
                 "BASE_URL",
-                "\"${properties.getProperty("RELEASE_BASE_URL")}\""
+                "\"${localProperties.getProperty("RELEASE_BASE_URL")}\""
             )
         }
 
@@ -87,7 +87,7 @@ android {
             buildConfigField(
                 "String",
                 "BASE_URL",
-                "\"${properties.getProperty("DEBUG_BASE_URL")}\""
+                "\"${localProperties.getProperty("DEBUG_BASE_URL")}\""
             )
         }
 
