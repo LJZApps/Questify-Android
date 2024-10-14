@@ -11,42 +11,42 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class QuestsViewModel(
-  private val appUserRepository: AppUserRepository
+    private val appUserRepository: AppUserRepository
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow(QuestsUIState())
-  val uiState: StateFlow<QuestsUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(QuestsUIState())
+    val uiState: StateFlow<QuestsUIState> = _uiState.asStateFlow()
 
-  init {
-    viewModelScope.launch {
-      appUserRepository.getAppUser().collect { appUser ->
-        _uiState.update { currentState ->
-          currentState.copy(
-            userPoints = appUser.points
-          )
+    init {
+        viewModelScope.launch {
+            appUserRepository.getAppUser().collect { appUser ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        userPoints = appUser.points
+                    )
+                }
+            }
         }
-      }
     }
-  }
 
-  fun showQuestCreation() {
-    _uiState.update {
-      it.copy(
-        createQuestSheetOpen = true
-      )
+    fun showQuestCreation() {
+        _uiState.update {
+            it.copy(
+                createQuestSheetOpen = true
+            )
+        }
     }
-  }
 
-  fun hideQuestCreation() {
-    _uiState.update {
-      it.copy(
-        createQuestSheetOpen = false
-      )
+    fun hideQuestCreation() {
+        _uiState.update {
+            it.copy(
+                createQuestSheetOpen = false
+            )
+        }
     }
-  }
 
-  fun addPoint () {
-    viewModelScope.launch {
-      appUserRepository.addPoint(Points.EASY)
+    fun addPoint() {
+        viewModelScope.launch {
+            appUserRepository.addPoint(Points.EASY)
+        }
     }
-  }
 }

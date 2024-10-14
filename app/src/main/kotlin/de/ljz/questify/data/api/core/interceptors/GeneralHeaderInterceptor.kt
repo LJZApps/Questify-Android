@@ -17,7 +17,10 @@ class GeneralHeaderInterceptor(private val context: Context) : Interceptor {
             addHeader("X-APPLICATION-ID", 1.toString())
             addHeader("X-APPLICATION-VERSION", BuildConfig.VERSION_NAME)
             addHeader("X-APPLICATION-BUILD", BuildConfig.VERSION_CODE.toString())
-            addHeader("X-DEVICE-ID", Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID))
+            addHeader(
+                "X-DEVICE-ID",
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            )
             addHeader("X-DEVICE-MANUFACTURER", Build.MANUFACTURER)
             addHeader("X-DEVICE-MODEL", Build.MODEL)
             addHeader("X-OPERATING-SYSTEM", "Android")

@@ -12,29 +12,29 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-  private val sessionManager: SessionManager,
-  private val appSettingsRepository: AppSettingsRepository
+    private val sessionManager: SessionManager,
+    private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
 
-  private val _uiState = MutableStateFlow(AppUiState())
-  val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(AppUiState())
+    val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
-  private val _isAppReady = MutableStateFlow(false)
-  val isAppReady: StateFlow<Boolean> = _isAppReady.asStateFlow()
+    private val _isAppReady = MutableStateFlow(false)
+    val isAppReady: StateFlow<Boolean> = _isAppReady.asStateFlow()
 
-  init {
-    viewModelScope.launch {
-      // Vorherige Abfrage der App-Einstellungen vor der UI-Update
-      val appSettings = appSettingsRepository.getAppSettings().firstOrNull()
+    init {
+        viewModelScope.launch {
+            // Vorherige Abfrage der App-Einstellungen vor der UI-Update
+            val appSettings = appSettingsRepository.getAppSettings().firstOrNull()
 
-      _uiState.update {
-        it.copy(
-          isLoggedIn = sessionManager.isAccessTokenPresent(),
-          isSetupDone = appSettings?.setupDone == true
-        )
-      }
+            _uiState.update {
+                it.copy(
+                    isLoggedIn = sessionManager.isAccessTokenPresent(),
+                    isSetupDone = appSettings?.setupDone == true
+                )
+            }
 
-      _isAppReady.update { true }
+            _isAppReady.update { true }
+        }
     }
-  }
 }

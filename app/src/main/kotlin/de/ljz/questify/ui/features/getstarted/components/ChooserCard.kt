@@ -13,39 +13,39 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ChooserCard (
-  title: String,
-  text: String,
-  onClick: () -> Unit,
-  modifier: Modifier = Modifier
+fun ChooserCard(
+    title: String,
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-  ElevatedCard (
-    onClick = onClick,
-    modifier = modifier
-  ) {
-    Column (
-      modifier = Modifier.padding(5.dp)
+    ElevatedCard(
+        onClick = onClick,
+        modifier = modifier
     ) {
-      Text(
-        text = title,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold
-      )
-      Text(
-        text = text,
-      )
+        Column(
+            modifier = Modifier.padding(5.dp)
+        ) {
+            Text(
+                text = title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = text,
+            )
+        }
     }
-  }
 }
 
 @Preview
 @Composable
 private fun ChooserCardPreview() {
-  Surface {
-    ChooserCard(
-      title = "Login / Create account",
-      text = "A account is required for syncing your quests",
-      onClick = { /*TODO*/ }
-    )
-  }
+    Surface {
+        ChooserCard(
+            title = "Login / Create account",
+            text = "A account is required for syncing your quests",
+            onClick = { /*TODO*/ }
+        )
+    }
 }

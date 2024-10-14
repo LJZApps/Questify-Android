@@ -12,140 +12,140 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-  private val loginRepository: LoginRepository,
-  private val contextProvider: ContextProvider,
-  private val sessionManager: SessionManager,
+    private val loginRepository: LoginRepository,
+    private val contextProvider: ContextProvider,
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow(LoginAndRegisterUiState())
-  val uiState: StateFlow<LoginAndRegisterUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(LoginAndRegisterUiState())
+    val uiState: StateFlow<LoginAndRegisterUiState> = _uiState.asStateFlow()
 
-  fun checkData(
-    onSuccess: () -> Unit
-  ) {
-    val username = _uiState.value.loginState.username
-    val password = _uiState.value.loginState.password
+    fun checkData(
+        onSuccess: () -> Unit
+    ) {
+        val username = _uiState.value.loginState.username
+        val password = _uiState.value.loginState.password
 
-    when {
-      username.isEmpty() -> {
-        _uiState.update {
-          it.copy(
-            loginState = it.loginState.copy(
-              loginErrorMessage = "Username cannot be empty",
-              isLoginErrorShown = true,
-            )
-          )
-        }
-      }
-
-      password.isEmpty() -> {
-        _uiState.update {
-          it.copy(
-            loginState = it.loginState.copy(
-              loginErrorMessage = "Password cannot be empty",
-              isLoginErrorShown = true,
-            )
-          )
-        }
-      }
-
-      password.length < 8 -> {
-        _uiState.update {
-          it.copy(
-            loginState = it.loginState.copy(
-              loginErrorMessage = "Password must be at least 8 characters long",
-              isLoginErrorShown = true,
-            )
-          )
-        }
-      }
-
-      else -> {
-        // Daten sind gültig, Login-Prozess starten
-        login(onSuccess)
-      }
-    }
-  }
-
-  private fun login(
-    onSuccess: () -> Unit
-  ) {
-    _uiState.update {
-      it.copy(
-        isLoading = true,
-        loadingText = "Logging in"
-      )
-    }
-    viewModelScope.launch {
-      loginRepository.login(
-        username = _uiState.value.loginState.username,
-        password = _uiState.value.loginState.password,
-        onSuccess = {
-          if (it.success) {
-            sessionManager.setAccessToken(it.accessToken)
-
-            _uiState.update {
-              it.copy(
-                loadingText = "Done! Now setup your app."
-              )
+        when {
+            username.isEmpty() -> {
+                _uiState.update {
+                    it.copy(
+                        loginState = it.loginState.copy(
+                            loginErrorMessage = "Username cannot be empty",
+                            isLoginErrorShown = true,
+                        )
+                    )
+                }
             }
 
-            onSuccess.invoke()
-          }
-        },
-        onError = { errorResponse ->
-          _uiState.update {
-            it.copy(
-              isLoading = false,
-              loadingText = "",
-              loginState = it.loginState.copy(
-                loginErrorMessage = errorResponse.errorMessage.toString(),
-                isLoginErrorShown = true,
-              )
-            )
-          }
+            password.isEmpty() -> {
+                _uiState.update {
+                    it.copy(
+                        loginState = it.loginState.copy(
+                            loginErrorMessage = "Password cannot be empty",
+                            isLoginErrorShown = true,
+                        )
+                    )
+                }
+            }
+
+            password.length < 8 -> {
+                _uiState.update {
+                    it.copy(
+                        loginState = it.loginState.copy(
+                            loginErrorMessage = "Password must be at least 8 characters long",
+                            isLoginErrorShown = true,
+                        )
+                    )
+                }
+            }
+
+            else -> {
+                // Daten sind gültig, Login-Prozess starten
+                login(onSuccess)
+            }
         }
-      )
     }
-  }
 
-  fun dismissDialog() {
-    _uiState.update {
-      it.copy(
-        loginState = it.loginState.copy(
-          isLoginErrorShown = false,
-          loginErrorMessage = ""
-        )
-      )
-    }
-  }
+    private fun login(
+        onSuccess: () -> Unit
+    ) {
+        _uiState.update {
+            it.copy(
+                isLoading = true,
+                loadingText = "Logging in"
+            )
+        }
+        viewModelScope.launch {
+            loginRepository.login(
+                username = _uiState.value.loginState.username,
+                password = _uiState.value.loginState.password,
+                onSuccess = {
+                    if (it.success) {
+                        sessionManager.setAccessToken(it.accessToken)
 
-  fun updatePassword(password: String) {
-    _uiState.update {
-      it.copy(
-        loginState = it.loginState.copy(
-          password = password
-        )
-      )
-    }
-  }
+                        _uiState.update {
+                            it.copy(
+                                loadingText = "Done! Now setup your app."
+                            )
+                        }
 
-  fun updateUsername(username: String) {
-    _uiState.update {
-      it.copy(
-        loginState = it.loginState.copy(
-          username = username
-        )
-      )
+                        onSuccess.invoke()
+                    }
+                },
+                onError = { errorResponse ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            loadingText = "",
+                            loginState = it.loginState.copy(
+                                loginErrorMessage = errorResponse.errorMessage.toString(),
+                                isLoginErrorShown = true,
+                            )
+                        )
+                    }
+                }
+            )
+        }
     }
-  }
 
-  fun togglePasswordVisibility() {
-    _uiState.update {
-      it.copy(
-        loginState = it.loginState.copy(
-          passwordVisible = !it.loginState.passwordVisible
-        )
-      )
+    fun dismissDialog() {
+        _uiState.update {
+            it.copy(
+                loginState = it.loginState.copy(
+                    isLoginErrorShown = false,
+                    loginErrorMessage = ""
+                )
+            )
+        }
     }
-  }
+
+    fun updatePassword(password: String) {
+        _uiState.update {
+            it.copy(
+                loginState = it.loginState.copy(
+                    password = password
+                )
+            )
+        }
+    }
+
+    fun updateUsername(username: String) {
+        _uiState.update {
+            it.copy(
+                loginState = it.loginState.copy(
+                    username = username
+                )
+            )
+        }
+    }
+
+    fun togglePasswordVisibility() {
+        _uiState.update {
+            it.copy(
+                loginState = it.loginState.copy(
+                    passwordVisible = !it.loginState.passwordVisible
+                )
+            )
+        }
+    }
 }

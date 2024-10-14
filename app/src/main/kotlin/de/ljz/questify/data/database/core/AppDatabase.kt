@@ -9,15 +9,15 @@ import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
 import de.ljz.questify.data.database.models.entities.quests.SubQuestEntity
 
 @Database(
-  entities = [
-    // Quests
-    MainQuestEntity::class,
-    SubQuestEntity::class
-  ],
-  version = 1,
-  exportSchema = false
+    entities = [
+        // Quests
+        MainQuestEntity::class,
+        SubQuestEntity::class
+    ],
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters(AppDatabaseConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-  abstract fun getQuestDao(): QuestDao
+    abstract fun getQuestDao(): QuestDao
 }

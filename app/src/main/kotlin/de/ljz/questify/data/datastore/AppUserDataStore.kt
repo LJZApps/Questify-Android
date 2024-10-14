@@ -12,21 +12,21 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 class AppUserDataStore(
-  private val context: Context
+    private val context: Context
 ) {
-  private val dataStore: DataStore<AppUser> = DataStoreFactory.create(
-    serializer = AppUserSerializer,
-    corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },
-    migrations = listOf(),
-    scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-    produceFile = { File(context.filesDir, "datastore/app_user.json") }
-  )
+    private val dataStore: DataStore<AppUser> = DataStoreFactory.create(
+        serializer = AppUserSerializer,
+        corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },
+        migrations = listOf(),
+        scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+        produceFile = { File(context.filesDir, "datastore/app_user.json") }
+    )
 
-  val data: Flow<AppUser> = dataStore.data
+    val data: Flow<AppUser> = dataStore.data
 
-  suspend fun addPoint(points: Points) {
-    dataStore.updateData { currentUser ->
-      currentUser.copy(points = currentUser.points + points.points)
+    suspend fun addPoint(points: Points) {
+        dataStore.updateData { currentUser ->
+            currentUser.copy(points = currentUser.points + points.points)
+        }
     }
-  }
 }

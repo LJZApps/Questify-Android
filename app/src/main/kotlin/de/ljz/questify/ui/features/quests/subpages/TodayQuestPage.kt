@@ -8,12 +8,12 @@ import de.ljz.questify.ui.features.quests.QuestsViewModel
 
 @Composable
 fun TodayQuestsPage(
-  modifier: Modifier = Modifier,
-  viewModel: QuestsViewModel
+    modifier: Modifier = Modifier,
+    viewModel: QuestsViewModel
 ) {
-  Column(
-    modifier = modifier.fillMaxSize()
-  ) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
 
-  }
+    }
 }

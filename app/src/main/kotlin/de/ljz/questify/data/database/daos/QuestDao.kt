@@ -10,26 +10,26 @@ import de.ljz.questify.data.database.models.entities.quests.SubQuestEntity
 @Dao
 interface QuestDao {
 
-  @Transaction
-  @Query("SELECT * FROM main_quests WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%' ORDER BY title, description DESC")
-  suspend fun searchQuests(query: String): List<MainQuestEntity>
+    @Transaction
+    @Query("SELECT * FROM main_quests WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%' ORDER BY title, description DESC")
+    suspend fun searchQuests(query: String): List<MainQuestEntity>
 
-  @Transaction
-  @Query("SELECT * FROM sub_quests WHERE main_quest_id = :mainQuestId")
-  suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
+    @Transaction
+    @Query("SELECT * FROM sub_quests WHERE main_quest_id = :mainQuestId")
+    suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
 
-  @Upsert
-  suspend fun upsertMainQuest(value: MainQuestEntity)
+    @Upsert
+    suspend fun upsertMainQuest(value: MainQuestEntity)
 
-  @Upsert
-  suspend fun upsertSubQuest(value: SubQuestEntity)
+    @Upsert
+    suspend fun upsertSubQuest(value: SubQuestEntity)
 
-  @Upsert
-  suspend fun upsertQuests(value: List<MainQuestEntity>)
+    @Upsert
+    suspend fun upsertQuests(value: List<MainQuestEntity>)
 
-  @Upsert
-  suspend fun upsertSubQuests(value: List<SubQuestEntity>)
+    @Upsert
+    suspend fun upsertSubQuests(value: List<SubQuestEntity>)
 
-  @Query("DELETE FROM sub_quests WHERE main_quest_id = :mainQuestId")
-  suspend fun clearSubQuestsForMainQuest(mainQuestId: Int)
+    @Query("DELETE FROM sub_quests WHERE main_quest_id = :mainQuestId")
+    suspend fun clearSubQuestsForMainQuest(mainQuestId: Int)
 }

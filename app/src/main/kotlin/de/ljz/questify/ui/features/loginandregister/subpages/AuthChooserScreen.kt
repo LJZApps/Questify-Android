@@ -28,99 +28,99 @@ import io.sentry.compose.SentryTraced
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginAndRegisterScreen(
-  navController: NavHostController
+    navController: NavHostController
 ) {
-  QuestifyTheme {
-    SentryTraced(tag = "auth_chooser_screen") {
-      Surface {
-        ConstraintLayout(
-          modifier = Modifier
-            .fillMaxSize()
-        ) {
-          val (
-            iconRef,
-            titleRef,
-            descriptionRef,
-            registerButtonRef,
-            loginButtonRef,
-          ) = createRefs()
+    QuestifyTheme {
+        SentryTraced(tag = "auth_chooser_screen") {
+            Surface {
+                ConstraintLayout(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    val (
+                        iconRef,
+                        titleRef,
+                        descriptionRef,
+                        registerButtonRef,
+                        loginButtonRef,
+                    ) = createRefs()
 
-          Icon(
-            imageVector = Icons.Outlined.AccountCircle,
-            contentDescription = null,
-            modifier = Modifier
-              .constrainAs(iconRef) {
-                top.linkTo(parent.top, 12.dp)
-                start.linkTo(parent.start, 12.dp)
-              }
-              .size(40.dp)
-          )
+                    Icon(
+                        imageVector = Icons.Outlined.AccountCircle,
+                        contentDescription = null,
+                        modifier = Modifier
+                          .constrainAs(iconRef) {
+                            top.linkTo(parent.top, 12.dp)
+                            start.linkTo(parent.start, 12.dp)
+                          }
+                          .size(40.dp)
+                    )
 
-          Text(
-            text = "Let's start with your account",
-            modifier = Modifier.constrainAs(titleRef) {
-              top.linkTo(iconRef.bottom, 6.dp)
-              start.linkTo(parent.start, 12.dp)
-              end.linkTo(parent.end, 12.dp)
+                    Text(
+                        text = "Let's start with your account",
+                        modifier = Modifier.constrainAs(titleRef) {
+                            top.linkTo(iconRef.bottom, 6.dp)
+                            start.linkTo(parent.start, 12.dp)
+                            end.linkTo(parent.end, 12.dp)
 
-              width = Dimension.fillToConstraints
-            },
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Left
-          )
+                            width = Dimension.fillToConstraints
+                        },
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Left
+                    )
 
-          Text(
-            text = "Easily create a new account or log in with your existing one to get started right away.",
-            modifier = Modifier.constrainAs(descriptionRef) {
-              top.linkTo(titleRef.bottom, 6.dp)
-              start.linkTo(parent.start, 12.dp)
-              end.linkTo(parent.end, 12.dp)
+                    Text(
+                        text = "Easily create a new account or log in with your existing one to get started right away.",
+                        modifier = Modifier.constrainAs(descriptionRef) {
+                            top.linkTo(titleRef.bottom, 6.dp)
+                            start.linkTo(parent.start, 12.dp)
+                            end.linkTo(parent.end, 12.dp)
 
-              width = Dimension.fillToConstraints
-            },
-            style = TextStyle(
-              fontSize = 16.sp
-            ),
-          )
+                            width = Dimension.fillToConstraints
+                        },
+                        style = TextStyle(
+                            fontSize = 16.sp
+                        ),
+                    )
 
-          Button(
-            onClick = {
-              //navigator.push(RegisterScreen())
-              //navigator.navigate(RegisterScreenDestination)
-            },
-            modifier = Modifier.constrainAs(registerButtonRef) {
-              bottom.linkTo(loginButtonRef.top, 8.dp)
-              start.linkTo(parent.start, 12.dp)
-              end.linkTo(parent.end, 12.dp)
+                    Button(
+                        onClick = {
+                            //navigator.push(RegisterScreen())
+                            //navigator.navigate(RegisterScreenDestination)
+                        },
+                        modifier = Modifier.constrainAs(registerButtonRef) {
+                            bottom.linkTo(loginButtonRef.top, 8.dp)
+                            start.linkTo(parent.start, 12.dp)
+                            end.linkTo(parent.end, 12.dp)
 
-              width = Dimension.fillToConstraints
-            },
-            colors = ButtonDefaults.buttonColors(
-              containerColor = MaterialTheme.colorScheme.primary,
-              contentColor = MaterialTheme.colorScheme.onPrimary
-            )
-          ) {
-            Text(text = "Create account")
-          }
+                            width = Dimension.fillToConstraints
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Text(text = "Create account")
+                    }
 
-          OutlinedButton(
-            onClick = {
-              TODO("NAVIGATE TO LOGIN SCREEN")
-              //navigator.push(LoginScreen())
-            },
-            modifier = Modifier.constrainAs(loginButtonRef) {
-              bottom.linkTo(parent.bottom, 12.dp)
-              start.linkTo(parent.start, 12.dp)
-              end.linkTo(parent.end, 12.dp)
+                    OutlinedButton(
+                        onClick = {
+                            TODO("NAVIGATE TO LOGIN SCREEN")
+                            //navigator.push(LoginScreen())
+                        },
+                        modifier = Modifier.constrainAs(loginButtonRef) {
+                            bottom.linkTo(parent.bottom, 12.dp)
+                            start.linkTo(parent.start, 12.dp)
+                            end.linkTo(parent.end, 12.dp)
 
-              width = Dimension.fillToConstraints
+                            width = Dimension.fillToConstraints
+                        }
+                    ) {
+                        Text(text = "Login")
+                    }
+                }
             }
-          ) {
-            Text(text = "Login")
-          }
         }
-      }
     }
-  }
 }

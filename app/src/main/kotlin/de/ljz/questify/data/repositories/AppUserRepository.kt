@@ -6,15 +6,15 @@ import de.ljz.questify.data.shared.Points
 import kotlinx.coroutines.flow.Flow
 
 class AppUserRepository(
-  private val appUserDataStore: AppUserDataStore
+    private val appUserDataStore: AppUserDataStore
 ) : BaseRepository() {
 
-  fun getAppUser(): Flow<AppUser> {
-    return appUserDataStore.data
-  }
+    fun getAppUser(): Flow<AppUser> {
+        return appUserDataStore.data
+    }
 
-  suspend fun addPoint(points: Points) {
-    appUserDataStore.addPoint(points)
-  }
+    suspend fun addPoint(points: Points) {
+        appUserDataStore.addPoint(points)
+    }
 
 }

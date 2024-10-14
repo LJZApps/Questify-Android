@@ -5,8 +5,8 @@ import de.ljz.questify.data.api.services.RegisterService
 import retrofit2.Retrofit
 
 class ApiClient(
-  retrofit: Retrofit,
+    retrofit: Retrofit,
 ) {
-  val loginService: LoginService = retrofit.create(LoginService::class.java)
-  val registerService: RegisterService = retrofit.create(RegisterService::class.java)
+    val loginService: LoginService = retrofit.create(LoginService::class.java)
+    val registerService: RegisterService = retrofit.create(RegisterService::class.java)
 }

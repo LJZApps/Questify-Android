@@ -4,12 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object QuestBottomRoutes {
-  @Serializable
-  object AllQuests
+    @Serializable
+    object AllQuests
 
-  @Serializable
-  object TodayQuests
+    @Serializable
+    object TodayQuests
 
-  @Serializable
-  object RepeatingQuests
+    @Serializable
+    object RepeatingQuests
 }

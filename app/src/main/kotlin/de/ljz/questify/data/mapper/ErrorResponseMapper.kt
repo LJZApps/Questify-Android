@@ -9,33 +9,38 @@ import org.json.JSONObject
 
 object ErrorResponseMapper : ApiErrorModelMapper<ErrorResponse> {
 
-  override fun map(apiErrorResponse: ApiResponse.Failure.Error): ErrorResponse {
-    return when (apiErrorResponse.statusCode.code) {
-      404 -> ErrorResponse("NOT_FOUND", "This api call leads to nothing.\nPlease try again later.")
-      503 -> ErrorResponse("SERVICE_UNAVAILABLE", "This service is currently unavailable.\nPlease try again later.")
-      else -> {
-        val body = apiErrorResponse.errorBody?.string() // Konvertiere den errorBody zu einem String
-        if (body != null) {
-          try {
-            // Parse den JSON-String und extrahiere die gewünschten Parameter
-            val jsonObject = JSONObject(body)
-            val errorCode = jsonObject.optString("error_code")
-            val errorMessage = jsonObject.optString("error_message")
-            //ErrorResponse(errorCode, errorMessage)
-            ErrorResponse(errorCode, apiErrorResponse.statusCode.code.toString())
-          } catch (e: Exception) {
-            //ErrorResponse("UNKNOWN_ERROR", e.localizedMessage)
-            when (apiErrorResponse.statusCode.code) {
-              404 -> ErrorResponse("NOT_FOUND", "This api call leads to nothing. Please try again later.")
-              503 -> ErrorResponse("SERVICE_UNAVAILABLE", "This service is currently unavailable. Please try again later.")
-              500 -> ErrorResponse("INTERNAL_SERVER_ERROR", "Internal server error occurred.")
-              else -> ErrorResponse("UNKNOWN_ERROR", "Unknown error occurred.")
+    override fun map(apiErrorResponse: ApiResponse.Failure.Error): ErrorResponse {
+        return when (apiErrorResponse.statusCode.code) {
+            404 -> ErrorResponse("NOT_FOUND", "This api call leads to nothing.\nPlease try again later.")
+
+            503 -> ErrorResponse("SERVICE_UNAVAILABLE", "This service is currently unavailable.\nPlease try again later.")
+
+            else -> {
+                val body = apiErrorResponse.errorBody?.string() // Konvertiere den errorBody zu einem String
+                if (body != null) {
+                    try {
+                        // Parse den JSON-String und extrahiere die gewünschten Parameter
+                        val jsonObject = JSONObject(body)
+                        val errorCode = jsonObject.optString("error_code")
+                        val errorMessage = jsonObject.optString("error_message")
+                        //ErrorResponse(errorCode, errorMessage)
+                        ErrorResponse(errorCode, apiErrorResponse.statusCode.code.toString())
+                    } catch (e: Exception) {
+                        //ErrorResponse("UNKNOWN_ERROR", e.localizedMessage)
+                        when (apiErrorResponse.statusCode.code) {
+                            404 -> ErrorResponse("NOT_FOUND", "This api call leads to nothing. Please try again later.")
+
+                            503 -> ErrorResponse("SERVICE_UNAVAILABLE", "This service is currently unavailable. Please try again later.")
+
+                            500 -> ErrorResponse("INTERNAL_SERVER_ERROR", "Internal server error occurred.")
+
+                            else -> ErrorResponse("UNKNOWN_ERROR", "Unknown error occurred.")
+                        }
+                    }
+                } else {
+                    ErrorResponse("UNKNOWN_ERROR", "Unknown error occurred.")
+                }
             }
-          }
-        } else {
-          ErrorResponse("UNKNOWN_ERROR", "Unknown error occurred.")
         }
-      }
     }
-  }
 }

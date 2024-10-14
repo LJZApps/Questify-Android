@@ -19,64 +19,63 @@ import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
-import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
 class ActivityMain : AppCompatActivity() {
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    val splashScreen = installSplashScreen()
+        val splashScreen = installSplashScreen()
 
-    setContent {
-      splashScreen.setKeepOnScreenCondition { true }
-      val vm: AppViewModel = koinViewModel()
+        setContent {
+            splashScreen.setKeepOnScreenCondition { true }
+            val vm: AppViewModel = koinViewModel()
 
-      val appUiState by vm.uiState.collectAsState()
-      val isSetupDone = appUiState.isSetupDone
+            val appUiState by vm.uiState.collectAsState()
+            val isSetupDone = appUiState.isSetupDone
 
-      val isAppReadyState by vm.isAppReady.collectAsState()
+            val isAppReadyState by vm.isAppReady.collectAsState()
 
-      SentryAndroid.init(this) { options ->
-        options.dsn =
-          "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
-        options.isDebug = BuildConfig.DEBUG
+            SentryAndroid.init(this) { options ->
+                options.dsn =
+                    "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
+                options.isDebug = BuildConfig.DEBUG
 
-        // Currently under experimental options:
-        options.experimental.sessionReplay.errorSampleRate = 1.0
-        options.experimental.sessionReplay.sessionSampleRate = 0.1
-        options.experimental.sessionReplay.redactAllText = true
-        options.experimental.sessionReplay.redactAllImages = true
-      }
-
-      if (isAppReadyState) {
-        splashScreen.setKeepOnScreenCondition { false }
-
-        QuestifyTheme {
-          Surface(
-            modifier = Modifier.fillMaxSize()
-          ) {
-            val navController = rememberNavController()
-            NavHost(
-              navController = navController,
-              startDestination = if (isSetupDone) Home else GetStartedMain
-            ) {
-              composable<GetStartedMain> {
-                GetStartedMainScreen(
-                  navController = navController
-                )
-              }
-              composable<Home> {
-                HomeScreen(
-                  navController = navController
-                )
-              }
+                // Currently under experimental options:
+                options.experimental.sessionReplay.errorSampleRate = 1.0
+                options.experimental.sessionReplay.sessionSampleRate = 0.1
+                options.experimental.sessionReplay.redactAllText = true
+                options.experimental.sessionReplay.redactAllImages = true
             }
-          }
-        }
-      }
-    }
 
-  }
+            if (isAppReadyState) {
+                splashScreen.setKeepOnScreenCondition { false }
+
+                QuestifyTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val navController = rememberNavController()
+                        NavHost(
+                            navController = navController,
+                            startDestination = if (isSetupDone) Home else GetStartedMain
+                        ) {
+                            composable<GetStartedMain> {
+                                GetStartedMainScreen(
+                                    navController = navController
+                                )
+                            }
+                            composable<Home> {
+                                HomeScreen(
+                                    navController = navController
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 }

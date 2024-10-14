@@ -17,46 +17,46 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.time.Duration
 
 val networkModule = module {
-  single<SessionManager> { SessionManager(androidContext()) }
+    single<SessionManager> { SessionManager(androidContext()) }
 
-  single<Moshi> {
-    Moshi.Builder()
-      .add(StringToDateAdapter())
-      .add(KotlinJsonAdapterFactory())
-      .build()
-  }
+    single<Moshi> {
+        Moshi.Builder()
+            .add(StringToDateAdapter())
+            .add(KotlinJsonAdapterFactory())
+            .build()
+    }
 
-  single<Retrofit> {
-    Retrofit.Builder()
-      .baseUrl(BuildConfig.BASE_URL)
-      .client(get())
-      .addConverterFactory(MoshiConverterFactory.create(get()))
-      .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
-      .build()
-  }
+    single<Retrofit> {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(get())
+            .addConverterFactory(MoshiConverterFactory.create(get()))
+            .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
+            .build()
+    }
 
-  single<OkHttpClient> {
-    OkHttpClient.Builder().apply {
-      callTimeout(Duration.ofMinutes(3))
-      connectTimeout(Duration.ofMinutes(3))
-      readTimeout(Duration.ofMinutes(3))
-      writeTimeout(Duration.ofMinutes(3))
+    single<OkHttpClient> {
+        OkHttpClient.Builder().apply {
+            callTimeout(Duration.ofMinutes(3))
+            connectTimeout(Duration.ofMinutes(3))
+            readTimeout(Duration.ofMinutes(3))
+            writeTimeout(Duration.ofMinutes(3))
 
-      addInterceptor(FailedRequestInterceptor(get()))
+            addInterceptor(FailedRequestInterceptor(get()))
 
-      if (BuildConfig.DEBUG) {
-        addNetworkInterceptor(
-          HttpLoggingInterceptor().apply {
-            this.level = HttpLoggingInterceptor.Level.BODY
-          }
+            if (BuildConfig.DEBUG) {
+                addNetworkInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        this.level = HttpLoggingInterceptor.Level.BODY
+                    }
+                )
+            }
+        }.build()
+    }
+
+    single<ApiClient> {
+        ApiClient(
+            retrofit = get(),
         )
-      }
-    }.build()
-  }
-
-  single<ApiClient> {
-    ApiClient(
-      retrofit = get(),
-    )
-  }
+    }
 }

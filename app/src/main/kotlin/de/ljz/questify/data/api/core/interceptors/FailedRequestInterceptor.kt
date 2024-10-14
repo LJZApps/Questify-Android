@@ -18,10 +18,15 @@ class FailedRequestInterceptor(private val moshi: Moshi) : Interceptor {
          * - POST, PUT, PATCH and DELETE-Requests
          * - Requests which have nothing to do with authentication
          */
-        if (request.method.uppercase() != "GET" && response.isSuccessful && !request.url.toString().endsWith("/oauth/token")) {
+        if (request.method.uppercase() != "GET" && response.isSuccessful && !request.url.toString()
+                .endsWith("/oauth/token")
+        ) {
             NetworkUtils.parseSuccessResponse(moshi, responseBody)?.let { successResponse ->
                 if (successResponse.success != true) {
-                    throw RequestFailedException(errorCode = successResponse.errorCode, errorMessage = successResponse.errorMessage)
+                    throw RequestFailedException(
+                        errorCode = successResponse.errorCode,
+                        errorMessage = successResponse.errorMessage
+                    )
                 }
             } ?: response
         }

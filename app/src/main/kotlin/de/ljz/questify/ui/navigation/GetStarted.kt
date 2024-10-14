@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object GetStarted {
-  @Serializable
-  object Main
-  data class Loginer(
-    val test : String
-  )
+    @Serializable
+    object Main
+    data class Loginer(
+        val test: String
+    )
 }
 
 @Serializable

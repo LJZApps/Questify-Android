@@ -13,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.home.components.DrawerContent
-import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialog
 import de.ljz.questify.ui.features.quests.QuestScreen
 import de.ljz.questify.ui.features.quests.navigation.Quests
 import io.sentry.compose.SentryTraced
@@ -22,42 +21,42 @@ import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(
-  ExperimentalComposeUiApi::class,
-  ExperimentalMaterial3Api::class,
-  ExperimentalSerializationApi::class
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalSerializationApi::class
 )
 @Composable
 fun HomeScreen(
-  navController: NavHostController,
-  viewModel: HomeViewModel = koinViewModel()
+    navController: NavHostController,
+    viewModel: HomeViewModel = koinViewModel()
 ) {
-  val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsState().value
 
-  val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-  val homeNavHostController = rememberNavController()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val homeNavHostController = rememberNavController()
 
-  QuestifyTheme(
-    transparentNavBar = false
-  ) {
-    SentryTraced(tag = "home_screen") {
-      ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-          DrawerContent(
-            uiState = uiState,
-            navController = homeNavHostController
-          )
+    QuestifyTheme(
+        transparentNavBar = false
+    ) {
+        SentryTraced(tag = "home_screen") {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    DrawerContent(
+                        uiState = uiState,
+                        navController = homeNavHostController
+                    )
+                }
+            ) {
+                NavHost(
+                    navController = homeNavHostController,
+                    startDestination = Quests
+                ) {
+                    composable<Quests> {
+                        QuestScreen(drawerState = drawerState)
+                    }
+                }
+            }
         }
-      ) {
-        NavHost(
-          navController = homeNavHostController,
-          startDestination = Quests
-        ) {
-          composable<Quests> {
-            QuestScreen(drawerState = drawerState)
-          }
-        }
-      }
     }
-  }
 }

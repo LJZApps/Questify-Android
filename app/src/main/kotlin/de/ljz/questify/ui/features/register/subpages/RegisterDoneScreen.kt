@@ -5,7 +5,7 @@ import de.ljz.questify.core.compose.UIModePreviews
 
 @Composable
 fun RegisterDoneScreen(
-  onNextPage: () -> Unit
+    onNextPage: () -> Unit
 ) {
 
 }
@@ -13,7 +13,7 @@ fun RegisterDoneScreen(
 @UIModePreviews
 @Composable
 fun RegisterDoneScreenPreview() {
-  RegisterDoneScreen (
-    onNextPage = {}
-  )
+    RegisterDoneScreen(
+        onNextPage = {}
+    )
 }

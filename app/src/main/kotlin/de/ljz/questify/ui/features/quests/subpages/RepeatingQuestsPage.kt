@@ -11,26 +11,26 @@ import de.ljz.questify.ui.features.quests.QuestsViewModel
 
 @Composable
 fun RepeatingQuestsPage(
-  modifier: Modifier = Modifier,
-  viewModel: QuestsViewModel
+    modifier: Modifier = Modifier,
+    viewModel: QuestsViewModel
 ) {
-  ConstraintLayout(
-    modifier = modifier.fillMaxSize()
-  ) {
-    val (
-      text
-    ) = createRefs()
+    ConstraintLayout(
+        modifier = modifier.fillMaxSize()
+    ) {
+        val (
+            text
+        ) = createRefs()
 
-    Text(
-      text = "Map here",
-      modifier = Modifier.constrainAs(text) {
-        top.linkTo(parent.top)
-        start.linkTo(parent.start)
-        end.linkTo(parent.end)
+        Text(
+            text = "Map here",
+            modifier = Modifier.constrainAs(text) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
 
-        width = Dimension.fillToConstraints
-      },
-      textAlign = TextAlign.Center
-    )
-  }
+                width = Dimension.fillToConstraints
+            },
+            textAlign = TextAlign.Center
+        )
+    }
 }

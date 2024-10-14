@@ -19,11 +19,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 enum class ButtonState { Pressed, Idle }
 
 fun Modifier.bounceClick() = composed {
-  var buttonState by remember { mutableStateOf(ButtonState.Idle) }
-  val scale by animateFloatAsState(
-    targetValue = if (buttonState == ButtonState.Pressed) 0.70f else 1f,
-    label = "bounceClick"
-  )
+    var buttonState by remember { mutableStateOf(ButtonState.Idle) }
+    val scale by animateFloatAsState(
+        targetValue = if (buttonState == ButtonState.Pressed) 0.70f else 1f,
+        label = "bounceClick"
+    )
 
   this
     .graphicsLayer {
@@ -49,9 +49,9 @@ fun Modifier.bounceClick() = composed {
 }
 
 fun Context.longToast(message: String) {
-  Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
 fun Context.shortToast(message: String) {
-  Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

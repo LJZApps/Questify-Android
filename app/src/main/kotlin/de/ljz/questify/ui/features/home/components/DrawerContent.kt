@@ -24,63 +24,63 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun DrawerContent(
-  uiState: HomeUiState,
-  navController: NavHostController
+    uiState: HomeUiState,
+    navController: NavHostController
 ) {
-  ModalDrawerSheet {
-    Column(
-      modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth()
-    ) {
-      // Header mit Benutzerinformationen
-      Column {
-        Text(
-          text = "Welcome, Leon Zapke",
-          style = MaterialTheme.typography.labelLarge,
-        )
-        Text(
-          text = "Points: ${uiState.userPoints}",
-          style = MaterialTheme.typography.bodyMedium,
-        )
-      }
+    ModalDrawerSheet {
+        Column(
+            modifier = Modifier
+              .padding(16.dp)
+              .fillMaxWidth()
+        ) {
+            // Header mit Benutzerinformationen
+            Column {
+                Text(
+                    text = "Welcome, Leon Zapke",
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                Text(
+                    text = "Points: ${uiState.userPoints}",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
 
-      // Divider
-      HorizontalDivider()
+            // Divider
+            HorizontalDivider()
 
-      // Kategorie: Quests
-      Text(
-        text = "Quests",
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(vertical = 8.dp)
-      )
+            // Kategorie: Quests
+            Text(
+                text = "Quests",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
-      NavigationDrawerItem(
-        label = { Text(text = "Your Quests") },
-        icon = {
-          Icon(
-            imageVector = Icons.AutoMirrored.Filled.List,
-            contentDescription = "Your Quests"
-          )
-        },
-        selected = navController.currentDestination?.route == Quests.serializer().descriptor.serialName,
-        onClick = {
-          if (navController.currentDestination?.route != Quests.serializer().descriptor.serialName) navController.navigate(
-            Quests
-          )
-        },
-        modifier = Modifier.padding(vertical = 4.dp)
-      )
+            NavigationDrawerItem(
+                label = { Text(text = "Your Quests") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.List,
+                        contentDescription = "Your Quests"
+                    )
+                },
+                selected = navController.currentDestination?.route == Quests.serializer().descriptor.serialName,
+                onClick = {
+                    if (navController.currentDestination?.route != Quests.serializer().descriptor.serialName) navController.navigate(
+                        Quests
+                    )
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
 
-      Text(
-        text = "More coming soon!",
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier
-          .padding(vertical = 8.dp)
-          .background(Color.Gray.copy(alpha = 0.2f), shape = MaterialTheme.shapes.medium)
-          .padding(8.dp)
-          .fillMaxWidth()
-      )
+            Text(
+                text = "More coming soon!",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                  .padding(vertical = 8.dp)
+                  .background(Color.Gray.copy(alpha = 0.2f), shape = MaterialTheme.shapes.medium)
+                  .padding(8.dp)
+                  .fillMaxWidth()
+            )
+        }
     }
-  }
 }

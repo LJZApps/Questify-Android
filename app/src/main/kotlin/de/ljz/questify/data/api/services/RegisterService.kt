@@ -7,8 +7,8 @@ import retrofit2.http.Query
 
 interface RegisterService {
 
-  @POST("/api/oauth/validate-email")
-  suspend fun validateEmail(
-    @Query("email") email: String
-  ): ApiResponse<ValidateEmailResponse>
+    @POST("/api/oauth/validate-email")
+    suspend fun validateEmail(
+        @Query("email") email: String
+    ): ApiResponse<ValidateEmailResponse>
 }

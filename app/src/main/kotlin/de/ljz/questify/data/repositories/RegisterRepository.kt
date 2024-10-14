@@ -9,22 +9,22 @@ import de.ljz.questify.data.mapper.ErrorResponseMapper
 import de.ljz.questify.util.suspendMessageOnException
 
 class RegisterRepository(
-  private val apiClient: ApiClient
+    private val apiClient: ApiClient
 ) : BaseRepository() {
-  suspend fun validateEmail(
-    email: String,
-    onSuccess: (suspend (ValidateEmailResponse) -> Unit)? = null,
-    onError: (suspend (ErrorResponse) -> Unit)? = null
-  ) {
-    apiClient.registerService.validateEmail(email)
-      .suspendOnSuccess {
-        onSuccess?.invoke(data)
-      }
-      .suspendOnError (ErrorResponseMapper) {
-        onError?.invoke(this)
-      }
-      .suspendMessageOnException {
-        onError?.invoke(it)
-      }
-  }
+    suspend fun validateEmail(
+        email: String,
+        onSuccess: (suspend (ValidateEmailResponse) -> Unit)? = null,
+        onError: (suspend (ErrorResponse) -> Unit)? = null
+    ) {
+        apiClient.registerService.validateEmail(email)
+            .suspendOnSuccess {
+                onSuccess?.invoke(data)
+            }
+            .suspendOnError(ErrorResponseMapper) {
+                onError?.invoke(this)
+            }
+            .suspendMessageOnException {
+                onError?.invoke(it)
+            }
+    }
 }

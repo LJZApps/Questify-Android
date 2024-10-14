@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 
 @JsonClass(generateAdapter = true)
 @Serializable
-data class ValidateEmailResponse (
-  @Json(name = "success")
-  @SerializedName("success")
-  val success: Boolean
+data class ValidateEmailResponse(
+    @Json(name = "success")
+    @SerializedName("success")
+    val success: Boolean
 )

@@ -13,11 +13,11 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
-  viewModelOf(::AppViewModel)
-  viewModelOf(::ThemeViewModel)
-  viewModelOf(::GetStartedViewModel)
-  viewModelOf(::RegisterViewModel)
-  viewModelOf(::HomeViewModel)
-  viewModelOf(::LoginViewModel)
-  viewModel { QuestsViewModel(get<AppUserRepository>()) }
+    viewModelOf(::AppViewModel)
+    viewModelOf(::ThemeViewModel)
+    viewModelOf(::GetStartedViewModel)
+    viewModelOf(::RegisterViewModel)
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::LoginViewModel)
+    viewModel { QuestsViewModel(get<AppUserRepository>()) }
 }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @JsonClass(generateAdapter = true)
 @Serializable
-data class RegisterResponse (
+data class RegisterResponse(
     @Json(name = "success")
     val success: Boolean,
 

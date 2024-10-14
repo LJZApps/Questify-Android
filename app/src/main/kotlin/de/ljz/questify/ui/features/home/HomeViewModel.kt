@@ -10,22 +10,22 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-  private val appUserRepository: AppUserRepository
+    private val appUserRepository: AppUserRepository
 ) : ViewModel() {
-  private val _uiState = MutableStateFlow(HomeUiState())
-  val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-  init {
-    viewModelScope.launch {
-      appUserRepository.getAppUser().collect { appUser ->
-        _uiState.update { currentState ->
-          currentState.copy(
-            userPoints = appUser.points
-          )
+    init {
+        viewModelScope.launch {
+            appUserRepository.getAppUser().collect { appUser ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        userPoints = appUser.points
+                    )
+                }
+            }
         }
-      }
-    }
 
-  }
+    }
 
 }

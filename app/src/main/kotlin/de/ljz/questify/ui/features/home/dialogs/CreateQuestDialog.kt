@@ -24,70 +24,70 @@ import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun CreateQuestDialog(
-  onDismiss: () -> Unit,
-  onConfirm: (CreateQuestDialogState) -> Unit,
+    onDismiss: () -> Unit,
+    onConfirm: (CreateQuestDialogState) -> Unit,
 ) {
-  // Verwende remember für den Zustand des Dialogs
-  val dialogState = remember { mutableStateOf(CreateQuestDialogState()) }
+    // Verwende remember für den Zustand des Dialogs
+    val dialogState = remember { mutableStateOf(CreateQuestDialogState()) }
 
-  Dialog(
-    onDismissRequest = onDismiss,
-    properties = DialogProperties(
-      dismissOnBackPress = false,
-      dismissOnClickOutside = false
-    )
-  ) {
-    Card(
-      shape = RoundedCornerShape(16.dp),
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
+        )
     ) {
-      Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Create quest")
-        OutlinedTextField(
-          value = dialogState.value.title,
-          onValueChange = { newValue ->
-            dialogState.value = dialogState.value.copy(title = newValue)
-          },
-          modifier = Modifier.fillMaxWidth(),
-          label = { Text(text = "Title") },
-          shape = RoundedCornerShape(16.dp),
-          singleLine = true
-        )
-        OutlinedTextField(
-          value = dialogState.value.description, // Tippfehler 'desciption' korrigiert
-          onValueChange = { newValue ->
-            dialogState.value = dialogState.value.copy(description = newValue)
-          },
-          modifier = Modifier.fillMaxWidth(),
-          label = { Text(text = "Description") },
-          shape = RoundedCornerShape(16.dp),
-          singleLine = true
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-          horizontalArrangement = Arrangement.End,
-          modifier = Modifier.fillMaxWidth()
+        Card(
+            shape = RoundedCornerShape(16.dp),
         ) {
-          TextButton(onClick = onDismiss) {
-            Text("Dismiss")
-          }
-          Spacer(modifier = Modifier.width(8.dp))
-          TextButton(onClick = { onConfirm(dialogState.value) }) {
-            Text("Confirm")
-          }
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = "Create quest")
+                OutlinedTextField(
+                    value = dialogState.value.title,
+                    onValueChange = { newValue ->
+                        dialogState.value = dialogState.value.copy(title = newValue)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Title") },
+                    shape = RoundedCornerShape(16.dp),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = dialogState.value.description, // Tippfehler 'desciption' korrigiert
+                    onValueChange = { newValue ->
+                        dialogState.value = dialogState.value.copy(description = newValue)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Description") },
+                    shape = RoundedCornerShape(16.dp),
+                    singleLine = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("Dismiss")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    TextButton(onClick = { onConfirm(dialogState.value) }) {
+                        Text("Confirm")
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 
 
 @Preview
 @Composable
 private fun CreateQuestDialogPreview() {
-  CreateQuestDialog(
-    onDismiss = {},
-    onConfirm = {_ ->
+    CreateQuestDialog(
+        onDismiss = {},
+        onConfirm = { _ ->
 
-    }
-  )
+        }
+    )
 }

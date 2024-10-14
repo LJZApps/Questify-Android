@@ -6,13 +6,13 @@ import de.ljz.questify.data.repositories.AppSettingsRepository
 import kotlinx.coroutines.launch
 
 class GetStartedViewModel(
-  private val appSettingsRepository: AppSettingsRepository,
+    private val appSettingsRepository: AppSettingsRepository,
 ) : ViewModel() {
 
-  fun setSetupDone() {
-    viewModelScope.launch {
-      appSettingsRepository.setOnboardingDone()
+    fun setSetupDone() {
+        viewModelScope.launch {
+            appSettingsRepository.setOnboardingDone()
+        }
     }
-  }
 
 }

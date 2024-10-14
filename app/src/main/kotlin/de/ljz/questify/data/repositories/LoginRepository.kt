@@ -11,48 +11,48 @@ import de.ljz.questify.data.sharedpreferences.SessionManager
 import de.ljz.questify.util.suspendMessageOnException
 
 class LoginRepository(
-  private val apiClient: ApiClient,
-  private val sessionManager: SessionManager
+    private val apiClient: ApiClient,
+    private val sessionManager: SessionManager
 ) : BaseRepository() {
 
-  suspend fun login(
-    username: String,
-    password: String,
-    onSuccess: (suspend (LoginResponse) -> Unit)? = null,
-    onError: (suspend (ErrorResponse) -> Unit)? = null
-  ) {
-    apiClient.loginService.login(username, password)
-      .suspendOnSuccess {
-        sessionManager.setAccessToken(data.accessToken)
+    suspend fun login(
+        username: String,
+        password: String,
+        onSuccess: (suspend (LoginResponse) -> Unit)? = null,
+        onError: (suspend (ErrorResponse) -> Unit)? = null
+    ) {
+        apiClient.loginService.login(username, password)
+            .suspendOnSuccess {
+                sessionManager.setAccessToken(data.accessToken)
 
-        onSuccess?.invoke(data)
-      }
-      .suspendOnError(ErrorResponseMapper) {
-        onError?.invoke(this)
-      }
-      .suspendMessageOnException {
-        onError?.invoke(it)
-      }
-  }
+                onSuccess?.invoke(data)
+            }
+            .suspendOnError(ErrorResponseMapper) {
+                onError?.invoke(this)
+            }
+            .suspendMessageOnException {
+                onError?.invoke(it)
+            }
+    }
 
-  suspend fun register(
-    displayName: String,
-    username: String,
-    biography: String? = null,
-    onSuccess: (suspend (RegisterResponse) -> Unit)? = null,
-    onError: (suspend (ErrorResponse) -> Unit)? = null
-  ) {
-    apiClient.loginService.register(displayName, username, biography)
-      .suspendOnSuccess {
-        sessionManager.setAccessToken(data.accessToken)
+    suspend fun register(
+        displayName: String,
+        username: String,
+        biography: String? = null,
+        onSuccess: (suspend (RegisterResponse) -> Unit)? = null,
+        onError: (suspend (ErrorResponse) -> Unit)? = null
+    ) {
+        apiClient.loginService.register(displayName, username, biography)
+            .suspendOnSuccess {
+                sessionManager.setAccessToken(data.accessToken)
 
-        onSuccess?.invoke(data)
-      }
-      .suspendOnError(ErrorResponseMapper) {
-        onError?.invoke(this)
-      }
-      .suspendMessageOnException {
-        onError?.invoke(it)
-      }
-  }
+                onSuccess?.invoke(data)
+            }
+            .suspendOnError(ErrorResponseMapper) {
+                onError?.invoke(this)
+            }
+            .suspendMessageOnException {
+                onError?.invoke(it)
+            }
+    }
 }

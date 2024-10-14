@@ -5,7 +5,7 @@ import de.ljz.questify.data.emitter.NetworkErrorEmitter
 import org.koin.dsl.module
 
 val emitterModule = module {
-  single<NetworkErrorEmitter> { NetworkErrorEmitter() }
+    single<NetworkErrorEmitter> { NetworkErrorEmitter() }
 
-  single<ErrorEmitter> { ErrorEmitter() }
+    single<ErrorEmitter> { ErrorEmitter() }
 }
