@@ -33,15 +33,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Create the keystore file from secret
-        run: |
-          mkdir -p keystore
-          echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
-
-      - name: Verify keystore file
-        run: ls -l keystore/release.keystore
-
-    
       - name: Create local.properties file
         run: |
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
@@ -50,6 +41,22 @@ jobs:
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
 
+      - name: Create the keystore file from secret
+        run: |
+          mkdir -p keystore
+          echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
+
+      - name: Verify keystore file exists
+        run: ls -la keystore/
+
+      - name: Show local.properties content
+        run: cat local.properties
+
+      - name: Set permissions on keystore
+        run: chmod 644 keystore/release.keystore
+
+      - name: Show current directory
+        run: pwd
       - name: Create google-services.json
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
