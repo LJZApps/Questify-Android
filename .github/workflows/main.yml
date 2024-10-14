@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '17' # Updated to Java 17
+          java-version: '17'
 
       # 3. Cache Gradle dependencies to speed up builds
       - name: Cache Gradle packages
@@ -36,11 +36,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. Build the release APK
+      # 4. Create google-services.json from Secret
+      - name: Create google-services.json
+        run: |
+          echo ${{ secrets.GOOGLE_SERVICES_JSON }} > $GITHUB_WORKSPACE/app/google-services.json
+
+      # 5. Build the release APK
       - name: Build Release APK
         run: ./gradlew assembleRelease
 
-      # 5. Upload APK to GitHub Actions artifacts (Updated to v3)
+      # 6. Upload APK to GitHub Actions artifacts (Updated to v3)
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
