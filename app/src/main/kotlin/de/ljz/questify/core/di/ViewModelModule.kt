@@ -6,7 +6,7 @@ import de.ljz.questify.ui.ds.theme.ThemeViewModel
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.home.HomeViewModel
 import de.ljz.questify.ui.features.loginandregister.LoginViewModel
-import de.ljz.questify.ui.features.quests.QuestsViewModel
+import de.ljz.questify.ui.features.quests.overview.QuestsViewModel
 import de.ljz.questify.ui.features.register.RegisterViewModel
 import de.ljz.questify.ui.features.settings.SettingsViewModel
 import org.koin.core.module.dsl.viewModel

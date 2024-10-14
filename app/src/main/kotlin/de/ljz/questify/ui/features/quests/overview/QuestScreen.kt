@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests
+package de.ljz.questify.ui.features.quests.overview
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +29,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.components.TopBar
-import de.ljz.questify.ui.features.quests.components.CreateQuestBottomSheet
-import de.ljz.questify.ui.features.quests.navigation.BottomNavigationRoute
-import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.overview.components.CreateQuestBottomSheet
+import de.ljz.questify.ui.features.quests.overview.navigation.BottomNavigationRoute
+import de.ljz.questify.ui.features.quests.overview.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi

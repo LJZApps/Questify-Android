@@ -13,8 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.home.components.DrawerContent
-import de.ljz.questify.ui.features.quests.QuestScreen
-import de.ljz.questify.ui.features.quests.navigation.Quests
+import de.ljz.questify.ui.features.quests.overview.QuestScreen
+import de.ljz.questify.ui.features.quests.overview.navigation.Quests
 import io.sentry.compose.SentryTraced
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.androidx.compose.koinViewModel

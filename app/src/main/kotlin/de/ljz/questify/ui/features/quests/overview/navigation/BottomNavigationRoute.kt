@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests.navigation
+package de.ljz.questify.ui.features.quests.overview.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
