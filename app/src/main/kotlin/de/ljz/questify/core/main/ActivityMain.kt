@@ -23,6 +23,7 @@ import de.ljz.questify.ui.features.settings.SettingsScreen
 import de.ljz.questify.ui.features.settings.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
+import io.sentry.Sentry
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
 
@@ -44,15 +45,8 @@ class ActivityMain : AppCompatActivity() {
             val isAppReadyState by vm.isAppReady.collectAsState()
 
             SentryAndroid.init(this) { options ->
-                options.dsn =
-                    "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
+                options.dsn = "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
                 options.isDebug = BuildConfig.DEBUG
-
-                // Currently under experimental options:
-                options.experimental.sessionReplay.errorSampleRate = 1.0
-                options.experimental.sessionReplay.sessionSampleRate = 0.1
-                options.experimental.sessionReplay.redactAllText = true
-                options.experimental.sessionReplay.redactAllImages = true
             }
 
             if (isAppReadyState) {
