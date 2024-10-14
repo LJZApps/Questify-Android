@@ -14,18 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up JDK 19 (matching your project configuration)
       - name: Set up JDK 19
         uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
           java-version: '19'
 
-      # 3. Cache Gradle dependencies to speed up builds
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -36,34 +33,47 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. Generate local.properties file with Sentry Auth Token
       - name: Create local.properties file
         run: |
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
+          echo "STORE_FILE=keystore/release.keystore" >> local.properties
+          echo "STORE_PASSWORD=${{ secrets.STORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
 
-      # 5. Create google-services.json from Secret
+      - name: Create Keystore
+        run: |
+          mkdir -p keystore
+          echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
+
       - name: Create google-services.json
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
 
-      # 6. Build the debug APK
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
-
-      # 7. Build the release APK
       - name: Build Release APK
         run: ./gradlew assembleRelease --stacktrace
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          KEYSTORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # 8. Upload Debug APK to GitHub Actions artifacts
-      - name: Upload Debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease --stacktrace
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          KEYSTORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # 9. Upload Release APK to GitHub Actions artifacts
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload Release AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
