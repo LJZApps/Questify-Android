@@ -46,23 +46,6 @@ jobs:
           mkdir -p keystore
           echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
 
-      - name: Verify keystore file
-        run: ls -l $GITHUB_WORKSPACE/keystore/release.keystore
-
-      - name: Show local.properties content
-        run: cat local.properties
-
-      - name: Set keystore permissions
-        run: chmod 600 $GITHUB_WORKSPACE/keystore/release.keystore
-
-      - name: Debug information
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Keystore location: $GITHUB_WORKSPACE/keystore/release.keystore"
-          ls -R $GITHUB_WORKSPACE
-
-      - name: Show current directory
-        run: pwd
       - name: Create google-services.json
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
