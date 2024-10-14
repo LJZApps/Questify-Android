@@ -36,32 +36,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. Create google-services.json from Secret
-      - name: Create google-services.json
+      # 4. Generate local.properties file with Sentry Auth Token
+      - name: Create local.properties file
         run: |
-          echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
 
-      # 5. Set Sentry auth token for release build
-      - name: Set Sentry Auth Token
-        run: |
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> $GITHUB_ENV
-
-      # 6. Build the debug APK
+      # 5. Build the debug APK
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      # 7. Build the release APK (includes Sentry integration)
+      # 6. Build the release APK
       - name: Build Release APK
         run: ./gradlew assembleRelease --stacktrace
 
-      # 8. Upload Debug APK to GitHub Actions artifacts
+      # 7. Upload Debug APK to GitHub Actions artifacts
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
         with:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      # 9. Upload Release APK to GitHub Actions artifacts
+      # 8. Upload Release APK to GitHub Actions artifacts
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:

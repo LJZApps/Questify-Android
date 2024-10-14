@@ -165,10 +165,16 @@ dependencies {
 
 
 sentry {
+  val localProperties = Properties()
+  val localPropertiesFile = rootProject.file("local.properties")
+  if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+  }
+
   org.set("ljz-apps")
   projectName.set("questify")
 
-  authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
+  authToken.set(localProperties.getProperty("SENTRY_AUTH_TOKEN"))
 
   // this will upload your source code to Sentry to show it as part of the stack traces
   // disable if you don't want to expose your sources
