@@ -1,11 +1,27 @@
 package de.ljz.questify.core.di
 
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import de.ljz.questify.data.emitter.ErrorEmitter
 import de.ljz.questify.data.emitter.NetworkErrorEmitter
-import org.koin.dsl.module
+import javax.inject.Singleton
 
-val emitterModule = module {
-    single<NetworkErrorEmitter> { NetworkErrorEmitter() }
+@Module
+@InstallIn(SingletonComponent::class)
+object EmitterModule {
 
-    single<ErrorEmitter> { ErrorEmitter() }
+  @Singleton
+  @Provides
+  fun provideNetworkErrorEmitter(): NetworkErrorEmitter {
+    return NetworkErrorEmitter()
+  }
+
+  @Singleton
+  @Provides
+  fun provideErrorEmitter(): ErrorEmitter {
+    return ErrorEmitter()
+  }
+
 }

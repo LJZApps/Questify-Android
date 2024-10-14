@@ -4,8 +4,11 @@ import androidx.datastore.core.DataStore
 import de.ljz.questify.data.datastore.AppSettings
 import de.ljz.questify.ui.state.ThemeBehavior
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AppSettingsRepository(
+@Singleton
+class AppSettingsRepository @Inject constructor(
     private val appSettingsDataStore: DataStore<AppSettings>
 ) : BaseRepository() {
 

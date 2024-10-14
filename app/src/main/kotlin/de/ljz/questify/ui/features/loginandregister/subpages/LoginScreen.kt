@@ -27,18 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.loginandregister.LoginViewModel
 import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.compose.SentryTraced
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val loginAndRegisterUiState = viewModel.uiState.collectAsState().value
 

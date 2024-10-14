@@ -9,8 +9,11 @@ import de.ljz.questify.data.api.responses.register.RegisterResponse
 import de.ljz.questify.data.mapper.ErrorResponseMapper
 import de.ljz.questify.data.sharedpreferences.SessionManager
 import de.ljz.questify.util.suspendMessageOnException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class LoginRepository(
+@Singleton
+class LoginRepository @Inject constructor(
     private val apiClient: ApiClient,
     private val sessionManager: SessionManager
 ) : BaseRepository() {

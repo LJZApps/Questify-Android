@@ -2,14 +2,17 @@ package de.ljz.questify.ui.ds.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.repositories.AppSettingsRepository
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ThemeViewModel(
+@HiltViewModel
+class ThemeViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
     private val _themeBehavior = appSettingsRepository.getAppSettings().map { it.themeBehavior }

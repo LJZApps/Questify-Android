@@ -2,14 +2,17 @@ package de.ljz.questify.ui.features.register
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.api.responses.common.ErrorResponse
 import de.ljz.questify.data.repositories.RegisterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class RegisterViewModel(
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
     private val registerRepository: RegisterRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RegisterUiState())

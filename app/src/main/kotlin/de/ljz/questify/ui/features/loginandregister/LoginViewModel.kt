@@ -2,6 +2,7 @@ package de.ljz.questify.ui.features.loginandregister
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.coroutine.ContextProvider
 import de.ljz.questify.data.repositories.LoginRepository
 import de.ljz.questify.data.sharedpreferences.SessionManager
@@ -10,8 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val contextProvider: ContextProvider,
     private val sessionManager: SessionManager,

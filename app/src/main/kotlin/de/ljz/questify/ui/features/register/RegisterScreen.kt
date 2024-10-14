@@ -12,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.register.subpages.RegisterDoneScreen
@@ -20,13 +21,12 @@ import de.ljz.questify.ui.features.register.subpages.RegisterPasswordScreen
 import de.ljz.questify.ui.features.register.subpages.RegisterUserDataScreen
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     navHostController: NavHostController,
-    viewModel: RegisterViewModel = koinViewModel()
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val pagerState = rememberPagerState(pageCount = { uiState.pageCount })

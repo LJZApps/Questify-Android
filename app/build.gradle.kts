@@ -14,6 +14,7 @@ plugins {
     id("com.google.gms.google-services")
     id("kotlinx-serialization")
     kotlin("plugin.serialization")
+    id("com.google.dagger.hilt.android")
 
     id("io.sentry.android.gradle") version "4.11.0"
 }
@@ -112,11 +113,17 @@ val composeVersion by extra("1.6.5")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+/*
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
-    implementation(libs.koin.androidx.navigation)
+    implementation(libs.koin.androidx.navigation)*/
 
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)

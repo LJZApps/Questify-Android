@@ -10,4 +10,5 @@ plugins {
   id("com.google.firebase.crashlytics") version "3.0.2" apply false
   id("androidx.navigation.safeargs") version "2.8.2" apply false
   kotlin("plugin.serialization") version "1.9.23" apply false
+  id("com.google.dagger.hilt.android") version "2.51.1" apply false
 }

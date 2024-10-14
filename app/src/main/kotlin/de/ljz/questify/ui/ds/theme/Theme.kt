@@ -13,13 +13,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
-import org.koin.androidx.compose.koinViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun QuestifyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     transparentNavBar: Boolean = true,
-    vm: ThemeViewModel = koinViewModel(),
+    vm: ThemeViewModel = hiltViewModel(),
     content: @Composable () -> Unit,
 ) {
     val isDynamicColorEnabled = vm.dynamicColorsEnabled

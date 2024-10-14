@@ -2,10 +2,13 @@ package de.ljz.questify.ui.features.getstarted
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.repositories.AppSettingsRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GetStartedViewModel(
+@HiltViewModel
+class GetStartedViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository,
 ) : ViewModel() {
 

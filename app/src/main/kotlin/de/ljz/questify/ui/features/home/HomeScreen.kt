@@ -7,6 +7,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,7 +18,6 @@ import de.ljz.questify.ui.features.quests.overview.QuestScreen
 import de.ljz.questify.ui.features.quests.overview.navigation.Quests
 import io.sentry.compose.SentryTraced
 import kotlinx.serialization.ExperimentalSerializationApi
-import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(
@@ -28,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 

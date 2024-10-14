@@ -2,6 +2,7 @@ package de.ljz.questify.core.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -12,6 +13,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
@@ -23,8 +25,8 @@ import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
-import org.koin.androidx.compose.koinViewModel
 
+@AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,7 @@ class ActivityMain : AppCompatActivity() {
 
         setContent {
             splashScreen.setKeepOnScreenCondition { true }
-            val vm: AppViewModel = koinViewModel()
+            val vm: AppViewModel by viewModels()
 
             val appUiState by vm.uiState.collectAsState()
             val isSetupDone = appUiState.isSetupDone

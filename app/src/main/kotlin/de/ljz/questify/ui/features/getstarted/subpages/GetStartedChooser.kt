@@ -17,18 +17,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.features.getstarted.components.ChooserCard
 import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.compose.SentryTraced
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GetStartedChooserScreen(
-    viewModel: GetStartedViewModel = koinViewModel(),
+    viewModel: GetStartedViewModel = hiltViewModel(),
     navController: NavController
 ) {
     SentryTraced(tag = "get_started_chooser") {
@@ -58,16 +58,16 @@ fun GetStartedChooserScreen(
 
                     Column(
                         modifier = Modifier
-                          .constrainAs(buttonColumn) {
-                            top.linkTo(title.bottom, 6.dp)
-                            start.linkTo(parent.start, 12.dp)
-                            end.linkTo(parent.end, 12.dp)
-                            bottom.linkTo(parent.bottom, 12.dp)
+                            .constrainAs(buttonColumn) {
+                                top.linkTo(title.bottom, 6.dp)
+                                start.linkTo(parent.start, 12.dp)
+                                end.linkTo(parent.end, 12.dp)
+                                bottom.linkTo(parent.bottom, 12.dp)
 
-                            width = Dimension.fillToConstraints
-                            height = Dimension.fillToConstraints
-                          }
-                          .height(IntrinsicSize.Min),
+                                width = Dimension.fillToConstraints
+                                height = Dimension.fillToConstraints
+                            }
+                            .height(IntrinsicSize.Min),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
                         ChooserCard(
@@ -77,9 +77,9 @@ fun GetStartedChooserScreen(
                                 //navigator.push(LoginAndRegisterScreen())
                             },
                             modifier = Modifier
-                              .fillMaxWidth()
-                              .weight(1f)
-                              .padding(bottom = 6.dp)
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .padding(bottom = 6.dp)
                         )
 
                         ChooserCard(
@@ -90,9 +90,9 @@ fun GetStartedChooserScreen(
                                 navController.navigate(Home)
                             },
                             modifier = Modifier
-                              .fillMaxWidth()
-                              .weight(1f)
-                              .padding(top = 6.dp)
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .padding(top = 6.dp)
                         )
                     }
                 }

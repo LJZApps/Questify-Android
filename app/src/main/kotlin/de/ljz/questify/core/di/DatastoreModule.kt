@@ -1,31 +1,47 @@
 package de.ljz.questify.core.di
 
-import android.util.Log
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import de.ljz.questify.data.datastore.AppSettings
 import de.ljz.questify.data.datastore.AppSettingsSerializer
-import de.ljz.questify.data.datastore.AppUserDataStore
+import de.ljz.questify.data.datastore.AppUser
+import de.ljz.questify.data.datastore.AppUserSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
 import java.io.File
+import javax.inject.Singleton
 
-val datastoreModule = module {
-    single { AppUserDataStore(androidContext()) } // Registriere die AppUserDataStore-Klasse
+@Module
+@InstallIn(SingletonComponent::class)
+object DatastoreModule {
 
-    single<DataStore<AppSettings>> {
-        Log.d("KoinModule", "Providing AppSettings")
+    @Singleton
+    @Provides
+    fun provideUserDatastore(@ApplicationContext context: Context): DataStore<AppUser> = DataStoreFactory.create(
+        serializer = AppUserSerializer,
+        corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },
+        migrations = listOf(),
+        scope = CoroutineScope(Dispatchers.IO),
+        produceFile = { File(context.filesDir, "datastore/app_user.json") }
+    )
 
-        DataStoreFactory.create(
+    @Singleton
+    @Provides
+    fun provideAppSettingsDatastore(@ApplicationContext context: Context): DataStore<AppSettings> {
+        return DataStoreFactory.create(
             serializer = AppSettingsSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { AppSettings() },
             migrations = listOf(),
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { File(androidContext().filesDir, "datastore/app_settings.json") }
+            scope = CoroutineScope(Dispatchers.IO),
+            produceFile = { File(context.filesDir, "datastore/app_settings.json") }
         )
     }
+
 }

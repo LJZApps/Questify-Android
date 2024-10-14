@@ -12,17 +12,17 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    viewModel: SettingsViewModel = koinViewModel()
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val dynamicColorsEnabled = viewModel.dynamicColorsEnabled.collectAsState().value
 

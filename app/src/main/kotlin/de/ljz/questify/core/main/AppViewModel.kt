@@ -2,6 +2,7 @@ package de.ljz.questify.core.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.repositories.AppSettingsRepository
 import de.ljz.questify.data.sharedpreferences.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,8 +11,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AppViewModel(
+@HiltViewModel
+class AppViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {

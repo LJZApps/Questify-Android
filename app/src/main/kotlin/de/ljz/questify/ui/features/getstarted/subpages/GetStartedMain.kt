@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
@@ -20,12 +21,11 @@ import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
 import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.util.bounceClick
 import io.sentry.compose.SentryTraced
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GetStartedMainScreen(
-    viewModel: GetStartedViewModel = koinViewModel(),
+    viewModel: GetStartedViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
     SentryTraced(tag = "get_started_main") {

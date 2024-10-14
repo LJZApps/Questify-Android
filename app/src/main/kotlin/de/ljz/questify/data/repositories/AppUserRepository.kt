@@ -1,12 +1,15 @@
 package de.ljz.questify.data.repositories
 
+import androidx.datastore.core.DataStore
 import de.ljz.questify.data.datastore.AppUser
-import de.ljz.questify.data.datastore.AppUserDataStore
 import de.ljz.questify.data.shared.Points
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AppUserRepository(
-    private val appUserDataStore: AppUserDataStore
+@Singleton
+class AppUserRepository @Inject constructor(
+    private val appUserDataStore: DataStore<AppUser>
 ) : BaseRepository() {
 
     fun getAppUser(): Flow<AppUser> {
@@ -14,7 +17,11 @@ class AppUserRepository(
     }
 
     suspend fun addPoint(points: Points) {
-        appUserDataStore.addPoint(points)
+        appUserDataStore.updateData {
+            it.copy(
+                points = it.points + points.points
+            )
+        }
     }
 
 }

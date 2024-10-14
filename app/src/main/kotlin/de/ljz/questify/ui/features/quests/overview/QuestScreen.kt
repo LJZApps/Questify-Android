@@ -24,6 +24,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -36,7 +37,6 @@ import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(
     ExperimentalSerializationApi::class,
@@ -46,7 +46,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun QuestScreen(
     drawerState: DrawerState,
-    viewModel: QuestsViewModel = koinViewModel(),
+    viewModel: QuestsViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState().value
