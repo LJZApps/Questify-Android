@@ -1,4 +1,4 @@
-name: Build Release APK
+name: Build Debug and Release APK
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Build APK
+    name: Build APKs
     runs-on: ubuntu-latest
 
     steps:
@@ -41,12 +41,28 @@ jobs:
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
 
-      # 5. Build the release APK
+      # 5. Set Sentry auth token for release build
+      - name: Set Sentry Auth Token
+        run: |
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> $GITHUB_ENV
+
+      # 6. Build the debug APK
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      # 7. Build the release APK (includes Sentry integration)
       - name: Build Release APK
         run: ./gradlew assembleRelease --stacktrace
 
-      # 6. Upload APK to GitHub Actions artifacts
-      - name: Upload APK
+      # 8. Upload Debug APK to GitHub Actions artifacts
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      # 9. Upload Release APK to GitHub Actions artifacts
+      - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:
           name: release-apk
