@@ -1,4 +1,4 @@
-name: Build Debug and Release APK
+name: Build signed Artifacts
 
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
 
-      - name: Build Release APK
+      - name: Build signed Release APK
         run: ./gradlew assembleRelease --stacktrace
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Build Release AAB
+      - name: Build signed Release AAB
         run: ./gradlew bundleRelease --stacktrace
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -66,13 +66,13 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload Release APK
+      - name: Upload signed Release APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: app/build/outputs/apk/release/app-release.apk
 
-      - name: Upload Release AAB
+      - name: Upload signed Release AAB
         uses: actions/upload-artifact@v4
         with:
           name: release-aab
