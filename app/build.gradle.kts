@@ -19,8 +19,10 @@ plugins {
 }
 
 android {
-    val properties = Properties().apply {
-        load(FileInputStream(File(rootProject.rootDir, "app.properties")))
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(FileInputStream(localPropertiesFile))
     }
 
     compileSdk = 35
