@@ -8,6 +8,7 @@ import de.ljz.questify.ui.features.home.HomeViewModel
 import de.ljz.questify.ui.features.loginandregister.LoginViewModel
 import de.ljz.questify.ui.features.quests.QuestsViewModel
 import de.ljz.questify.ui.features.register.RegisterViewModel
+import de.ljz.questify.ui.features.settings.SettingsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -20,4 +21,5 @@ val viewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::LoginViewModel)
     viewModel { QuestsViewModel(get<AppUserRepository>()) }
+    viewModelOf(::SettingsViewModel)
 }

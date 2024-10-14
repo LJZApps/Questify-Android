@@ -29,4 +29,12 @@ class AppSettingsRepository(
         }
     }
 
+    suspend fun setDynamicColorsEnabled(enabled: Boolean) {
+        appSettingsDataStore.updateData {
+            it.copy(
+                dynamicThemeColors = enabled
+            )
+        }
+    }
+
 }

@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,16 +31,17 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.compose.UIModePreviews
-import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.settings.navigation.Settings
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     questItemCount: Int,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    navController: NavHostController
 ) {
     val scope = rememberCoroutineScope()
     var showMenu by remember { mutableStateOf(false) }
@@ -132,7 +132,9 @@ fun TopBar(
                     }
                 )
                 DropdownMenuItem(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        navController.navigate(Settings)
+                    },
                     text = {
                         Text(text = "Settings")
                     },
@@ -143,15 +145,4 @@ fun TopBar(
             }
         }
     )
-}
-
-@UIModePreviews
-@Composable
-private fun TopBarPreview() {
-    QuestifyTheme {
-        TopBar(
-            questItemCount = 999,
-            drawerState = DrawerState(initialValue = DrawerValue.Closed)
-        )
-    }
 }

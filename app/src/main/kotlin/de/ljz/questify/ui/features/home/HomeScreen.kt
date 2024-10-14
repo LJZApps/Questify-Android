@@ -53,7 +53,10 @@ fun HomeScreen(
                     startDestination = Quests
                 ) {
                     composable<Quests> {
-                        QuestScreen(drawerState = drawerState)
+                        QuestScreen(
+                            drawerState = drawerState,
+                            navController = navController
+                        )
                     }
                 }
             }

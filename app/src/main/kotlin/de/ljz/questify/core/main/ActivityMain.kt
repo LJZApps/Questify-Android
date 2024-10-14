@@ -15,6 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
+import de.ljz.questify.ui.features.settings.SettingsScreen
+import de.ljz.questify.ui.features.settings.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
 import io.sentry.android.core.BuildConfig
@@ -68,6 +70,11 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<Home> {
                                 HomeScreen(
+                                    navController = navController
+                                )
+                            }
+                            composable<Settings> {
+                                SettingsScreen(
                                     navController = navController
                                 )
                             }

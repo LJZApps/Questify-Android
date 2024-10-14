@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.components.TopBar
@@ -45,7 +46,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun QuestScreen(
     drawerState: DrawerState,
-    viewModel: QuestsViewModel = koinViewModel()
+    viewModel: QuestsViewModel = koinViewModel(),
+    navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
@@ -60,7 +62,7 @@ fun QuestScreen(
     )
 
     Scaffold(
-        topBar = { TopBar(uiState.userPoints, drawerState) },
+        topBar = { TopBar(uiState.userPoints, drawerState, navController) },
         content = { innerPadding ->
             Box(
                 modifier = Modifier

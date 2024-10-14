@@ -2,6 +2,7 @@ package de.ljz.questify.ui.ds.theme
 
 import android.app.Activity
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -22,6 +23,8 @@ fun QuestifyTheme(
     content: @Composable () -> Unit,
 ) {
     val isDynamicColorEnabled = vm.dynamicColorsEnabled
+
+    Log.d("QuestiyTheme", isDynamicColorEnabled.toString())
 
     var colorScheme = getColorScheme(vm.themeBehavior, vm.themeColor, isSystemInDarkTheme())
 
