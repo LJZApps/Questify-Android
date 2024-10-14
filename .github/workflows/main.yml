@@ -33,11 +33,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Create Keystore
+      - name: Create the keystore file from secret
         run: |
           mkdir -p keystore
           echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
 
+      - name: Verify keystore file
+        run: ls -l keystore/release.keystore
+
+    
       - name: Create local.properties file
         run: |
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
