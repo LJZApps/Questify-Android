@@ -56,7 +56,7 @@ fun QuestScreen(
     val bottomNavRoutes = listOf(
         BottomNavigationRoute("All Quests", QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
         BottomNavigationRoute("Today Quests", QuestBottomRoutes.TodayQuests, Icons.Default.Today),
-        BottomNavigationRoute("Repeating Quests", QuestBottomRoutes.RepeatingQuests, Icons.Default.Repeat)
+        BottomNavigationRoute("Repeating Quests", QuestBottomRoutes.RepeatingQuests, Icons.Default.Repeat),
     )
 
     Scaffold(
@@ -97,16 +97,10 @@ fun QuestScreen(
                         selected = currentDestination?.route == bottomNavRoute.route::class.serializer().descriptor.serialName,
                         onClick = {
                             bottomNavController.navigate(bottomNavRoute.route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
                                 popUpTo(bottomNavController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
                                 launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
                                 restoreState = true
                             }
                         }
