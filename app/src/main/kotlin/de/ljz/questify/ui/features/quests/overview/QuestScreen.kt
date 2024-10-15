@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.overview.components.CreateQuestBottomSheet
 import de.ljz.questify.ui.features.quests.overview.navigation.BottomNavigationRoute
 import de.ljz.questify.ui.features.quests.overview.navigation.QuestBottomRoutes
@@ -47,7 +48,7 @@ import kotlinx.serialization.serializer
 fun QuestScreen(
     drawerState: DrawerState,
     viewModel: QuestsViewModel = hiltViewModel(),
-    navController: NavHostController
+    mainNavController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
@@ -62,7 +63,7 @@ fun QuestScreen(
     )
 
     Scaffold(
-        topBar = { TopBar(uiState.userPoints, drawerState, navController) },
+        topBar = { TopBar(uiState.userPoints, drawerState, mainNavController) },
         content = { innerPadding ->
             Box(
                 modifier = Modifier
@@ -74,7 +75,7 @@ fun QuestScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.showQuestCreation()
+                    mainNavController.navigate(CreateQuest)
                 }
             ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = null)

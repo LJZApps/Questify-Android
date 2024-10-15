@@ -27,7 +27,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 )
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
+    mainNavController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
@@ -55,7 +55,7 @@ fun HomeScreen(
                     composable<Quests> {
                         QuestScreen(
                             drawerState = drawerState,
-                            navController = navController
+                            mainNavController = mainNavController
                         )
                     }
                 }

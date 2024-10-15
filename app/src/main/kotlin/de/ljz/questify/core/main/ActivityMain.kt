@@ -23,7 +23,6 @@ import de.ljz.questify.ui.features.settings.SettingsScreen
 import de.ljz.questify.ui.features.settings.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
-import io.sentry.Sentry
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
 
@@ -65,13 +64,13 @@ class ActivityMain : AppCompatActivity() {
                                 GetStartedMainScreen(navController = navController)
                             }
                             composable<Home> {
-                                HomeScreen(navController = navController)
+                                HomeScreen(mainNavController = navController)
                             }
                             composable<Settings> {
-                                SettingsScreen(navController = navController)
+                                SettingsScreen(mainNavController = navController)
                             }
                             composable<CreateQuest> {
-                                CreateQuestScreen(navController = navController)
+                                CreateQuestScreen(mainNavController = navController)
                             }
                         }
                     }

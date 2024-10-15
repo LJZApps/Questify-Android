@@ -129,10 +129,12 @@ fun TopBar(
                             imageVector = Icons.Outlined.ManageAccounts,
                             contentDescription = "Profile"
                         )
-                    }
+                    },
+                    enabled = false
                 )
                 DropdownMenuItem(
                     onClick = {
+                        showMenu = !showMenu
                         navController.navigate(Settings)
                     },
                     text = {
