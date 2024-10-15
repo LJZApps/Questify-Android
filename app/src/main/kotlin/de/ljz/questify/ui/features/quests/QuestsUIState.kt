@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests.overview
+package de.ljz.questify.ui.features.quests
 
 import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
 

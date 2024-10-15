@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.quests.overview.QuestsViewModel
-import de.ljz.questify.ui.features.quests.overview.navigation.QuestBottomRoutes
-import de.ljz.questify.ui.features.quests.overview.subpages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.overview.subpages.RepeatingQuestsPage
-import de.ljz.questify.ui.features.quests.overview.subpages.TodayQuestsPage
+import de.ljz.questify.ui.features.quests.QuestsViewModel
+import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.subpages.AllQuestsPage
+import de.ljz.questify.ui.features.quests.subpages.RepeatingQuestsPage
+import de.ljz.questify.ui.features.quests.subpages.TodayQuestsPage
 
 @Composable
 fun HomeBottomNavGraph(navController: NavHostController, viewModel: QuestsViewModel) {

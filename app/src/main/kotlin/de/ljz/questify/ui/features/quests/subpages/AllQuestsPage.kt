@@ -1,10 +1,10 @@
-package de.ljz.questify.ui.features.quests.overview.subpages
+package de.ljz.questify.ui.features.quests.subpages
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import de.ljz.questify.ui.features.quests.overview.QuestsViewModel
+import de.ljz.questify.ui.features.quests.QuestsViewModel
 
 @Composable
 fun AllQuestsPage(

@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.features.home.HomeUiState
-import de.ljz.questify.ui.features.quests.overview.navigation.Quests
+import de.ljz.questify.ui.features.quests.navigation.Quests
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @OptIn(ExperimentalSerializationApi::class)

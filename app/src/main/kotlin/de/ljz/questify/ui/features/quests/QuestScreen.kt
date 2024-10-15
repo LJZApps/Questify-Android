@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests.overview
+package de.ljz.questify.ui.features.quests
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,10 +30,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.components.TopBar
-import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
-import de.ljz.questify.ui.features.quests.overview.components.CreateQuestBottomSheet
-import de.ljz.questify.ui.features.quests.overview.navigation.BottomNavigationRoute
-import de.ljz.questify.ui.features.quests.overview.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.createquest.navigation.CreateQuest
+import de.ljz.questify.ui.features.quests.components.CreateQuestBottomSheet
+import de.ljz.questify.ui.features.quests.navigation.BottomNavigationRoute
+import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -57,9 +57,17 @@ fun QuestScreen(
     val sheetState = rememberModalBottomSheetState()
 
     val bottomNavRoutes = listOf(
-        BottomNavigationRoute("All Quests", QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
+        BottomNavigationRoute(
+            "All Quests",
+            QuestBottomRoutes.AllQuests,
+            Icons.AutoMirrored.Default.List
+        ),
         BottomNavigationRoute("Today Quests", QuestBottomRoutes.TodayQuests, Icons.Default.Today),
-        BottomNavigationRoute("Repeating Quests", QuestBottomRoutes.RepeatingQuests, Icons.Default.Repeat),
+        BottomNavigationRoute(
+            "Repeating Quests",
+            QuestBottomRoutes.RepeatingQuests,
+            Icons.Default.Repeat
+        ),
     )
 
     Scaffold(

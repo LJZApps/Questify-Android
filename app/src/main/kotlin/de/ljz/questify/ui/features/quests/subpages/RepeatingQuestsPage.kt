@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests.overview.subpages
+package de.ljz.questify.ui.features.quests.subpages
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import de.ljz.questify.ui.features.quests.overview.QuestsViewModel
+import de.ljz.questify.ui.features.quests.QuestsViewModel
 
 @Composable
 fun RepeatingQuestsPage(
