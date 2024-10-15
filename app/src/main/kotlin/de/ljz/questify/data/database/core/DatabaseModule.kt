@@ -23,3 +23,11 @@ object DatabaseModule {
     ).build()
   }
 }
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DaoModule {
+  @Singleton
+  @Provides
+  fun userDao(db: AppDatabase) = db.getQuestDao()
+}

@@ -3,13 +3,14 @@ package de.ljz.questify.data.database.models.entities.quests
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import de.ljz.questify.data.shared.Points
 import java.util.Date
 
 @Entity(tableName = "main_quests")
 data class MainQuestEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int,
+    val id: Int? = null,
 
     @ColumnInfo(name = "title")
     val title: String,
@@ -18,7 +19,7 @@ data class MainQuestEntity(
     val description: String? = null,
 
     @ColumnInfo(name = "points")
-    val points: Int,
+    val points: Points,
 
     @ColumnInfo(name = "due_date")
     val dueDate: Date? = null,
@@ -30,11 +31,8 @@ data class MainQuestEntity(
     val updatedAt: Date? = null,
 
     @ColumnInfo(name = "lock_deletion")
-    val lockDeletion: Boolean,
+    val lockDeletion: Boolean? = false,
 
     @ColumnInfo(name = "done")
-    val done: Boolean,
-
-    @ColumnInfo(name = "archived")
-    val archived: Boolean
+    val done: Boolean? = false,
 )

@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
 import de.ljz.questify.data.database.models.entities.quests.SubQuestEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuestDao {
@@ -17,6 +18,10 @@ interface QuestDao {
     @Transaction
     @Query("SELECT * FROM sub_quests WHERE main_quest_id = :mainQuestId")
     suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
+
+    @Transaction
+    @Query("SELECT * FROM main_quests")
+    fun getMainQuests(): Flow<List<MainQuestEntity>>
 
     @Upsert
     suspend fun upsertMainQuest(value: MainQuestEntity)

@@ -56,7 +56,8 @@ fun CreateQuestScreen(
             bottomBar = {
                 Button(
                     onClick = {
-                        // TODO
+                        viewModel.createQuest()
+                        mainNavController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
