@@ -109,7 +109,7 @@ android {
 }
 
 val roomVersion by extra("2.6.1")
-val composeVersion by extra("1.6.5")
+val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {

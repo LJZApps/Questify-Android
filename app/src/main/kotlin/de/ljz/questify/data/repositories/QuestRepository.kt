@@ -13,5 +13,9 @@ class QuestRepository @Inject constructor(
         questDao.upsertMainQuest(quest)
     }
 
+    suspend fun setQuestDone(id: Int, done: Boolean) {
+        questDao.setQuestDone(id, done)
+    }
+
     fun getQuests () = questDao.getMainQuests()
 }

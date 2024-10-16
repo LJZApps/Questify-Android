@@ -8,15 +8,13 @@ import java.util.Date
 
 @Entity(tableName = "main_quests")
 data class MainQuestEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
 
     @ColumnInfo(name = "title")
     val title: String,
 
     @ColumnInfo(name = "description")
-    val description: String? = null,
+    val description: String = "",
 
     @ColumnInfo(name = "points")
     val points: Points,
@@ -31,8 +29,8 @@ data class MainQuestEntity(
     val updatedAt: Date? = null,
 
     @ColumnInfo(name = "lock_deletion")
-    val lockDeletion: Boolean? = false,
+    val lockDeletion: Boolean = false,
 
     @ColumnInfo(name = "done")
-    val done: Boolean? = false,
+    val done: Boolean = false,
 )

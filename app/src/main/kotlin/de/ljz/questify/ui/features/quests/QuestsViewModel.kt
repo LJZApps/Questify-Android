@@ -46,6 +46,12 @@ class QuestsViewModel @Inject constructor(
         }
     }
 
+    fun setQuestDone(id: Int, done: Boolean) {
+        viewModelScope.launch {
+            questRepository.setQuestDone(id, done)
+        }
+    }
+
     fun showQuestCreation() {
         _uiState.update {
             it.copy(

@@ -20,8 +20,12 @@ interface QuestDao {
     suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
 
     @Transaction
-    @Query("SELECT * FROM main_quests")
+    @Query("SELECT * FROM main_quests WHERE done = 0")
     fun getMainQuests(): Flow<List<MainQuestEntity>>
+
+    @Transaction
+    @Query("UPDATE main_quests SET done = :done WHERE id = :id")
+    suspend fun setQuestDone(id: Int, done: Boolean)
 
     @Upsert
     suspend fun upsertMainQuest(value: MainQuestEntity)

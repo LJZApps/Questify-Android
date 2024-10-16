@@ -25,7 +25,7 @@ class CreateQuestViewModel @Inject constructor(
             title = _uiState.value.title,
             description = _uiState.value.description,
             points = Points.EASY,
-            createdAt = Date(),
+            createdAt = Date()
         )
 
         viewModelScope.launch {

@@ -13,3 +13,6 @@ object GetStarted {
 
 @Serializable
 object GetStartedMain
+
+@Serializable
+object GetStartedChooser

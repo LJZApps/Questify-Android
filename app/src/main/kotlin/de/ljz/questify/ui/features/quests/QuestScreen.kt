@@ -57,17 +57,9 @@ fun QuestScreen(
     val sheetState = rememberModalBottomSheetState()
 
     val bottomNavRoutes = listOf(
-        BottomNavigationRoute(
-            "All Quests",
-            QuestBottomRoutes.AllQuests,
-            Icons.AutoMirrored.Default.List
-        ),
+        BottomNavigationRoute("All Quests", QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
         BottomNavigationRoute("Today Quests", QuestBottomRoutes.TodayQuests, Icons.Default.Today),
-        BottomNavigationRoute(
-            "Repeating Quests",
-            QuestBottomRoutes.RepeatingQuests,
-            Icons.Default.Repeat
-        ),
+        BottomNavigationRoute("Repeating Quests", QuestBottomRoutes.RepeatingQuests, Icons.Default.Repeat),
     )
 
     Scaffold(
