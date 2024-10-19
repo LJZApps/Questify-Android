@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.home.components
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import de.ljz.questify.R;
 import de.ljz.questify.ui.features.home.HomeUiState
 import de.ljz.questify.ui.features.quests.navigation.Quests
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -36,11 +39,12 @@ fun DrawerContent(
             // Header mit Benutzerinformationen
             Column {
                 Text(
-                    text = "Welcome, Leon Zapke",
+                    text = stringResource(R.string.drawer_content_title),
                     style = MaterialTheme.typography.labelLarge,
                 )
+
                 Text(
-                    text = "Points: ${uiState.userPoints}",
+                    text = stringResource(R.string.drawer_content_subtitle, uiState.userPoints),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -50,13 +54,13 @@ fun DrawerContent(
 
             // Kategorie: Quests
             Text(
-                text = "Quests",
+                text = stringResource(R.string.drawer_content_quests_title),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
             NavigationDrawerItem(
-                label = { Text(text = "Your Quests") },
+                label = { Text(text = stringResource(R.string.drawer_content_quests_navigation_title)) },
                 icon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.List,
@@ -73,7 +77,7 @@ fun DrawerContent(
             )
 
             Text(
-                text = "More coming soon!",
+                text = stringResource(R.string.drawer_content_more_coming_soon),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                   .padding(vertical = 8.dp)

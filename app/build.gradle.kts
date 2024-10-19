@@ -47,8 +47,8 @@ android {
         applicationId = "de.ljz.questify"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1"
+        versionCode = 2
+        versionName = "0.2"
         resourceConfigurations += listOf("en", "de")
     }
 
@@ -118,17 +118,11 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-/*
-    implementation(project.dependencies.platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.navigation)*/
 
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)
 
-    implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.05.00"))
+    implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.09.03"))
     implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
 
     implementation(platform(libs.sentry.bom))

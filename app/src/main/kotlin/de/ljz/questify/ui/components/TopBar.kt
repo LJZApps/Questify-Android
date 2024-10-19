@@ -144,7 +144,8 @@ fun TopBar(
                     },
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Settings, contentDescription = "Settings")
-                    }
+                    },
+                    enabled = false
                 )
             }
         }

@@ -16,4 +16,9 @@
     <string name="quest_screen_bottom_nav_all_quests">All Quests</string>
     <string name="quest_screen_bottom_nav_daily_quests">Daily Quests</string>
     <string name="quest_screen_bottom_nav_repeating_quests">Repeating Quests</string>
+    <string name="drawer_content_title">Welcome to Questify</string>
+    <string name="drawer_content_subtitle">Points: %1d</string>
+    <string name="drawer_content_quests_title">Quests</string>
+    <string name="drawer_content_quests_navigation_title">Your Quests</string>
+    <string name="drawer_content_more_coming_soon">More features coming soon!</string>
 </resources>

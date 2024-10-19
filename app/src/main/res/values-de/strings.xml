@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Questify</string>
-    <string name="top_bar_menu_connect_account">Acconunt verbinden</string>
+    <string name="top_bar_menu_connect_account">Konto verbinden</string>
     <string name="top_bar_menu_settings">Einstellungen</string>
     <string name="create_quest_top_bar_title">Quest erstellen</string>
     <string name="create_quest_save_button">Quest speichern</string>
@@ -17,4 +17,9 @@
     <string name="quest_screen_bottom_nav_all_quests">Alle Quests</string>
     <string name="quest_screen_bottom_nav_daily_quests">Tägliche Quests</string>
     <string name="quest_screen_bottom_nav_repeating_quests">Wiederholende Quests</string>
+    <string name="drawer_content_title">Willkommen bei Questify</string>
+    <string name="drawer_content_subtitle">Punkte: %1d</string>
+    <string name="drawer_content_quests_title">Quests</string>
+    <string name="drawer_content_quests_navigation_title">Deine Quests</string>
+    <string name="drawer_content_more_coming_soon">Weitere Funktionen demnächst!</string>
 </resources>
