@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -24,11 +23,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.components.CreateQuestBottomSheet
@@ -57,13 +58,12 @@ fun QuestScreen(
     val sheetState = rememberModalBottomSheetState()
 
     val bottomNavRoutes = listOf(
-        BottomNavigationRoute("All Quests", QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
-        BottomNavigationRoute("Today Quests", QuestBottomRoutes.TodayQuests, Icons.Default.Today),
-        BottomNavigationRoute("Repeating Quests", QuestBottomRoutes.RepeatingQuests, Icons.Default.Repeat),
+        BottomNavigationRoute(stringResource(R.string.quest_screen_bottom_nav_all_quests), QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
+        BottomNavigationRoute(stringResource(R.string.quest_screen_bottom_nav_daily_quests), QuestBottomRoutes.TodayQuests, Icons.Default.CalendarMonth),
     )
 
     Scaffold(
-        topBar = { TopBar(uiState.userPoints, drawerState, mainNavController) },
+        topBar = { TopBar(uiState.userPoints, drawerState, mainNavController, stringResource(R.string.quest_screen_top_bar_title)) },
         content = { innerPadding ->
             Box(
                 modifier = Modifier

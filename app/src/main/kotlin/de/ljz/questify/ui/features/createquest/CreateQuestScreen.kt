@@ -23,9 +23,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import de.ljz.questify.R
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +37,12 @@ fun CreateQuestScreen(
     viewModel: CreateQuestViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-    val options = listOf("Easy", "Medium", "Hard", "Epic")
+    val options = listOf(
+        stringResource(R.string.difficulty_easy),
+        stringResource(R.string.difficulty_medium),
+        stringResource(R.string.difficulty_hard),
+        stringResource(R.string.difficulty_epic)
+    )
 
     QuestifyTheme (
         transparentNavBar = true
@@ -43,7 +50,7 @@ fun CreateQuestScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Create Quest") },
+                    title = { Text(text = stringResource(R.string.create_quest_top_bar_title)) },
                     navigationIcon = {
                         IconButton(
                             onClick = { mainNavController.popBackStack() }
@@ -62,7 +69,7 @@ fun CreateQuestScreen(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
-                    Text("Save Quest")
+                    Text(stringResource(R.string.create_quest_save_button))
                 }
             }
         ) { innerPadding ->
@@ -76,7 +83,7 @@ fun CreateQuestScreen(
                 OutlinedTextField(
                     value = uiState.title,
                     onValueChange = { viewModel.updateTitle(it) },
-                    label = { Text("Title") },
+                    label = { Text(stringResource(R.string.create_quest_title)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     singleLine = true
@@ -85,7 +92,7 @@ fun CreateQuestScreen(
                 OutlinedTextField(
                     value = uiState.description,
                     onValueChange = { viewModel.updateDescription(it) },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(R.string.create_quest_description)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     minLines = 2,

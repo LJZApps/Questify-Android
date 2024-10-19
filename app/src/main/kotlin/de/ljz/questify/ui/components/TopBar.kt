@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
@@ -41,7 +42,8 @@ import kotlinx.coroutines.launch
 fun TopBar(
     questItemCount: Int,
     drawerState: DrawerState,
-    navController: NavHostController
+    navController: NavHostController,
+    title: String
 ) {
     val scope = rememberCoroutineScope()
     var showMenu by remember { mutableStateOf(false) }
@@ -75,7 +77,7 @@ fun TopBar(
     TopAppBar(
         title = {
             Text(
-                text = "Your Quests",
+                text = title,
             )
         },
         navigationIcon = {
@@ -122,7 +124,7 @@ fun TopBar(
                 DropdownMenuItem(
                     onClick = { /*TODO*/ },
                     text = {
-                        Text(text = "Connect account")
+                        Text(text = stringResource(R.string.top_bar_menu_connect_account))
                     },
                     leadingIcon = {
                         Icon(
@@ -138,7 +140,7 @@ fun TopBar(
                         navController.navigate(Settings)
                     },
                     text = {
-                        Text(text = "Settings")
+                        Text(text = stringResource(R.string.top_bar_menu_settings))
                     },
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Settings, contentDescription = "Settings")

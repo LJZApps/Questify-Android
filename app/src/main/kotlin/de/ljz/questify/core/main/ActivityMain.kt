@@ -60,7 +60,7 @@ class ActivityMain : AppCompatActivity() {
                         val navController = rememberNavController()
                         NavHost(
                             navController = navController,
-                            startDestination = if (isSetupDone) Home else GetStartedMain
+                            startDestination = if (isSetupDone) Home else GetStartedMain,
                         ) {
                             composable<GetStartedMain> {
                                 GetStartedMainScreen(navController = navController)
@@ -84,4 +84,5 @@ class ActivityMain : AppCompatActivity() {
         }
 
     }
+
 }

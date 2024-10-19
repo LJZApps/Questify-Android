@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +41,7 @@ fun GetStartedMainScreen(
                 ) = createRefs()
 
                 Text(
-                    text = "Are you ready for your next Adventure?",
+                    text = stringResource(R.string.get_started_intro),
                     modifier = Modifier
                         .constrainAs(titleRef) {
                             top.linkTo(parent.top)
@@ -73,7 +74,7 @@ fun GetStartedMainScreen(
                       }
                 ) {
                     Text(
-                        "Yes, let's start!",
+                        stringResource(R.string.get_started_lets_go),
                         fontFamily = FontFamily(
                             Font(R.font.arcade)
                         )
