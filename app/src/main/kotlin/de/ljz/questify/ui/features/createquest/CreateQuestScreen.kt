@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,6 +44,7 @@ fun CreateQuestScreen(
         stringResource(R.string.difficulty_hard),
         stringResource(R.string.difficulty_epic)
     )
+    val context = LocalContext.current
 
     QuestifyTheme (
         transparentNavBar = true
@@ -63,7 +65,7 @@ fun CreateQuestScreen(
             bottomBar = {
                 Button(
                     onClick = {
-                        viewModel.createQuest()
+                        viewModel.createQuest(context)
                         mainNavController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -99,8 +101,11 @@ fun CreateQuestScreen(
                     maxLines = 4
                 )
 
+                Text("Schwierigkeit")
+
                 SingleChoiceSegmentedButtonRow (
                     modifier = Modifier.fillMaxWidth()
+                        .padding(top = 2.dp)
                 ) {
                     options.forEachIndexed { index, label ->
                         SegmentedButton(

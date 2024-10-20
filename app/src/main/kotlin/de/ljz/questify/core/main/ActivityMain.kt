@@ -45,6 +45,8 @@ class ActivityMain : AppCompatActivity() {
 
             val isAppReadyState by vm.isAppReady.collectAsState()
 
+            vm.createNotificationChannel(this)
+
             SentryAndroid.init(this) { options ->
                 options.dsn = "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
                 options.isDebug = BuildConfig.DEBUG

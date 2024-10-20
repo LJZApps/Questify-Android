@@ -1,5 +1,11 @@
 package de.ljz.questify.core.main
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
+import android.app.NotificationManager
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +18,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import de.ljz.questify.R
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
@@ -39,5 +46,26 @@ class AppViewModel @Inject constructor(
 
             _isAppReady.update { true }
         }
+    }
+
+    fun createNotificationChannel(context: Context) {
+        val groupId = "quest_group"
+        val groupName = "Quests"
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val questGroup = NotificationChannelGroup(groupId, groupName)
+        notificationManager.createNotificationChannelGroup(questGroup)
+
+        val soundUri = Uri.parse("android.resource://" + context.packageName + "/" + R.raw.quest_notification)
+
+        val channel = NotificationChannel("quests", "Erinnerungen", NotificationManager.IMPORTANCE_DEFAULT).apply {
+            description = "Erhalte Quest-Erinnerungen"
+            importance = NotificationManager.IMPORTANCE_HIGH
+            group = groupId
+            setSound(soundUri, Notification.AUDIO_ATTRIBUTES_DEFAULT)
+        }
+
+        // Registriere den Kanal beim NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

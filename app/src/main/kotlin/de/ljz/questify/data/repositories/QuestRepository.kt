@@ -9,8 +9,8 @@ import javax.inject.Singleton
 class QuestRepository @Inject constructor(
     private val questDao: QuestDao
 ) : BaseRepository() {
-    suspend fun addMainQuest (quest: MainQuestEntity) {
-        questDao.upsertMainQuest(quest)
+    suspend fun addMainQuest (quest: MainQuestEntity): Long {
+        return questDao.upsertMainQuest(quest)
     }
 
     suspend fun setQuestDone(id: Int, done: Boolean) {
