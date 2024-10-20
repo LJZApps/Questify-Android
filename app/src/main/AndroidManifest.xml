@@ -5,12 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- FIXME DELETE android:usesCleartextTraffic="true" FOR RELEASE!!! VERY IMPORTANT!!! -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- FIXME DELETE android:usesCleartextTraffic="true" FOR RELEASE!!! VERY IMPORTANT!!! -->
     <application
         android:name=".core.application.App"
         android:allowBackup="true"
