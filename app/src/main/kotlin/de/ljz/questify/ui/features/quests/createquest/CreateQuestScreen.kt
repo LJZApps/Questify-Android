@@ -117,20 +117,25 @@ fun CreateQuestScreen(
                     maxLines = 4
                 )
 
-                Text("Schwierigkeit")
+                Column {
+                    Text(
+                        text = "Schwierigkeit",
+                        modifier = Modifier.padding(bottom = 0.dp)
+                    )
 
-                SingleChoiceSegmentedButtonRow (
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(top = 2.dp)
-                ) {
-                    options.forEachIndexed { index, label ->
-                        SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = options.size
-                            ), onClick = { viewModel.updateDifficulty(index) },
-                            selected = index == uiState.difficulty
-                        ) { Text(label) }
+                    SingleChoiceSegmentedButtonRow (
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 0.dp)
+                    ) {
+                        options.forEachIndexed { index, label ->
+                            SegmentedButton(
+                                shape = SegmentedButtonDefaults.itemShape(
+                                    index = index,
+                                    count = options.size
+                                ), onClick = { viewModel.updateDifficulty(index) },
+                                selected = index == uiState.difficulty
+                            ) { Text(label) }
+                        }
                     }
                 }
 

@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.register
+package de.ljz.questify.ui.features.loginandregister.register
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel

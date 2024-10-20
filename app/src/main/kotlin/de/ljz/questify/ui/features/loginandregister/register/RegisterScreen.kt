@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.register
+package de.ljz.questify.ui.features.loginandregister.register
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -15,10 +15,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.register.subpages.RegisterDoneScreen
-import de.ljz.questify.ui.features.register.subpages.RegisterEmailScreen
-import de.ljz.questify.ui.features.register.subpages.RegisterPasswordScreen
-import de.ljz.questify.ui.features.register.subpages.RegisterUserDataScreen
+import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterDoneScreen
+import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterEmailScreen
+import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterPasswordScreen
+import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterUserDataScreen
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.register.subpages
+package de.ljz.questify.ui.features.loginandregister.register.subpages
 
 import androidx.compose.runtime.Composable
 import de.ljz.questify.core.compose.UIModePreviews
