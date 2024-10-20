@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.createquest
+package de.ljz.questify.ui.features.quests.createquest
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
+
 @HiltViewModel
 class CreateQuestViewModel @Inject constructor(
     private val questRepository: QuestRepository
@@ -39,7 +40,7 @@ class CreateQuestViewModel @Inject constructor(
         viewModelScope.launch {
             val questId = questRepository.addMainQuest(quest)
 
-            scheduleNotification(context, questId.toInt(), "Zeit für deine Quest!", _uiState.value.title)
+            scheduleNotification(context, questId.toInt(), "Zeit für eine Quest!", _uiState.value.title)
         }
     }
 
@@ -62,7 +63,7 @@ class CreateQuestViewModel @Inject constructor(
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
-                    triggerTime,
+                    _uiState.value.selectedTime,
                     pendingIntent
                 )
             } else {
@@ -84,6 +85,18 @@ class CreateQuestViewModel @Inject constructor(
             }
             context.startActivity(intent)
         }
+    }
+
+    fun updateSelectedTime(time: Long) {
+        _uiState.value = _uiState.value.copy(selectedTime = time)
+    }
+
+    fun showTimePicker() {
+        _uiState.value = _uiState.value.copy(isTimePickerVisible = true)
+    }
+
+    fun hideTimePicker() {
+        _uiState.value = _uiState.value.copy(isTimePickerVisible = false)
     }
 
     fun updateTitle(title: String) {

@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests.components
+package de.ljz.questify.ui.features.quests.viewquests.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

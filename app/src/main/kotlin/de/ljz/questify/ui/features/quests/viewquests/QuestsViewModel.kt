@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests
+package de.ljz.questify.ui.features.quests.viewquests
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

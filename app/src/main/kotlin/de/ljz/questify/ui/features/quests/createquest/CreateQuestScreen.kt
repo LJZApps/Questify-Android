@@ -1,5 +1,6 @@
-package de.ljz.questify.ui.features.createquest
+package de.ljz.questify.ui.features.quests.createquest
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +22,8 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -29,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.ui.components.TimePickerDialog
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +51,16 @@ fun CreateQuestScreen(
         stringResource(R.string.difficulty_epic)
     )
     val context = LocalContext.current
+
+    val currentTime = Calendar.getInstance()
+    val timePickerState = rememberTimePickerState(
+        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
+        initialMinute = currentTime.get(Calendar.MINUTE),
+        is24Hour = true,
+    )
+    val datePickerState = rememberDatePickerState(
+        initialDisplayMode = DisplayMode.Input
+    )
 
     QuestifyTheme (
         transparentNavBar = true
@@ -116,6 +132,24 @@ fun CreateQuestScreen(
                             selected = index == uiState.difficulty
                         ) { Text(label) }
                     }
+                }
+
+                Text(
+                    text = "${timePickerState.hour} : ${timePickerState.minute}",
+                    modifier = Modifier.clickable(
+                        onClick = viewModel::showTimePicker
+                    )
+                )
+
+                if (uiState.isTimePickerVisible) {
+                    TimePickerDialog(
+                        timePickerState = timePickerState,
+                        onDismiss = viewModel::hideTimePicker,
+                        onConfirm = { timestamp ->
+                            viewModel.updateSelectedTime(timestamp)
+                            viewModel.hideTimePicker()
+                        }
+                    )
                 }
             }
         }

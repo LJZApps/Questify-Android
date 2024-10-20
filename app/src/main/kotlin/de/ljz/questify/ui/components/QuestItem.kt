@@ -15,22 +15,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import de.ljz.questify.core.compose.UIModePreviews
+import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 
 @Composable
 fun QuestItem(
+    id: Int,
     title: String,
     description: String,
     done: Boolean,
     onQuestChecked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController? = null
 ) {
     ElevatedCard (
         modifier = Modifier
             .fillMaxWidth()
             .padding(6.dp),
         onClick = {
-
+            navController?.navigate(QuestDetail(id))
         }
     ) {
         ListItem (
@@ -63,6 +67,7 @@ private fun QuestItemPreview() {
         title = "Quest #1",
         description = "Quest description",
         done = false,
-        onQuestChecked = {  }
+        onQuestChecked = {  },
+        id = 1
     )
 }

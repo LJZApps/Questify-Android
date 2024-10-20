@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests
+package de.ljz.questify.ui.features.quests.viewquests
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,10 +31,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
-import de.ljz.questify.ui.features.createquest.navigation.CreateQuest
-import de.ljz.questify.ui.features.quests.components.CreateQuestBottomSheet
-import de.ljz.questify.ui.features.quests.navigation.BottomNavigationRoute
-import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
+import de.ljz.questify.ui.features.quests.viewquests.components.CreateQuestBottomSheet
+import de.ljz.questify.ui.features.quests.viewquests.navigation.BottomNavigationRoute
+import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -58,8 +58,16 @@ fun QuestScreen(
     val sheetState = rememberModalBottomSheetState()
 
     val bottomNavRoutes = listOf(
-        BottomNavigationRoute(stringResource(R.string.quest_screen_bottom_nav_all_quests), QuestBottomRoutes.AllQuests, Icons.AutoMirrored.Default.List),
-        BottomNavigationRoute(stringResource(R.string.quest_screen_bottom_nav_daily_quests), QuestBottomRoutes.TodayQuests, Icons.Default.CalendarMonth),
+        BottomNavigationRoute(
+            stringResource(R.string.quest_screen_bottom_nav_all_quests),
+            QuestBottomRoutes.AllQuests,
+            Icons.AutoMirrored.Default.List
+        ),
+        BottomNavigationRoute(
+            stringResource(R.string.quest_screen_bottom_nav_daily_quests),
+            QuestBottomRoutes.TodayQuests,
+            Icons.Default.CalendarMonth
+        ),
     )
 
     Scaffold(
@@ -69,7 +77,7 @@ fun QuestScreen(
                 modifier = Modifier
                     .padding(innerPadding)
             ) {
-                HomeBottomNavGraph(bottomNavController, viewModel)
+                HomeBottomNavGraph(bottomNavController, mainNavController, viewModel)
             }
         },
         floatingActionButton = {

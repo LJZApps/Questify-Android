@@ -1,13 +1,19 @@
 package de.ljz.questify.core.receiver
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
+import de.ljz.questify.core.application.TAG
+import de.ljz.questify.core.main.ActivityMain
 
 @AndroidEntryPoint
 class QuestNotificationReceiver : BroadcastReceiver() {
@@ -21,8 +27,16 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         val description = intent.getStringExtra("description") ?: "Du hast eine Quest zu erledigen"
         val trophyEnabled = intent.getBooleanExtra("trophyEnabled", false)
 
+        val intent = Intent(context, ActivityMain::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = "questify://quest_detail/${notificationId}".toUri()
+        }
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
         // Speichere die neue Benachrichtigung in SharedPreferences
         saveNotification(context, title, description)
+
+        Log.d(TAG, intent.data.toString())
 
         // Erstelle die individuelle Benachrichtigung
         val notification = NotificationCompat.Builder(context, "quests")
@@ -31,6 +45,7 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             .setSmallIcon(R.drawable.ic_stat_name)
             .setColor(ContextCompat.getColor(context, R.color.notification_color))
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
             .setGroup(questsGroupId)
             .build()
 

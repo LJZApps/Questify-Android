@@ -6,14 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.quests.QuestsViewModel
-import de.ljz.questify.ui.features.quests.navigation.QuestBottomRoutes
-import de.ljz.questify.ui.features.quests.subpages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.subpages.RepeatingQuestsPage
-import de.ljz.questify.ui.features.quests.subpages.TodayQuestsPage
+import de.ljz.questify.ui.features.quests.viewquests.QuestsViewModel
+import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.viewquests.subpages.AllQuestsPage
+import de.ljz.questify.ui.features.quests.viewquests.subpages.RepeatingQuestsPage
+import de.ljz.questify.ui.features.quests.viewquests.subpages.TodayQuestsPage
 
 @Composable
-fun HomeBottomNavGraph(navController: NavHostController, viewModel: QuestsViewModel) {
+fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: QuestsViewModel) {
 
     NavHost(
         navController = navController,
@@ -36,7 +36,7 @@ fun HomeBottomNavGraph(navController: NavHostController, viewModel: QuestsViewMo
         }
 
         composable<QuestBottomRoutes.AllQuests> {
-            AllQuestsPage(viewModel = viewModel)
+            AllQuestsPage(viewModel = viewModel, navController = mainNavController)
         }
     }
 }

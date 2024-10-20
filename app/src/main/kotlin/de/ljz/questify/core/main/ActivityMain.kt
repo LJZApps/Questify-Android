@@ -1,6 +1,7 @@
 package de.ljz.questify.core.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,15 +14,20 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import de.ljz.questify.core.application.TAG
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.createquest.CreateQuestScreen
-import de.ljz.questify.ui.features.createquest.navigation.CreateQuest
+import de.ljz.questify.ui.features.quests.createquest.CreateQuestScreen
+import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
+import de.ljz.questify.ui.features.quests.questdetail.QuestDetailScreen
 import de.ljz.questify.ui.features.settings.SettingsScreen
 import de.ljz.questify.ui.features.settings.navigation.Settings
+import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.home.Home
@@ -78,6 +84,17 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<CreateQuest> {
                                 CreateQuestScreen(mainNavController = navController)
+                            }
+                            composable<QuestDetail>(
+                                deepLinks = listOf(
+                                    navDeepLink<QuestDetail>(basePath = "questify://quest_detail")
+                                )
+                            ) { backStackEntry ->
+                                Log.d(TAG, backStackEntry.toRoute<QuestDetail>().id.toString())
+                                QuestDetailScreen(
+                                    id = backStackEntry.toRoute<QuestDetail>().id,
+                                    mainNavController = navController
+                                )
                             }
                         }
                     }
