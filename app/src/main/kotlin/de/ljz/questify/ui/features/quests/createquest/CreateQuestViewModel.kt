@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.quests.createquest
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -29,18 +30,25 @@ class CreateQuestViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(CreateQuestUiState())
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
 
+    @SuppressLint("NewApi")
     fun createQuest(context: Context) {
-        val quest = MainQuestEntity(
-            title = _uiState.value.title,
-            description = _uiState.value.description,
-            points = Points.EASY,
-            createdAt = Date()
-        )
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        viewModelScope.launch {
-            val questId = questRepository.addMainQuest(quest)
+        if (alarmManager.canScheduleExactAlarms() || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            val quest = MainQuestEntity(
+                title = _uiState.value.title,
+                description = _uiState.value.description,
+                points = Points.EASY,
+                createdAt = Date()
+            )
 
-            scheduleNotification(context, questId.toInt(), "Zeit für eine Quest!", _uiState.value.title)
+            viewModelScope.launch {
+                val questId = questRepository.addMainQuest(quest)
+
+                scheduleNotification(context, questId.toInt(), "Zeit für eine Quest!", _uiState.value.title)
+            }
+        } else {
+            showAlertManagerInfo()
         }
     }
 
@@ -67,7 +75,7 @@ class CreateQuestViewModel @Inject constructor(
                     pendingIntent
                 )
             } else {
-                requestExactAlarmPermission(context)
+                showAlertManagerInfo()
             }
         } else {
             alarmManager.setExact(
@@ -78,7 +86,7 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    private fun requestExactAlarmPermission(context: Context) {
+    fun requestExactAlarmPermission(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
                 data = Uri.parse("package:${context.packageName}")
@@ -87,27 +95,17 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedTime(time: Long) {
-        _uiState.value = _uiState.value.copy(selectedTime = time)
+    private fun updateUiState(update: CreateQuestUiState.() -> CreateQuestUiState) {
+        _uiState.value = _uiState.value.update()
     }
 
-    fun showTimePicker() {
-        _uiState.value = _uiState.value.copy(isTimePickerVisible = true)
-    }
+    fun updateSelectedTime(time: Long) = updateUiState { copy(selectedTime = time) }
+    fun showTimePicker() = updateUiState { copy(isTimePickerVisible = true) }
+    fun hideTimePicker() = updateUiState { copy(isTimePickerVisible = false) }
+    fun updateTitle(title: String) = updateUiState { copy(title = title) }
+    fun updateDescription(description: String) = updateUiState { copy(description = description) }
+    fun updateDifficulty(difficulty: Int) = updateUiState { copy(difficulty = difficulty) }
+    fun showAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = true) }
+    fun hideAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = false) }
 
-    fun hideTimePicker() {
-        _uiState.value = _uiState.value.copy(isTimePickerVisible = false)
-    }
-
-    fun updateTitle(title: String) {
-        _uiState.value = _uiState.value.copy(title = title)
-    }
-
-    fun updateDescription(description: String) {
-        _uiState.value = _uiState.value.copy(description = description)
-    }
-
-    fun updateDifficulty(difficulty: Int) {
-        _uiState.value = _uiState.value.copy(difficulty = difficulty)
-    }
 }

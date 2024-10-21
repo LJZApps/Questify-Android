@@ -23,6 +23,7 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,6 +36,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TimePickerDialog
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.quests.createquest.components.AlertManagerInfoBottomSheet
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +63,7 @@ fun CreateQuestScreen(
     val datePickerState = rememberDatePickerState(
         initialDisplayMode = DisplayMode.Input
     )
+    val sheetState = rememberModalBottomSheetState()
 
     QuestifyTheme (
         transparentNavBar = true
@@ -71,7 +74,7 @@ fun CreateQuestScreen(
                     title = { Text(text = stringResource(R.string.create_quest_top_bar_title)) },
                     navigationIcon = {
                         IconButton(
-                            onClick = { mainNavController.popBackStack() }
+                            onClick = { mainNavController.navigateUp() }
                         ) {
                             Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                         }
@@ -82,7 +85,7 @@ fun CreateQuestScreen(
                 Button(
                     onClick = {
                         viewModel.createQuest(context)
-                        mainNavController.popBackStack()
+                        //mainNavController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -157,6 +160,18 @@ fun CreateQuestScreen(
                     )
                 }
             }
+        }
+
+        if (uiState.isAlertManagerInfoVisible) {
+            AlertManagerInfoBottomSheet(
+                sheetState = sheetState,
+                onConfirm = {
+                    viewModel.requestExactAlarmPermission(context)
+                },
+                onDismiss = {
+
+                }
+            )
         }
     }
 }

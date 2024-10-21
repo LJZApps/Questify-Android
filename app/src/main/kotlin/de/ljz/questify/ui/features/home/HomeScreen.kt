@@ -16,6 +16,9 @@ import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.home.components.DrawerContent
 import de.ljz.questify.ui.features.quests.viewquests.QuestScreen
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
+import de.ljz.questify.ui.navigation.ScaleTransitionDirection
+import de.ljz.questify.ui.navigation.scaleIntoContainer
+import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import io.sentry.compose.SentryTraced
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -50,7 +53,19 @@ fun HomeScreen(
             ) {
                 NavHost(
                     navController = homeNavHostController,
-                    startDestination = Quests
+                    startDestination = Quests,
+                    enterTransition = {
+                        scaleIntoContainer()
+                    },
+                    exitTransition = {
+                        scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)
+                    },
+                    popEnterTransition = {
+                        scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS)
+                    },
+                    popExitTransition = {
+                        scaleOutOfContainer()
+                    }
                 ) {
                     composable<Quests> {
                         QuestScreen(

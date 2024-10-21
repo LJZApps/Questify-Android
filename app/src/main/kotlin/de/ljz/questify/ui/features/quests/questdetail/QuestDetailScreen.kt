@@ -21,7 +21,6 @@ import de.ljz.questify.ui.ds.theme.QuestifyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestDetailScreen(
-    id: Int,
     viewModel: QuestDetailViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
@@ -54,7 +53,7 @@ fun QuestDetailScreen(
                     navigationIcon = {
                         IconButton(
                             onClick = {
-                                navController.popBackStack()
+                                navController.navigateUp()
                             }
                         ) {
                             Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)

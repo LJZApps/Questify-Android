@@ -28,7 +28,10 @@ import de.ljz.questify.ui.features.settings.SettingsScreen
 import de.ljz.questify.ui.features.settings.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
+import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.home.Home
+import de.ljz.questify.ui.navigation.scaleIntoContainer
+import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
 
@@ -67,6 +70,18 @@ class ActivityMain : AppCompatActivity() {
                         NavHost(
                             navController = navController,
                             startDestination = if (isSetupDone) Home else GetStartedMain,
+                            enterTransition = {
+                                scaleIntoContainer()
+                            },
+                            exitTransition = {
+                                scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)
+                            },
+                            popEnterTransition = {
+                                scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS)
+                            },
+                            popExitTransition = {
+                                scaleOutOfContainer()
+                            }
                         ) {
                             composable<GetStartedMain> {
                                 GetStartedMainScreen(navController = navController)
@@ -88,10 +103,7 @@ class ActivityMain : AppCompatActivity() {
                                     navDeepLink<QuestDetail>(basePath = "questify://quest_detail")
                                 ),
                             ) { backStackEntry ->
-                                QuestDetailScreen(
-                                    id = backStackEntry.toRoute<QuestDetail>().id,
-                                    navController = navController
-                                )
+                                QuestDetailScreen(navController = navController)
                             }
                         }
                     }

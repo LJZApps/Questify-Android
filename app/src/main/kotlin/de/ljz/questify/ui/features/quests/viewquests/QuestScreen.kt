@@ -32,7 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
-import de.ljz.questify.ui.features.quests.viewquests.components.CreateQuestBottomSheet
 import de.ljz.questify.ui.features.quests.viewquests.navigation.BottomNavigationRoute
 import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
@@ -55,7 +54,6 @@ fun QuestScreen(
 
     val bottomNavController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
-    val sheetState = rememberModalBottomSheetState()
 
     val bottomNavRoutes = listOf(
         BottomNavigationRoute(
@@ -71,7 +69,14 @@ fun QuestScreen(
     )
 
     Scaffold(
-        topBar = { TopBar(uiState.userPoints, drawerState, mainNavController, stringResource(R.string.quest_screen_top_bar_title)) },
+        topBar = {
+            TopBar(
+                uiState.userPoints,
+                drawerState,
+                mainNavController,
+                stringResource(R.string.quest_screen_top_bar_title)
+            )
+        },
         content = { innerPadding ->
             Box(
                 modifier = Modifier
@@ -125,12 +130,4 @@ fun QuestScreen(
             )
         }
     )
-
-    if (uiState.createQuestSheetOpen) {
-        CreateQuestBottomSheet(
-            sheetState = sheetState,
-            onDismiss = viewModel::hideQuestCreation,
-            onConfirm = {}
-        )
-    }
 }
