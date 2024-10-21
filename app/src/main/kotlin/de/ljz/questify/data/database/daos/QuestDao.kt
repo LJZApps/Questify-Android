@@ -19,9 +19,11 @@ interface QuestDao {
     @Query("SELECT * FROM sub_quests WHERE main_quest_id = :mainQuestId")
     suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
 
-    @Transaction
     @Query("SELECT * FROM main_quests WHERE done = 0 ")
     fun getMainQuests(): Flow<List<MainQuestEntity>>
+
+    @Query("SELECT * FROM main_quests WHERE id = :id")
+    fun findMainQuestById(id: Int): Flow<MainQuestEntity>
 
     @Transaction
     @Query("UPDATE main_quests SET done = :done WHERE id = :id")

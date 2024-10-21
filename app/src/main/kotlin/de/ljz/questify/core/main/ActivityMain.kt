@@ -86,10 +86,11 @@ class ActivityMain : AppCompatActivity() {
                             composable<QuestDetail>(
                                 deepLinks = listOf(
                                     navDeepLink<QuestDetail>(basePath = "questify://quest_detail")
-                                )
+                                ),
                             ) { backStackEntry ->
                                 QuestDetailScreen(
-                                    id = backStackEntry.toRoute<QuestDetail>().id
+                                    id = backStackEntry.toRoute<QuestDetail>().id,
+                                    navController = navController
                                 )
                             }
                         }

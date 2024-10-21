@@ -18,4 +18,6 @@ class QuestRepository @Inject constructor(
     }
 
     fun getQuests () = questDao.getMainQuests()
+
+    fun findMainQuestById(id: Int) = questDao.findMainQuestById(id)
 }

@@ -5,9 +5,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.core.compose.UIModePreviews
@@ -23,35 +27,55 @@ fun QuestItem(
     modifier: Modifier = Modifier,
     navController: NavHostController? = null
 ) {
-    ElevatedCard (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
-        onClick = {
-            navController?.navigate(QuestDetail(id))
-        }
-    ) {
-        ListItem (
-            headlineContent = {
-                Text(
-                    title
+    val context = LocalContext.current
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
+            when(it) {
+                SwipeToDismissBoxValue.StartToEnd -> {}
+                SwipeToDismissBoxValue.EndToStart -> {}
+                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
+            }
+            return@rememberSwipeToDismissBoxState true
+        },
+        // positional threshold of 25%
+        positionalThreshold = { it * .25f }
+    )
+
+    SwipeToDismissBox(
+        state = dismissState,
+        modifier = modifier,
+        backgroundContent = { DismissBackground(dismissState)},
+        content = {
+            ElevatedCard (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                onClick = {
+                    navController?.navigate(QuestDetail(id))
+                }
+            ) {
+                ListItem (
+                    headlineContent = {
+                        Text(
+                            title
+                        )
+                    },
+                    supportingContent = {
+                        Text(description, maxLines = 1)
+                    },
+                    leadingContent = {
+                        Checkbox(
+                            checked = done,
+                            onCheckedChange = {
+                                onQuestChecked()
+                            }
+                        )
+                    },
+                    modifier = modifier.fillMaxWidth(),
+                    tonalElevation = 50.dp
                 )
-            },
-            supportingContent = {
-                Text(description, maxLines = 1)
-            },
-            leadingContent = {
-                Checkbox(
-                    checked = done,
-                    onCheckedChange = {
-                        onQuestChecked()
-                    }
-                )
-            },
-            modifier = modifier.fillMaxWidth(),
-            tonalElevation = 50.dp
-        )
-    }
+            }
+        })
 }
 
 @UIModePreviews
