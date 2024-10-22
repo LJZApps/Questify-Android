@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -18,6 +22,7 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -39,25 +44,46 @@ fun TimePickerDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnBackPress = false,
-            dismissOnClickOutside = false
+            dismissOnClickOutside = false,
         )
     ) {
-        Card(
-            shape = RoundedCornerShape(16.dp),
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = 6.dp,
         ) {
-            Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Select time",
+                    modifier = Modifier
+                        .padding(bottom = 12.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Start
+                )
                 TimePicker(timePickerState)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = onDismiss) {
-                        Text("Dismiss")
+                    Row {
+                        IconButton(
+                            onClick = {}
+                        ) {
+                            Icon(Icons.Outlined.Keyboard, contentDescription = null)
+                        }
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(onClick = { onConfirm(cal.timeInMillis) }) {
-                        Text("Confirm")
+
+                    Row {
+                        TextButton(onClick = onDismiss) {
+                            Text("Dismiss")
+                        }
+                        Spacer(modifier = Modifier.width(2.dp))
+                        TextButton(onClick = { onConfirm(cal.timeInMillis) }) {
+                            Text("Confirm")
+                        }
                     }
                 }
             }

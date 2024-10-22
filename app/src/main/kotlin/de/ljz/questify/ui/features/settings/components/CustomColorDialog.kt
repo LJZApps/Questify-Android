@@ -49,7 +49,7 @@ fun CustomColorDialog(
         onDismissRequest = onDismiss,
     ) {
         Card(
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.extraLarge,
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
