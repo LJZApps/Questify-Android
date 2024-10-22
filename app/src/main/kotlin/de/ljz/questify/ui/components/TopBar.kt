@@ -7,11 +7,7 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.ManageAccounts
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,14 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.settings.navigation.Settings
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,38 +108,6 @@ fun TopBar(
                     painter = painterResource(id = R.drawable.no_profile_pic),
                     contentDescription = null,
                     modifier = Modifier.clip(CircleShape)
-                )
-            }
-
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(
-                    onClick = { /*TODO*/ },
-                    text = {
-                        Text(text = stringResource(R.string.top_bar_menu_connect_account))
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.ManageAccounts,
-                            contentDescription = "Profile"
-                        )
-                    },
-                    enabled = false
-                )
-                DropdownMenuItem(
-                    onClick = {
-                        showMenu = !showMenu
-                        navController.navigate(Settings)
-                    },
-                    text = {
-                        Text(text = stringResource(R.string.top_bar_menu_settings))
-                    },
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Outlined.Settings, contentDescription = "Settings")
-                    },
-                    enabled = false
                 )
             }
         }

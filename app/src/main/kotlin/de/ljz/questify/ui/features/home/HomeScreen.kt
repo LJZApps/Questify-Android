@@ -47,7 +47,9 @@ fun HomeScreen(
                 drawerContent = {
                     DrawerContent(
                         uiState = uiState,
-                        navController = homeNavHostController
+                        navController = homeNavHostController,
+                        mainNavController = mainNavController,
+                        drawerState = drawerState
                     )
                 }
             ) {
