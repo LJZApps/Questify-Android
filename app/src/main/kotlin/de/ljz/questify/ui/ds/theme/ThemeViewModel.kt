@@ -1,3 +1,4 @@
+// ThemeViewModel.kt
 package de.ljz.questify.ui.ds.theme
 
 import androidx.lifecycle.ViewModel
@@ -6,8 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.repositories.AppSettingsRepository
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,31 +15,22 @@ import javax.inject.Inject
 class ThemeViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
-    private val _themeBehavior = appSettingsRepository.getAppSettings().map { it.themeBehavior }
-    var themeBehavior = ThemeBehavior.SYSTEM_STANDARD
+    // MutableStateFlows to hold the app settings
+    private val _themeBehavior = MutableStateFlow(ThemeBehavior.SYSTEM_STANDARD)
+    val themeBehavior: StateFlow<ThemeBehavior> = _themeBehavior
 
-    private val _themeColor = appSettingsRepository.getAppSettings().map { it.themeColor }
-    var themeColor = ThemeColor.RED
+    private val _themeColor = MutableStateFlow(ThemeColor.RED)
+    val themeColor: StateFlow<ThemeColor> = _themeColor
 
-    private val _dynamicColorEnabled = appSettingsRepository.getAppSettings().map { it.dynamicThemeColors }
-    var dynamicColorsEnabled = false
+    private val _dynamicColorEnabled = MutableStateFlow(false)
+    val dynamicColorsEnabled: StateFlow<Boolean> = _dynamicColorEnabled
 
     init {
         viewModelScope.launch {
-            _themeBehavior.collectLatest {
-                themeBehavior = it
-            }
-        }
-
-        viewModelScope.launch {
-            _themeColor.collectLatest {
-                themeColor = it
-            }
-        }
-
-        viewModelScope.launch {
-            _dynamicColorEnabled.collectLatest {
-                dynamicColorsEnabled = it
+            appSettingsRepository.getAppSettings().collectLatest { settings ->
+                _themeBehavior.value = settings.themeBehavior
+                _themeColor.value = settings.themeColor
+                _dynamicColorEnabled.value = settings.dynamicThemeColors
             }
         }
     }

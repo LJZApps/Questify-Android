@@ -2,18 +2,17 @@ package de.ljz.questify.ui.ds.theme
 
 import android.app.Activity
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.ljz.questify.ui.state.ThemeBehavior
 
 @Composable
 fun QuestifyTheme(
@@ -22,17 +21,25 @@ fun QuestifyTheme(
     vm: ThemeViewModel = hiltViewModel(),
     content: @Composable () -> Unit,
 ) {
-    val isDynamicColorEnabled = vm.dynamicColorsEnabled
+    val themeBehavior by vm.themeBehavior.collectAsState() // Reactively track theme behavior
+    val themeColor by vm.themeColor.collectAsState() // Reactively track theme color
+    val dynamicColorsEnabled by vm.dynamicColorsEnabled.collectAsState() // Reactively track dynamic color setting
 
-    Log.d("QuestiyTheme", isDynamicColorEnabled.toString())
+    var colorScheme = getColorScheme(themeBehavior, themeColor, darkTheme)
 
-    var colorScheme = getColorScheme(vm.themeBehavior, vm.themeColor, isSystemInDarkTheme())
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        if (isDynamicColorEnabled) {
-            colorScheme = if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current) else dynamicLightColorScheme(LocalContext.current)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && dynamicColorsEnabled) {
+        colorScheme = when (themeBehavior) {
+            ThemeBehavior.DARK -> dynamicDarkColorScheme(LocalContext.current)
+            ThemeBehavior.LIGHT -> dynamicLightColorScheme(LocalContext.current)
+            ThemeBehavior.SYSTEM_STANDARD -> {
+                if (darkTheme) {
+                    dynamicDarkColorScheme(LocalContext.current)
+                } else {
+                    dynamicLightColorScheme(LocalContext.current)
+                }
+            }
         }
-
+    }
 
     val view = LocalView.current
     if (!view.isInEditMode) {

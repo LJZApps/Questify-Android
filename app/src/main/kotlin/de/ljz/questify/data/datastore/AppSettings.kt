@@ -30,9 +30,15 @@ object AppSettingsSerializer : Serializer<AppSettings> {
     override val defaultValue: AppSettings
         get() = AppSettings()
 
+    val jsonFormat = Json {
+        ignoreUnknownKeys = true // Ignore unknown fields for robustness
+        isLenient = true // Lenient parsing
+        prettyPrint = false // No pretty printing for faster serialization
+    }
+
     override suspend fun readFrom(input: InputStream): AppSettings {
         return try {
-            Json.decodeFromString(
+            jsonFormat.decodeFromString(
                 deserializer = AppSettings.serializer(),
                 string = input.readBytes().decodeToString()
             )
@@ -45,7 +51,7 @@ object AppSettingsSerializer : Serializer<AppSettings> {
     override suspend fun writeTo(t: AppSettings, output: OutputStream) {
         try {
             output.write(
-                Json.encodeToString(
+                jsonFormat.encodeToString(
                     serializer = AppSettings.serializer(),
                     value = t
                 ).encodeToByteArray()

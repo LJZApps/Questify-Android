@@ -3,6 +3,7 @@ package de.ljz.questify.data.repositories
 import androidx.datastore.core.DataStore
 import de.ljz.questify.data.datastore.AppSettings
 import de.ljz.questify.ui.state.ThemeBehavior
+import de.ljz.questify.ui.state.ThemeColor
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,6 +37,14 @@ class AppSettingsRepository @Inject constructor(
         appSettingsDataStore.updateData {
             it.copy(
                 dynamicThemeColors = enabled
+            )
+        }
+    }
+
+    suspend fun setCustomColor(color: ThemeColor) {
+        appSettingsDataStore.updateData {
+            it.copy(
+                themeColor = color
             )
         }
     }

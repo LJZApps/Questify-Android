@@ -34,9 +34,15 @@ object AppUserSerializer : Serializer<AppUser> {
     override val defaultValue: AppUser
         get() = AppUser()
 
+    val jsonFormat = Json {
+        ignoreUnknownKeys = true // Ignore unknown fields for robustness
+        isLenient = true // Lenient parsing
+        prettyPrint = false // No pretty printing for faster serialization
+    }
+
     override suspend fun readFrom(input: InputStream): AppUser {
         return try {
-            Json.decodeFromString(
+            jsonFormat.decodeFromString(
                 deserializer = AppUser.serializer(),
                 string = input.readBytes().decodeToString()
             )
@@ -49,7 +55,7 @@ object AppUserSerializer : Serializer<AppUser> {
     override suspend fun writeTo(t: AppUser, output: OutputStream) {
         try {
             output.write(
-                Json.encodeToString(
+                jsonFormat.encodeToString(
                     serializer = AppUser.serializer(),
                     value = t
                 ).encodeToByteArray()

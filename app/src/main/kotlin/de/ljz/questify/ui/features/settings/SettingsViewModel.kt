@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.settings
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +14,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
+    private val _uiState = MutableStateFlow(SettingsUIState())
+    val uiState = _uiState.asStateFlow()
 
     private val _themeBehavior = MutableStateFlow(ThemeBehavior.SYSTEM_STANDARD)
     val themeBehavior: StateFlow<ThemeBehavior> = _themeBehavior.asStateFlow()
@@ -35,26 +36,30 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    /*
-    fun updateThemeBehavior(behavior: ThemeBehavior) {
-        viewModelScope.launch {
-            appSettingsRepository.(behavior)
-        }
+    private fun updateUiState(update: SettingsUIState.() -> SettingsUIState) {
+        _uiState.value = _uiState.value.update()
     }
-     */
 
-    /*
-    fun updateThemeColor(color: ThemeColor) {
-        viewModelScope.launch {
-            appSettingsRepository.setThemeColor(color)
-        }
-    }
-     */
+    fun showCustomColorDialog() = updateUiState { copy(customColorDialogVisible = true) }
+    fun hideCustomColorDialog() = updateUiState { copy(customColorDialogVisible = false) }
+    fun showDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = true) }
+    fun hideDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = false) }
 
     fun updateDynamicColorsEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            Log.d("QuestiyTheme", enabled.toString())
             appSettingsRepository.setDynamicColorsEnabled(enabled)
+        }
+    }
+
+    fun updateCustomColor(color: ThemeColor) {
+        viewModelScope.launch {
+            appSettingsRepository.setCustomColor(color)
+        }
+    }
+
+    fun updateThemeBehavior(themeBehavior: ThemeBehavior) {
+        viewModelScope.launch {
+            appSettingsRepository.setDarkModeBehavior(themeBehavior)
         }
     }
 }

@@ -14,12 +14,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
-import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
+import de.ljz.questify.ui.features.profile.ProfileScreen
+import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.createquest.CreateQuestScreen
 import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.questdetail.QuestDetailScreen
@@ -104,6 +105,9 @@ class ActivityMain : AppCompatActivity() {
                                 ),
                             ) { backStackEntry ->
                                 QuestDetailScreen(navController = navController)
+                            }
+                            composable<ProfileRoute> {
+                                ProfileScreen(navController = navController)
                             }
                         }
                     }
