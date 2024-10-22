@@ -22,4 +22,20 @@
     <string name="drawer_content_quests_title">Quests</string>
     <string name="drawer_content_quests_navigation_title">Deine Quests</string>
     <string name="drawer_content_more_coming_soon">Weitere Funktionen demnächst!</string>
+    <string name="settings_screen_color_red">Rot</string>
+    <string name="settings_screen_color_green">Grün</string>
+    <string name="settings_screen_color_blue">Blau</string>
+    <string name="settings_screen_color_yellow">Gelb</string>
+    <string name="settings_screen_color_orange">Orange</string>
+    <string name="settings_screen_color_purple">Lila</string>
+    <string name="settings_screen_theme_system">System</string>
+    <string name="settings_screen_theme_dark">Dunkel</string>
+    <string name="settings_screen_theme_light">Hell</string>
+    <string name="settings_screen_title">Einstellungen</string>
+    <string name="settings_screen_theme_title">Darstellung</string>
+    <string name="settings_screen_dynamic_colors_title">Dynamische Farben</string>
+    <string name="settings_screen_dynamic_colors_subtitle">Färbe die App in deinen Android-Farben</string>
+    <string name="settings_screen_custom_colors_title">Benutzerdefinierte Farbe</string>
+    <string name="settings_screen_app_theme_title">Erscheinungsbild</string>
+    <string name="save">Speichern</string>
 </resources>

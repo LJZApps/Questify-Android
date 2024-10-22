@@ -21,4 +21,20 @@
     <string name="drawer_content_quests_title">Quests</string>
     <string name="drawer_content_quests_navigation_title">Your Quests</string>
     <string name="drawer_content_more_coming_soon">More features coming soon!</string>
+    <string name="settings_screen_color_red">Red</string>
+    <string name="settings_screen_color_green">Green</string>
+    <string name="settings_screen_color_blue">Blue</string>
+    <string name="settings_screen_color_yellow">Yellow</string>
+    <string name="settings_screen_color_orange">Orange</string>
+    <string name="settings_screen_color_purple">Purple</string>
+    <string name="settings_screen_theme_system">System</string>
+    <string name="settings_screen_theme_dark">Dark</string>
+    <string name="settings_screen_theme_light">Light</string>
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_screen_theme_title">Appearance</string>
+    <string name="settings_screen_dynamic_colors_title">Dynamic Colors</string>
+    <string name="settings_screen_dynamic_colors_subtitle">Tint the app in your Android colors</string>
+    <string name="settings_screen_custom_colors_title">Custom Color</string>
+    <string name="settings_screen_app_theme_title">App theme</string>
+    <string name="save">Save</string>
 </resources>

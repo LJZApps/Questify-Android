@@ -52,7 +52,13 @@ fun QuestifyTheme(
                 (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
             }
 
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = when (themeBehavior) {
+                ThemeBehavior.DARK -> false
+                ThemeBehavior.LIGHT -> true
+                ThemeBehavior.SYSTEM_STANDARD -> {
+                    !darkTheme
+                }
+            }
         }
     }
 

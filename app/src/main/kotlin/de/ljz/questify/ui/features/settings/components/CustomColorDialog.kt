@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.CustomColorItem
 import de.ljz.questify.ui.state.ThemeColor
 
@@ -34,12 +37,12 @@ fun CustomColorDialog(
     onDismiss: () -> Unit
 ) {
     val radioOptions = listOf(
-        CustomColorItem("Red", ThemeColor.RED),
-        CustomColorItem("Green", ThemeColor.GREEN),
-        CustomColorItem("Blue", ThemeColor.BLUE),
-        CustomColorItem("Yellow", ThemeColor.YELLOW),
-        CustomColorItem("Orange", ThemeColor.ORANGE),
-        CustomColorItem("Purple", ThemeColor.PURPLE),
+        CustomColorItem(stringResource(R.string.settings_screen_color_red), ThemeColor.RED),
+        CustomColorItem(stringResource(R.string.settings_screen_color_green), ThemeColor.GREEN),
+        CustomColorItem(stringResource(R.string.settings_screen_color_blue), ThemeColor.BLUE),
+        CustomColorItem(stringResource(R.string.settings_screen_color_yellow), ThemeColor.YELLOW),
+        CustomColorItem(stringResource(R.string.settings_screen_color_orange), ThemeColor.ORANGE),
+        CustomColorItem(stringResource(R.string.settings_screen_color_purple), ThemeColor.PURPLE),
     )
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(radioOptions.first { it.color == selectedColor })
@@ -48,8 +51,9 @@ fun CustomColorDialog(
     Dialog(
         onDismissRequest = onDismiss,
     ) {
-        Card(
+        Surface(
             shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = 6.dp,
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -83,7 +87,7 @@ fun CustomColorDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancel")
+                        Text(stringResource(android.R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
@@ -91,7 +95,7 @@ fun CustomColorDialog(
                             onConfirm(selectedOption.color)
                         }
                     ) {
-                        Text("Save")
+                        Text(stringResource(R.string.save))
                     }
                 }
             }

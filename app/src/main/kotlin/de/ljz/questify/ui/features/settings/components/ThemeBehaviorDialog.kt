@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.settings.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.ThemeItem
 import de.ljz.questify.ui.state.ThemeBehavior
 
@@ -35,9 +36,9 @@ fun ThemeBehaviorDialog(
     onDismiss: () -> Unit
 ) {
     val themOptions = listOf(
-        ThemeItem("System", ThemeBehavior.SYSTEM_STANDARD),
-        ThemeItem("Dark Mode", ThemeBehavior.DARK),
-        ThemeItem("Light Mode", ThemeBehavior.LIGHT),
+        ThemeItem(stringResource(R.string.settings_screen_theme_system), ThemeBehavior.SYSTEM_STANDARD),
+        ThemeItem(stringResource(R.string.settings_screen_theme_dark), ThemeBehavior.DARK),
+        ThemeItem(stringResource(R.string.settings_screen_theme_light), ThemeBehavior.LIGHT),
     )
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(themOptions.first { it.behavior == themeBehavior })
@@ -48,11 +49,7 @@ fun ThemeBehaviorDialog(
     ) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            modifier = Modifier
-                .background(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
+            tonalElevation = 6.dp,
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -72,7 +69,7 @@ fun ThemeBehaviorDialog(
                     ) {
                         RadioButton(
                             selected = (colorItem == selectedOption),
-                            onClick = null // null recommended for accessibility with screenreaders
+                            onClick = null
                         )
                         Text(
                             text = colorItem.text,
@@ -86,7 +83,7 @@ fun ThemeBehaviorDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancel")
+                        Text(stringResource(android.R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
@@ -94,7 +91,7 @@ fun ThemeBehaviorDialog(
                             onConfirm(selectedOption.behavior)
                         }
                     ) {
-                        Text("Save")
+                        Text(stringResource(R.string.save))
                     }
                 }
             }
