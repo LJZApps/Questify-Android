@@ -3,9 +3,11 @@ package de.ljz.questify.ui.features.settings.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -77,19 +79,19 @@ fun CustomColorDialog(
                     }
                 }
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = onDismiss) {
                         Text("Cancel")
                     }
-
+                    Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = {
                             onConfirm(selectedOption.color)
                         }
                     ) {
-                        Text("Select")
+                        Text("Save")
                     }
                 }
             }

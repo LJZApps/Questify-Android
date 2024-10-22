@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.settings
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -21,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
+import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.settings.components.CustomColorDialog
 import de.ljz.questify.ui.features.settings.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
@@ -51,78 +53,89 @@ fun SettingsScreen(
         ThemeItem("Light Mode", ThemeBehavior.LIGHT),
     )
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Settings") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { mainNavController.popBackStack() }
-                    ) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            SettingsGroup(
-                title = { Text(text = "Theme") },
-            ) {
-                SettingsSwitch(
-                    state = dynamicColorsEnabled,
-                    title = { Text(text = "Dynamic Colors") },
-                    subtitle = { Text(text = "Paint the app in your android colors") },
-                    icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
-                    onCheckedChange = viewModel::updateDynamicColorsEnabled,
-                )
-
-                SettingsMenuLink(
-                    title = { Text(text = "Custom color") },
-                    subtitle = { Text(text = colorOptions.first { it.color == customColor }.text) },
-                    icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
-                    onClick = {
-                        viewModel.showCustomColorDialog()
-                    }
-                )
-
-                SettingsMenuLink(
-                    title = { Text(text = "Dark mode") },
-                    subtitle = { Text(text = themOptions.first { it.behavior == themeBehavior }.text) },
-                    icon = { Icon(Icons.Outlined.DarkMode, contentDescription = null) },
-                    onClick = {
-                        viewModel.showDarkModeDialog()
+    QuestifyTheme(
+        transparentNavBar = true
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Settings") },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { mainNavController.popBackStack() }
+                        ) {
+                            Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+                        }
                     }
                 )
             }
-        }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                SettingsGroup(
+                    title = { Text(text = "Theme") },
+                ) {
+                    SettingsSwitch(
+                        state = dynamicColorsEnabled,
+                        title = { Text(text = "Dynamic Colors") },
+                        subtitle = { Text(text = "Paint the app in your android colors") },
+                        icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
+                        onCheckedChange = viewModel::updateDynamicColorsEnabled,
+                    )
 
-        if (uiState.customColorDialogVisible) {
-            CustomColorDialog(
-                selectedColor = customColor,
-                onConfirm = { color ->
-                    viewModel.updateCustomColor(color)
-                    viewModel.hideCustomColorDialog()
-                },
-                onDismiss = {
-                    viewModel.hideCustomColorDialog()
-                }
-            )
-        }
+                    AnimatedVisibility(!dynamicColorsEnabled) {
+                        SettingsMenuLink(
+                            title = { Text(text = "Custom color") },
+                            enabled = !dynamicColorsEnabled,
+                            subtitle = {
+                                Text(
+                                    text = colorOptions.first { it.color == customColor }.text
+                                )
+                            },
+                            icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
+                            onClick = {
+                                viewModel.showCustomColorDialog()
+                            }
+                        )
+                    }
 
-        if (uiState.darkModeDialogVisible) {
-            ThemeBehaviorDialog(
-                themeBehavior = themeBehavior,
-                onConfirm = { behavior ->
-                    viewModel.updateThemeBehavior(behavior)
-                    viewModel.hideDarkModeDialog()
-                },
-                onDismiss = {
-                    viewModel.hideDarkModeDialog()
+                    SettingsMenuLink(
+                        title = { Text(text = "Dark mode") },
+                        subtitle = { Text(text = themOptions.first { it.behavior == themeBehavior }.text) },
+                        icon = { Icon(Icons.Outlined.DarkMode, contentDescription = null) },
+                        onClick = {
+                            viewModel.showDarkModeDialog()
+                        }
+                    )
                 }
-            )
+            }
+
+            if (uiState.customColorDialogVisible) {
+                CustomColorDialog(
+                    selectedColor = customColor,
+                    onConfirm = { color ->
+                        viewModel.updateCustomColor(color)
+                        viewModel.hideCustomColorDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideCustomColorDialog()
+                    }
+                )
+            }
+
+            if (uiState.darkModeDialogVisible) {
+                ThemeBehaviorDialog(
+                    themeBehavior = themeBehavior,
+                    onConfirm = { behavior ->
+                        viewModel.updateThemeBehavior(behavior)
+                        viewModel.hideDarkModeDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideDarkModeDialog()
+                    }
+                )
+            }
         }
     }
 }

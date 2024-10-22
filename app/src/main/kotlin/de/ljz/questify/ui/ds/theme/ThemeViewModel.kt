@@ -15,7 +15,6 @@ import javax.inject.Inject
 class ThemeViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
-    // MutableStateFlows to hold the app settings
     private val _themeBehavior = MutableStateFlow(ThemeBehavior.SYSTEM_STANDARD)
     val themeBehavior: StateFlow<ThemeBehavior> = _themeBehavior
 
