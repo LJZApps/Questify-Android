@@ -28,6 +28,7 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.R
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
 import de.ljz.questify.ui.features.settings.settingsmain.components.CustomColorDialog
 import de.ljz.questify.ui.features.settings.settingsmain.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
@@ -139,7 +140,7 @@ fun SettingsScreen(
                             Icon(Icons.Outlined.Feedback, contentDescription = null)
                         },
                         onClick = {
-
+                            mainNavController.navigate(SettingsHelp)
                         }
                     )
                 }

@@ -41,4 +41,5 @@
     <string name="settings_help_screen_help_title">Hilfe</string>
     <string name="settings_help_screen_provide_feedback_title">Feedback geben</string>
     <string name="settings_help_screen_provide_feedback_subtitle">Irgendwelche Bugs, Abstürze oder seltsame UI bemerkt? Melde es hier!</string>
+    <string name="settings_help_screen_send_feedback">Feedback senden</string>
 </resources>
