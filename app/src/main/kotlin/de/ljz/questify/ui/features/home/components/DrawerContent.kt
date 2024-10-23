@@ -30,7 +30,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.home.HomeUiState
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
-import de.ljz.questify.ui.features.settings.navigation.Settings
+import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 

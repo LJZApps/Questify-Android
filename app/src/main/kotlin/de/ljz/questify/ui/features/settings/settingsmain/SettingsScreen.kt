@@ -1,14 +1,15 @@
-package de.ljz.questify.ui.features.settings
+package de.ljz.questify.ui.features.settings.settingsmain
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,8 +28,8 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.R
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.settings.components.CustomColorDialog
-import de.ljz.questify.ui.features.settings.components.ThemeBehaviorDialog
+import de.ljz.questify.ui.features.settings.settingsmain.components.CustomColorDialog
+import de.ljz.questify.ui.features.settings.settingsmain.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 
@@ -74,7 +75,7 @@ fun SettingsScreen(
                 )
             }
         ) { innerPadding ->
-            Box(
+            Column (
                 modifier = Modifier.padding(innerPadding)
             ) {
                 SettingsGroup(
@@ -124,6 +125,21 @@ fun SettingsScreen(
                         },
                         onClick = {
                             viewModel.showDarkModeDialog()
+                        }
+                    )
+                }
+
+                SettingsGroup (
+                    title = { Text(text = stringResource(R.string.settings_help_screen_help_title)) },
+                ) {
+                    SettingsMenuLink(
+                        title = { Text(text = stringResource(R.string.settings_help_screen_provide_feedback_title)) },
+                        subtitle = { Text(text = stringResource(R.string.settings_help_screen_provide_feedback_subtitle)) },
+                        icon = {
+                            Icon(Icons.Outlined.Feedback, contentDescription = null)
+                        },
+                        onClick = {
+
                         }
                     )
                 }

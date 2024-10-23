@@ -25,8 +25,10 @@ import de.ljz.questify.ui.features.quests.createquest.CreateQuestScreen
 import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.questdetail.QuestDetailScreen
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
-import de.ljz.questify.ui.features.settings.SettingsScreen
-import de.ljz.questify.ui.features.settings.navigation.Settings
+import de.ljz.questify.ui.features.settings.settingshelp.SettingsHelpScreen
+import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
+import de.ljz.questify.ui.features.settings.settingsmain.SettingsScreen
+import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
@@ -56,7 +58,8 @@ class ActivityMain : AppCompatActivity() {
             vm.createNotificationChannel(this)
 
             SentryAndroid.init(this) { options ->
-                options.dsn = "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
+                options.dsn =
+                    "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
                 options.isDebug = BuildConfig.DEBUG
             }
 
@@ -108,6 +111,9 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<ProfileRoute> {
                                 ProfileScreen(navController = navController)
+                            }
+                            composable<SettingsHelp> {
+                                SettingsHelpScreen(mainNavController = navController)
                             }
                         }
                     }

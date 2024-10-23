@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.settings
+package de.ljz.questify.ui.features.settings.settingsmain
 
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor

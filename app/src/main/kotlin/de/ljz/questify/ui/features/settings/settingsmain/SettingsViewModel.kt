@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.settings
+package de.ljz.questify.ui.features.settings.settingsmain
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
