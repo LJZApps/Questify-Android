@@ -4,7 +4,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.api.responses.common.ErrorResponse
-import de.ljz.questify.data.repositories.RegisterRepository
+import de.ljz.questify.domain.repositories.RegisterRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

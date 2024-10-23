@@ -9,8 +9,9 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.data.repositories.AppSettingsRepository
+import de.ljz.questify.R
 import de.ljz.questify.data.sharedpreferences.SessionManager
+import de.ljz.questify.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import de.ljz.questify.R
 
 @HiltViewModel
 class AppViewModel @Inject constructor(

@@ -1,11 +1,11 @@
-package de.ljz.questify.data.database.daos
+package de.ljz.questify.domain.daos
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
-import de.ljz.questify.data.database.models.entities.quests.SubQuestEntity
+import de.ljz.questify.domain.models.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.SubQuestEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

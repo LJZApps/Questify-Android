@@ -1,4 +1,4 @@
-package de.ljz.questify.data.database.core.converters
+package de.ljz.questify.domain.core.converters
 
 import androidx.room.TypeConverter
 import java.util.Date

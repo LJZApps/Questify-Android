@@ -3,7 +3,7 @@ package de.ljz.questify.ui.features.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.data.repositories.AppSettingsRepository
+import de.ljz.questify.domain.repositories.AppSettingsRepository
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 import kotlinx.coroutines.flow.*

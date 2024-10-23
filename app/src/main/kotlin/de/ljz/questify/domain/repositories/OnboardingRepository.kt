@@ -1,4 +1,4 @@
-package de.ljz.questify.data.repositories
+package de.ljz.questify.domain.repositories
 
 import javax.inject.Inject
 import javax.inject.Singleton

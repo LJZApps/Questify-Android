@@ -24,24 +24,23 @@ object DatastoreModule {
 
     @Singleton
     @Provides
-    fun provideUserDatastore(@ApplicationContext context: Context): DataStore<AppUser> = DataStoreFactory.create(
-        serializer = AppUserSerializer,
-        corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },
-        migrations = listOf(),
-        scope = CoroutineScope(Dispatchers.IO),
-        produceFile = { File(context.filesDir, "datastore/app_user.json") }
-    )
+    fun provideUserDatastore(@ApplicationContext context: Context): DataStore<AppUser> =
+        DataStoreFactory.create(
+            serializer = AppUserSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },
+            migrations = listOf(),
+            scope = CoroutineScope(Dispatchers.IO),
+            produceFile = { File(context.filesDir, "datastore/app_user.json") }
+        )
 
     @Singleton
     @Provides
-    fun provideAppSettingsDatastore(@ApplicationContext context: Context): DataStore<AppSettings> {
-        return DataStoreFactory.create(
+    fun provideAppSettingsDatastore(@ApplicationContext context: Context): DataStore<AppSettings> =
+        DataStoreFactory.create(
             serializer = AppSettingsSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { AppSettings() },
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
             produceFile = { File(context.filesDir, "datastore/app_settings.json") }
         )
-    }
-
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.data.repositories.QuestRepository
+import de.ljz.questify.domain.repositories.QuestRepository
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

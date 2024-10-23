@@ -1,4 +1,4 @@
-package de.ljz.questify.data.repositories
+package de.ljz.questify.domain.repositories
 
 import androidx.datastore.core.DataStore
 import de.ljz.questify.data.datastore.AppUser

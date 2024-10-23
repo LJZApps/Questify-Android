@@ -1,4 +1,4 @@
-package de.ljz.questify.data.database.models.entities.quests
+package de.ljz.questify.domain.models.quests
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

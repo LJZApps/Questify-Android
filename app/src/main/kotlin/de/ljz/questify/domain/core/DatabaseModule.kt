@@ -1,4 +1,4 @@
-package de.ljz.questify.data.database.core
+package de.ljz.questify.domain.core
 
 import android.content.Context
 import androidx.room.Room
@@ -27,7 +27,13 @@ object DatabaseModule {
 @Module
 @InstallIn(SingletonComponent::class)
 object DaoModule {
+
   @Singleton
   @Provides
-  fun userDao(db: AppDatabase) = db.getQuestDao()
+  fun questDao(db: AppDatabase) = db.getQuestDao()
+
+  @Singleton
+  @Provides
+  fun questNotificationDao(db: AppDatabase) = db.getQuestNotificationDao()
+
 }

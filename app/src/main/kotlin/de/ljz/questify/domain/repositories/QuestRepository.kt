@@ -1,7 +1,7 @@
-package de.ljz.questify.data.repositories
+package de.ljz.questify.domain.repositories
 
-import de.ljz.questify.data.database.daos.QuestDao
-import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
+import de.ljz.questify.domain.daos.QuestDao
+import de.ljz.questify.domain.models.quests.MainQuestEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -12,9 +12,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
-import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
-import de.ljz.questify.data.repositories.QuestRepository
 import de.ljz.questify.data.shared.Points
+import de.ljz.questify.domain.models.quests.MainQuestEntity
+import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,13 +26,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateQuestViewModel @Inject constructor(
-    private val questRepository: QuestRepository
+    private val questRepository: QuestRepository,
+    private val questNotificationRepository: QuestNotificationRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(CreateQuestUiState())
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
 
     @SuppressLint("NewApi")
-    fun createQuest(context: Context) {
+    fun createQuest(
+        context: Context,
+        onSuccess: () -> Unit,
+    ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         if (alarmManager.canScheduleExactAlarms() || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
@@ -46,6 +51,8 @@ class CreateQuestViewModel @Inject constructor(
                 val questId = questRepository.addMainQuest(quest)
 
                 scheduleNotification(context, questId.toInt(), "Zeit für eine Quest!", _uiState.value.title)
+
+                onSuccess.invoke()
             }
         } else {
             showAlertManagerInfo()

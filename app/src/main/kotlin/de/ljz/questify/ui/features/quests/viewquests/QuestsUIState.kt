@@ -1,6 +1,6 @@
 package de.ljz.questify.ui.features.quests.viewquests
 
-import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.MainQuestEntity
 
 data class QuestsUIState(
     val quests: List<MainQuestEntity> = listOf(),

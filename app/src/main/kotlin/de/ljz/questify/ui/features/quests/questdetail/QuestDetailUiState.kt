@@ -1,6 +1,6 @@
 package de.ljz.questify.ui.features.quests.questdetail
 
-import de.ljz.questify.data.database.models.entities.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.MainQuestEntity
 
 data class QuestDetailUiState (
     val questId: Int? = null,

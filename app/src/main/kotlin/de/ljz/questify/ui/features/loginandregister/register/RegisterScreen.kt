@@ -77,7 +77,7 @@ fun RegisterScreenPager(
                         }
                     )
                 },
-                onBackButtonClick = navController::popBackStack,
+                onBackButtonClick = navController::navigateUp,
                 email = uiState.email,
                 error = emailError
             )

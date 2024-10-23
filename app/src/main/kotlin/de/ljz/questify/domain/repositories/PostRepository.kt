@@ -1,4 +1,4 @@
-package de.ljz.questify.data.repositories
+package de.ljz.questify.domain.repositories
 
 import de.ljz.questify.data.api.core.ApiClient
 import de.ljz.questify.data.api.responses.login.LoginResponse

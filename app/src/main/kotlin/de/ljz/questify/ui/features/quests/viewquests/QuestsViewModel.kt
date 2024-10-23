@@ -3,9 +3,9 @@ package de.ljz.questify.ui.features.quests.viewquests
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.data.repositories.AppUserRepository
-import de.ljz.questify.data.repositories.QuestRepository
 import de.ljz.questify.data.shared.Points
+import de.ljz.questify.domain.repositories.AppUserRepository
+import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

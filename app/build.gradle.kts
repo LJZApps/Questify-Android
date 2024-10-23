@@ -16,7 +16,13 @@ plugins {
     kotlin("plugin.serialization")
     id("com.google.dagger.hilt.android")
 
+    id("androidx.room")
+
     id("io.sentry.android.gradle") version "4.11.0"
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
@@ -113,6 +119,9 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Balloon (tooltips)
+    implementation(libs.balloon.compose)
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -164,6 +173,7 @@ dependencies {
     implementation(libs.sandwich)
     implementation(libs.sandwich.retrofit)
     implementation(libs.sandwich.retrofit.serialization)
+    implementation(libs.sandwich.ktor)
     implementation(libs.sentry.android)
     implementation(libs.sentry.compose.android)
     implementation(libs.ui.graphics)
@@ -177,6 +187,9 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    implementation("io.ktor:ktor-client-logging:$ktorVersion")
+    implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }

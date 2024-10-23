@@ -6,13 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.BrightnessAuto
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.ModeNight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,7 +66,7 @@ fun SettingsScreen(
                     title = { Text(stringResource(R.string.settings_screen_title)) },
                     navigationIcon = {
                         IconButton(
-                            onClick = { mainNavController.popBackStack() }
+                            onClick = { mainNavController.navigateUp() }
                         ) {
                             Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                         }

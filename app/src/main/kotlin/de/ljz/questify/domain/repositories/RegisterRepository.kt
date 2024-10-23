@@ -1,4 +1,4 @@
-package de.ljz.questify.data.repositories
+package de.ljz.questify.domain.repositories
 
 import com.skydoves.sandwich.suspendOnError
 import com.skydoves.sandwich.suspendOnSuccess

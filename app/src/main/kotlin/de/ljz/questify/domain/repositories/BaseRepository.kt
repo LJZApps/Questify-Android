@@ -1,4 +1,4 @@
-package de.ljz.questify.data.repositories
+package de.ljz.questify.domain.repositories
 
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
