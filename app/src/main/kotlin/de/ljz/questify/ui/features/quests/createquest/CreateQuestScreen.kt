@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.quests.createquest
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,9 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.ui.components.TimePickerDialog
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.quests.createquest.components.AlertManagerInfoBottomSheet
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -146,14 +143,14 @@ fun CreateQuestScreen(
                     }
                 }
 
-                Text(
+                /*Text(
                     text = "${timePickerState.hour} : ${timePickerState.minute}",
                     modifier = Modifier.clickable(
                         onClick = viewModel::showTimePicker
                     )
-                )
+                )*/
 
-                if (uiState.isTimePickerVisible) {
+                /*if (uiState.isTimePickerVisible) {
                     TimePickerDialog(
                         timePickerState = timePickerState,
                         onDismiss = viewModel::hideTimePicker,
@@ -162,11 +159,11 @@ fun CreateQuestScreen(
                             viewModel.hideTimePicker()
                         }
                     )
-                }
+                }*/
             }
         }
 
-        if (uiState.isAlertManagerInfoVisible) {
+        /*if (uiState.isAlertManagerInfoVisible) {
             AlertManagerInfoBottomSheet(
                 sheetState = sheetState,
                 onConfirm = {
@@ -176,6 +173,6 @@ fun CreateQuestScreen(
 
                 }
             )
-        }
+        }*/
     }
 }

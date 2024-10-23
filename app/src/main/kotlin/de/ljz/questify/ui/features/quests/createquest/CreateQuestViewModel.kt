@@ -37,26 +37,29 @@ class CreateQuestViewModel @Inject constructor(
         context: Context,
         onSuccess: () -> Unit,
     ) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val quest = MainQuestEntity(
+            title = _uiState.value.title,
+            description = _uiState.value.description,
+            points = Points.EASY,
+            createdAt = Date()
+        )
+
+        viewModelScope.launch {
+            val questId = questRepository.addMainQuest(quest)
+
+//            scheduleNotification(context, questId.toInt(), "Zeit für eine Quest!", _uiState.value.title)
+
+            onSuccess.invoke()
+        }
+
+        /*val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         if (alarmManager.canScheduleExactAlarms() || Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            val quest = MainQuestEntity(
-                title = _uiState.value.title,
-                description = _uiState.value.description,
-                points = Points.EASY,
-                createdAt = Date()
-            )
 
-            viewModelScope.launch {
-                val questId = questRepository.addMainQuest(quest)
-
-                scheduleNotification(context, questId.toInt(), "Zeit für eine Quest!", _uiState.value.title)
-
-                onSuccess.invoke()
-            }
         } else {
             showAlertManagerInfo()
-        }
+        }*/
     }
 
     private fun scheduleNotification(context: Context, id: Int, title: String, description: String) {

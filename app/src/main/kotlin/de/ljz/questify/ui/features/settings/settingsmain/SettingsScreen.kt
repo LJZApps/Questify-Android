@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Feedback
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
+import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
@@ -54,7 +56,10 @@ fun SettingsScreen(
         CustomColorItem(stringResource(R.string.settings_screen_color_purple), ThemeColor.PURPLE),
     )
     val themOptions = listOf(
-        ThemeItem(stringResource(R.string.settings_screen_theme_system), ThemeBehavior.SYSTEM_STANDARD),
+        ThemeItem(
+            stringResource(R.string.settings_screen_theme_system),
+            ThemeBehavior.SYSTEM_STANDARD
+        ),
         ThemeItem(stringResource(R.string.settings_screen_theme_dark), ThemeBehavior.DARK),
         ThemeItem(stringResource(R.string.settings_screen_theme_light), ThemeBehavior.LIGHT),
     )
@@ -76,7 +81,7 @@ fun SettingsScreen(
                 )
             }
         ) { innerPadding ->
-            Column (
+            Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 SettingsGroup(
@@ -130,7 +135,7 @@ fun SettingsScreen(
                     )
                 }
 
-                SettingsGroup (
+                SettingsGroup(
                     title = { Text(text = stringResource(R.string.settings_help_screen_help_title)) },
                 ) {
                     SettingsMenuLink(
@@ -141,6 +146,21 @@ fun SettingsScreen(
                         },
                         onClick = {
                             mainNavController.navigate(SettingsHelp)
+                        }
+                    )
+
+                    SettingsMenuLink(
+                        title = {
+                            Text("App-Info")
+                        },
+                        subtitle = {
+                            Text(
+                                text = "Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                            )
+                        },
+                        icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+                        onClick = {
+                            // TODO
                         }
                     )
                 }
