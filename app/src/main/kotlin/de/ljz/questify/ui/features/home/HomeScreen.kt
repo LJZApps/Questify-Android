@@ -1,7 +1,6 @@
 package de.ljz.questify.ui.features.home
 
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -22,14 +21,9 @@ import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import de.ljz.questify.util.NavBarConfig
 import io.sentry.compose.SentryTraced
-import kotlinx.serialization.ExperimentalSerializationApi
 
 
-@OptIn(
-    ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalSerializationApi::class
-)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(
     mainNavController: NavHostController,
