@@ -27,15 +27,19 @@ fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavH
             ExitTransition.None
         }
     ) {
-        composable<QuestBottomRoutes.TodayQuests> {
+        composable<QuestBottomRoutes.AllQuests> {
+            AllQuestsPage(viewModel = viewModel, navController = mainNavController)
+        }
+
+        composable<QuestBottomRoutes.Dailies> {
             TodayQuestsPage(viewModel = viewModel)
         }
 
-        composable<QuestBottomRoutes.RepeatingQuests> {
+        composable<QuestBottomRoutes.Routines> {
             RepeatingQuestsPage(viewModel = viewModel)
         }
 
-        composable<QuestBottomRoutes.AllQuests> {
+        composable<QuestBottomRoutes.Rituals> {
             AllQuestsPage(viewModel = viewModel, navController = mainNavController)
         }
     }

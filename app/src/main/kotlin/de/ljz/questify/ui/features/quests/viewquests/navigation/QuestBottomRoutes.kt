@@ -8,8 +8,11 @@ object QuestBottomRoutes {
     object AllQuests
 
     @Serializable
-    object TodayQuests
+    object Dailies
 
     @Serializable
-    object RepeatingQuests
+    object Routines
+
+    @Serializable
+    object Rituals
 }

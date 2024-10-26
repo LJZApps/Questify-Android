@@ -5,8 +5,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Autorenew
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.EventRepeat
+import androidx.compose.material.icons.filled.HourglassBottom
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Spa
+import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -17,7 +31,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,13 +72,27 @@ fun QuestScreen(
         BottomNavigationRoute(
             stringResource(R.string.quest_screen_bottom_nav_all_quests),
             QuestBottomRoutes.AllQuests,
-            Icons.AutoMirrored.Default.List
+            Icons.AutoMirrored.Outlined.List,
+            Icons.AutoMirrored.Filled.List
         ),
         BottomNavigationRoute(
-            stringResource(R.string.quest_screen_bottom_nav_daily_quests),
-            QuestBottomRoutes.TodayQuests,
-            Icons.Default.CalendarMonth
+            stringResource(R.string.quest_screen_bottom_nav_dailies),
+            QuestBottomRoutes.Dailies,
+            Icons.Outlined.CalendarMonth,
+            Icons.Filled.CalendarMonth
         ),
+        BottomNavigationRoute(
+            stringResource(R.string.quest_screen_bottom_nav_routines),
+            QuestBottomRoutes.Routines,
+            Icons.Outlined.Schedule,
+            Icons.Filled.Schedule
+        ),
+        BottomNavigationRoute(
+            stringResource(R.string.quest_screen_bottom_nav_rituals),
+            QuestBottomRoutes.Rituals,
+            Icons.Outlined.Spa,
+            Icons.Filled.Spa
+        )
     )
 
     Scaffold(
@@ -102,10 +129,11 @@ fun QuestScreen(
                 val currentDestination = navBackStackEntry?.destination
 
                 bottomNavRoutes.forEach { bottomNavRoute ->
+                    val isSelected = currentDestination?.route == bottomNavRoute.route::class.serializer().descriptor.serialName
                     NavigationBarItem(
                         icon = {
                             Icon(
-                                bottomNavRoute.icon,
+                                imageVector = if (isSelected) bottomNavRoute.filledIcon else bottomNavRoute.outlinedIcon,
                                 contentDescription = bottomNavRoute.name
                             )
                         },

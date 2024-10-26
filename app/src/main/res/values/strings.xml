@@ -13,8 +13,8 @@
     <string name="get_started_intro">Are you ready for your next Adventure?</string>
     <string name="get_started_lets_go">Yes, let\'s start!</string>
     <string name="quest_screen_top_bar_title">Your Quests</string>
-    <string name="quest_screen_bottom_nav_all_quests">All Quests</string>
-    <string name="quest_screen_bottom_nav_daily_quests">Daily Quests</string>
+    <string name="quest_screen_bottom_nav_all_quests">Quests</string>
+    <string name="quest_screen_bottom_nav_dailies">Dailies</string>
     <string name="quest_screen_bottom_nav_repeating_quests">Repeating Quests</string>
     <string name="drawer_content_title">Welcome to Questify</string>
     <string name="drawer_content_subtitle">Points: %1d</string>
@@ -41,4 +41,6 @@
     <string name="settings_help_screen_provide_feedback_title">Provide Feedback</string>
     <string name="settings_help_screen_provide_feedback_subtitle">Noticed any bugs, crashes or strange UI? Report it here!</string>
     <string name="settings_help_screen_send_feedback">Send Feedback</string>
+    <string name="quest_screen_bottom_nav_routines">Routines</string>
+    <string name="quest_screen_bottom_nav_rituals">Rituals</string>
 </resources>

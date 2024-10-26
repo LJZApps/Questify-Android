@@ -40,7 +40,7 @@ class CreateQuestViewModel @Inject constructor(
 
         val quest = MainQuestEntity(
             title = _uiState.value.title,
-            description = _uiState.value.description,
+            description = if (_uiState.value.description.isEmpty()) null else _uiState.value.description,
             points = Points.EASY,
             createdAt = Date()
         )

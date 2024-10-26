@@ -22,7 +22,7 @@ import de.ljz.questify.domain.models.quests.SubQuestEntity
     ],
     version = 2,
     autoMigrations = [
-        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 1, to = 2),
     ]
 )
 @TypeConverters(AppDatabaseConverters::class)
