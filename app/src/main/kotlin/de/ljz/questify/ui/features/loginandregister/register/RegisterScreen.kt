@@ -6,6 +6,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -14,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterDoneScreen
 import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterEmailScreen
 import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterPasswordScreen
 import de.ljz.questify.ui.features.loginandregister.register.subpages.RegisterUserDataScreen
+import de.ljz.questify.util.NavBarConfig
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 
@@ -31,16 +32,19 @@ fun RegisterScreen(
     val uiState = viewModel.uiState.collectAsState().value
     val pagerState = rememberPagerState(pageCount = { uiState.pageCount })
 
-    QuestifyTheme {
-        SentryTraced(tag = "register_screen") {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                RegisterScreenPager(
-                    pagerState = pagerState,
-                    screenModel = viewModel,
-                    uiState = uiState,
-                    navController = navHostController
-                )
-            }
+    LaunchedEffect(Unit) {
+       
+        NavBarConfig.transparentNavBar = true
+    }
+
+    SentryTraced(tag = "register_screen") {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            RegisterScreenPager(
+                pagerState = pagerState,
+                screenModel = viewModel,
+                uiState = uiState,
+                navController = navHostController
+            )
         }
     }
 }

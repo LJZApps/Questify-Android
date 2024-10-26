@@ -13,17 +13,19 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.ljz.questify.ui.state.ThemeBehavior
+import de.ljz.questify.util.NavBarConfig
 
 @Composable
 fun QuestifyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    transparentNavBar: Boolean = true,
     vm: ThemeViewModel = hiltViewModel(),
     content: @Composable () -> Unit,
 ) {
     val themeBehavior by vm.themeBehavior.collectAsState() // Reactively track theme behavior
     val themeColor by vm.themeColor.collectAsState() // Reactively track theme color
     val dynamicColorsEnabled by vm.dynamicColorsEnabled.collectAsState() // Reactively track dynamic color setting
+
+    val transparentNavBarState = NavBarConfig.transparentNavBar
 
     var colorScheme = getColorScheme(themeBehavior, themeColor, darkTheme)
 
@@ -46,7 +48,7 @@ fun QuestifyTheme(
         SideEffect {
             (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
 
-            if (!transparentNavBar) {
+            if (!transparentNavBarState) {
                 (view.context as Activity).window.navigationBarColor = colorScheme.surfaceContainer.toArgb()
             } else {
                 (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
