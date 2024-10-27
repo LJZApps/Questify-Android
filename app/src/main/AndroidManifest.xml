@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Questify"
         android:usesCleartextTraffic="true"
-        android:enableOnBackInvokedCallback="true"
+        android:localeConfig="@xml/locales_config"
         tools:targetApi="tiramisu">
 
         <receiver android:name=".core.receiver.QuestNotificationReceiver" android:exported="false" />

@@ -11,7 +11,7 @@
     <string name="difficulty_medium">Mittel</string>
     <string name="difficulty_hard">Hart</string>
     <string name="difficulty_epic">Episch</string>
-    <string name="get_started_intro">Bist du bereit für dein nächstes Abenteuer?</string>
+    <string name="get_started_intro">Bereit, jeden Tag zu deiner persönlichen Quest zu machen?</string>
     <string name="get_started_lets_go">Ja, los geht\'s!</string>
     <string name="quest_screen_top_bar_title">Deine Quests</string>
     <string name="quest_screen_bottom_nav_all_quests">Quests</string>

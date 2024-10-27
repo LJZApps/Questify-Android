@@ -57,9 +57,9 @@ fun GetStartedMainScreen(
                         width = Dimension.fillToConstraints
                     },
                 textAlign = TextAlign.Center,
-                fontSize = 32.sp,
+                fontSize = 18.sp,
                 fontFamily = FontFamily(
-                    Font(R.font.arcade)
+                    Font(R.font.pressstart_regular)
                 )
             )
 
@@ -80,8 +80,9 @@ fun GetStartedMainScreen(
             ) {
                 Text(
                     stringResource(R.string.get_started_lets_go),
+                    fontSize = 10.sp,
                     fontFamily = FontFamily(
-                        Font(R.font.arcade)
+                        Font(R.font.pressstart_regular)
                     )
                 )
             }

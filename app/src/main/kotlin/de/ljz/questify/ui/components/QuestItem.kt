@@ -1,19 +1,23 @@
 package de.ljz.questify.ui.components
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import de.ljz.questify.core.compose.UIModePreviews
 
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun QuestItem(
     id: Int,
@@ -30,35 +34,38 @@ fun QuestItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
+        onClick = {
+            // TODO
+        },
+        //enabled = !done
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
         ) {
-            // Header Row with Checkbox, Title, and Description
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
                     checked = done,
-                    onCheckedChange = { onQuestChecked() },
-                    modifier = Modifier.padding(end = 8.dp)
+                    onCheckedChange = {
+                        onQuestChecked()
+                    },
+                    modifier = Modifier.padding(end = 8.dp),
+
                 )
 
-                // Title and Description Column
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
-                    // Quest Title
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        textDecoration = if (done) TextDecoration.LineThrough else null
                     )
-
-                    // Description (optional, under the title)
                     description?.let {
                         Text(
                             text = it,
@@ -70,15 +77,13 @@ fun QuestItem(
                 }
             }
 
-            // Footer with Due Date and Difficulty Icon
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Due Date (optional)
                 dueDate?.let {
                     Icon(
-                        imageVector = Icons.Filled.Schedule, // Custom due date icon here
+                        imageVector = Icons.Filled.Schedule,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
@@ -90,12 +95,9 @@ fun QuestItem(
                     )
                 }
 
-                Spacer(modifier = Modifier.weight(1f)) // Spacer to push difficulty icon to the end
+                Spacer(modifier = Modifier.weight(1f))
 
-                // Difficulty Icon if provided
-                difficultyIcon?.let {
-                    it()
-                }
+                difficultyIcon?.let { it() }
             }
         }
     }
@@ -112,9 +114,25 @@ private fun QuestItemPreview() {
         dueDate = "2023-10-25",
         difficultyIcon = {
             Icon(
-                imageVector = Icons.Default.Star, // Example icon for difficulty
+                imageVector = Icons.Default.Star,
                 contentDescription = "Difficulty"
             )
+        },
+        onQuestChecked = {}
+    )
+}
+
+@UIModePreviews
+@Composable
+private fun QuestItemDonePreview() {
+    QuestItem(
+        id = 1,
+        title = "Complete the epic quest",
+        description = "This is a challenging quest that requires strategy and effort.",
+        done = true,
+        dueDate = "2023-10-25",
+        difficultyIcon = {
+            EpicIcon()
         },
         onQuestChecked = {}
     )

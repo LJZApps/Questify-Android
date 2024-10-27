@@ -3,7 +3,7 @@ package de.ljz.questify.domain.models.quests
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import de.ljz.questify.data.shared.Points
+import de.ljz.questify.core.application.Difficulty
 import java.util.Date
 
 @Entity(tableName = "main_quests")
@@ -16,8 +16,8 @@ data class MainQuestEntity(
     @ColumnInfo(name = "description")
     val description: String? = null,
 
-    @ColumnInfo(name = "points")
-    val points: Points,
+    @ColumnInfo(name = "difficulty")
+    val difficulty: Difficulty?,
 
     @ColumnInfo(name = "due_date")
     val dueDate: Date? = null,

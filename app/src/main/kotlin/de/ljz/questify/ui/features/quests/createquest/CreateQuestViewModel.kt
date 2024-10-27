@@ -11,8 +11,8 @@ import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
-import de.ljz.questify.data.shared.Points
 import de.ljz.questify.domain.models.quests.MainQuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.QuestRepository
@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
-
 
 @HiltViewModel
 class CreateQuestViewModel @Inject constructor(
@@ -37,11 +36,10 @@ class CreateQuestViewModel @Inject constructor(
         context: Context,
         onSuccess: () -> Unit,
     ) {
-
         val quest = MainQuestEntity(
             title = _uiState.value.title,
             description = if (_uiState.value.description.isEmpty()) null else _uiState.value.description,
-            points = Points.EASY,
+            difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
             createdAt = Date()
         )
 

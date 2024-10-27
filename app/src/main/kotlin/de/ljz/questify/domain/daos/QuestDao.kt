@@ -19,7 +19,7 @@ interface QuestDao {
     @Query("SELECT * FROM sub_quests WHERE main_quest_id = :mainQuestId")
     suspend fun getSubQuests(mainQuestId: Int): List<SubQuestEntity>
 
-    @Query("SELECT * FROM main_quests WHERE done = 0 ")
+    @Query("SELECT * FROM main_quests WHERE done = 0 ORDER BY done")
     fun getMainQuests(): Flow<List<MainQuestEntity>>
 
     @Query("SELECT * FROM main_quests WHERE id = :id")

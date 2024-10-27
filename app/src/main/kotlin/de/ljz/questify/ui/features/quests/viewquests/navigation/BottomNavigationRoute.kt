@@ -5,6 +5,5 @@ import androidx.compose.ui.graphics.vector.ImageVector
 data class BottomNavigationRoute<T : Any>(
     val name: String,
     val route: T,
-    val outlinedIcon: ImageVector,
-    val filledIcon: ImageVector
+    val icon: ImageVector
 )

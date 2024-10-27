@@ -10,7 +10,7 @@
     <string name="difficulty_medium">Medium</string>
     <string name="difficulty_hard">Hard</string>
     <string name="difficulty_epic">Epic</string>
-    <string name="get_started_intro">Are you ready for your next Adventure?</string>
+    <string name="get_started_intro">Ready to make each day your own personal quest?</string>
     <string name="get_started_lets_go">Yes, let\'s start!</string>
     <string name="quest_screen_top_bar_title">Your Quests</string>
     <string name="quest_screen_bottom_nav_all_quests">Quests</string>
