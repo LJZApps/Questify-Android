@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.domain.repositories.AppUserRepository
-import de.ljz.questify.domain.repositories.FirstSetupRepository
+import de.ljz.questify.domain.repositories.QuestMasterRepository
 import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,17 +17,17 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
-    private val firstSetupRepository: FirstSetupRepository
+    private val questMasterRepository: QuestMasterRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            firstSetupRepository.getFirstSetup().collectLatest { firstSetup ->
+            questMasterRepository.getQuestMaster().collectLatest { questMaster ->
                 _uiState.update {
                     it.copy(
-                        dashboardOnboardingDone = firstSetup.dashboardOnboarding
+                        dashboardOnboardingDone = questMaster.dashboardOnboarding
                     )
                 }
             }
@@ -36,7 +36,7 @@ class DashboardViewModel @Inject constructor(
 
     fun setDashboardOnboardingDone() {
         viewModelScope.launch {
-            firstSetupRepository.setDashboardOnboardingDone()
+            questMasterRepository.setDashboardOnboardingDone()
         }
     }
 }

@@ -1,22 +1,22 @@
 package de.ljz.questify.domain.repositories
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.domain.datastore.FirstSetup
+import de.ljz.questify.domain.datastore.QuestMaster
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FirstSetupRepository @Inject constructor(
-    private val firstSetupDatastore: DataStore<FirstSetup>
+class QuestMasterRepository @Inject constructor(
+    private val questMasterDatastore: DataStore<QuestMaster>
 ) : BaseRepository() {
 
-    fun getFirstSetup(): Flow<FirstSetup> {
-        return firstSetupDatastore.data
+    fun getQuestMaster(): Flow<QuestMaster> {
+        return questMasterDatastore.data
     }
 
     suspend fun setDashboardOnboardingDone() {
-        firstSetupDatastore.updateData {
+        questMasterDatastore.updateData {
             it.copy(
                 dashboardOnboarding = true
             )
@@ -24,7 +24,7 @@ class FirstSetupRepository @Inject constructor(
     }
 
     suspend fun setQuestsOnboardingDone() {
-        firstSetupDatastore.updateData {
+        questMasterDatastore.updateData {
             it.copy(
                 questsOnboarding = true
             )

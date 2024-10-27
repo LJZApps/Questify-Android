@@ -10,7 +10,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 @Serializable
-data class FirstSetup(
+data class QuestMaster(
     @SerialName("dashboard_onboarding_done")
     val dashboardOnboarding: Boolean = false,
 
@@ -18,9 +18,9 @@ data class FirstSetup(
     val questsOnboarding: Boolean = false,
 )
 
-object FirstSetupSerializer : Serializer<FirstSetup> {
-    override val defaultValue: FirstSetup
-        get() = FirstSetup()
+object QuestMasterSerializer : Serializer<QuestMaster> {
+    override val defaultValue: QuestMaster
+        get() = QuestMaster()
 
     val jsonFormat = Json {
         ignoreUnknownKeys = true // Ignore unknown fields for robustness
@@ -28,28 +28,28 @@ object FirstSetupSerializer : Serializer<FirstSetup> {
         prettyPrint = false // No pretty printing for faster serialization
     }
 
-    override suspend fun readFrom(input: InputStream): FirstSetup {
+    override suspend fun readFrom(input: InputStream): QuestMaster {
         return try {
             jsonFormat.decodeFromString(
-                deserializer = FirstSetup.serializer(),
+                deserializer = QuestMaster.serializer(),
                 string = input.readBytes().decodeToString()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to deserialize FirstSetup: ${e.stackTraceToString()}")
-            FirstSetup()
+            Log.e(TAG, "Failed to deserialize QuestMaster: ${e.stackTraceToString()}")
+            QuestMaster()
         }
     }
 
-    override suspend fun writeTo(t: FirstSetup, output: OutputStream) {
+    override suspend fun writeTo(t: QuestMaster, output: OutputStream) {
         try {
             output.write(
                 jsonFormat.encodeToString(
-                    serializer = FirstSetup.serializer(),
+                    serializer = QuestMaster.serializer(),
                     value = t
                 ).encodeToByteArray()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to serialize FirstSetup: ${e.stackTraceToString()}")
+            Log.e(TAG, "Failed to serialize QuestMaster: ${e.stackTraceToString()}")
         }
     }
 

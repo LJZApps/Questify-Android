@@ -13,8 +13,8 @@ import de.ljz.questify.domain.datastore.AppSettings
 import de.ljz.questify.domain.datastore.AppSettingsSerializer
 import de.ljz.questify.domain.datastore.AppUser
 import de.ljz.questify.domain.datastore.AppUserSerializer
-import de.ljz.questify.domain.datastore.FirstSetup
-import de.ljz.questify.domain.datastore.FirstSetupSerializer
+import de.ljz.questify.domain.datastore.QuestMaster
+import de.ljz.questify.domain.datastore.QuestMasterSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.File
@@ -48,12 +48,12 @@ object DatastoreModule {
 
     @Singleton
     @Provides
-    fun provideFirstSetupDatastore(@ApplicationContext context: Context): DataStore<FirstSetup> =
+    fun provideQuestMasterDatastore(@ApplicationContext context: Context): DataStore<QuestMaster> =
         DataStoreFactory.create(
-            serializer = FirstSetupSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { FirstSetup() },
+            serializer = QuestMasterSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { QuestMaster() },
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
-            produceFile = { File(context.filesDir, "datastore/first_setup.json") }
+            produceFile = { File(context.filesDir, "datastore/quest_master.json") }
         )
 }
