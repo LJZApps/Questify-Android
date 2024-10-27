@@ -20,7 +20,7 @@ class AppSettingsRepository @Inject constructor(
     suspend fun setOnboardingDone() {
         appSettingsDataStore.updateData {
             it.copy(
-                setupDone = true
+                onboardingState = true
             )
         }
     }

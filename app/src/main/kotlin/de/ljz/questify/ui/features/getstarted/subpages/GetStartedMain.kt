@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.getstarted.subpages
 
+import android.media.SoundPool
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.tween
@@ -20,6 +21,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -34,6 +36,7 @@ import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.bounceClick
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -45,17 +48,25 @@ fun GetStartedMainScreen(
         NavBarConfig.transparentNavBar = true
     }
 
+    val context = LocalContext.current
+
     val messages = listOf(
-        "Willkommen, Suchender! Ich bin der Quest Master, dein Begleiter auf dieser Reise.",
-        "Gemeinsam werden wir deine Aufgaben in Quests verwandeln und verborgene Kräfte wecken.",
-        "Questify macht deinen Alltag zum Abenteuer – jeder Tag bringt neue Herausforderungen.",
-        "Bist du bereit, deinen Weg zu meistern und dein volles Potenzial zu entfalten?"
+        "Willkommen, edler Suchender! Ich bin der Quest Master, dein weiser Begleiter auf dieser Reise.",
+        "Zusammen werden wir deine Aufgaben in Quests verwandeln und verborgene Kräfte entfesseln.",
+        "Questify wird deinen Alltag in ein episches Abenteuer verwandeln – voller Prüfungen und Geheimnisse.",
+        "Bist du bereit, deinen Pfad zu erleuchten und dein wahres Potenzial zu entfalten?",
+        "Dann lass uns das Tor öffnen und den Weg für deine Reise vorbereiten."
     )
 
     var currentIndex by remember { mutableIntStateOf(0) }
     var currentText by remember { mutableStateOf("") }
     var showContinueHint by remember { mutableStateOf(false) }
     var showButton by remember { mutableStateOf(false) }
+
+    val soundPool = remember {
+        SoundPool.Builder().setMaxStreams(1).build()
+    }
+    val soundId = remember { soundPool.load(context, R.raw.typing, 1) }
 
     LaunchedEffect(currentIndex) {
         currentText = ""
@@ -64,9 +75,12 @@ fun GetStartedMainScreen(
         val message = messages[currentIndex]
         for (i in message.indices) {
             currentText += message[i]
-            delay(50) // Typing-Geschwindigkeit
+            delay(40) // Typing-Geschwindigkeit
+
+            val pitch = Random.nextFloat() * (1.2f - 0.8f) + 0.8f
+            soundPool.play(soundId, 1f, 1f, 1, 0, pitch) // Sound mit zufälligem Pitch abspielen
         }
-        if (currentIndex == messages.lastIndex) {
+        if (currentIndex == messages.lastIndex - 1) {
             showButton = true // Button anzeigen, wenn letzte Nachricht fertig ist
         } else {
             showContinueHint = true // "Tippe, um fortzufahren" anzeigen, wenn weitere Nachrichten folgen

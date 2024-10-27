@@ -40,7 +40,7 @@ class AppViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoggedIn = sessionManager.isAccessTokenPresent(),
-                    isSetupDone = appSettings?.setupDone == true
+                    isSetupDone = appSettings?.onboardingState == true
                 )
             }
 

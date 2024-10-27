@@ -13,8 +13,8 @@ import java.io.OutputStream
 
 @Serializable
 data class AppSettings(
-    @SerialName("onboarding_done")
-    val setupDone: Boolean = false,
+    @SerialName("onboarding_state")
+    val onboardingState: Boolean = false,
 
     @SerialName("theme_behavior")
     val themeBehavior: ThemeBehavior = ThemeBehavior.SYSTEM_STANDARD,
