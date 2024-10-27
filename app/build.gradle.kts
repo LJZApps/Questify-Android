@@ -119,6 +119,9 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Texty
+    implementation(libs.texty.android)
+
     // Konfetti
     implementation(libs.konfetti.compose)
 

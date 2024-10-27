@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
@@ -19,6 +20,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import de.ljz.questify.R
+import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.home.HomeUiState
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
 import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
@@ -43,6 +48,8 @@ fun DrawerContent(
     drawerState: DrawerState
 ) {
     val scope = rememberCoroutineScope()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
     ModalDrawerSheet {
         Column(
@@ -84,6 +91,32 @@ fun DrawerContent(
             // Divider
             HorizontalDivider()
 
+            NavigationDrawerItem(
+                label = { Text(text = "Dashboard") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Home,
+                        contentDescription = "Dashboard"
+                    )
+                },
+                selected = currentDestination?.route == DashboardRoute.serializer().descriptor.serialName,
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != DashboardRoute.serializer().descriptor.serialName) navController.navigate(
+                        DashboardRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
             // Kategorie: Quests
             Text(
                 text = stringResource(R.string.drawer_content_quests_title),
@@ -99,14 +132,20 @@ fun DrawerContent(
                         contentDescription = "Your Quests"
                     )
                 },
-                selected = navController.currentDestination?.route == Quests.serializer().descriptor.serialName,
+                selected = currentDestination?.route == Quests.serializer().descriptor.serialName,
                 onClick = {
                     scope.launch {
                         drawerState.close()
                     }
-                    if (navController.currentDestination?.route != Quests.serializer().descriptor.serialName) navController.navigate(
+                    if (currentDestination?.route != Quests.serializer().descriptor.serialName) navController.navigate(
                         Quests
-                    )
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 modifier = Modifier.padding(vertical = 4.dp)
             )

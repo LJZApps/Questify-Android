@@ -29,7 +29,6 @@ fun QuestDetailScreen(
     val quest = uiState.quest
 
     LaunchedEffect(Unit) {
-       
         NavBarConfig.transparentNavBar = true
     }
 

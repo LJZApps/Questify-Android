@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    questItemCount: Int,
+    userPoints: Int,
     drawerState: DrawerState,
     navController: NavHostController,
     title: String
@@ -45,7 +45,7 @@ fun TopBar(
     val icon = "icon"
 
     val annotatedString = buildAnnotatedString {
-        append("$questItemCount ")
+        append("$userPoints ")
 
         // Placeholder für das Icon
         appendInlineContent(icon, "[icon]")

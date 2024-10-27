@@ -13,6 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.dashboard.DashboardScreen
+import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.home.components.DrawerContent
 import de.ljz.questify.ui.features.quests.viewquests.QuestScreen
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
@@ -54,7 +56,7 @@ fun HomeScreen(
             ) {
                 NavHost(
                     navController = homeNavHostController,
-                    startDestination = Quests,
+                    startDestination = DashboardRoute,
                     enterTransition = {
                         scaleIntoContainer()
                     },
@@ -68,6 +70,13 @@ fun HomeScreen(
                         scaleOutOfContainer()
                     }
                 ) {
+                    composable<DashboardRoute> {
+                        DashboardScreen(
+                            mainNavController = mainNavController,
+                            drawerState = drawerState
+                        )
+                    }
+
                     composable<Quests> {
                         QuestScreen(
                             drawerState = drawerState,

@@ -37,6 +37,7 @@ sentryBom = "7.15.0"
 composeSettings = "2.4.0"
 composePlugin = "1.7.0"
 datastoreCoreAndroid = "1.1.1"
+textyAndroid = "1.0.0-alpha"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -84,6 +85,7 @@ sandwich-retrofit-serialization = { module = "com.github.skydoves:sandwich-retro
 sentry-android = { module = "io.sentry:sentry-android" }
 sentry-bom = { module = "io.sentry:sentry-bom", version.ref = "sentryBom" }
 sentry-compose-android = { module = "io.sentry:sentry-compose-android" }
+texty-android = { module = "com.arjunjadeja:texty-android", version.ref = "textyAndroid" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }

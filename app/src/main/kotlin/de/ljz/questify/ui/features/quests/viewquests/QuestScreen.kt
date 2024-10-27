@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.viewquests.navigation.BottomNavigationRoute
 import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
+import de.ljz.questify.util.NavBarConfig
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
@@ -55,6 +57,10 @@ fun QuestScreen(
 
     val bottomNavController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        NavBarConfig.transparentNavBar = false
+    }
 
     val bottomNavRoutes = listOf(
         BottomNavigationRoute(
@@ -113,7 +119,6 @@ fun QuestScreen(
                 val currentDestination = navBackStackEntry?.destination
 
                 bottomNavRoutes.forEach { bottomNavRoute ->
-                    val isSelected = currentDestination?.route == bottomNavRoute.route::class.serializer().descriptor.serialName
                     NavigationBarItem(
                         icon = {
                             Icon(
