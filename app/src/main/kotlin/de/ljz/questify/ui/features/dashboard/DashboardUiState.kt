@@ -4,5 +4,6 @@ import de.ljz.questify.domain.models.quests.MainQuestEntity
 
 data class DashboardUiState(
     val quests: List<MainQuestEntity> = listOf(),
-    val userPoints: Int = 0
+    val userPoints: Int = 0,
+    val dashboardOnboardingDone: Boolean = true
 )

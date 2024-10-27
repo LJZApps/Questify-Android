@@ -9,10 +9,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import de.ljz.questify.data.datastore.AppSettings
-import de.ljz.questify.data.datastore.AppSettingsSerializer
-import de.ljz.questify.data.datastore.AppUser
-import de.ljz.questify.data.datastore.AppUserSerializer
+import de.ljz.questify.domain.datastore.AppSettings
+import de.ljz.questify.domain.datastore.AppSettingsSerializer
+import de.ljz.questify.domain.datastore.AppUser
+import de.ljz.questify.domain.datastore.AppUserSerializer
+import de.ljz.questify.domain.datastore.FirstSetup
+import de.ljz.questify.domain.datastore.FirstSetupSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.File
@@ -42,5 +44,16 @@ object DatastoreModule {
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
             produceFile = { File(context.filesDir, "datastore/app_settings.json") }
+        )
+
+    @Singleton
+    @Provides
+    fun provideFirstSetupDatastore(@ApplicationContext context: Context): DataStore<FirstSetup> =
+        DataStoreFactory.create(
+            serializer = FirstSetupSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { FirstSetup() },
+            migrations = listOf(),
+            scope = CoroutineScope(Dispatchers.IO),
+            produceFile = { File(context.filesDir, "datastore/first_setup.json") }
         )
 }

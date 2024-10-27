@@ -55,7 +55,6 @@ fun GetStartedMainScreen(
         "Zusammen werden wir deine Aufgaben in Quests verwandeln und verborgene Kräfte entfesseln.",
         "Questify wird deinen Alltag in ein episches Abenteuer verwandeln – voller Prüfungen und Geheimnisse.",
         "Bist du bereit, deinen Pfad zu erleuchten und dein wahres Potenzial zu entfalten?",
-        "Dann lass uns das Tor öffnen und den Weg für deine Reise vorbereiten."
     )
 
     var currentIndex by remember { mutableIntStateOf(0) }
@@ -75,15 +74,15 @@ fun GetStartedMainScreen(
         val message = messages[currentIndex]
         for (i in message.indices) {
             currentText += message[i]
-            delay(40) // Typing-Geschwindigkeit
+            delay(40)
 
             val pitch = Random.nextFloat() * (1.2f - 0.8f) + 0.8f
-            soundPool.play(soundId, 1f, 1f, 1, 0, pitch) // Sound mit zufälligem Pitch abspielen
+            soundPool.play(soundId, 1f, 1f, 1, 0, pitch)
         }
-        if (currentIndex == messages.lastIndex - 1) {
-            showButton = true // Button anzeigen, wenn letzte Nachricht fertig ist
+        if (currentIndex == messages.lastIndex) {
+            showButton = true
         } else {
-            showContinueHint = true // "Tippe, um fortzufahren" anzeigen, wenn weitere Nachrichten folgen
+            showContinueHint = true
         }
     }
 
@@ -93,7 +92,7 @@ fun GetStartedMainScreen(
             .clickable(
                 enabled = showContinueHint && currentIndex < messages.size - 1,
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null // Entfernt die OnClick-Animation
+                indication = null
             ) {
                 if (showContinueHint) {
                     currentIndex++
@@ -173,7 +172,6 @@ fun GetStartedMainScreen(
     }
 }
 
-// Pixel Speech Bubble Shape
 val PixelSpeechBubbleShape: Shape = GenericShape { size, _ ->
     val cornerRadius = 25f
     val peakStartX = size.width / 4

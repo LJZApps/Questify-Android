@@ -1,8 +1,8 @@
 package de.ljz.questify.domain.repositories
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.data.datastore.AppUser
 import de.ljz.questify.data.shared.Points
+import de.ljz.questify.domain.datastore.AppUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach

@@ -1,4 +1,4 @@
-package de.ljz.questify.data.datastore
+package de.ljz.questify.domain.datastore
 
 import android.util.Log
 import androidx.datastore.core.Serializer
