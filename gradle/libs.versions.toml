@@ -9,6 +9,7 @@ coreSplashscreen = "1.0.1"
 datastorePreferencesCore = "1.1.1"
 firebaseAnalytics = "22.1.2"
 firebaseCrashlytics = "19.2.1"
+gampose = "1.5.0"
 gson = "2.11.0"
 hiltAndroid = "2.52"
 hiltWork = "1.2.0"
@@ -62,6 +63,7 @@ balloon-compose = { module = "com.github.skydoves:balloon-compose", version.ref 
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlytics" }
+gampose = { module = "com.github.ezlifeSol:gampose", version.ref = "gampose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
