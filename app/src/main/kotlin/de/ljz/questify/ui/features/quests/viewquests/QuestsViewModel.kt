@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.data.shared.Points
 import de.ljz.questify.domain.repositories.AppUserRepository
+import de.ljz.questify.domain.repositories.QuestMasterRepository
 import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class QuestsViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
-    private val questRepository: QuestRepository
+    private val questRepository: QuestRepository,
+    private val questMasterRepository: QuestMasterRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestsUIState())
     val uiState: StateFlow<QuestsUIState> = _uiState.asStateFlow()
@@ -43,12 +45,28 @@ class QuestsViewModel @Inject constructor(
                     }
                 }
             }
+
+            launch {
+                questMasterRepository.getQuestMaster().collectLatest { questMaster ->
+                    _uiState.update {
+                        it.copy(
+                            questOnboardingDone = questMaster.questsOnboarding
+                        )
+                    }
+                }
+            }
         }
     }
 
     fun setQuestDone(id: Int, done: Boolean) {
         viewModelScope.launch {
             questRepository.setQuestDone(id, done)
+        }
+    }
+
+    fun setOnboardingDone() {
+        viewModelScope.launch {
+            questMasterRepository.setQuestsOnboardingDone()
         }
     }
 

@@ -16,6 +16,9 @@ data class AppSettings(
     @SerialName("onboarding_state")
     val onboardingState: Boolean = false,
 
+    @SerialName("last_opened_version")
+    val lastOpenedVersion: Int = 0,
+
     @SerialName("theme_behavior")
     val themeBehavior: ThemeBehavior = ThemeBehavior.SYSTEM_STANDARD,
 

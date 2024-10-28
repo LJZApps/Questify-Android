@@ -34,17 +34,23 @@ class AppViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // Vorherige Abfrage der App-Einstellungen vor der UI-Update
-            val appSettings = appSettingsRepository.getAppSettings().firstOrNull()
+            launch {
+                // Vorherige Abfrage der App-Einstellungen vor der UI-Update
+                val appSettings = appSettingsRepository.getAppSettings().firstOrNull()
 
-            _uiState.update {
-                it.copy(
-                    isLoggedIn = sessionManager.isAccessTokenPresent(),
-                    isSetupDone = appSettings?.onboardingState == true
-                )
+                _uiState.update {
+                    it.copy(
+                        isLoggedIn = sessionManager.isAccessTokenPresent(),
+                        isSetupDone = appSettings?.onboardingState == true
+                    )
+                }
+
+                _isAppReady.update { true }
             }
 
-            _isAppReady.update { true }
+            /*launch {
+                appSettingsRepository.setLas
+            }*/
         }
     }
 

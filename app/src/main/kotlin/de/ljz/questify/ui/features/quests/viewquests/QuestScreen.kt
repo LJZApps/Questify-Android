@@ -32,6 +32,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
+import de.ljz.questify.ui.components.QuestMasterOnboarding
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.viewquests.navigation.BottomNavigationRoute
@@ -147,4 +148,17 @@ fun QuestScreen(
             )
         }
     )
+
+    if (!uiState.questOnboardingDone) {
+        QuestMasterOnboarding(
+            messages = listOf(
+                "Dieser Ort ist deine Schmiede – hier entstehen deine Herausforderungen.",
+                "Hier findest du alles für deinen Fortschritt: Quests, Dailies, Routinen und Gewohnheiten – dein Werkzeug für ein produktiveres Leben!",
+                "Wähle weise, Abenteurer – jede abgeschlossene Quest bringt dich deinem Ziel näher."
+            ),
+            onDismiss = {
+                viewModel.setOnboardingDone()
+            }
+        )
+    }
 }

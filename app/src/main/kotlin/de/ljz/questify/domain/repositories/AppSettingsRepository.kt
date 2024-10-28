@@ -25,6 +25,14 @@ class AppSettingsRepository @Inject constructor(
         }
     }
 
+    suspend fun setLastOpenedVersion(version: Int) {
+        appSettingsDataStore.updateData {
+            it.copy(
+                lastOpenedVersion = version
+            )
+        }
+    }
+
     suspend fun setDarkModeBehavior(value: ThemeBehavior) {
         appSettingsDataStore.updateData {
             it.copy(
