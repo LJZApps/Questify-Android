@@ -119,7 +119,7 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-    // Gampose
+    // Gampose https://github.com/ezlifeSol/gampose
     implementation(libs.gampose)
 
     // Texty
