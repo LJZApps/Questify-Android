@@ -18,7 +18,7 @@ import de.ljz.questify.ui.components.EpicIcon
 import de.ljz.questify.ui.components.HardIcon
 import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.components.QuestItem
-import de.ljz.questify.ui.features.quests.viewquests.QuestsViewModel
+import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
 import kotlinx.coroutines.launch
 
 enum class SortType { DONE, TITLE, DIFFICULTY }
@@ -26,7 +26,7 @@ enum class SortType { DONE, TITLE, DIFFICULTY }
 @Composable
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
-    viewModel: QuestsViewModel,
+    viewModel: ViewQuestsViewModel,
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState().value

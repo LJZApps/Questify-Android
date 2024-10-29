@@ -123,7 +123,7 @@ fun CreateQuestScreen(
             OutlinedTextField(
                 value = uiState.description,
                 onValueChange = { viewModel.updateDescription(it) },
-                label = { Text(stringResource(R.string.create_quest_description)) },
+                label = { Text(stringResource(R.string.create_quest_note)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 minLines = 2,

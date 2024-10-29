@@ -49,14 +49,17 @@ import kotlinx.serialization.serializer
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun QuestScreen(
+fun ViewQuestsScreen(
     drawerState: DrawerState,
-    viewModel: QuestsViewModel = hiltViewModel(),
+    viewModel: ViewQuestsViewModel = hiltViewModel(),
     mainNavController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
     val bottomNavController = rememberNavController()
+    val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -106,7 +109,7 @@ fun QuestScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    mainNavController.navigate(CreateQuest)
+                    mainNavController.navigate(CreateQuest())
                 }
             ) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = null)
@@ -116,8 +119,6 @@ fun QuestScreen(
             NavigationBar(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
 
                 bottomNavRoutes.forEach { bottomNavRoute ->
                     NavigationBarItem(
@@ -148,6 +149,7 @@ fun QuestScreen(
             )
         }
     )
+
 
     if (!uiState.questOnboardingDone) {
         QuestMasterOnboarding(

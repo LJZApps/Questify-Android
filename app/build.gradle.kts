@@ -203,7 +203,6 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }
 
-
 sentry {
     val localProperties = Properties()
     val localPropertiesFile = rootProject.file("local.properties")

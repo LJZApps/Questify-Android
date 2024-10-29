@@ -16,7 +16,7 @@ import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.dashboard.DashboardScreen
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.home.components.DrawerContent
-import de.ljz.questify.ui.features.quests.viewquests.QuestScreen
+import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsScreen
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.scaleIntoContainer
@@ -78,7 +78,7 @@ fun HomeScreen(
                     }
 
                     composable<Quests> {
-                        QuestScreen(
+                        ViewQuestsScreen(
                             drawerState = drawerState,
                             mainNavController = mainNavController
                         )

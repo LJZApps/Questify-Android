@@ -35,4 +35,20 @@ class AppUserRepository @Inject constructor(
         }
     }
 
+    suspend fun addXP(xp: Int) {
+        appUserDataStore.updateData {
+            val updatedUser = it.copy(xp = it.xp + xp)
+            cachedAppUser = updatedUser
+            updatedUser
+        }
+    }
+
+    suspend fun addLevel(level: Int) {
+        appUserDataStore.updateData {
+            val updatedUser = it.copy(level = it.level + level)
+            cachedAppUser = updatedUser
+            updatedUser
+        }
+    }
+
 }

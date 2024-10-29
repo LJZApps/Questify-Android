@@ -16,13 +16,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class QuestsViewModel @Inject constructor(
+class ViewQuestsViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
     private val questMasterRepository: QuestMasterRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(QuestsUIState())
-    val uiState: StateFlow<QuestsUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ViewQuestsUIState())
+    val uiState: StateFlow<ViewQuestsUIState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {

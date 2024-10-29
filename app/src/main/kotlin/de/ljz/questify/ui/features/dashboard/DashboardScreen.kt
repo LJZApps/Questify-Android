@@ -51,7 +51,7 @@ fun DashboardScreen(
     if (!uiState.dashboardOnboardingDone) {
         QuestMasterOnboarding(
             messages = listOf(
-                "Hier beginnt dein Weg durchs Dashboard – ich zeige dir den Pfad.",
+                "Hier beginnt dein Weg durchs Dashboard – lass mich dich kurz rumführen.",
                 "Hier vereinen sich deine Statistiken und Quests an einem Ort.",
                 "Nutze das Dashboard, um deine Fortschritte zu erblicken und neue Ziele zu setzen."
             ),

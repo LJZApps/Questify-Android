@@ -6,7 +6,7 @@
     <string name="create_quest_top_bar_title">Quest erstellen</string>
     <string name="create_quest_save_button">Quest speichern</string>
     <string name="create_quest_title">Titel</string>
-    <string name="create_quest_description">Beschreibung</string>
+    <string name="create_quest_note">Notizen</string>
     <string name="difficulty_easy">Leicht</string>
     <string name="difficulty_medium">Mittel</string>
     <string name="difficulty_hard">Hart</string>
@@ -21,7 +21,7 @@
     <string name="drawer_content_subtitle">Punkte: %1d</string>
     <string name="drawer_content_quests_title">Quests</string>
     <string name="drawer_content_quests_navigation_title">Deine Quests</string>
-    <string name="drawer_content_more_coming_soon">Weitere Funktionen demnächst!</string>
+    <string name="drawer_content_more_coming_soon">Etwas Großes naht! 👀</string>
     <string name="settings_screen_color_red">Rot</string>
     <string name="settings_screen_color_green">Grün</string>
     <string name="settings_screen_color_blue">Blau</string>
@@ -43,5 +43,5 @@
     <string name="settings_help_screen_provide_feedback_subtitle">Irgendwelche Bugs, Abstürze oder seltsame UI bemerkt? Melde es hier!</string>
     <string name="settings_help_screen_send_feedback">Feedback senden</string>
     <string name="quest_screen_bottom_nav_routines">Routinen</string>
-    <string name="quest_screen_bottom_nav_rituals">Rituale</string>
+    <string name="quest_screen_bottom_nav_rituals">Gewohnheiten</string>
 </resources>

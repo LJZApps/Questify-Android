@@ -6,14 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.quests.viewquests.QuestsViewModel
+import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
 import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.features.quests.viewquests.subpages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.viewquests.subpages.RepeatingQuestsPage
+import de.ljz.questify.ui.features.quests.viewquests.subpages.HabitsQuestsPage
+import de.ljz.questify.ui.features.quests.viewquests.subpages.RoutinesQuestsPage
 import de.ljz.questify.ui.features.quests.viewquests.subpages.TodayQuestsPage
 
 @Composable
-fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: QuestsViewModel) {
+fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: ViewQuestsViewModel) {
 
     NavHost(
         navController = navController,
@@ -36,11 +37,11 @@ fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavH
         }
 
         composable<QuestBottomRoutes.Routines> {
-            RepeatingQuestsPage(viewModel = viewModel)
+            RoutinesQuestsPage(viewModel = viewModel)
         }
 
         composable<QuestBottomRoutes.Rituals> {
-            AllQuestsPage(viewModel = viewModel, navController = mainNavController)
+            HabitsQuestsPage(viewModel = viewModel)
         }
     }
 }
