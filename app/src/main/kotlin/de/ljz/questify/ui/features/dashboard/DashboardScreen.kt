@@ -11,7 +11,7 @@ import de.ljz.questify.ui.components.QuestMasterOnboarding
 import de.ljz.questify.ui.components.TopBar
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     mainNavController: NavHostController,

@@ -1,8 +1,21 @@
 package de.ljz.questify.ui.features.quests.viewquests
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
@@ -19,12 +32,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -39,9 +57,12 @@ import de.ljz.questify.ui.features.quests.viewquests.navigation.BottomNavigation
 import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
 import de.ljz.questify.util.NavBarConfig
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
+
+
 
 @OptIn(
     ExperimentalSerializationApi::class,
@@ -66,6 +87,7 @@ fun ViewQuestsScreen(
         NavBarConfig.transparentNavBar = false
     }
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomNavRoutes = listOf(
         BottomNavigationRoute(
             stringResource(R.string.quest_screen_bottom_nav_all_quests),
@@ -95,31 +117,48 @@ fun ViewQuestsScreen(
                 uiState.userPoints,
                 drawerState,
                 mainNavController,
-                stringResource(R.string.quest_screen_top_bar_title)
+                stringResource(R.string.quest_screen_top_bar_title),
+                scrollBehavior = scrollBehavior
             )
         },
         content = { innerPadding ->
             Box(
                 modifier = Modifier
                     .padding(innerPadding)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
                 HomeBottomNavGraph(bottomNavController, mainNavController, viewModel)
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    mainNavController.navigate(CreateQuest())
-                }
+            AnimatedVisibility(
+                visible = !(scrollBehavior.state.collapsedFraction > 0.5f),
+                enter = fadeIn(animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)) +
+                        slideInVertically(
+                            initialOffsetY = { it / 2 }, // Sanfteres Einblenden von der halben Höhe
+                            animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+                        ),
+                exit = fadeOut(animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)) +
+                        slideOutVertically(
+                            targetOffsetY = { it / 2 }, // Sanfteres Ausblenden zur halben Höhe
+                            animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)
+                        )
             ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                FloatingActionButton(
+                    onClick = {
+                        mainNavController.navigate(CreateQuest())
+                    }
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+                }
             }
         },
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
-
                 bottomNavRoutes.forEach { bottomNavRoute ->
                     NavigationBarItem(
                         icon = {
@@ -149,7 +188,6 @@ fun ViewQuestsScreen(
             )
         }
     )
-
 
     if (!uiState.questOnboardingDone) {
         QuestMasterOnboarding(

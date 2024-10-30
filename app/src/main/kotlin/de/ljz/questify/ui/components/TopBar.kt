@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +38,8 @@ fun TopBar(
     userPoints: Int,
     drawerState: DrawerState,
     navController: NavHostController,
-    title: String
+    title: String,
+    scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     val scope = rememberCoroutineScope()
     var showMenu by remember { mutableStateOf(false) }
@@ -110,6 +112,7 @@ fun TopBar(
                     modifier = Modifier.clip(CircleShape)
                 )
             }
-        }
+        },
+        scrollBehavior = scrollBehavior
     )
 }
