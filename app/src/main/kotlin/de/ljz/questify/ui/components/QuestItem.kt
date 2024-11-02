@@ -28,6 +28,7 @@ fun QuestItem(
     difficultyIcon: @Composable (() -> Unit)? = null,
     onQuestChecked: () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
     navController: NavHostController? = null
 ) {
     ElevatedCard(
@@ -35,10 +36,7 @@ fun QuestItem(
             .fillMaxWidth()
             .padding(8.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 1.dp),
-        onClick = {
-            // TODO
-        },
-        //enabled = !done
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier
@@ -55,7 +53,6 @@ fun QuestItem(
                         onQuestChecked()
                     },
                     modifier = Modifier.padding(end = 8.dp),
-
                 )
 
                 Column(
@@ -118,7 +115,8 @@ private fun QuestItemPreview() {
                 contentDescription = "Difficulty"
             )
         },
-        onQuestChecked = {}
+        onQuestChecked = {},
+        onClick = {}
     )
 }
 
@@ -134,6 +132,7 @@ private fun QuestItemDonePreview() {
         difficultyIcon = {
             EpicIcon()
         },
-        onQuestChecked = {}
+        onQuestChecked = {},
+        onClick = {}
     )
 }

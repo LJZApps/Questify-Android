@@ -14,7 +14,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
@@ -37,6 +41,7 @@ import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
@@ -56,6 +61,15 @@ class ActivityMain : AppCompatActivity() {
             val isAppReadyState by vm.isAppReady.collectAsState()
 
             vm.createNotificationChannel(this)
+
+            val workRequest = PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
+                .build()
+
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "QuestNotificationWorker",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                workRequest
+            )
 
             SentryAndroid.init(this) { options ->
                 options.dsn =

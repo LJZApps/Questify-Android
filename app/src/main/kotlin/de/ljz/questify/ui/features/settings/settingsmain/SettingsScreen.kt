@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LightMode
+import androidx.compose.material.icons.outlined.NotificationImportant
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,8 +31,10 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
+import de.ljz.questify.core.application.ReminderTime
 import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
 import de.ljz.questify.ui.features.settings.settingsmain.components.CustomColorDialog
+import de.ljz.questify.ui.features.settings.settingsmain.components.ReminderDialog
 import de.ljz.questify.ui.features.settings.settingsmain.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
@@ -46,6 +49,7 @@ fun SettingsScreen(
     val dynamicColorsEnabled = viewModel.dynamicColorsEnabled.collectAsState().value
     val customColor = viewModel.themeColor.collectAsState().value
     val themeBehavior = viewModel.themeBehavior.collectAsState().value
+    val reminderTime = viewModel.reminderTime.collectAsState().value
     val uiState = viewModel.uiState.collectAsState().value
 
     val colorOptions = listOf(
@@ -66,7 +70,6 @@ fun SettingsScreen(
     )
 
     LaunchedEffect(Unit) {
-       
         NavBarConfig.transparentNavBar = true
     }
 
@@ -139,6 +142,23 @@ fun SettingsScreen(
             }
 
             SettingsGroup(
+                title = { Text("Quests") }
+            ) {
+                SettingsMenuLink(
+                    title = { Text(text = "Erneut erinnern in") },
+                    subtitle = {
+                        Text(
+                            text = "${reminderTime.minutes} Minuten"
+                        )
+                    },
+                    icon = { Icon(Icons.Outlined.NotificationImportant, contentDescription = null) },
+                    onClick = {
+                        viewModel.showReminderTimeDialog()
+                    }
+                )
+            }
+
+            SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_help_screen_help_title)) },
             ) {
                 SettingsMenuLink(
@@ -191,6 +211,19 @@ fun SettingsScreen(
                 },
                 onDismiss = {
                     viewModel.hideDarkModeDialog()
+                }
+            )
+        }
+
+        if (uiState.reminderDialogVisible) {
+            ReminderDialog(
+                selectedTime = reminderTime,
+                onConfirm = { time ->
+                    viewModel.updateReminderTime(time)
+                    viewModel.hideReminderTimeDialog()
+                },
+                onDismiss = {
+                    viewModel.hideReminderTimeDialog()
                 }
             )
         }

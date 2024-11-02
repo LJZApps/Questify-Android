@@ -18,13 +18,12 @@ import de.ljz.questify.core.compose.UIModePreviews
 @Composable
 fun DifficultyIconContainer(content: @Composable BoxScope.() -> Unit) {
     Box(
-        modifier = Modifier.size(24.dp), // Einheitliche Container-Größe für Konsistenz
+        modifier = Modifier.size(24.dp),
         contentAlignment = Alignment.Center,
         content = content
     )
 }
 
-// Die verschiedenen Schwierigkeitsgrade als Schwerter-Icons
 @Composable
 fun EasyIcon() {
     DifficultyIconContainer {
@@ -77,7 +76,7 @@ fun EpicIcon() {
 @Composable
 fun SwordIcon() {
     val color = MaterialTheme.colorScheme.onBackground
-    Canvas(modifier = Modifier.size(8.dp)) { // Kompaktes, kleines Schwert-Symbol
+    Canvas(modifier = Modifier.size(8.dp)) {
         rotate(degrees = 45f) {
             drawSword(color)
         }
@@ -87,7 +86,6 @@ fun SwordIcon() {
 
 fun DrawScope.drawSword(color: Color) {
     val path = Path().apply {
-        // Größere Klinge
         moveTo(size.width / 2f, 0f)
         lineTo(size.width * 0.65f, size.height * 0.6f)
         lineTo(size.width * 0.35f, size.height * 0.6f)
@@ -95,7 +93,6 @@ fun DrawScope.drawSword(color: Color) {
     }
     drawPath(path = path, color = color)
 
-    // Größere Parierstange
     drawLine(
         color = color,
         start = androidx.compose.ui.geometry.Offset(size.width * 0.25f, size.height * 0.6f),
@@ -103,7 +100,6 @@ fun DrawScope.drawSword(color: Color) {
         strokeWidth = 1.5f
     )
 
-    // Größerer Griff
     drawRect(
         color = color,
         topLeft = androidx.compose.ui.geometry.Offset(size.width * 0.45f, size.height * 0.6f),
@@ -111,7 +107,6 @@ fun DrawScope.drawSword(color: Color) {
     )
 }
 
-// Vorschau
 @Composable
 fun DifficultyIconsPreview() {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

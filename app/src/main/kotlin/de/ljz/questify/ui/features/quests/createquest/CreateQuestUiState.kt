@@ -6,5 +6,6 @@ data class CreateQuestUiState(
     val difficulty: Int = 0,
     val isTimePickerVisible: Boolean = false,
     val selectedTime: Long = 0,
-    val isAlertManagerInfoVisible: Boolean = false
+    val isAlertManagerInfoVisible: Boolean = false,
+    val notificationTriggerTimes: List<Long> = listOf()
 )

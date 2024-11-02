@@ -2,6 +2,7 @@ package de.ljz.questify.domain.datastore
 
 import android.util.Log
 import androidx.datastore.core.Serializer
+import de.ljz.questify.core.application.ReminderTime
 import de.ljz.questify.core.application.TAG
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
@@ -27,6 +28,9 @@ data class AppSettings(
 
     @SerialName("theme_color")
     val themeColor: ThemeColor = ThemeColor.RED,
+
+    @SerialName("reminder_time")
+    val reminderTime: Int = 5
 )
 
 object AppSettingsSerializer : Serializer<AppSettings> {

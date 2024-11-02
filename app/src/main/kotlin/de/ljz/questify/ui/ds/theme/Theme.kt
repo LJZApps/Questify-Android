@@ -10,7 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.util.NavBarConfig
@@ -46,19 +46,28 @@ fun QuestifyTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
+            val window = (view.context as Activity).window
+            val windowInsetsController = WindowCompat.getInsetsController(window, view)
 
-            if (!transparentNavBarState) {
-                (view.context as Activity).window.navigationBarColor = colorScheme.surfaceContainer.toArgb()
+            window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = if (!transparentNavBarState) {
+                colorScheme.surfaceContainer.toArgb()
             } else {
-                (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
+                colorScheme.background.toArgb()
             }
 
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = when (themeBehavior) {
-                ThemeBehavior.DARK -> false
-                ThemeBehavior.LIGHT -> true
-                ThemeBehavior.SYSTEM_STANDARD -> {
-                    !darkTheme
+            // Set system bar appearance
+            windowInsetsController.apply {
+                isAppearanceLightStatusBars = when (themeBehavior) {
+                    ThemeBehavior.DARK -> false
+                    ThemeBehavior.LIGHT -> true
+                    ThemeBehavior.SYSTEM_STANDARD -> !darkTheme
+                }
+
+                isAppearanceLightNavigationBars = when (themeBehavior) {
+                    ThemeBehavior.DARK -> false
+                    ThemeBehavior.LIGHT -> true
+                    ThemeBehavior.SYSTEM_STANDARD -> !darkTheme
                 }
             }
         }

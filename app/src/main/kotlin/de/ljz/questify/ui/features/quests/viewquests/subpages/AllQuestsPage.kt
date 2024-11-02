@@ -13,6 +13,7 @@ import de.ljz.questify.ui.components.EpicIcon
 import de.ljz.questify.ui.components.HardIcon
 import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.components.QuestItem
+import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
 
 enum class SortType { DONE, TITLE, DIFFICULTY }
@@ -37,6 +38,9 @@ fun AllQuestsPage(
                 done = quest.done,
                 onQuestChecked = {
                     viewModel.setQuestDone(quest.id, !quest.done)
+                },
+                onClick = {
+                    navController.navigate(QuestDetail(id = quest.id))
                 },
                 difficultyIcon = {
                     when (quest.difficulty) {

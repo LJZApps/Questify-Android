@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.domain.models.quests.MainQuestEntity
 import de.ljz.questify.domain.repositories.QuestRepository
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,10 +28,21 @@ class QuestDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val quest = questRepository.findMainQuestById(questId)
-            quest.collectLatest { questEntity ->
-                _uiState.value = _uiState.value.copy(quest = questEntity)
+            questRepository.findMainQuestById(questId).collect { quest ->
+                _uiState.value = _uiState.value.copy(
+                    questId = quest.id,
+                    title = quest.title,
+                    description = quest.description ?: ""
+                )
             }
         }
+    }
+
+    fun updateTitle(newTitle: String) {
+        _uiState.value = _uiState.value.copy(title = newTitle)
+    }
+
+    fun updateDescription(newDescription: String) {
+        _uiState.value = _uiState.value.copy(description = newDescription)
     }
 }

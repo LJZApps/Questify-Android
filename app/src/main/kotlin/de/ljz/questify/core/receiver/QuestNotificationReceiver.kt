@@ -14,31 +14,79 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
 import de.ljz.questify.core.application.TAG
 import de.ljz.questify.core.main.ActivityMain
+import de.ljz.questify.domain.repositories.AppSettingsRepository
+import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuestNotificationReceiver : BroadcastReceiver() {
     private val questsGroupId = "de.jz.QUEST_NOTIFICATION_GROUP"
 
+    @Inject
+    lateinit var questNotificationRepository: QuestNotificationRepository
+
+    @Inject
+    lateinit var appSettingsRepository: AppSettingsRepository
+
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
 
         val notificationId = intent.getIntExtra("notificationId", 0)
+        val questId = intent.getIntExtra("questId", 0)
         val title = intent.getStringExtra("title") ?: "Zeit für deine Quest!"
         val description = intent.getStringExtra("description") ?: "Du hast eine Quest zu erledigen"
-        val trophyEnabled = intent.getBooleanExtra("trophyEnabled", false)
+        var hasNotified: Boolean = false
+        var remindAgainTime: Int = 5
+
+        CoroutineScope(Dispatchers.IO).launch {
+            hasNotified = questNotificationRepository.isNotified(notificationId)
+
+            appSettingsRepository.getAppSettings().collectLatest { settings ->
+               remindAgainTime = settings.reminderTime
+            }
+        }
 
         val intent = Intent(context, ActivityMain::class.java).apply {
             action = Intent.ACTION_VIEW
-            data = "questify://quest_detail/${notificationId}".toUri()
+            data = "questify://quest_detail/${questId}".toUri()
         }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-        // Speichere die neue Benachrichtigung in SharedPreferences
+        // Abschließen
+        val completeQuestIntent = Intent(context, CompleteQuestReceiver::class.java).apply {
+            putExtra("notificationId", notificationId)
+            putExtra("questId", questId)
+        }
+        val completeQuestPendingIntent = PendingIntent.getBroadcast(
+            context, notificationId, completeQuestIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val completeQuestAction = NotificationCompat.Action.Builder(
+            null,
+            "Abschließen",
+            completeQuestPendingIntent
+        ).build()
+
+        // Erneut erinnern
+        val remindAgainIntent = Intent(context, RemindAgainReceiver::class.java).apply {
+            putExtra("notificationId", notificationId)
+            putExtra("questId", questId)
+            putExtra("remindAgainTime", remindAgainTime)
+        }
+        val remindAgainPendingIntent = PendingIntent.getBroadcast(
+            context, notificationId, remindAgainIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val remindAgainAction = NotificationCompat.Action.Builder(
+            null,
+            "Erneut erinnern",
+            remindAgainPendingIntent
+        ).build()
+
         saveNotification(context, title, description)
 
-        Log.d(TAG, intent.data.toString())
-
-        // Erstelle die individuelle Benachrichtigung
         val notification = NotificationCompat.Builder(context, "quests")
             .setContentTitle(title)
             .setContentText(description)
@@ -47,9 +95,10 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setGroup(questsGroupId)
+            .addAction(completeQuestAction)
+            .addAction(remindAgainAction)
             .build()
 
-        // Erstelle die Zusammenfassungsbenachrichtigung
         val inboxStyle = NotificationCompat.InboxStyle().setBigContentTitle("Level auf, während du deine neuen Quests erledigst!")
 
         val summaryNotification = NotificationCompat.Builder(context, "quests")
@@ -64,14 +113,16 @@ class QuestNotificationReceiver : BroadcastReceiver() {
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Sende die individuelle Benachrichtigung
-        notificationManager.notify(notificationId, notification)
+        if (!hasNotified) {
+            notificationManager.notify(notificationId, notification)
+            notificationManager.notify(0, summaryNotification)
 
-        // Sende die Zusammenfassungsbenachrichtigung
-        notificationManager.notify(0, summaryNotification)
+            CoroutineScope(Dispatchers.IO).launch {
+                questNotificationRepository.setNotificationAsNotified(notificationId)
+            }
+        }
     }
 
-    // Speichere die aktuelle Benachrichtigung in SharedPreferences
     private fun saveNotification(context: Context, title: String, description: String) {
         val sharedPreferences = context.getSharedPreferences("quest_notifications", Context.MODE_PRIVATE)
         val notifications = sharedPreferences.getStringSet("notifications", mutableSetOf()) ?: mutableSetOf()

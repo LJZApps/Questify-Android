@@ -126,8 +126,7 @@ fun CreateQuestScreen(
                 label = { Text(stringResource(R.string.create_quest_note)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                minLines = 2,
-                maxLines = 4
+                minLines = 2
             )
 
             Column {
@@ -151,6 +150,14 @@ fun CreateQuestScreen(
                         ) { Text(label) }
                     }
                 }
+            }
+
+            Button(
+                onClick = {
+                    viewModel.addReminder()
+                }
+            ) {
+                Text("Erinnerung hinzufügen")
             }
 
             /*Text(

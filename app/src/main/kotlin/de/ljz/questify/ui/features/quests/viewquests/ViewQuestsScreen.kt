@@ -63,7 +63,6 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
 
 
-
 @OptIn(
     ExperimentalSerializationApi::class,
     InternalSerializationApi::class,
@@ -114,10 +113,10 @@ fun ViewQuestsScreen(
     Scaffold(
         topBar = {
             TopBar(
-                uiState.userPoints,
-                drawerState,
-                mainNavController,
-                stringResource(R.string.quest_screen_top_bar_title),
+                userPoints = uiState.userPoints,
+                drawerState = drawerState,
+                navController = mainNavController,
+                title = stringResource(R.string.quest_screen_top_bar_title),
                 scrollBehavior = scrollBehavior
             )
         },

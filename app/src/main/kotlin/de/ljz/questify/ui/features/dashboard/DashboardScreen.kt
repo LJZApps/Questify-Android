@@ -9,6 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.components.QuestMasterOnboarding
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.util.NavBarConfig
 
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -21,6 +22,10 @@ fun DashboardScreen(
     val uiState = viewModel.uiState.collectAsState().value
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        NavBarConfig.transparentNavBar = true
+    }
 
     Scaffold(
         topBar = {
