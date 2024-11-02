@@ -16,6 +16,7 @@ import de.ljz.questify.core.application.TAG
 import de.ljz.questify.core.main.ActivityMain
 import de.ljz.questify.domain.repositories.AppSettingsRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.ui.features.remindagain.RemindAgainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -40,14 +41,9 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         val title = intent.getStringExtra("title") ?: "Zeit für deine Quest!"
         val description = intent.getStringExtra("description") ?: "Du hast eine Quest zu erledigen"
         var hasNotified: Boolean = false
-        var remindAgainTime: Int = 5
 
         CoroutineScope(Dispatchers.IO).launch {
             hasNotified = questNotificationRepository.isNotified(notificationId)
-
-            appSettingsRepository.getAppSettings().collectLatest { settings ->
-               remindAgainTime = settings.reminderTime
-            }
         }
 
         val intent = Intent(context, ActivityMain::class.java).apply {
@@ -71,12 +67,11 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         ).build()
 
         // Erneut erinnern
-        val remindAgainIntent = Intent(context, RemindAgainReceiver::class.java).apply {
+        val remindAgainIntent = Intent(context, RemindAgainActivity::class.java).apply {
             putExtra("notificationId", notificationId)
             putExtra("questId", questId)
-            putExtra("remindAgainTime", remindAgainTime)
         }
-        val remindAgainPendingIntent = PendingIntent.getBroadcast(
+        val remindAgainPendingIntent = PendingIntent.getActivity(
             context, notificationId, remindAgainIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val remindAgainAction = NotificationCompat.Action.Builder(
