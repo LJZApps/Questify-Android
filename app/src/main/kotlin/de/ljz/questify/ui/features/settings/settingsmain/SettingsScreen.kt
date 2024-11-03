@@ -49,7 +49,6 @@ fun SettingsScreen(
     val dynamicColorsEnabled = viewModel.dynamicColorsEnabled.collectAsState().value
     val customColor = viewModel.themeColor.collectAsState().value
     val themeBehavior = viewModel.themeBehavior.collectAsState().value
-    val reminderTime = viewModel.reminderTime.collectAsState().value
     val uiState = viewModel.uiState.collectAsState().value
 
     val colorOptions = listOf(
@@ -142,23 +141,6 @@ fun SettingsScreen(
             }
 
             SettingsGroup(
-                title = { Text("Quests") }
-            ) {
-                SettingsMenuLink(
-                    title = { Text(text = "Erneut erinnern in") },
-                    subtitle = {
-                        Text(
-                            text = "${reminderTime.minutes} Minuten"
-                        )
-                    },
-                    icon = { Icon(Icons.Outlined.NotificationImportant, contentDescription = null) },
-                    onClick = {
-                        viewModel.showReminderTimeDialog()
-                    }
-                )
-            }
-
-            SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_help_screen_help_title)) },
             ) {
                 SettingsMenuLink(
@@ -211,19 +193,6 @@ fun SettingsScreen(
                 },
                 onDismiss = {
                     viewModel.hideDarkModeDialog()
-                }
-            )
-        }
-
-        if (uiState.reminderDialogVisible) {
-            ReminderDialog(
-                selectedTime = reminderTime,
-                onConfirm = { time ->
-                    viewModel.updateReminderTime(time)
-                    viewModel.hideReminderTimeDialog()
-                },
-                onDismiss = {
-                    viewModel.hideReminderTimeDialog()
                 }
             )
         }

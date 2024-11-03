@@ -1,7 +1,6 @@
 package de.ljz.questify.domain.repositories
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.core.application.ReminderTime
 import de.ljz.questify.domain.datastore.AppSettings
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
@@ -26,14 +25,6 @@ class AppSettingsRepository @Inject constructor(
         }
     }
 
-    suspend fun setLastOpenedVersion(version: Int) {
-        appSettingsDataStore.updateData {
-            it.copy(
-                lastOpenedVersion = version
-            )
-        }
-    }
-
     suspend fun setDarkModeBehavior(value: ThemeBehavior) {
         appSettingsDataStore.updateData {
             it.copy(
@@ -54,14 +45,6 @@ class AppSettingsRepository @Inject constructor(
         appSettingsDataStore.updateData {
             it.copy(
                 themeColor = color
-            )
-        }
-    }
-
-    suspend fun setReminderTime(reminderTime: ReminderTime) {
-        appSettingsDataStore.updateData {
-            it.copy(
-                reminderTime = reminderTime.minutes
             )
         }
     }

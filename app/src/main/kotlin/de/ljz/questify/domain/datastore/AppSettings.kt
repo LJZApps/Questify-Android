@@ -27,10 +27,7 @@ data class AppSettings(
     val dynamicThemeColors: Boolean = false,
 
     @SerialName("theme_color")
-    val themeColor: ThemeColor = ThemeColor.RED,
-
-    @SerialName("reminder_time")
-    val reminderTime: Int = 5
+    val themeColor: ThemeColor = ThemeColor.RED
 )
 
 object AppSettingsSerializer : Serializer<AppSettings> {

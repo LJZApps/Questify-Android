@@ -27,16 +27,12 @@ class SettingsViewModel @Inject constructor(
     private val _dynamicColorsEnabled = MutableStateFlow(false)
     val dynamicColorsEnabled: StateFlow<Boolean> = _dynamicColorsEnabled.asStateFlow()
 
-    private val _reminderTime = MutableStateFlow<ReminderTime>(ReminderTime.MIN_5)
-    val reminderTime: StateFlow<ReminderTime> = _reminderTime.asStateFlow()
-
     init {
         viewModelScope.launch {
             appSettingsRepository.getAppSettings().collectLatest { settings ->
                 _themeBehavior.value = settings.themeBehavior
                 _themeColor.value = settings.themeColor
                 _dynamicColorsEnabled.value = settings.dynamicThemeColors
-                _reminderTime.value = ReminderTime.fromMinutes(settings.reminderTime)
             }
         }
     }
@@ -49,8 +45,6 @@ class SettingsViewModel @Inject constructor(
     fun hideCustomColorDialog() = updateUiState { copy(customColorDialogVisible = false) }
     fun showDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = true) }
     fun hideDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = false) }
-    fun showReminderTimeDialog() = updateUiState { copy(reminderDialogVisible = true) }
-    fun hideReminderTimeDialog() = updateUiState { copy(reminderDialogVisible = false) }
 
     fun updateDynamicColorsEnabled(enabled: Boolean) {
         viewModelScope.launch {
@@ -67,12 +61,6 @@ class SettingsViewModel @Inject constructor(
     fun updateThemeBehavior(themeBehavior: ThemeBehavior) {
         viewModelScope.launch {
             appSettingsRepository.setDarkModeBehavior(themeBehavior)
-        }
-    }
-
-    fun updateReminderTime(reminderTime: ReminderTime) {
-        viewModelScope.launch {
-            appSettingsRepository.setReminderTime(reminderTime)
         }
     }
 }
