@@ -35,7 +35,7 @@ fun AllQuestsPage(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(uiState.quests.sortedBy { it.dueDate }.asReversed(), key = { it.id }) { quest ->
-            val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val dueDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
             val formattedDate = quest.dueDate?.let { dueDateFormat.format(it) }
 
             QuestItem(

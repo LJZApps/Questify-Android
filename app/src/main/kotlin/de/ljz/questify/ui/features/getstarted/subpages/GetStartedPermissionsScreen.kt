@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.getstarted.subpages
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,7 @@ fun GetStartedPermissionsScreen(
     navController: NavController
 ) {
     val context = LocalContext.current
+    val activity = (LocalContext.current) as Activity
     val uiState = viewModel.uiState.collectAsState().value
 
     val isNotificationPermissionGranted = uiState.isNotificationPermissionGranted

@@ -55,3 +55,7 @@ fun Context.longToast(message: String) {
 fun Context.shortToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
+
+fun String?.trimToNull(): String? {
+    return if (this.isNullOrBlank()) null else this.trim()
+}

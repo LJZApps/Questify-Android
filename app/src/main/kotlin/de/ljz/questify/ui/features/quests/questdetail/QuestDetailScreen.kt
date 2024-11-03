@@ -15,10 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,7 +42,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.createquest.components.DueDateInfoDialog
-import de.ljz.questify.ui.features.quests.createquest.components.SetDueDateDialog
+import de.ljz.questify.ui.features.quests.questdetail.components.DeleteConfirmationDialog
 import de.ljz.questify.util.NavBarConfig
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -64,8 +62,7 @@ fun QuestDetailScreen(
         stringResource(R.string.difficulty_epic)
     )
     val context = LocalContext.current
-    val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
-    val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
 
     LaunchedEffect(Unit) {
         NavBarConfig.transparentNavBar = true
@@ -78,14 +75,16 @@ fun QuestDetailScreen(
                 actions = {
                     TextButton(
                         onClick = {
-                            // TODO
+                            viewModel.showDeleteConfirmationDialog()
                         }
                     ) {
                         Text("Löschen")
                     }
                     TextButton(
                         onClick = {
-                            // TODO
+                            viewModel.updateQuest (context = context) {
+                                navController.navigateUp()
+                            }
                         }
                     ) {
                         Text("Speichern")
@@ -129,19 +128,10 @@ fun QuestDetailScreen(
                 )
 
                 Column {
-                    Row (
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Lock,
-                            contentDescription = null,
-                        )
-
-                        Text(
-                            text = "Schwierigkeit",
-                            modifier = Modifier.padding(bottom = 0.dp)
-                        )
-                    }
+                    Text(
+                        text = "Schwierigkeit",
+                        modifier = Modifier.padding(bottom = 0.dp)
+                    )
 
                     SingleChoiceSegmentedButtonRow(
                         modifier = Modifier
@@ -153,29 +143,41 @@ fun QuestDetailScreen(
                                 shape = SegmentedButtonDefaults.itemShape(
                                     index = index,
                                     count = options.size
-                                ), onClick = {  },
+                                ), onClick = { },
                                 selected = index == uiState.difficulty,
-                                enabled = false
+                                enabled = false,
+                                icon = {
+                                    if (index == uiState.difficulty) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Lock,
+                                            contentDescription = null,
+                                        )
+                                    }
+                                }
                             ) { Text(label) }
                         }
                     }
                 }
 
                 // Due
-                Column (
+                Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Row (
+                    Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Lock,
-                            contentDescription = null,
+                        Text(
+                            text = "Fälligkeit",
+                            modifier = Modifier.padding(bottom = 0.dp)
                         )
 
-                        Text(
-                            text = "Fälligkeitsdatum",
-                            modifier = Modifier.padding(bottom = 0.dp)
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.showDueDateInfoDialog()
+                                }
                         )
                     }
 
@@ -198,10 +200,10 @@ fun QuestDetailScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 val date = Date(uiState.selectedDueDate)
-                                val formattedDate = dueDateFormat.format(date)
+                                val formattedDate = dateFormat.format(date)
 
                                 Icon(
-                                    Icons.Outlined.Schedule,
+                                    Icons.Outlined.Lock,
                                     contentDescription = null
                                 )
 
@@ -210,15 +212,6 @@ fun QuestDetailScreen(
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
                             }
-
-                            Icon(
-                                imageVector = Icons.Outlined.Info,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clickable {
-                                        viewModel.showDueDateInfoDialog()
-                                    }
-                            )
                         }
 
                     }
@@ -233,9 +226,9 @@ fun QuestDetailScreen(
                         modifier = Modifier.padding(bottom = 0.dp)
                     )
 
-                    uiState.notificationTriggerTimes.forEachIndexed { index, triggerTime ->
+                    uiState.notificationTriggerTimes.sortedBy { it }.forEachIndexed { index, triggerTime ->
                         val date = Date(triggerTime)
-                        val formattedDate = reminderDateFormat.format(date)
+                        val formattedDate = dateFormat.format(date)
 
                         Box(
                             modifier = Modifier
@@ -312,6 +305,24 @@ fun QuestDetailScreen(
                 DueDateInfoDialog(
                     onDismiss = {
                         viewModel.hideDueDateInfoDialog()
+                    }
+                )
+            }
+
+            if (uiState.isDeleteConfirmationDialogVisible) {
+                DeleteConfirmationDialog(
+                    onConfirm = {
+                        viewModel.deleteQuest(
+                            uiState.questId,
+                            context,
+                            onSuccess = {
+                                viewModel.hideDeleteConfirmationDialog()
+                                navController.navigateUp()
+                            }
+                        )
+                    },
+                    onDismiss = {
+                        viewModel.hideDeleteConfirmationDialog()
                     }
                 )
             }

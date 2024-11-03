@@ -7,13 +7,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.coroutine.ContextProvider
 import de.ljz.questify.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,6 +40,19 @@ class GetStartedViewModel @Inject constructor(
         "Questify wird deinen Alltag in ein episches Abenteuer verwandeln – voller Prüfungen und Geheimnisse.",
         "Bist du bereit, deinen Pfad zu erleuchten und dein wahres Potenzial zu entfalten?",
     )
+
+    fun initializePermissionLauncher(activity: ComponentActivity) {
+        permissionLauncher = activity.registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            // Handle the permission result
+            if (isGranted) {
+                loadPermissionData(activity)
+            } else {
+                // Permission denied
+            }
+        }
+    }
 
     fun loadPermissionData(context: Context) {
         permissionLauncher.launch(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)

@@ -3,6 +3,7 @@ package de.ljz.questify.ui.components
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -80,7 +81,7 @@ fun QuestItem(
             ) {
                 dueDate?.let {
                     Icon(
-                        imageVector = Icons.Filled.Schedule,
+                        imageVector = Icons.Filled.Event,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )

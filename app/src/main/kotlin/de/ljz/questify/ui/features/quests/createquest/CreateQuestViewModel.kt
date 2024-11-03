@@ -114,7 +114,7 @@ class CreateQuestViewModel @Inject constructor(
     fun hideAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = false) }
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
-    fun showAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = true) }
-    fun hideAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = false) }
+    fun showAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = true, addingReminderState = AddingReminderState.DATE) }
+    fun hideAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = false, addingReminderState = AddingReminderState.NONE) }
 
 }

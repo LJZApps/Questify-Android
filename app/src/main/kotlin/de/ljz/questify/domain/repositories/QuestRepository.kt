@@ -17,6 +17,10 @@ class QuestRepository @Inject constructor(
         questDao.setQuestDone(id, done)
     }
 
+    suspend fun updateQuest(id: Int, title: String, description: String? = null) {
+        questDao.updateQuestById(id, title, description)
+    }
+
     fun getQuests () = questDao.getMainQuests()
 
     fun findMainQuestById(id: Int) = questDao.findMainQuestById(id)
@@ -25,5 +29,5 @@ class QuestRepository @Inject constructor(
 
     suspend fun suspendGetQuestById(id: Int) = questDao.suspendGetQuestById(id)
 
-
+    suspend fun deleteQuest(id: Int) = questDao.deleteQuest(id)
 }

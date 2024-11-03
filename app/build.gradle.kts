@@ -73,7 +73,18 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        named("debug") {
+            isDebuggable = true
+            applicationIdSuffix = ".DEV"
+
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"${localProperties.getProperty("DEBUG_BASE_URL")}\""
+            )
+        }
+
+        named("release") {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
             proguardFiles(
@@ -85,27 +96,6 @@ android {
                 "String",
                 "BASE_URL",
                 "\"${localProperties.getProperty("RELEASE_BASE_URL")}\""
-            )
-        }
-
-        named("debug") {
-            isDebuggable = true
-
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${localProperties.getProperty("DEBUG_BASE_URL")}\""
-            )
-        }
-
-        named("release") {
-            isDebuggable = false
-            isMinifyEnabled = false
-            setProguardFiles(
-                listOf(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
             )
         }
     }

@@ -2,26 +2,33 @@ package de.ljz.questify.core.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
@@ -45,15 +52,12 @@ import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
-import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
-
-
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +71,6 @@ class ActivityMain : AppCompatActivity() {
 
             val appUiState by vm.uiState.collectAsState()
             val isSetupDone = appUiState.isSetupDone
-            val context = LocalContext.current
 
             val isAppReadyState by vm.isAppReady.collectAsState()
 
@@ -76,20 +79,14 @@ class ActivityMain : AppCompatActivity() {
             val workRequest = PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
                 .build()
 
-
-
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "QuestNotificationWorker",
                 ExistingPeriodicWorkPolicy.REPLACE,
                 workRequest
             )
 
-            vm.checkPermissions(context = LocalContext.current)
-
             SentryAndroid.init(this) { options ->
-                options.dsn =
-                    "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
-                options.isDebug = BuildConfig.DEBUG
+                options.dsn = "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
             }
 
             if (isAppReadyState) {
@@ -101,15 +98,9 @@ class ActivityMain : AppCompatActivity() {
                     ) {
                         val navController = rememberNavController()
 
-                        val startDestination = if (isSetupDone && vm.areAllPermissionsGranted) {
-                            Home
-                        } else {
-                            GetStartedPermissionsRoute
-                        }
-
                         NavHost(
                             navController = navController,
-                            startDestination = startDestination,
+                            startDestination = if (isSetupDone) Home else GetStartedMain,
                             enterTransition = {
                                 scaleIntoContainer()
                             },
@@ -158,20 +149,30 @@ class ActivityMain : AppCompatActivity() {
                             }
                         }
 
-                        navController.addOnDestinationChangedListener { _, destination, _ ->
-                            if (destination.route == GetStartedPermissionsRoute.serializer().descriptor.serialName) {
-                                if (vm.areAllPermissionsGranted) {
-                                    navController.navigate(Home) {
-                                        popUpTo(GetStartedPermissionsRoute) { inclusive = true }
-                                    }
-                                }
-                            }
-                        }
+                        DebugOverlay("DEV")
                     }
                 }
             }
         }
-
     }
+}
 
+@Composable
+fun DebugOverlay(text: String) {
+    if (BuildConfig.DEBUG) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+                .background(Color.Transparent),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Text(
+                text = text,
+                modifier = Modifier.padding(8.dp),
+                color = Color.White,
+                fontSize = 10.sp
+            )
+        }
+    }
 }

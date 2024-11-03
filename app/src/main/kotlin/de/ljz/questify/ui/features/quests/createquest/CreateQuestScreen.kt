@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
@@ -64,8 +63,7 @@ fun CreateQuestScreen(
         stringResource(R.string.difficulty_epic)
     )
     val context = LocalContext.current
-    val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
-    val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
 
     LaunchedEffect(Unit) {
 
@@ -164,7 +162,7 @@ fun CreateQuestScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Fälligkeitsdatum",
+                        text = "Fälligkeit",
                         modifier = Modifier.padding(bottom = 0.dp)
                     )
 
@@ -200,7 +198,7 @@ fun CreateQuestScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val date = Date(uiState.selectedDueDate)
-                            val formattedDate = dueDateFormat.format(date)
+                            val formattedDate = dateFormat.format(date)
 
                             Icon(
                                 Icons.Outlined.Schedule,
@@ -239,9 +237,9 @@ fun CreateQuestScreen(
                     modifier = Modifier.padding(bottom = 0.dp)
                 )
 
-                uiState.notificationTriggerTimes.forEachIndexed { index, triggerTime ->
+                uiState.notificationTriggerTimes.sortedBy { it }.forEachIndexed { index, triggerTime ->
                     val date = Date(triggerTime)
-                    val formattedDate = reminderDateFormat.format(date)
+                    val formattedDate = dateFormat.format(date)
 
                     Box(
                         modifier = Modifier
@@ -330,6 +328,10 @@ fun CreateQuestScreen(
                 },
                 onDismiss = {
                     viewModel.hideAddingDueDateDialog()
+                },
+                addingReminderState = uiState.addingReminderState,
+                onReminderStateChange = { addingReminderState ->
+                    viewModel.updateReminderState(addingReminderState)
                 }
             )
         }

@@ -28,6 +28,9 @@ interface QuestDao {
     @Query("SELECT * FROM main_quests WHERE id = :id")
     fun getQuestById(id: Int): MainQuestEntity
 
+    @Query("UPDATE main_quests SET title = :title, description = :description WHERE id = :id")
+    suspend fun updateQuestById(id: Int, title: String, description: String? = null)
+
     @Query("SELECT * FROM main_quests WHERE id = :id")
     suspend fun suspendGetQuestById(id: Int): MainQuestEntity
 
@@ -49,4 +52,8 @@ interface QuestDao {
 
     @Query("DELETE FROM sub_quests WHERE main_quest_id = :mainQuestId")
     suspend fun clearSubQuestsForMainQuest(mainQuestId: Int)
+
+    @Transaction
+    @Query("DELETE FROM main_quests WHERE id = :questId")
+    suspend fun deleteQuest(questId: Int)
 }
