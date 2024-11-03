@@ -16,3 +16,6 @@ object GetStartedMain
 
 @Serializable
 object GetStartedChooser
+
+@Serializable
+object GetStartedPermissionsRoute

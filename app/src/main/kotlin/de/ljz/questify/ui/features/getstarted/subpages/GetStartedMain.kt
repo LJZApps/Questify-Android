@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.getstarted.GetStartedViewModel
+import de.ljz.questify.ui.navigation.GetStartedPermissionsRoute
 import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.bounceClick
@@ -155,7 +156,7 @@ fun GetStartedMainScreen(
             Button(
                 onClick = {
                     viewModel.setSetupDone()
-                    navController.navigate(Home)
+                    navController.navigate(GetStartedPermissionsRoute)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -87,8 +87,9 @@ fun QuestItem(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = it,
-                        style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray),
-                        fontSize = 12.sp
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp,
+                        color = Color.Gray
                     )
                 }
 

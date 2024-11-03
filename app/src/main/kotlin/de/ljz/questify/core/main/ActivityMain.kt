@@ -2,6 +2,8 @@ package de.ljz.questify.core.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +11,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -22,6 +26,7 @@ import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
+import de.ljz.questify.ui.features.getstarted.subpages.GetStartedPermissionsScreen
 import de.ljz.questify.ui.features.home.HomeScreen
 import de.ljz.questify.ui.features.profile.ProfileScreen
 import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
@@ -35,17 +40,22 @@ import de.ljz.questify.ui.features.settings.settingsmain.SettingsScreen
 import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
+import de.ljz.questify.ui.navigation.GetStartedPermissionsRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import io.sentry.android.core.BuildConfig
 import io.sentry.android.core.SentryAndroid
+import kotlinx.serialization.ExperimentalSerializationApi
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
 
+
+
+    @OptIn(ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,6 +67,7 @@ class ActivityMain : AppCompatActivity() {
 
             val appUiState by vm.uiState.collectAsState()
             val isSetupDone = appUiState.isSetupDone
+            val context = LocalContext.current
 
             val isAppReadyState by vm.isAppReady.collectAsState()
 
@@ -65,11 +76,15 @@ class ActivityMain : AppCompatActivity() {
             val workRequest = PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
                 .build()
 
+
+
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "QuestNotificationWorker",
                 ExistingPeriodicWorkPolicy.REPLACE,
                 workRequest
             )
+
+            vm.checkPermissions(context = LocalContext.current)
 
             SentryAndroid.init(this) { options ->
                 options.dsn =
@@ -85,9 +100,16 @@ class ActivityMain : AppCompatActivity() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         val navController = rememberNavController()
+
+                        val startDestination = if (isSetupDone && vm.areAllPermissionsGranted) {
+                            Home
+                        } else {
+                            GetStartedPermissionsRoute
+                        }
+
                         NavHost(
                             navController = navController,
-                            startDestination = if (isSetupDone) Home else GetStartedMain,
+                            startDestination = startDestination,
                             enterTransition = {
                                 scaleIntoContainer()
                             },
@@ -106,6 +128,11 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<GetStartedChooser> {
                                 GetStartedChooserScreen(navController = navController)
+                            }
+                            composable<GetStartedPermissionsRoute> {
+                                GetStartedPermissionsScreen(
+                                    navController = navController
+                                )
                             }
                             composable<Home> {
                                 HomeScreen(mainNavController = navController)
@@ -128,6 +155,16 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<SettingsHelp> {
                                 SettingsHelpScreen(mainNavController = navController)
+                            }
+                        }
+
+                        navController.addOnDestinationChangedListener { _, destination, _ ->
+                            if (destination.route == GetStartedPermissionsRoute.serializer().descriptor.serialName) {
+                                if (vm.areAllPermissionsGranted) {
+                                    navController.navigate(Home) {
+                                        popUpTo(GetStartedPermissionsRoute) { inclusive = true }
+                                    }
+                                }
                             }
                         }
                     }

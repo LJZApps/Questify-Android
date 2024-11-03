@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.core.application.Difficulty
@@ -15,6 +16,9 @@ import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.components.QuestItem
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 enum class SortType { DONE, TITLE, DIFFICULTY }
 
@@ -25,19 +29,22 @@ fun AllQuestsPage(
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsState().value
+    val context = LocalContext.current
 
-    // Animierte LazyColumn mit sortierten Items
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(uiState.quests, key = { it.id }) { quest ->
+            val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val formattedDate = quest.dueDate?.let { dueDateFormat.format(it) }
+
             QuestItem(
                 id = quest.id,
                 title = quest.title,
                 description = quest.description,
                 done = quest.done,
                 onQuestChecked = {
-                    viewModel.setQuestDone(quest.id, !quest.done)
+                    viewModel.setQuestDone(quest.id, !quest.done, context)
                 },
                 onClick = {
                     navController.navigate(QuestDetail(id = quest.id))
@@ -51,6 +58,7 @@ fun AllQuestsPage(
                         else -> null
                     }
                 },
+                dueDate = formattedDate,
                 navController = navController,
                 modifier = Modifier
                     .animateItem() // `animateItem` für sanfte Positionsänderung

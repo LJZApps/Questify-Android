@@ -28,6 +28,9 @@ interface QuestDao {
     @Query("SELECT * FROM main_quests WHERE id = :id")
     fun getQuestById(id: Int): MainQuestEntity
 
+    @Query("SELECT * FROM main_quests WHERE id = :id")
+    suspend fun suspendGetQuestById(id: Int): MainQuestEntity
+
     @Transaction
     @Query("UPDATE main_quests SET done = :done WHERE id = :id")
     suspend fun setQuestDone(id: Int, done: Boolean)

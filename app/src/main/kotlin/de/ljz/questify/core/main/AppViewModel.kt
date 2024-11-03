@@ -1,11 +1,15 @@
 package de.ljz.questify.core.main
 
+import android.app.AlarmManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +35,11 @@ class AppViewModel @Inject constructor(
 
     private val _isAppReady = MutableStateFlow(false)
     val isAppReady: StateFlow<Boolean> = _isAppReady.asStateFlow()
+
+    val areAllPermissionsGranted: Boolean
+        get() = _uiState.value.isNotificationPermissionGranted &&
+                _uiState.value.isAlarmPermissionGranted &&
+                _uiState.value.isOverlayPermissionGranted
 
     init {
         viewModelScope.launch {
@@ -73,5 +82,19 @@ class AppViewModel @Inject constructor(
 
         // Registriere den Kanal beim NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    fun checkPermissions(context: Context) {
+        _uiState.update {
+            it.copy(
+                isNotificationPermissionGranted = NotificationManagerCompat.from(context).areNotificationsEnabled(),
+                isAlarmPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()
+                } else {
+                    true
+                },
+                isOverlayPermissionGranted = Settings.canDrawOverlays(context)
+            )
+        }
     }
 }

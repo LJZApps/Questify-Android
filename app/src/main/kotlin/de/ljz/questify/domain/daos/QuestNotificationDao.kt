@@ -31,4 +31,11 @@ interface QuestNotificationDao {
     @Query("SELECT * FROM quest_notifications WHERE id = :id")
     fun getNotificationById(id: Int): QuestNotificationEntity
 
+    @Query("SELECT * FROM quest_notifications WHERE quest_id = :questId")
+    suspend fun getNotificationsByQuestId(questId: Int): List<QuestNotificationEntity>
+
+    @Transaction
+    @Query("DELETE FROM quest_notifications WHERE quest_id = :questId")
+    suspend fun removeNotificationsByQuestId(questId: Int)
+
 }

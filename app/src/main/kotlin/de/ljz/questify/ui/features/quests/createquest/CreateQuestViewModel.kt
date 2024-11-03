@@ -1,18 +1,11 @@
 package de.ljz.questify.ui.features.quests.createquest
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.models.quests.MainQuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
@@ -23,6 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
+
+private const val REQUEST_NOTIFICATION_PERMISSION = 1001
 
 @HiltViewModel
 class CreateQuestViewModel @Inject constructor(
@@ -41,7 +36,8 @@ class CreateQuestViewModel @Inject constructor(
             title = _uiState.value.title,
             description = if (_uiState.value.description.isEmpty()) null else _uiState.value.description,
             difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
-            createdAt = Date()
+            createdAt = Date(),
+            dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate)
         )
 
         viewModelScope.launch {
@@ -60,20 +56,47 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    fun addReminder() {
-        viewModelScope.launch {
-            val triggerTime = System.currentTimeMillis() + 10 * 1000
+    fun removeReminder(index: Int) {
+        val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
+            removeAt(index)
+        }
+        _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
+    }
 
-            updateUiState { copy(notificationTriggerTimes = notificationTriggerTimes + triggerTime) }
+    fun addReminder(timestamp: Long) {
+        val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
+            add(timestamp)
+        }
+        _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
+
+        updateUiState {
+            copy(
+                isAddingReminder = true,
+                addingReminderState = AddingReminderState.DATE
+            )
         }
     }
 
-    fun requestExactAlarmPermission(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
-                data = Uri.parse("package:${context.packageName}")
-            }
-            context.startActivity(intent)
+
+    fun setDueDate(timestamp: Long) {
+        updateUiState {
+            copy(
+                selectedDueDate = timestamp
+            )
+        }
+    }
+
+    fun removeDueDate() {
+        updateUiState {
+            copy(
+                selectedDueDate = 0
+            )
+        }
+    }
+
+    fun updateReminderState(reminderState: AddingReminderState) {
+        updateUiState {
+            copy(addingReminderState = reminderState)
         }
     }
 
@@ -82,12 +105,16 @@ class CreateQuestViewModel @Inject constructor(
     }
 
     fun updateSelectedTime(time: Long) = updateUiState { copy(selectedTime = time) }
-    fun showTimePicker() = updateUiState { copy(isTimePickerVisible = true) }
-    fun hideTimePicker() = updateUiState { copy(isTimePickerVisible = false) }
+    fun showCreateReminderDialog() = updateUiState { copy(isAddingReminder = true, addingReminderState = AddingReminderState.DATE) }
+    fun hideCreateReminderDialog() = updateUiState { copy(isAddingReminder = false, addingReminderState = AddingReminderState.NONE) }
     fun updateTitle(title: String) = updateUiState { copy(title = title) }
     fun updateDescription(description: String) = updateUiState { copy(description = description) }
     fun updateDifficulty(difficulty: Int) = updateUiState { copy(difficulty = difficulty) }
     fun showAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = true) }
     fun hideAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = false) }
+    fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
+    fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
+    fun showAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = true) }
+    fun hideAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = false) }
 
 }

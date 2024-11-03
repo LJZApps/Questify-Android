@@ -1,7 +1,11 @@
 package de.ljz.questify.ui.features.quests.createquest
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -9,11 +13,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Button
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -21,12 +31,10 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,8 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.ui.components.CreateReminderDialog
+import de.ljz.questify.ui.features.quests.createquest.components.DueDateInfoDialog
+import de.ljz.questify.ui.features.quests.createquest.components.SetDueDateDialog
 import de.ljz.questify.util.NavBarConfig
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,25 +64,16 @@ fun CreateQuestScreen(
         stringResource(R.string.difficulty_epic)
     )
     val context = LocalContext.current
+    val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
+    val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     LaunchedEffect(Unit) {
-       
+
         NavBarConfig.transparentNavBar = true
     }
 
-    val currentTime = Calendar.getInstance()
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = true,
-    )
-    val datePickerState = rememberDatePickerState(
-        initialDisplayMode = DisplayMode.Input
-    )
-    val sheetState = rememberModalBottomSheetState()
-
     LaunchedEffect(Unit) {
-       
+
         NavBarConfig.transparentNavBar = true
     }
 
@@ -152,43 +156,194 @@ fun CreateQuestScreen(
                 }
             }
 
-            Button(
-                onClick = {
-                    viewModel.addReminder()
-                }
+            // Due
+            Column (
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text("Erinnerung hinzufügen")
+                Row (
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "Fälligkeitsdatum",
+                        modifier = Modifier.padding(bottom = 0.dp)
+                    )
+
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.showDueDateInfoDialog()
+                            }
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            viewModel.showAddingDueDateDialog()
+                        }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val date = Date(uiState.selectedDueDate)
+                            val formattedDate = dueDateFormat.format(date)
+
+                            Icon(
+                                Icons.Outlined.Schedule,
+                                contentDescription = null
+                            )
+
+                            Text(
+                                text = if (uiState.selectedDueDate.toInt() == 0) "Keine Fälligkeit" else formattedDate,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+
+                        if (uiState.selectedDueDate > 0) {
+                            Box(
+                                modifier = Modifier
+                                    .clickable { viewModel.removeDueDate() }
+                                    .padding(0.dp)
+                            ) {
+                                Icon(
+                                    Icons.Outlined.Delete,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+
+                }
             }
 
-            /*Text(
-                text = "${timePickerState.hour} : ${timePickerState.minute}",
-                modifier = Modifier.clickable(
-                    onClick = viewModel::showTimePicker
+            // Reminders
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = "Erinnerungen",
+                    modifier = Modifier.padding(bottom = 0.dp)
                 )
-            )*/
 
-            /*if (uiState.isTimePickerVisible) {
-                TimePickerDialog(
-                    timePickerState = timePickerState,
-                    onDismiss = viewModel::hideTimePicker,
-                    onConfirm = { timestamp ->
-                        viewModel.updateSelectedTime(timestamp)
-                        viewModel.hideTimePicker()
+                uiState.notificationTriggerTimes.forEachIndexed { index, triggerTime ->
+                    val date = Date(triggerTime)
+                    val formattedDate = reminderDateFormat.format(date)
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable {
+                                viewModel.removeReminder(index)
+                            }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.Close,
+                                contentDescription = null
+                            )
+
+                            Text(
+                                text = formattedDate,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
                     }
-                )
-            }*/
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            viewModel.showCreateReminderDialog()
+                        }
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            contentDescription = null
+                        )
+
+                        Text(
+                            text = "Erinnerung hinzufügen",
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        if (uiState.isAddingReminder) {
+            CreateReminderDialog(
+                onDismiss = viewModel::hideCreateReminderDialog,
+                onConfirm = { timestamp ->
+                    viewModel.addReminder(timestamp)
+                    viewModel.hideCreateReminderDialog()
+                },
+                addingReminderState = uiState.addingReminderState,
+                onReminderStateChange = { addingReminderState ->
+                    viewModel.updateReminderState(addingReminderState)
+                }
+            )
+        }
+
+        if (uiState.isDueDateInfoDialogVisible) {
+            DueDateInfoDialog(
+                onDismiss = {
+                    viewModel.hideDueDateInfoDialog()
+                }
+            )
+        }
+
+        if (uiState.isAddingDueDate) {
+            SetDueDateDialog(
+                onConfirm = { dueDateTimestamp ->
+                    viewModel.setDueDate(dueDateTimestamp)
+                    viewModel.hideAddingDueDateDialog()
+                },
+                onDismiss = {
+                    viewModel.hideAddingDueDateDialog()
+                }
+            )
         }
     }
-
-    /*if (uiState.isAlertManagerInfoVisible) {
-        AlertManagerInfoBottomSheet(
-            sheetState = sheetState,
-            onConfirm = {
-                viewModel.requestExactAlarmPermission(context)
-            },
-            onDismiss = {
-
-            }
-        )
-    }*/
 }
+
+/*if (uiState.isAlertManagerInfoVisible) {
+    AlertManagerInfoBottomSheet(
+        sheetState = sheetState,
+        onConfirm = {
+            viewModel.requestExactAlarmPermission(context)
+        },
+        onDismiss = {
+
+        }
+    )
+}*/

@@ -35,7 +35,8 @@ class QuestNotificationWorker @AssistedInject constructor(
 
         notifications.collectLatest { notificationsList ->
             notificationsList.forEach { notification ->
-                if (!notification.notified) scheduleNotification(context, notification)
+                val quest = questRepository.getQuestById(notification.questId)
+                if (!notification.notified && !quest.done) scheduleNotification(context, notification)
             }
         }
 

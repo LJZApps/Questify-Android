@@ -40,9 +40,6 @@
         <receiver
             android:name=".core.receiver.CompleteQuestReceiver"
             android:exported="false" />
-        <receiver
-            android:name=".core.receiver.RemindAgainReceiver"
-            android:exported="false" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"
