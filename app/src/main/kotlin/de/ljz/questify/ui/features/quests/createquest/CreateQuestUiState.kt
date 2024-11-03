@@ -1,5 +1,7 @@
 package de.ljz.questify.ui.features.quests.createquest
 
+import de.ljz.questify.core.application.AddingReminderState
+
 data class CreateQuestUiState(
     val title: String = "",
     val description: String = "",
@@ -13,9 +15,3 @@ data class CreateQuestUiState(
     val isDueDateInfoDialogVisible: Boolean = false,
     val isAddingDueDate: Boolean = false
 )
-
-enum class AddingReminderState {
-    NONE,
-    DATE,
-    TIME;
-}

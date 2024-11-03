@@ -46,3 +46,9 @@ sealed class ReminderTime(val minutes: Int) {
         }
     }
 }
+
+enum class AddingReminderState {
+    NONE,
+    DATE,
+    TIME;
+}

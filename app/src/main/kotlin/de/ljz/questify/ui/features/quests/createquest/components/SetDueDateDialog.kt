@@ -15,8 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.DialogProperties
-import de.ljz.questify.ui.features.quests.createquest.AddingReminderState
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)

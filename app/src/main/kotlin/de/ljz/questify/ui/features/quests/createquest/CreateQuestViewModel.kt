@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.application.AddingReminderState
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.models.quests.MainQuestEntity
@@ -104,7 +105,6 @@ class CreateQuestViewModel @Inject constructor(
         _uiState.value = _uiState.value.update()
     }
 
-    fun updateSelectedTime(time: Long) = updateUiState { copy(selectedTime = time) }
     fun showCreateReminderDialog() = updateUiState { copy(isAddingReminder = true, addingReminderState = AddingReminderState.DATE) }
     fun hideCreateReminderDialog() = updateUiState { copy(isAddingReminder = false, addingReminderState = AddingReminderState.NONE) }
     fun updateTitle(title: String) = updateUiState { copy(title = title) }

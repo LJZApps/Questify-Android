@@ -34,7 +34,7 @@ fun AllQuestsPage(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(uiState.quests, key = { it.id }) { quest ->
+        items(uiState.quests.sortedBy { it.dueDate }.asReversed(), key = { it.id }) { quest ->
             val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val formattedDate = quest.dueDate?.let { dueDateFormat.format(it) }
 
