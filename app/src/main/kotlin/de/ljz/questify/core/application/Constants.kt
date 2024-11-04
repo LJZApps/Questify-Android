@@ -14,8 +14,8 @@ enum class Difficulty {
     EPIC;
 
     companion object {
-        fun fromIndex(index: Int): Difficulty? {
-            return Difficulty.entries.getOrNull(index)
+        fun fromIndex(index: Int): Difficulty {
+            return Difficulty.entries[index]
         }
     }
 }

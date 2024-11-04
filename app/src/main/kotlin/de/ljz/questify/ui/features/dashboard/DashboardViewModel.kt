@@ -8,6 +8,7 @@ import de.ljz.questify.domain.repositories.QuestMasterRepository
 import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,11 +25,35 @@ class DashboardViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            questMasterRepository.getQuestMaster().collectLatest { questMaster ->
-                _uiState.update {
-                    it.copy(
-                        dashboardOnboardingDone = questMaster.dashboardOnboarding
-                    )
+            launch {
+                questMasterRepository.getQuestMaster().collectLatest { questMaster ->
+                    _uiState.update {
+                        it.copy(
+                            dashboardOnboardingDone = questMaster.dashboardOnboarding
+                        )
+                    }
+                }
+            }
+
+            launch {
+                questRepository.getQuests().collectLatest { questsList ->
+                    _uiState.update {
+                        it.copy(
+                            quests = questsList
+                        )
+                    }
+                }
+            }
+
+            launch {
+                appUserRepository.getAppUser().collect { appUser ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            userPoints = appUser.points,
+                            userXp = appUser.xp,
+                            userLevel = appUser.level
+                        )
+                    }
                 }
             }
         }

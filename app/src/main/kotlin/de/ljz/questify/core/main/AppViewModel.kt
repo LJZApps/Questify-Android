@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.R
 import de.ljz.questify.data.sharedpreferences.SessionManager
 import de.ljz.questify.domain.repositories.AppSettingsRepository
+import de.ljz.questify.domain.repositories.AppUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val appSettingsRepository: AppSettingsRepository
+    private val appSettingsRepository: AppSettingsRepository,
+    private val appUserRepository: AppUserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AppUiState())
@@ -60,6 +62,12 @@ class AppViewModel @Inject constructor(
             /*launch {
                 appSettingsRepository.setLas
             }*/
+        }
+    }
+
+    fun resetAppUserStats() {
+        viewModelScope.launch {
+            appUserRepository.resetAppUserStats()
         }
     }
 

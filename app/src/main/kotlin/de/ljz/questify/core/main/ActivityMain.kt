@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,8 +77,9 @@ class ActivityMain : AppCompatActivity() {
 
             vm.createNotificationChannel(this)
 
-            val workRequest = PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
-                .build()
+            val workRequest =
+                PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
+                    .build()
 
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "QuestNotificationWorker",
@@ -86,7 +88,8 @@ class ActivityMain : AppCompatActivity() {
             )
 
             SentryAndroid.init(this) { options ->
-                options.dsn = "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
+                options.dsn =
+                    "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
             }
 
             if (isAppReadyState) {
@@ -149,7 +152,12 @@ class ActivityMain : AppCompatActivity() {
                             }
                         }
 
-                        DebugOverlay("DEV")
+                        DebugOverlay(
+                            "DEV",
+                            onResetAppUser = {
+                                vm.resetAppUserStats()
+                            }
+                        )
                     }
                 }
             }
@@ -158,7 +166,7 @@ class ActivityMain : AppCompatActivity() {
 }
 
 @Composable
-fun DebugOverlay(text: String) {
+fun DebugOverlay(text: String, onResetAppUser: () -> Unit) {
     if (BuildConfig.DEBUG) {
         Box(
             modifier = Modifier
@@ -167,6 +175,8 @@ fun DebugOverlay(text: String) {
                 .background(Color.Transparent),
             contentAlignment = Alignment.TopEnd
         ) {
+            //Button(onClick = onResetAppUser) { Text("Reset App User Stats") }
+
             Text(
                 text = text,
                 modifier = Modifier.padding(8.dp),

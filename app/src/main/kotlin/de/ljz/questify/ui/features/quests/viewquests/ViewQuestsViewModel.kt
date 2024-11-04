@@ -7,12 +7,15 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.data.shared.Points
+import de.ljz.questify.domain.models.quests.MainQuestEntity
 import de.ljz.questify.domain.repositories.AppUserRepository
 import de.ljz.questify.domain.repositories.QuestMasterRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.QuestRepository
+import io.ktor.util.Digest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,16 +37,6 @@ class ViewQuestsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                appUserRepository.getAppUser().collect { appUser ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            userPoints = appUser.points
-                        )
-                    }
-                }
-            }
-
-            launch {
                 questRepository.getQuests().collectLatest { quests ->
                     _uiState.update { currentState ->
                         currentState.copy(
@@ -62,14 +55,24 @@ class ViewQuestsViewModel @Inject constructor(
                     }
                 }
             }
+
+            launch {
+                appUserRepository.getAppUser().collect { appUser ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            userPoints = appUser.points
+                        )
+                    }
+                }
+            }
         }
     }
 
-    fun setQuestDone(id: Int, done: Boolean, context: Context) {
+    fun setQuestDone(quest: MainQuestEntity, context: Context, onSuccess: (Int, Int, Int?) -> Unit) {
         viewModelScope.launch {
-            questRepository.setQuestDone(id, done)
+            questRepository.setQuestDone(quest.id, true)
 
-            val notifications = questNotificationRepository.getNotificationsByQuestId(id)
+            val notifications = questNotificationRepository.getNotificationsByQuestId(quest.id)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             notifications.forEach { notification ->
@@ -87,19 +90,20 @@ class ViewQuestsViewModel @Inject constructor(
                 }
             }
 
-            questNotificationRepository.removeNotifications(id)
+            questNotificationRepository.removeNotifications(quest.id)
+
+            appUserRepository.addPointsAndXp(
+                difficulty = quest.difficulty,
+                earnedStats = { xp, points, level ->
+                    onSuccess.invoke(xp, points, level)
+                }
+            )
         }
     }
 
     fun setOnboardingDone() {
         viewModelScope.launch {
             questMasterRepository.setQuestsOnboardingDone()
-        }
-    }
-
-    fun addPoint() {
-        viewModelScope.launch {
-            appUserRepository.addPoint(Points.EASY)
         }
     }
 }

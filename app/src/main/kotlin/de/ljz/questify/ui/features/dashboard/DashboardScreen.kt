@@ -5,10 +5,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.components.QuestMasterOnboarding
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.features.dashboard.components.StatsComponent
 import de.ljz.questify.util.NavBarConfig
 
 
@@ -37,12 +39,17 @@ fun DashboardScreen(
             )
         },
         content = { innerPadding ->
-            Box(
+            Column(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Dashboard content here
+                StatsComponent(
+                    userLevel = uiState.userLevel,
+                    userXP = uiState.userXp
+                )
             }
         },
         snackbarHost = {

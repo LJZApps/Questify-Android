@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "c49e19f78ed59e02795ad790232f5db2",
+    "identityHash": "8a83ea4c1c2da669c06e0e2258dc5311",
     "entities": [
       {
         "tableName": "main_quests",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `difficulty` TEXT, `due_date` INTEGER, `created_at` INTEGER NOT NULL, `updated_at` INTEGER, `lock_deletion` INTEGER NOT NULL, `done` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT, `difficulty` TEXT NOT NULL, `due_date` INTEGER, `created_at` INTEGER NOT NULL, `updated_at` INTEGER, `lock_deletion` INTEGER NOT NULL, `done` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -30,7 +30,7 @@
             "fieldPath": "difficulty",
             "columnName": "difficulty",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "dueDate",
@@ -238,7 +238,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c49e19f78ed59e02795ad790232f5db2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a83ea4c1c2da669c06e0e2258dc5311')"
     ]
   }
 }

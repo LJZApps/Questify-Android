@@ -17,7 +17,7 @@ data class MainQuestEntity(
     val description: String? = null,
 
     @ColumnInfo(name = "difficulty")
-    val difficulty: Difficulty?,
+    val difficulty: Difficulty,
 
     @ColumnInfo(name = "due_date")
     val dueDate: Date? = null,

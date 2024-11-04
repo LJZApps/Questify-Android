@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.quests.viewquests.subpages
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,7 +45,13 @@ fun AllQuestsPage(
                 description = quest.description,
                 done = quest.done,
                 onQuestChecked = {
-                    viewModel.setQuestDone(quest.id, !quest.done, context)
+                    viewModel.setQuestDone(
+                        quest = quest,
+                        context = context,
+                        onSuccess = { xp, points, level ->
+                            Toast.makeText(context,  "XP: $xp, Punkte: $points" + if (level != null) ", neues Level: $level" else "", Toast.LENGTH_LONG).show()
+                        }
+                    )
                 },
                 onClick = {
                     navController.navigate(QuestDetail(id = quest.id))
