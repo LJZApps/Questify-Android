@@ -42,6 +42,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.CreateReminderDialog
+import de.ljz.questify.ui.components.EasyIcon
+import de.ljz.questify.ui.components.EpicIcon
+import de.ljz.questify.ui.components.HardIcon
+import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.features.quests.createquest.components.DueDateInfoDialog
 import de.ljz.questify.ui.features.quests.createquest.components.SetDueDateDialog
 import de.ljz.questify.util.NavBarConfig
@@ -148,8 +152,16 @@ fun CreateQuestScreen(
                                 index = index,
                                 count = options.size
                             ), onClick = { viewModel.updateDifficulty(index) },
-                            selected = index == uiState.difficulty
-                        ) { Text(label) }
+                            selected = index == uiState.difficulty,
+                            icon = {}
+                        ) {
+                            when (index) {
+                                0 -> EasyIcon()
+                                1 -> MediumIcon()
+                                2 -> HardIcon()
+                                3 -> EpicIcon()
+                            }
+                        }
                     }
                 }
             }

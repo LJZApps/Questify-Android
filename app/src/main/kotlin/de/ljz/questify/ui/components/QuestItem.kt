@@ -81,9 +81,10 @@ fun QuestItem(
             ) {
                 dueDate?.let {
                     Icon(
-                        imageVector = Icons.Filled.Event,
+                        imageVector = Icons.Filled.Schedule,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(

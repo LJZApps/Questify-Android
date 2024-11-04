@@ -156,7 +156,7 @@ fun GetStartedMainScreen(
             Button(
                 onClick = {
                     viewModel.setSetupDone()
-                    navController.navigate(GetStartedPermissionsRoute)
+                    navController.navigate(Home)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

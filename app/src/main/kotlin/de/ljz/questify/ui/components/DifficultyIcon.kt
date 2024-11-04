@@ -75,7 +75,7 @@ fun EpicIcon() {
 
 @Composable
 fun SwordIcon() {
-    val color = MaterialTheme.colorScheme.onBackground
+    val color = MaterialTheme.colorScheme.secondary
     Canvas(modifier = Modifier.size(8.dp)) {
         rotate(degrees = 45f) {
             drawSword(color)

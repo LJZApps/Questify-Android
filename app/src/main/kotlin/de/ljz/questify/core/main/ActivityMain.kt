@@ -1,7 +1,9 @@
 package de.ljz.questify.core.main
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -9,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +35,6 @@ import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
-import de.ljz.questify.ui.features.getstarted.subpages.GetStartedPermissionsScreen
 import de.ljz.questify.ui.features.home.HomeScreen
 import de.ljz.questify.ui.features.profile.ProfileScreen
 import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
@@ -42,17 +42,22 @@ import de.ljz.questify.ui.features.quests.createquest.CreateQuestScreen
 import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.questdetail.QuestDetailScreen
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
+import de.ljz.questify.ui.features.settings.permissions.PermissionsScreen
+import de.ljz.questify.ui.features.settings.permissions.PermissionsViewModel
+import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settingshelp.SettingsHelpScreen
 import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
 import de.ljz.questify.ui.features.settings.settingsmain.SettingsScreen
 import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
-import de.ljz.questify.ui.navigation.GetStartedPermissionsRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.home.Home
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
+import de.ljz.questify.util.isAlarmPermissionGranted
+import de.ljz.questify.util.isNotificationPermissionGranted
+import de.ljz.questify.util.isOverlayPermissionGranted
 import io.sentry.android.core.SentryAndroid
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.util.concurrent.TimeUnit
@@ -66,13 +71,21 @@ class ActivityMain : AppCompatActivity() {
 
         val splashScreen = installSplashScreen()
 
+        val permissionsVm: PermissionsViewModel by viewModels()
+
+        val notificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            permissionsVm.loadPermissionData(this)
+        }
+
+        permissionsVm.initializePermissionLauncher(notificationPermissionLauncher)
+
         setContent {
             splashScreen.setKeepOnScreenCondition { true }
             val vm: AppViewModel by viewModels()
 
             val appUiState by vm.uiState.collectAsState()
             val isSetupDone = appUiState.isSetupDone
-
+            val allPermissionsGranted: Boolean = (isNotificationPermissionGranted(this) && isOverlayPermissionGranted(this) && isAlarmPermissionGranted(this))
             val isAppReadyState by vm.isAppReady.collectAsState()
 
             vm.createNotificationChannel(this)
@@ -123,11 +136,6 @@ class ActivityMain : AppCompatActivity() {
                             composable<GetStartedChooser> {
                                 GetStartedChooserScreen(navController = navController)
                             }
-                            composable<GetStartedPermissionsRoute> {
-                                GetStartedPermissionsScreen(
-                                    navController = navController
-                                )
-                            }
                             composable<Home> {
                                 HomeScreen(mainNavController = navController)
                             }
@@ -149,6 +157,16 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<SettingsHelp> {
                                 SettingsHelpScreen(mainNavController = navController)
+                            }
+                            composable<SettingsPermissionRoute> {
+                                PermissionsScreen(
+                                    mainNavController = navController,
+                                    viewModel = permissionsVm
+                                )
+
+                                BackHandler(enabled = !allPermissionsGranted) {
+
+                                }
                             }
                         }
 

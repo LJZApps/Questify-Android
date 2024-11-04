@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.NotificationImportant
+import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +33,7 @@ import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.core.application.ReminderTime
+import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
 import de.ljz.questify.ui.features.settings.settingsmain.components.CustomColorDialog
 import de.ljz.questify.ui.features.settings.settingsmain.components.ReminderDialog
@@ -143,6 +145,17 @@ fun SettingsScreen(
             SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_help_screen_help_title)) },
             ) {
+                SettingsMenuLink(
+                    title = { Text(text = "App-Berechtigungen") },
+                    subtitle = { Text(text = "Berechtigungen, die zur vollen Funktionsfähigkeit benötigt werden") },
+                    icon = {
+                        Icon(Icons.Outlined.VerifiedUser, contentDescription = null)
+                    },
+                    onClick = {
+                        mainNavController.navigate(SettingsPermissionRoute)
+                    }
+                )
+
                 SettingsMenuLink(
                     title = { Text(text = stringResource(R.string.settings_help_screen_provide_feedback_title)) },
                     subtitle = { Text(text = stringResource(R.string.settings_help_screen_provide_feedback_subtitle)) },

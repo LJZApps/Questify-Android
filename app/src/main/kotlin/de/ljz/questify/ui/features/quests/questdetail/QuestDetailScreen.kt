@@ -41,6 +41,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.CreateReminderDialog
+import de.ljz.questify.ui.components.EasyIcon
+import de.ljz.questify.ui.components.EpicIcon
+import de.ljz.questify.ui.components.HardIcon
+import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.features.quests.createquest.components.DueDateInfoDialog
 import de.ljz.questify.ui.features.quests.questdetail.components.DeleteConfirmationDialog
 import de.ljz.questify.util.NavBarConfig
@@ -154,7 +158,14 @@ fun QuestDetailScreen(
                                         )
                                     }
                                 }
-                            ) { Text(label) }
+                            ) {
+                                when (index) {
+                                    0 -> EasyIcon()
+                                    1 -> MediumIcon()
+                                    2 -> HardIcon()
+                                    3 -> EpicIcon()
+                                }
+                            }
                         }
                     }
                 }
