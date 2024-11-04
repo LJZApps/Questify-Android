@@ -74,7 +74,7 @@ fun ViewQuestsScreen(
     viewModel: ViewQuestsViewModel = hiltViewModel(),
     mainNavController: NavHostController
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsState()
 
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
@@ -113,7 +113,6 @@ fun ViewQuestsScreen(
     Scaffold(
         topBar = {
             TopBar(
-                userPoints = uiState.userPoints,
                 drawerState = drawerState,
                 navController = mainNavController,
                 title = stringResource(R.string.quest_screen_top_bar_title),
@@ -188,7 +187,7 @@ fun ViewQuestsScreen(
         }
     )
 
-    if (!uiState.questOnboardingDone) {
+    if (!uiState.value.questOnboardingDone) {
         QuestMasterOnboarding(
             messages = listOf(
                 "Dieser Ort ist deine Schmiede – hier entstehen deine Herausforderungen.",

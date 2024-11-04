@@ -55,16 +55,6 @@ class ViewQuestsViewModel @Inject constructor(
                     }
                 }
             }
-
-            launch {
-                appUserRepository.getAppUser().collect { appUser ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            userPoints = appUser.points
-                        )
-                    }
-                }
-            }
         }
     }
 

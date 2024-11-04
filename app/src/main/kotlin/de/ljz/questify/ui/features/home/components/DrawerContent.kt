@@ -6,10 +6,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -56,7 +62,6 @@ fun DrawerContent(
               .padding(horizontal = 12.dp)
               .fillMaxWidth()
         ) {
-            // Header mit Benutzerinformationen
             Row (
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -69,10 +74,47 @@ fun DrawerContent(
                         style = MaterialTheme.typography.labelLarge,
                     )
 
-                    Text(
-                        text = stringResource(R.string.drawer_content_subtitle, uiState.userPoints),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.padding(top = 4.dp)
+                    ) {
+                        // XP
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "${uiState.userXP} XP",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+
+                        // Level
+                        Icon(
+                            imageVector = Icons.Default.MilitaryTech,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "Level ${uiState.userLevel}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+
+                        // Points
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "${uiState.userPoints} Punkte",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
 
                 IconButton(
@@ -87,7 +129,6 @@ fun DrawerContent(
                 }
             }
 
-            // Divider
             HorizontalDivider()
 
             NavigationDrawerItem(

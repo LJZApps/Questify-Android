@@ -23,7 +23,9 @@ class HomeViewModel @Inject constructor(
             appUserRepository.getAppUser().collect { appUser ->
                 _uiState.update { currentState ->
                     currentState.copy(
-                        userPoints = appUser.points
+                        userPoints = appUser.points,
+                        userXP = appUser.xp,
+                        userLevel = appUser.level
                     )
                 }
             }

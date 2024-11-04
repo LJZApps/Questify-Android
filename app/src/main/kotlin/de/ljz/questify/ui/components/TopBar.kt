@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    userPoints: Int,
     drawerState: DrawerState,
     navController: NavHostController,
     title: String,
@@ -43,32 +42,6 @@ fun TopBar(
 ) {
     val scope = rememberCoroutineScope()
     var showMenu by remember { mutableStateOf(false) }
-
-    val icon = "icon"
-
-    val annotatedString = buildAnnotatedString {
-        append("$userPoints ")
-
-        // Placeholder für das Icon
-        appendInlineContent(icon, "[icon]")
-    }
-
-    val inlineContent = mapOf(
-        icon to InlineTextContent(
-            // Höhe und Breite des Icons festlegen
-            placeholder = Placeholder(
-                width = 16.sp,
-                height = 16.sp,
-                placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-            ),
-            children = {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null, // Beschreibung des Icons
-                )
-            }
-        )
-    )
 
     TopAppBar(
         title = {
@@ -91,16 +64,6 @@ fun TopBar(
             }
         },
         actions = {
-            TextButton(
-                onClick = {
-                    // TODO
-                }
-            ) {
-                Text(
-                    text = annotatedString,
-                    inlineContent = inlineContent,
-                )
-            }
             IconButton(
                 onClick = {
                     showMenu = !showMenu

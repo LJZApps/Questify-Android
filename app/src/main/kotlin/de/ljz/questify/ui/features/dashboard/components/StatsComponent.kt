@@ -36,7 +36,7 @@ fun StatsComponent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Level $userLevel", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "$userXP XP", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "${nextLevelXP - userXP} XP bis Level ${userLevel + 1}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

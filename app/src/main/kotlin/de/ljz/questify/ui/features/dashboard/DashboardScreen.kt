@@ -32,7 +32,6 @@ fun DashboardScreen(
     Scaffold(
         topBar = {
             TopBar(
-                userPoints = uiState.userPoints,
                 drawerState = drawerState,
                 navController = mainNavController,
                 title = "Dashboard"
