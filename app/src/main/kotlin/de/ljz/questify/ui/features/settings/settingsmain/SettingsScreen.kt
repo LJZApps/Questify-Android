@@ -12,7 +12,6 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.NotificationImportant
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,11 +31,9 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
-import de.ljz.questify.core.application.ReminderTime
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
 import de.ljz.questify.ui.features.settings.settingsmain.components.CustomColorDialog
-import de.ljz.questify.ui.features.settings.settingsmain.components.ReminderDialog
 import de.ljz.questify.ui.features.settings.settingsmain.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
@@ -152,7 +149,7 @@ fun SettingsScreen(
                         Icon(Icons.Outlined.VerifiedUser, contentDescription = null)
                     },
                     onClick = {
-                        mainNavController.navigate(SettingsPermissionRoute)
+                        mainNavController.navigate(SettingsPermissionRoute())
                     }
                 )
 

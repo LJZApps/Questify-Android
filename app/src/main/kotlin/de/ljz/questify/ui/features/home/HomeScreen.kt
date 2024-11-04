@@ -50,7 +50,7 @@ fun HomeScreen(
     val allPermissionsGranted: Boolean = (isNotificationPermissionGranted(context) && isOverlayPermissionGranted(context) && isAlarmPermissionGranted(context))
 
     if (!allPermissionsGranted) {
-        mainNavController.navigate(SettingsPermissionRoute)
+        mainNavController.navigate(SettingsPermissionRoute(canNavigateBack = false))
     }
 
     QuestifyTheme {

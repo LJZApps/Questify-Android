@@ -3,4 +3,6 @@ package de.ljz.questify.ui.features.settings.permissions.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-object SettingsPermissionRoute
+data class SettingsPermissionRoute(
+    val canNavigateBack: Boolean = true
+)

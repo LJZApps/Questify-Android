@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -158,10 +159,12 @@ class ActivityMain : AppCompatActivity() {
                             composable<SettingsHelp> {
                                 SettingsHelpScreen(mainNavController = navController)
                             }
-                            composable<SettingsPermissionRoute> {
+                            composable<SettingsPermissionRoute> { backStackEntry ->
+                                val arguments = backStackEntry.toRoute<SettingsPermissionRoute>()
                                 PermissionsScreen(
                                     mainNavController = navController,
-                                    viewModel = permissionsVm
+                                    viewModel = permissionsVm,
+                                    canNavigateBack = arguments.canNavigateBack
                                 )
 
                                 BackHandler(enabled = !allPermissionsGranted) {

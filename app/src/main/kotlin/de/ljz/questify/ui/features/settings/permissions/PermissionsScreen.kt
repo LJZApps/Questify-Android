@@ -3,6 +3,7 @@ package de.ljz.questify.ui.features.settings.permissions
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsSwitch
@@ -27,7 +30,8 @@ import com.alorma.compose.settings.ui.SettingsSwitch
 @Composable
 fun PermissionsScreen(
     viewModel: PermissionsViewModel,
-    mainNavController: NavHostController
+    mainNavController: NavHostController,
+    canNavigateBack: Boolean = true
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
@@ -38,14 +42,24 @@ fun PermissionsScreen(
             TopAppBar(
                 title = { Text(text = "App-Berechtigungen") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            mainNavController.navigateUp()
+                    if (canNavigateBack) {
+                        IconButton(
+                            onClick = {
+                                mainNavController.navigateUp()
+                            }
+                        ) {
+                            Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                         }
-                    ) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
                 }
+            )
+        },
+        bottomBar = {
+            Text(
+                text = "Bitte starte die App neu, wenn du alle Berechtigungen zugelassen hast.",
+                modifier = Modifier.fillMaxWidth()
+                    .padding(8.dp),
+                textAlign = TextAlign.Center
             )
         },
         content = { innerPadding ->
