@@ -53,8 +53,8 @@ android {
         applicationId = "de.ljz.questify"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "0.4-DEV"
+        versionCode = 5
+        versionName = "0.4"
         resourceConfigurations += listOf("en", "de")
     }
 
@@ -76,6 +76,7 @@ android {
         named("debug") {
             isDebuggable = true
             applicationIdSuffix = ".DEV"
+            versionNameSuffix = "-DEV"
 
             buildConfigField(
                 "String",
