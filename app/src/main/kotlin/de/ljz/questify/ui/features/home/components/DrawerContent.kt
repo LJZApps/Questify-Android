@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.home.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
@@ -30,7 +32,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,69 +69,86 @@ fun DrawerContent(
               .fillMaxWidth()
         ) {
             Row (
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(vertical = 6.dp)
             ) {
-                Column {
-                    Text(
-                        text = stringResource(R.string.drawer_content_title),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.padding(top = 4.dp)
-                    ) {
-                        // XP
-                        Icon(
-                            imageVector = Icons.Filled.AutoGraph,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "${uiState.userXP} XP",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-
-                        // Level
-                        Icon(
-                            imageVector = Icons.Default.MilitaryTech,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "Level ${uiState.userLevel}",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-
-                        // Points
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = "${uiState.userPoints} Punkte",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-
                 IconButton(
                     onClick = {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                        mainNavController.navigate(Settings)
-                    }
+
+                    },
+                    modifier = Modifier.padding(end = 4.dp)
                 ) {
-                    Icon(Icons.Default.Settings, contentDescription = null)
+                    Image(
+                        painter = painterResource(id = R.drawable.no_profile_pic),
+                        contentDescription = null,
+                        modifier = Modifier.clip(CircleShape)
+                    )
+                }
+
+                Row (
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                ) {
+                    Column {
+                        Text(
+                            text = "Willkommen, Leon!",
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.padding(top = 4.dp)
+                        ) {
+                            // XP
+                            Icon(
+                                imageVector = Icons.Filled.AutoGraph,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "${uiState.userXP} XP",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+
+                            // Level
+                            Icon(
+                                imageVector = Icons.Default.MilitaryTech,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Level ${uiState.userLevel}",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+
+                            // Points
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "${uiState.userPoints} Punkte",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            mainNavController.navigate(Settings)
+                        }
+                    ) {
+                        Icon(Icons.Default.Settings, contentDescription = null)
+                    }
                 }
             }
 

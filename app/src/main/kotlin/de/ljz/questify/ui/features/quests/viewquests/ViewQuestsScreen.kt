@@ -1,7 +1,6 @@
 package de.ljz.questify.ui.features.quests.viewquests
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -10,15 +9,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
@@ -26,6 +22,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -37,10 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -57,7 +51,7 @@ import de.ljz.questify.ui.features.quests.viewquests.navigation.BottomNavigation
 import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
 import de.ljz.questify.util.NavBarConfig
-import kotlinx.coroutines.launch
+import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
@@ -105,9 +99,12 @@ fun ViewQuestsScreen(
         ),
         BottomNavigationRoute(
             stringResource(R.string.quest_screen_bottom_nav_rituals),
-            QuestBottomRoutes.Rituals,
+            QuestBottomRoutes.Habits,
             Icons.Outlined.Eco
         )
+    )
+    val enabledViewQuestFeatures = listOf(
+        QuestBottomRoutes.AllQuests
     )
 
     Scaffold(
@@ -116,7 +113,19 @@ fun ViewQuestsScreen(
                 drawerState = drawerState,
                 navController = mainNavController,
                 title = stringResource(R.string.quest_screen_top_bar_title),
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    // TODO Remove "false" when feature is ready
+                    if (enabledViewQuestFeatures.any { getSerializedRouteName(it) == currentDestination?.route }) {
+                        IconButton(
+                            onClick = {
+
+                            }
+                        ) {
+                            Icon(imageVector = Icons.Filled.FilterList, contentDescription = null)
+                        }
+                    }
+                }
             )
         },
         content = { innerPadding ->
@@ -130,21 +139,32 @@ fun ViewQuestsScreen(
         },
         floatingActionButton = {
             AnimatedVisibility(
-                visible = !(scrollBehavior.state.collapsedFraction > 0.5f),
+                visible = !(scrollBehavior.state.collapsedFraction > 0.5f) && enabledViewQuestFeatures.any { getSerializedRouteName(it) == currentDestination?.route },
                 enter = fadeIn(animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)) +
                         slideInVertically(
-                            initialOffsetY = { it / 2 }, // Sanfteres Einblenden von der halben Höhe
+                            initialOffsetY = { it / 2 },
                             animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
                         ),
                 exit = fadeOut(animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)) +
                         slideOutVertically(
-                            targetOffsetY = { it / 2 }, // Sanfteres Ausblenden zur halben Höhe
+                            targetOffsetY = { it / 2 },
                             animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)
                         )
             ) {
                 FloatingActionButton(
                     onClick = {
-                        mainNavController.navigate(CreateQuest())
+                        when (currentDestination?.route) {
+                            getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(CreateQuest())
+                            getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
+                                // TODO
+                            }
+                            getSerializedRouteName(QuestBottomRoutes.Routines) -> {
+                                // TODO
+                            }
+                            getSerializedRouteName(QuestBottomRoutes.Habits) -> {
+                                // TODO
+                            }
+                        }
                     }
                 ) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = null)

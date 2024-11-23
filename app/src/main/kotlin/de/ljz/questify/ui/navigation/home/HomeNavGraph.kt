@@ -40,7 +40,7 @@ fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavH
             RoutinesQuestsPage(viewModel = viewModel)
         }
 
-        composable<QuestBottomRoutes.Rituals> {
+        composable<QuestBottomRoutes.Habits> {
             HabitsQuestsPage(viewModel = viewModel)
         }
     }

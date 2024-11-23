@@ -14,5 +14,5 @@ object QuestBottomRoutes {
     object Routines
 
     @Serializable
-    object Rituals
+    object Habits
 }

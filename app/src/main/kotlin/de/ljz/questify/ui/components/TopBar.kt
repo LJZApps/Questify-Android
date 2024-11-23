@@ -1,6 +1,7 @@
 package de.ljz.questify.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
@@ -38,7 +39,8 @@ fun TopBar(
     drawerState: DrawerState,
     navController: NavHostController,
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior? = null
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    actions: @Composable (RowScope.() -> Unit) = {},
 ) {
     val scope = rememberCoroutineScope()
     var showMenu by remember { mutableStateOf(false) }
@@ -64,7 +66,8 @@ fun TopBar(
             }
         },
         actions = {
-            IconButton(
+            actions()
+            /*IconButton(
                 onClick = {
                     showMenu = !showMenu
                 }
@@ -74,8 +77,8 @@ fun TopBar(
                     contentDescription = null,
                     modifier = Modifier.clip(CircleShape)
                 )
-            }
+            }*/
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
     )
 }

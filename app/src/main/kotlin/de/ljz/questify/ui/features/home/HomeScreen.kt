@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.home
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
@@ -64,7 +63,8 @@ fun HomeScreen(
                         mainNavController = mainNavController,
                         drawerState = drawerState
                     )
-                }
+                },
+                gesturesEnabled = allPermissionsGranted
             ) {
                 NavHost(
                     navController = homeNavHostController,

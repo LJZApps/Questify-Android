@@ -21,8 +21,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-enum class SortType { DONE, TITLE, DIFFICULTY }
-
 @Composable
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
@@ -66,7 +64,6 @@ fun AllQuestsPage(
                     }
                 },
                 dueDate = formattedDate,
-                navController = navController,
                 modifier = Modifier
                     .animateItem() // `animateItem` für sanfte Positionsänderung
                     .padding(vertical = 4.dp)
