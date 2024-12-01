@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.application.AddingReminderState
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.domain.models.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,9 +33,9 @@ class CreateQuestViewModel @Inject constructor(
         context: Context,
         onSuccess: () -> Unit,
     ) {
-        val quest = MainQuestEntity(
+        val quest = QuestEntity(
             title = _uiState.value.title,
-            description = if (_uiState.value.description.isEmpty()) null else _uiState.value.description,
+            notes = if (_uiState.value.description.isEmpty()) null else _uiState.value.description,
             difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
             createdAt = Date(),
             dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate)

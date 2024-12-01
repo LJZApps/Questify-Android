@@ -7,15 +7,12 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
-import de.ljz.questify.data.shared.Points
-import de.ljz.questify.domain.models.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.AppUserRepository
 import de.ljz.questify.domain.repositories.QuestMasterRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.QuestRepository
-import io.ktor.util.Digest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,7 +55,7 @@ class ViewQuestsViewModel @Inject constructor(
         }
     }
 
-    fun setQuestDone(quest: MainQuestEntity, context: Context, onSuccess: (Int, Int, Int?) -> Unit) {
+    fun setQuestDone(quest: QuestEntity, context: Context, onSuccess: (Int, Int, Int?) -> Unit) {
         viewModelScope.launch {
             questRepository.setQuestDone(quest.id, true)
 

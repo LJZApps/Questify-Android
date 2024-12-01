@@ -7,25 +7,27 @@ import androidx.room.TypeConverters
 import de.ljz.questify.domain.core.converters.AppDatabaseConverters
 import de.ljz.questify.domain.core.migrations.InitialMigrationSpec
 import de.ljz.questify.domain.core.migrations.MainQuestAutoMigration
+import de.ljz.questify.domain.core.migrations.QuestEntityAutoMigration
 import de.ljz.questify.domain.daos.QuestDao
 import de.ljz.questify.domain.daos.QuestNotificationDao
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.domain.models.quests.MainQuestEntity
-import de.ljz.questify.domain.models.quests.SubQuestEntity
+import de.ljz.questify.domain.models.quests.QuestEntity
+import de.ljz.questify.domain.models.quests.QuestChecklistEntity
 
 @Database(
     entities = [
         // Quests
-        MainQuestEntity::class,
-        SubQuestEntity::class,
+        QuestEntity::class,
+        QuestChecklistEntity::class,
 
         // Notifications
         QuestNotificationEntity::class
     ],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = InitialMigrationSpec::class),
         AutoMigration(from = 2, to = 3, spec = MainQuestAutoMigration::class),
+        AutoMigration(from = 3, to = 4, spec = QuestEntityAutoMigration::class)
     ]
 )
 @TypeConverters(AppDatabaseConverters::class)

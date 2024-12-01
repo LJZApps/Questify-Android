@@ -1,9 +1,9 @@
 package de.ljz.questify.ui.features.dashboard
 
-import de.ljz.questify.domain.models.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.QuestEntity
 
 data class DashboardUiState(
-    val quests: List<MainQuestEntity> = listOf(),
+    val quests: List<QuestEntity> = listOf(),
     val userPoints: Int = 0,
     val dashboardOnboardingDone: Boolean = true,
     val userXp: Int = 0,

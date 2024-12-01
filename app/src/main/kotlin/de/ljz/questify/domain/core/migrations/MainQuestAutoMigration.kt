@@ -2,6 +2,7 @@ package de.ljz.questify.domain.core.migrations
 
 import androidx.room.DeleteColumn
 import androidx.room.RenameColumn
+import androidx.room.RenameTable
 import androidx.room.migration.AutoMigrationSpec
 
 @DeleteColumn.Entries(

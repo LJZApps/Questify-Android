@@ -1,21 +1,20 @@
-package de.ljz.questify.domain.models.notifications
+package de.ljz.questify.domain.models.quests
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import de.ljz.questify.domain.models.quests.QuestEntity
 import java.util.Date
 
 @Entity(
-    tableName = "quest_notifications",
+    tableName = "quest_checklist_entity",
     foreignKeys = [
         ForeignKey(
             entity = QuestEntity::class,
             parentColumns = ["id"],
             childColumns = ["quest_id"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.Companion.CASCADE
         )
     ],
     indices = [
@@ -24,16 +23,18 @@ import java.util.Date
         )
     ]
 )
-data class QuestNotificationEntity(
+data class QuestChecklistEntity(
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     val id: Int = 0,
 
     @ColumnInfo(name = "quest_id")
     val questId: Int,
 
-    @ColumnInfo(name = "notified")
-    val notified: Boolean = false,
+    @ColumnInfo(name = "text")
+    val text: String,
 
-    @ColumnInfo(name = "notify_at")
-    val notifyAt: Date
+    val createdAt: Date,
+
+    val done: Boolean = false
 )

@@ -19,3 +19,6 @@ object GetStartedChooser
 
 @Serializable
 object GetStartedPermissionsRoute
+
+@Serializable
+object AdventureScreenRoute

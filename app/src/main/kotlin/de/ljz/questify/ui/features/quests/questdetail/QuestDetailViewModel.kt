@@ -45,7 +45,7 @@ class QuestDetailViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(
                 questId = quest.id,
                 title = quest.title,
-                description = quest.description ?: "",
+                description = quest.notes ?: "",
                 notificationTriggerTimes = notifications,
                 selectedDueDate = if (quest.dueDate != null) quest.dueDate.time else 0,
                 difficulty = if (quest.difficulty != null) quest.difficulty.ordinal else 0

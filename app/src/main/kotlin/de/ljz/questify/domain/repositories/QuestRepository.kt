@@ -1,7 +1,7 @@
 package de.ljz.questify.domain.repositories
 
 import de.ljz.questify.domain.daos.QuestDao
-import de.ljz.questify.domain.models.quests.MainQuestEntity
+import de.ljz.questify.domain.models.quests.QuestEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -9,7 +9,7 @@ import javax.inject.Singleton
 class QuestRepository @Inject constructor(
     private val questDao: QuestDao
 ) : BaseRepository() {
-    suspend fun addMainQuest (quest: MainQuestEntity): Long {
+    suspend fun addMainQuest (quest: QuestEntity): Long {
         return questDao.upsertMainQuest(quest)
     }
 

@@ -34,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.getstarted.subpages.AdventureScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.getstarted.subpages.GetStartedMainScreen
 import de.ljz.questify.ui.features.home.HomeScreen
@@ -50,6 +51,7 @@ import de.ljz.questify.ui.features.settings.settingshelp.SettingsHelpScreen
 import de.ljz.questify.ui.features.settings.settingshelp.navigation.SettingsHelp
 import de.ljz.questify.ui.features.settings.settingsmain.SettingsScreen
 import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
+import de.ljz.questify.ui.navigation.AdventureScreenRoute
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
@@ -118,6 +120,7 @@ class ActivityMain : AppCompatActivity() {
                         NavHost(
                             navController = navController,
                             startDestination = if (isSetupDone) Home else GetStartedMain,
+//                            startDestination = AdventureScreenRoute,
                             enterTransition = {
                                 scaleIntoContainer()
                             },
@@ -170,6 +173,9 @@ class ActivityMain : AppCompatActivity() {
                                 BackHandler(enabled = !allPermissionsGranted) {
 
                                 }
+                            }
+                            composable<AdventureScreenRoute> {
+                                AdventureScreen()
                             }
                         }
 

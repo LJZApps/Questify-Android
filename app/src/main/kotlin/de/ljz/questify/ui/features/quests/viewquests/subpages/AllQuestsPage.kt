@@ -18,7 +18,6 @@ import de.ljz.questify.ui.components.QuestItem
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -40,7 +39,7 @@ fun AllQuestsPage(
             QuestItem(
                 id = quest.id,
                 title = quest.title,
-                description = quest.description,
+                description = quest.notes,
                 done = quest.done,
                 onQuestChecked = {
                     viewModel.setQuestDone(

@@ -6,15 +6,15 @@ import androidx.room.PrimaryKey
 import de.ljz.questify.core.application.Difficulty
 import java.util.Date
 
-@Entity(tableName = "main_quests")
-data class MainQuestEntity(
+@Entity(tableName = "quest_entity")
+data class QuestEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
 
     @ColumnInfo(name = "title")
     val title: String,
 
-    @ColumnInfo(name = "description")
-    val description: String? = null,
+    @ColumnInfo(name = "notes")
+    val notes: String? = null,
 
     @ColumnInfo(name = "difficulty")
     val difficulty: Difficulty,
