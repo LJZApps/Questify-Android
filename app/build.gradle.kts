@@ -111,16 +111,7 @@ val ktorVersion by extra("2.2.1")
 
 dependencies {
     // Gampose https://github.com/ezlifeSol/gampose
-    implementation(libs.gampose)
-
-    // Texty
-    implementation(libs.texty.android)
-
-    // Konfetti
-    implementation(libs.konfetti.compose)
-
-    // Balloon (tooltips)
-    implementation(libs.balloon.compose)
+    //implementation(libs.gampose)
 
     // Hilt
     implementation(libs.hilt.android)
