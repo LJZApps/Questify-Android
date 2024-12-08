@@ -1,11 +1,8 @@
 package de.ljz.questify.ui.components
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,23 +12,23 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import de.ljz.questify.core.compose.UIModePreviews
+import de.ljz.questify.domain.models.quests.QuestEntity
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun QuestItem(
-    id: Int,
-    title: String,
-    description: String? = null,
-    done: Boolean,
-    dueDate: String? = null,
+    quest: QuestEntity,
     difficultyIcon: @Composable (() -> Unit)? = null,
     onQuestChecked: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     navController: NavHostController? = null
 ) {
+    val dueDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
+    val formattedDate = quest.dueDate?.let { dueDateFormat.format(it) }
+
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -49,7 +46,7 @@ fun QuestItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
-                    checked = done,
+                    checked = quest.done,
                     onCheckedChange = {
                         onQuestChecked()
                     },
@@ -60,11 +57,11 @@ fun QuestItem(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = title,
+                        text = quest.title,
                         style = MaterialTheme.typography.titleMedium,
-                        textDecoration = if (done) TextDecoration.LineThrough else null
+                        textDecoration = if (quest.done) TextDecoration.LineThrough else null
                     )
-                    description?.let {
+                    quest.notes?.let {
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
@@ -79,7 +76,7 @@ fun QuestItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                dueDate?.let {
+                formattedDate?.let {
                     Icon(
                         imageVector = Icons.Filled.Schedule,
                         contentDescription = null,
@@ -103,6 +100,7 @@ fun QuestItem(
     }
 }
 
+/*
 @UIModePreviews
 @Composable
 private fun QuestItemPreview() {
@@ -114,7 +112,7 @@ private fun QuestItemPreview() {
         dueDate = "2023-10-25",
         difficultyIcon = {
             Icon(
-                imageVector = Icons.Default.Star,
+                imageVector = Icons.Filled.Star,
                 contentDescription = "Difficulty"
             )
         },
@@ -139,3 +137,4 @@ private fun QuestItemDonePreview() {
         onClick = {}
     )
 }
+ */

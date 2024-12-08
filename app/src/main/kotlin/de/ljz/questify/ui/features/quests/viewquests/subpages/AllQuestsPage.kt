@@ -17,8 +17,6 @@ import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.components.QuestItem
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Composable
 fun AllQuestsPage(
@@ -33,14 +31,8 @@ fun AllQuestsPage(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(uiState.quests.sortedBy { it.dueDate }.asReversed(), key = { it.id }) { quest ->
-            val dueDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
-            val formattedDate = quest.dueDate?.let { dueDateFormat.format(it) }
-
             QuestItem(
-                id = quest.id,
-                title = quest.title,
-                description = quest.notes,
-                done = quest.done,
+                quest = quest,
                 onQuestChecked = {
                     viewModel.setQuestDone(
                         quest = quest,
@@ -62,7 +54,6 @@ fun AllQuestsPage(
                         else -> null
                     }
                 },
-                dueDate = formattedDate,
                 modifier = Modifier
                     .animateItem() // `animateItem` für sanfte Positionsänderung
                     .padding(vertical = 4.dp)
