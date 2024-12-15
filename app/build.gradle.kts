@@ -110,6 +110,9 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Android XR
+    implementation(libs.androidx.scenecore)
+
     // Gampose https://github.com/ezlifeSol/gampose
     //implementation(libs.gampose)
 

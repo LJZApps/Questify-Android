@@ -1,6 +1,6 @@
 [versions]
 activityKtx = "1.9.3"
-agp = "8.7.2"
+agp = "8.8.0-rc01"
 appcompat = "1.7.0"
 balloonCompose = "1.6.9"
 constraintlayoutCompose = "1.1.0"
@@ -40,6 +40,7 @@ composePlugin = "1.7.0"
 datastoreCoreAndroid = "1.1.1"
 textyAndroid = "1.0.0-alpha"
 workRuntimeKtx = "2.10.0"
+scenecore = "1.0.0-alpha01"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -97,6 +98,7 @@ material3-window-size = { module = "androidx.compose.material3:material3-window-
 composeSettings-ui = { group = "com.github.alorma.compose-settings", name = "ui-tiles", version.ref = "composeSettings" }
 composeSettings-ui-extended = { group = "com.github.alorma.compose-settings", name = "ui-tiles-extended", version.ref = "composeSettings" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
+androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
