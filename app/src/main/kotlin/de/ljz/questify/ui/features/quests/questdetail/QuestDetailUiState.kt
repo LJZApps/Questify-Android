@@ -2,7 +2,6 @@ package de.ljz.questify.ui.features.quests.questdetail
 
 import de.ljz.questify.core.application.AddingReminderState
 
-
 data class QuestDetailUiState (
     val questId: Int = 0,
     val title: String = "",

@@ -2,10 +2,15 @@ package de.ljz.questify.ui.features.quests.createquest
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,10 +41,11 @@ fun CreateQuestScreen(
 
     val context = LocalContext.current
     var currentStep by remember { mutableIntStateOf(0) }
+
     val steps = listOf(
-        "Allgemein",
-        "Details", // Add "Erinnerungen" in here later when Trophies are added
-        "Erinnerungen" // Rename later to "Belohnungen" where "Trophies" are in
+        NavigationItem("Allgemein", Icons.Filled.Category),
+        NavigationItem("Details", Icons.Filled.Description),
+        NavigationItem("Erinnerungen", Icons.Filled.Notifications)
     )
 
     Scaffold(
@@ -72,9 +78,15 @@ fun CreateQuestScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    steps.forEachIndexed { index, step ->
+                    steps.forEachIndexed { index, (title, icon) ->
                         Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { currentStep = index }
+                                )
                         ) {
                             Box(
                                 modifier = Modifier
@@ -91,13 +103,23 @@ fun CreateQuestScreen(
                                         width = 1.dp,
                                         color = if (index == currentStep || index < currentStep) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
                                         shape = CircleShape
-                                    ),
+                                    )
+                                ,
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
+                                /*Text(
                                     text = (index + 1).toString(),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = when {
+                                        index < currentStep -> MaterialTheme.colorScheme.onPrimary
+                                        index == currentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                                        else -> MaterialTheme.colorScheme.onSurface
+                                    }
+                                )*/
+                                Icon(
+                                    imageVector = icon,
+                                    contentDescription = null,
+                                    tint = when {
                                         index < currentStep -> MaterialTheme.colorScheme.onPrimary
                                         index == currentStep -> MaterialTheme.colorScheme.onPrimaryContainer
                                         else -> MaterialTheme.colorScheme.onSurface
@@ -106,7 +128,7 @@ fun CreateQuestScreen(
                             }
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = step,
+                                text = title,
                                 style = MaterialTheme.typography.bodySmall,
                                 textAlign = TextAlign.Center,
                                 color = if (index <= currentStep)

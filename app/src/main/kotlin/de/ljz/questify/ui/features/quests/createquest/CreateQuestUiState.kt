@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.quests.createquest
 
+import androidx.compose.ui.graphics.vector.ImageVector
 import de.ljz.questify.core.application.AddingReminderState
 
 data class CreateQuestUiState(
@@ -14,4 +15,9 @@ data class CreateQuestUiState(
     val addingReminderState: AddingReminderState = AddingReminderState.NONE,
     val isDueDateInfoDialogVisible: Boolean = false,
     val isAddingDueDate: Boolean = false
+)
+
+data class NavigationItem(
+    val title: String,
+    val icon: ImageVector
 )
