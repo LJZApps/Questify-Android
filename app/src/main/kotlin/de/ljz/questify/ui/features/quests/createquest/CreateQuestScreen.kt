@@ -70,12 +70,6 @@ fun CreateQuestScreen(
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
 
     LaunchedEffect(Unit) {
-
-        NavBarConfig.transparentNavBar = true
-    }
-
-    LaunchedEffect(Unit) {
-
         NavBarConfig.transparentNavBar = true
     }
 

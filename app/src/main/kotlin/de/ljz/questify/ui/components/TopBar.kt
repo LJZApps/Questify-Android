@@ -15,6 +15,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
@@ -43,7 +46,6 @@ fun TopBar(
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
     val scope = rememberCoroutineScope()
-    var showMenu by remember { mutableStateOf(false) }
 
     TopAppBar(
         title = {
@@ -80,5 +82,12 @@ fun TopBar(
             }*/
         },
         scrollBehavior = scrollBehavior,
+        colors = TopAppBarColors(
+            containerColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent,
+            navigationIconContentColor = TopAppBarDefaults.topAppBarColors().navigationIconContentColor,
+            titleContentColor = TopAppBarDefaults.topAppBarColors().titleContentColor,
+            actionIconContentColor = TopAppBarDefaults.topAppBarColors().actionIconContentColor
+        )
     )
 }

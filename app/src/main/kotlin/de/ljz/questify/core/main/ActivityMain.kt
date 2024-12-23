@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +42,7 @@ import de.ljz.questify.ui.features.home.HomeScreen
 import de.ljz.questify.ui.features.profile.ProfileScreen
 import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.createquest.CreateQuestScreen
+import de.ljz.questify.ui.features.quests.createquest.CreateQuestScreenNEW
 import de.ljz.questify.ui.features.quests.createquest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.questdetail.QuestDetailScreen
 import de.ljz.questify.ui.features.quests.questdetail.navigation.QuestDetail
@@ -147,7 +149,7 @@ class ActivityMain : AppCompatActivity() {
                                 SettingsScreen(mainNavController = navController)
                             }
                             composable<CreateQuest> {
-                                CreateQuestScreen(mainNavController = navController)
+                                CreateQuestScreenNEW(mainNavController = navController)
                             }
                             composable<QuestDetail>(
                                 deepLinks = listOf(

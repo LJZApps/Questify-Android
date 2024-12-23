@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -66,7 +67,8 @@ fun QuestItem(
                             text = it,
                             style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
                             maxLines = 1,
-                            color = Color.Gray
+                            color = Color.Gray,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }

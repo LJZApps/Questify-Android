@@ -25,60 +25,69 @@ fun DifficultyIconContainer(content: @Composable BoxScope.() -> Unit) {
 }
 
 @Composable
-fun EasyIcon() {
+fun EasyIcon(
+    tint: Color = MaterialTheme.colorScheme.primary
+) {
     DifficultyIconContainer {
-        SwordIcon()
+        SwordIcon(tint)
     }
 }
 
 @Composable
-fun MediumIcon() {
+fun MediumIcon(
+    tint: Color = MaterialTheme.colorScheme.primary
+) {
     DifficultyIconContainer {
         Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-            SwordIcon()
-            SwordIcon()
+            SwordIcon(tint)
+            SwordIcon(tint)
         }
     }
 }
 
 @Composable
-fun HardIcon() {
+fun HardIcon(
+    tint: Color = MaterialTheme.colorScheme.primary
+) {
     DifficultyIconContainer {
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SwordIcon()
+            SwordIcon(tint)
             Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwordIcon()
-                SwordIcon()
+                SwordIcon(tint)
+                SwordIcon(tint)
             }
         }
     }
 }
 
 @Composable
-fun EpicIcon() {
+fun EpicIcon(
+    tint: Color = MaterialTheme.colorScheme.primary
+) {
     DifficultyIconContainer {
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwordIcon()
-                SwordIcon()
+                SwordIcon(tint)
+                SwordIcon(tint)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwordIcon()
-                SwordIcon()
+                SwordIcon(tint)
+                SwordIcon(tint)
             }
         }
     }
 }
 
 @Composable
-fun SwordIcon() {
-    val color = MaterialTheme.colorScheme.primary
+fun SwordIcon(
+    tint: Color = MaterialTheme.colorScheme.primary
+) {
     Canvas(modifier = Modifier.size(8.dp)) {
         rotate(degrees = 45f) {
-            drawSword(color)
+            drawSword(tint)
         }
     }
 }
