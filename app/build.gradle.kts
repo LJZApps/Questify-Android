@@ -123,8 +123,8 @@ dependencies {
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)
 
-    implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.09.03"))
-    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.12.01"))
+    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
 
     implementation(platform(libs.sentry.bom))
 

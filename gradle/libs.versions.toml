@@ -1,6 +1,6 @@
 [versions]
 activityKtx = "1.9.3"
-agp = "8.7.2"
+agp = "8.7.3"
 appcompat = "1.7.0"
 balloonCompose = "1.6.9"
 constraintlayoutCompose = "1.1.0"
@@ -13,7 +13,6 @@ gampose = "1.5.0"
 gson = "2.11.0"
 hiltAndroid = "2.52"
 hiltWork = "1.2.0"
-konfettiCompose = "2.0.4"
 kotlin = "2.0.20"
 coreKtx = "1.15.0"
 kotlinStdlibJdk8 = "2.0.20"
@@ -34,11 +33,10 @@ roomCompiler = "2.6.1"
 sandwich = "2.0.10"
 sandwichRetrofit = "2.0.10"
 sandwichRetrofitSerialization = "2.0.10"
-sentryBom = "7.15.0"
+sentryBom = "7.19.1"
 composeSettings = "2.4.0"
 composePlugin = "1.7.0"
 datastoreCoreAndroid = "1.1.1"
-textyAndroid = "1.0.0-alpha"
 workRuntimeKtx = "2.10.0"
 
 [libraries]
@@ -72,7 +70,6 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
-konfetti-compose = { module = "nl.dionsegijn:konfetti-compose", version.ref = "konfettiCompose" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlinStdlibJdk8" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
@@ -90,7 +87,6 @@ sandwich-retrofit-serialization = { module = "com.github.skydoves:sandwich-retro
 sentry-android = { module = "io.sentry:sentry-android" }
 sentry-bom = { module = "io.sentry:sentry-bom", version.ref = "sentryBom" }
 sentry-compose-android = { module = "io.sentry:sentry-compose-android" }
-texty-android = { module = "com.arjunjadeja:texty-android", version.ref = "textyAndroid" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }
