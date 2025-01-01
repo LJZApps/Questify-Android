@@ -15,7 +15,7 @@ data class AppUser(
     val id: Int = -1,
 
     @SerialName(value = "display_name")
-    val displayName: String = "",
+    val displayName: String = "Abenteurer",
 
     @SerialName(value = "username")
     val username: String = "",

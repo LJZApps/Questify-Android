@@ -1,7 +1,5 @@
 package de.ljz.questify.ui.features.settings.permissions
 
-import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,12 +15,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsSwitch
 
@@ -35,14 +33,17 @@ fun PermissionsScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
-    val activity = (LocalContext.current) as ComponentActivity
 
-    Scaffold (
+    LaunchedEffect(Unit) {
+        viewModel.loadPermissionData(context)
+    }
+
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "App-Berechtigungen") },
                 navigationIcon = {
-                    if (canNavigateBack) {
+                    if (canNavigateBack)
                         IconButton(
                             onClick = {
                                 mainNavController.navigateUp()
@@ -50,20 +51,21 @@ fun PermissionsScreen(
                         ) {
                             Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                         }
-                    }
                 }
             )
         },
         bottomBar = {
-            Text(
-                text = "Bitte starte die App neu, wenn du alle Berechtigungen zugelassen hast.",
-                modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp),
-                textAlign = TextAlign.Center
-            )
+            if (!canNavigateBack)
+                Text(
+                    text = "Bitte starte die App neu, wenn du alle Berechtigungen zugelassen hast.",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    textAlign = TextAlign.Center
+                )
         },
         content = { innerPadding ->
-            Column (
+            Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 SettingsSwitch(

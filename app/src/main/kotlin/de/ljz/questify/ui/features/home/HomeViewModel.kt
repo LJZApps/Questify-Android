@@ -25,7 +25,8 @@ class HomeViewModel @Inject constructor(
                     currentState.copy(
                         userPoints = appUser.points,
                         userXP = appUser.xp,
-                        userLevel = appUser.level
+                        userLevel = appUser.level,
+                        userName = appUser.displayName
                     )
                 }
             }

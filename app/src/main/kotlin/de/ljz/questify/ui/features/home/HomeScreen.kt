@@ -20,6 +20,7 @@ import de.ljz.questify.ui.features.home.components.DrawerContent
 import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsScreen
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
+import de.ljz.questify.ui.features.trohies.navigation.TrophiesRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
@@ -94,6 +95,10 @@ fun HomeScreen(
                             drawerState = drawerState,
                             mainNavController = mainNavController
                         )
+                    }
+
+                    composable<TrophiesRoute> {
+
                     }
                 }
             }

@@ -1,4 +1,7 @@
 package de.ljz.questify.ui.features.profile
 
-class ProfileUiState {
-}
+data class ProfileUiState(
+    val profilePictureUrl: String = "",
+    val displayName: String = "Abenteurer",
+    val aboutMe: String = ""
+)

@@ -81,12 +81,6 @@ fun CreateQuestScreen(
                     steps.forEachIndexed { index, (title, icon) ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    onClick = { currentStep = index }
-                                )
                         ) {
                             Box(
                                 modifier = Modifier
@@ -107,15 +101,6 @@ fun CreateQuestScreen(
                                 ,
                                 contentAlignment = Alignment.Center
                             ) {
-                                /*Text(
-                                    text = (index + 1).toString(),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = when {
-                                        index < currentStep -> MaterialTheme.colorScheme.onPrimary
-                                        index == currentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                                        else -> MaterialTheme.colorScheme.onSurface
-                                    }
-                                )*/
                                 Icon(
                                     imageVector = icon,
                                     contentDescription = null,

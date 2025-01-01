@@ -43,4 +43,5 @@
     <string name="settings_help_screen_send_feedback">Send Feedback</string>
     <string name="quest_screen_bottom_nav_routines">Routines</string>
     <string name="quest_screen_bottom_nav_rituals">Habits</string>
+    <string name="drawer_content_trophies_navigation_title">Trophies</string>
 </resources>

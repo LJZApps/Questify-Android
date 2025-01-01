@@ -3,6 +3,7 @@ package de.ljz.questify.ui.features.home.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +16,14 @@ import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.House
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MilitaryTech
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.Warehouse
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -45,8 +50,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.home.HomeUiState
+import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
 import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
+import de.ljz.questify.ui.features.trohies.navigation.TrophiesRoute
+import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -73,15 +81,24 @@ fun DrawerContent(
             ) {
                 IconButton(
                     onClick = {
-
+                        mainNavController.navigate(ProfileRoute)
                     },
                     modifier = Modifier.padding(end = 4.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.no_profile_pic),
-                        contentDescription = null,
-                        modifier = Modifier.clip(CircleShape)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Profilbild",
+                            modifier = Modifier.size(40.dp)
+                                .padding(5.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
 
                 Row (
@@ -92,7 +109,7 @@ fun DrawerContent(
                 ) {
                     Column {
                         Text(
-                            text = "Willkommen, Leon!",
+                            text = "Willkommen, ${uiState.userName}!",
                             style = MaterialTheme.typography.labelLarge,
                         )
 
@@ -152,6 +169,7 @@ fun DrawerContent(
                 }
             }
 
+            // Divider after profile information
             HorizontalDivider()
 
             NavigationDrawerItem(
@@ -195,12 +213,12 @@ fun DrawerContent(
                         contentDescription = "Your Quests"
                     )
                 },
-                selected = currentDestination?.route == Quests.serializer().descriptor.serialName,
+                selected = currentDestination?.route == getSerializedRouteName(Quests),
                 onClick = {
                     scope.launch {
                         drawerState.close()
                     }
-                    if (currentDestination?.route != Quests.serializer().descriptor.serialName) navController.navigate(
+                    if (currentDestination?.route != getSerializedRouteName(Quests)) navController.navigate(
                         Quests
                     ) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -213,7 +231,33 @@ fun DrawerContent(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
-            Text(
+            /*NavigationDrawerItem(
+                label = { Text(text = stringResource(R.string.drawer_content_trophies_navigation_title)) },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.EmojiEvents,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )*/
+
+            /*Text(
                 text = stringResource(R.string.drawer_content_more_coming_soon),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
@@ -222,7 +266,7 @@ fun DrawerContent(
                   .padding(8.dp)
                   .fillMaxWidth(),
                 textAlign = TextAlign.Center
-            )
+            )*/
         }
     }
 }
