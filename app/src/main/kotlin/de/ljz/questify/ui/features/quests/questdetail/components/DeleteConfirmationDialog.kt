@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +25,7 @@ fun DeleteConfirmationDialog(
             Icon(Icons.Filled.Delete, contentDescription = null)
         },
         confirmButton = {
-            Button(
+            TextButton(
                 onClick = {
                     onConfirm()
                 }
@@ -33,7 +34,7 @@ fun DeleteConfirmationDialog(
             }
         },
         dismissButton = {
-            Button(
+            TextButton(
                 onClick = {
                     onDismiss()
                 }
