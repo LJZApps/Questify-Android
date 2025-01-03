@@ -45,4 +45,9 @@
     <string name="quest_screen_bottom_nav_routines">Routinen</string>
     <string name="quest_screen_bottom_nav_rituals">Gewohnheiten</string>
     <string name="drawer_content_trophies_navigation_title">Trophäen</string>
+    <string name="next">Weiter</string>
+    <string name="back">Zurück</string>
+    <string name="create_quest_screen_general">Allgemein</string>
+    <string name="create_quest_screen_details">Details</string>
+    <string name="create_quest_screen_trophies">Trophäen</string>
 </resources>

@@ -4,6 +4,9 @@ import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.app.NotificationManagerCompat
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -28,4 +31,10 @@ fun isOverlayPermissionGranted(context: Context): Boolean {
 @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
 fun <T: Any> getSerializedRouteName(route: T): String {
     return route::class.serializer().descriptor.serialName
+}
+
+fun getTrophyIconByName(iconName: String): ImageVector {
+    return when(iconName) {
+        else -> Icons.Filled.EmojiEvents
+    }
 }

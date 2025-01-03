@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import de.ljz.questify.domain.models.quests.QuestEntity
+import de.ljz.questify.domain.models.trophies.TrophyEntity
 import java.util.Date
 
 @Entity(
@@ -16,12 +17,17 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["quest_id"],
             onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = TrophyEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["trophy_id"],
+            onDelete = ForeignKey.SET_NULL
         )
     ],
     indices = [
-        Index(
-            value = ["quest_id"]
-        )
+        Index(value = ["quest_id"]),
+        Index(value = ["trophy_id"])
     ]
 )
 data class QuestNotificationEntity(
@@ -35,5 +41,8 @@ data class QuestNotificationEntity(
     val notified: Boolean = false,
 
     @ColumnInfo(name = "notify_at")
-    val notifyAt: Date
+    val notifyAt: Date,
+
+    @ColumnInfo(name = "trophy_id")
+    val trophyId: Int? = null
 )

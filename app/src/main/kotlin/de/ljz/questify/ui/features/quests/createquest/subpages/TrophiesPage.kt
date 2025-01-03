@@ -30,7 +30,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun ReminderPage(
+fun TrophiesPage(
     uiState: CreateQuestUiState,
     onRemoveReminder: (Int) -> Unit,
     onShowCreateReminderDialog: () -> Unit
@@ -124,7 +124,7 @@ fun ReminderPage(
 @Composable
 private fun ReminderPagePreview() {
     MaterialTheme {
-        ReminderPage(
+        TrophiesPage(
             uiState = CreateQuestUiState(
                 notificationTriggerTimes = listOf(1734963333)
             ),

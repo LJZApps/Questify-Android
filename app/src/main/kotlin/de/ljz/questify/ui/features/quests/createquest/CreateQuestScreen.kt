@@ -2,15 +2,13 @@ package de.ljz.questify.ui.features.quests.createquest
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,7 +27,7 @@ import de.ljz.questify.ui.features.quests.createquest.components.DueDateInfoDial
 import de.ljz.questify.ui.features.quests.createquest.components.SetDueDateDialog
 import de.ljz.questify.ui.features.quests.createquest.subpages.BaseInformationPage
 import de.ljz.questify.ui.features.quests.createquest.subpages.DetailedInformationPage
-import de.ljz.questify.ui.features.quests.createquest.subpages.ReminderPage
+import de.ljz.questify.ui.features.quests.createquest.subpages.TrophiesPage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,9 +41,9 @@ fun CreateQuestScreen(
     var currentStep by remember { mutableIntStateOf(0) }
 
     val steps = listOf(
-        NavigationItem("Allgemein", Icons.Filled.Category),
-        NavigationItem("Details", Icons.Filled.Description),
-        NavigationItem("Erinnerungen", Icons.Filled.Notifications)
+        NavigationItem(stringResource(R.string.create_quest_screen_general), Icons.Filled.Category),
+        NavigationItem(stringResource(R.string.create_quest_screen_details), Icons.Filled.Description),
+        NavigationItem(stringResource(R.string.create_quest_screen_trophies), Icons.Filled.EmojiEvents)
     )
 
     Scaffold(
@@ -142,9 +140,11 @@ fun CreateQuestScreen(
                             onNotesChange = { viewModel.updateDescription(it) },
                             onShowDueDateInfoDialog = { viewModel.showDueDateInfoDialog() },
                             onShowAddingDueDateDialog = { viewModel.showAddingDueDateDialog() },
-                            onRemoveDueDate = { viewModel.removeDueDate() }
+                            onRemoveDueDate = { viewModel.removeDueDate() },
+                            onShowCreateReminderDialog = { viewModel.showCreateReminderDialog() },
+                            onRemoveReminder = { viewModel.removeReminder(it) }
                         )
-                        2 -> ReminderPage(
+                        2 -> TrophiesPage(
                             uiState = uiState,
                             onShowCreateReminderDialog = { viewModel.showCreateReminderDialog() },
                             onRemoveReminder = { viewModel.removeReminder(it) }
@@ -204,13 +204,13 @@ fun CreateQuestScreen(
                         onClick = { if (currentStep > 0) currentStep-- },
                         enabled = currentStep > 0
                     ) {
-                        Text("Zurück")
+                        Text(stringResource(R.string.back))
                     }
                     if (currentStep < steps.size - 1) {
                         Button(
                             onClick = { currentStep++ }
                         ) {
-                            Text("Weiter")
+                            Text(stringResource(R.string.next))
                         }
                     } else {
                         Button(
@@ -223,7 +223,7 @@ fun CreateQuestScreen(
                                 )
                             }
                         ) {
-                            Text("Speichern")
+                            Text(stringResource(R.string.save))
                         }
                     }
                 }

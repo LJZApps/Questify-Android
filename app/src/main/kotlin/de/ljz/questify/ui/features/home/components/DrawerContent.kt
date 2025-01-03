@@ -231,7 +231,7 @@ fun DrawerContent(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
-            /*NavigationDrawerItem(
+            NavigationDrawerItem(
                 label = { Text(text = stringResource(R.string.drawer_content_trophies_navigation_title)) },
                 icon = {
                     Icon(
@@ -255,7 +255,7 @@ fun DrawerContent(
                     }
                 },
                 modifier = Modifier.padding(vertical = 4.dp)
-            )*/
+            )
 
             /*Text(
                 text = stringResource(R.string.drawer_content_more_coming_soon),

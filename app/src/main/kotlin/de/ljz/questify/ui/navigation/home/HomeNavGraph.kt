@@ -11,7 +11,7 @@ import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoute
 import de.ljz.questify.ui.features.quests.viewquests.subpages.AllQuestsPage
 import de.ljz.questify.ui.features.quests.viewquests.subpages.HabitsQuestsPage
 import de.ljz.questify.ui.features.quests.viewquests.subpages.RoutinesQuestsPage
-import de.ljz.questify.ui.features.quests.viewquests.subpages.TodayQuestsPage
+import de.ljz.questify.ui.features.quests.viewquests.subpages.DailiesQuestsPage
 
 @Composable
 fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: ViewQuestsViewModel) {
@@ -19,21 +19,15 @@ fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavH
     NavHost(
         navController = navController,
         startDestination = QuestBottomRoutes.AllQuests,
-        enterTransition = {
-            // you can change whatever you want transition
-            EnterTransition.None
-        },
-        exitTransition = {
-            // you can change whatever you want transition
-            ExitTransition.None
-        }
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
         composable<QuestBottomRoutes.AllQuests> {
             AllQuestsPage(viewModel = viewModel, navController = mainNavController)
         }
 
         composable<QuestBottomRoutes.Dailies> {
-            TodayQuestsPage(viewModel = viewModel)
+            DailiesQuestsPage(viewModel = viewModel)
         }
 
         composable<QuestBottomRoutes.Routines> {

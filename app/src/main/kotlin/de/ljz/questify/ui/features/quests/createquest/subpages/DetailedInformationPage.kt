@@ -12,6 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Schedule
@@ -39,7 +41,9 @@ fun DetailedInformationPage(
     onNotesChange: (String) -> Unit,
     onShowDueDateInfoDialog: () -> Unit,
     onShowAddingDueDateDialog: () -> Unit,
-    onRemoveDueDate: () -> Unit
+    onRemoveDueDate: () -> Unit,
+    onRemoveReminder: (Int) -> Unit,
+    onShowCreateReminderDialog: () -> Unit
 ) {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
 
@@ -138,6 +142,82 @@ fun DetailedInformationPage(
                 }
             }
         }
+
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            ),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = "Erinnerungen",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                uiState.notificationTriggerTimes.sortedBy { it }.forEachIndexed { index, triggerTime ->
+                    val date = Date(triggerTime)
+                    val formattedDate = dateFormat.format(date)
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable {
+                                onRemoveReminder(index)
+                            }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.Close,
+                                contentDescription = null
+                            )
+
+                            Text(
+                                text = formattedDate,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            onShowCreateReminderDialog()
+                        }
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            contentDescription = null
+                        )
+
+                        Text(
+                            text = "Erinnerung hinzufügen",
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -150,7 +230,9 @@ private fun DetailedInformationPagePreview() {
             onNotesChange = {},
             onShowAddingDueDateDialog = {},
             onShowDueDateInfoDialog = {},
-            onRemoveDueDate = {}
+            onRemoveDueDate = {},
+            onRemoveReminder = {},
+            onShowCreateReminderDialog = {}
         )
     }
 }
