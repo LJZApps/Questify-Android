@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.home.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,19 +10,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MilitaryTech
+import androidx.compose.material.icons.filled.Newspaper
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Sports
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material.icons.filled.Warehouse
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,11 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -51,8 +49,8 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.home.HomeUiState
 import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
-import de.ljz.questify.ui.features.quests.viewquests.navigation.Quests
-import de.ljz.questify.ui.features.settings.settingsmain.navigation.Settings
+import de.ljz.questify.ui.features.quests.quest_overview.navigation.Quests
+import de.ljz.questify.ui.features.settings.settings_main.navigation.Settings
 import de.ljz.questify.ui.features.trohies.navigation.TrophiesRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
@@ -81,6 +79,9 @@ fun DrawerContent(
             ) {
                 IconButton(
                     onClick = {
+                        scope.launch {
+                            drawerState.close()
+                        }
                         mainNavController.navigate(ProfileRoute)
                     },
                     modifier = Modifier.padding(end = 4.dp)
@@ -236,6 +237,174 @@ fun DrawerContent(
                 icon = {
                     Icon(
                         imageVector = Icons.Filled.EmojiEvents,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Fitness") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.DirectionsRun,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            Text(
+                text = "Social",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Freunde") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.People,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Gilden") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Shield,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            Text(
+                text = "Village of Ventures",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Map") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Map,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Häuser") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.House,
+                        contentDescription = "Trophies"
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(TrophiesRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(TrophiesRoute)) navController.navigate(
+                        TrophiesRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Shop") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
                         contentDescription = "Trophies"
                     )
                 },

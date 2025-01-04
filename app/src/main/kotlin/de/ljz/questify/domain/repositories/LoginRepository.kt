@@ -7,7 +7,7 @@ import de.ljz.questify.data.api.responses.common.ErrorResponse
 import de.ljz.questify.data.api.responses.login.LoginResponse
 import de.ljz.questify.data.api.responses.register.RegisterResponse
 import de.ljz.questify.data.mapper.ErrorResponseMapper
-import de.ljz.questify.data.sharedpreferences.SessionManager
+import de.ljz.questify.data.shared_preferences.SessionManager
 import de.ljz.questify.util.suspendMessageOnException
 import javax.inject.Inject
 import javax.inject.Singleton

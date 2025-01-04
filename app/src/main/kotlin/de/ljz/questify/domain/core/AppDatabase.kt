@@ -10,6 +10,7 @@ import de.ljz.questify.domain.core.migrations.MainQuestAutoMigration
 import de.ljz.questify.domain.core.migrations.QuestEntityAutoMigration
 import de.ljz.questify.domain.daos.QuestDao
 import de.ljz.questify.domain.daos.QuestNotificationDao
+import de.ljz.questify.domain.daos.TrophyDao
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.models.quests.QuestChecklistEntity
@@ -41,4 +42,5 @@ import de.ljz.questify.domain.models.trophies.TrophyEntity
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getQuestDao(): QuestDao
     abstract fun getQuestNotificationDao(): QuestNotificationDao
+    abstract fun getTrophyDao(): TrophyDao
 }

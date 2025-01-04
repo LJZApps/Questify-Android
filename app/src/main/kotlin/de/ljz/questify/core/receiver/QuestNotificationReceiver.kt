@@ -5,21 +5,17 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
-import de.ljz.questify.core.application.TAG
 import de.ljz.questify.core.main.ActivityMain
 import de.ljz.questify.domain.repositories.AppSettingsRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.ui.features.remindagain.RemindAgainActivity
+import de.ljz.questify.ui.features.remind_again.RemindAgainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

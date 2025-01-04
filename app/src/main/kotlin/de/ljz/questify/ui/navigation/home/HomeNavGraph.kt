@@ -6,15 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.quests.viewquests.ViewQuestsViewModel
-import de.ljz.questify.ui.features.quests.viewquests.navigation.QuestBottomRoutes
-import de.ljz.questify.ui.features.quests.viewquests.subpages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.viewquests.subpages.HabitsQuestsPage
-import de.ljz.questify.ui.features.quests.viewquests.subpages.RoutinesQuestsPage
-import de.ljz.questify.ui.features.quests.viewquests.subpages.DailiesQuestsPage
+import de.ljz.questify.ui.features.quests.quest_overview.QuestOverviewViewModel
+import de.ljz.questify.ui.features.quests.quest_overview.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.AllQuestsPage
+import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.HabitsQuestsPage
+import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.RoutinesQuestsPage
+import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.DailiesQuestsPage
 
 @Composable
-fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: ViewQuestsViewModel) {
+fun HomeBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: QuestOverviewViewModel) {
 
     NavHost(
         navController = navController,

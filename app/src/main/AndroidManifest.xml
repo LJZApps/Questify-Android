@@ -76,7 +76,7 @@
         </activity>
 
         <activity
-            android:name=".ui.features.remindagain.RemindAgainActivity"
+            android:name=".ui.features.remind_again.RemindAgainActivity"
             android:theme="@style/Theme.Questify.ReminderDialog" />
 
         <!-- Required: set your sentry.io project identifier (DSN) -->
