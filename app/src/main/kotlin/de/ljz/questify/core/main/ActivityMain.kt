@@ -34,12 +34,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.get_started.subpages.AdventureScreen
-import de.ljz.questify.ui.features.get_started.subpages.GetStartedChooserScreen
-import de.ljz.questify.ui.features.get_started.subpages.GetStartedMainScreen
-import de.ljz.questify.ui.features.home.HomeScreen
-import de.ljz.questify.ui.features.profile.ProfileScreen
-import de.ljz.questify.ui.features.profile.navigation.ProfileRoute
+import de.ljz.questify.ui.features.get_started.sub_pages.AdventureScreen
+import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedChooserScreen
+import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedMainScreen
+import de.ljz.questify.ui.features.main.MainScreen
+import de.ljz.questify.ui.features.profile.edit_profile.EditProfileScreen
+import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
+import de.ljz.questify.ui.features.profile.view_profile.ViewProfileScreen
+import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.create_quest.CreateQuestScreen
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailScreen
@@ -55,7 +57,7 @@ import de.ljz.questify.ui.navigation.AdventureScreenRoute
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
-import de.ljz.questify.ui.navigation.home.Home
+import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import de.ljz.questify.util.isAlarmPermissionGranted
@@ -119,7 +121,7 @@ class ActivityMain : AppCompatActivity() {
 
                         NavHost(
                             navController = navController,
-                            startDestination = if (isSetupDone) Home else GetStartedMain,
+                            startDestination = if (isSetupDone) MainRoute else GetStartedMain,
 //                            startDestination = AdventureScreenRoute,
                             enterTransition = {
                                 scaleIntoContainer()
@@ -140,8 +142,8 @@ class ActivityMain : AppCompatActivity() {
                             composable<GetStartedChooser> {
                                 GetStartedChooserScreen(navController = navController)
                             }
-                            composable<Home> {
-                                HomeScreen(mainNavController = navController)
+                            composable<MainRoute> {
+                                MainScreen(mainNavController = navController)
                             }
                             composable<Settings> {
                                 SettingsScreen(mainNavController = navController)
@@ -157,7 +159,10 @@ class ActivityMain : AppCompatActivity() {
                                 QuestDetailScreen(navController = navController)
                             }
                             composable<ProfileRoute> {
-                                ProfileScreen(navController = navController)
+                                ViewProfileScreen(navController = navController)
+                            }
+                            composable<EditProfileRoute> {
+                                EditProfileScreen(navController = navController)
                             }
                             composable<SettingsHelp> {
                                 SettingsHelpScreen(mainNavController = navController)

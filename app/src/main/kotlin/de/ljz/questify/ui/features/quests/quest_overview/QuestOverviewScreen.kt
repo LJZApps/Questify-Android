@@ -49,12 +49,11 @@ import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.ui.features.quests.quest_overview.navigation.QuestBottomRoutes
-import de.ljz.questify.ui.navigation.home.HomeBottomNavGraph
+import de.ljz.questify.ui.features.quests.quest_overview.navigation.QuestBottomNavGraph
 import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.serializer
 
 
 @OptIn(
@@ -133,7 +132,7 @@ fun QuestOverviewScreen(
                     .padding(innerPadding)
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
-                HomeBottomNavGraph(bottomNavController, mainNavController, viewModel)
+                QuestBottomNavGraph(bottomNavController, mainNavController, viewModel)
             }
         },
         floatingActionButton = {

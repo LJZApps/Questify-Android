@@ -20,6 +20,9 @@ data class AppUser(
     @SerialName(value = "username")
     val username: String = "",
 
+    @SerialName(value = "about_me")
+    val aboutMe: String = "",
+
     @SerialName(value = "email")
     val email: String = "",
 

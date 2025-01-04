@@ -25,9 +25,9 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.components.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.create_quest.components.DueDateInfoDialog
 import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
-import de.ljz.questify.ui.features.quests.create_quest.subpages.BaseInformationPage
-import de.ljz.questify.ui.features.quests.create_quest.subpages.DetailedInformationPage
-import de.ljz.questify.ui.features.quests.create_quest.subpages.TrophiesPage
+import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage
+import de.ljz.questify.ui.features.quests.create_quest.sub_pages.DetailedInformationPage
+import de.ljz.questify.ui.features.quests.create_quest.sub_pages.TrophiesPage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

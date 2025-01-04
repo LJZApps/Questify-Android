@@ -20,14 +20,7 @@ class AppUserRepository @Inject constructor(
     private var cachedAppUser: AppUser? = null
 
     fun getAppUser(): Flow<AppUser> {
-        return if (cachedAppUser != null) {
-            flowOf(cachedAppUser!!)
-        } else {
-            appUserDataStore.data
-                .onEach { appUser ->
-                    cachedAppUser = appUser // Cache the result
-                }
-        }
+        return appUserDataStore.data
     }
 
     suspend fun resetAppUserStats() {
@@ -36,6 +29,18 @@ class AppUserRepository @Inject constructor(
                 xp = 0,
                 points = 0,
                 level = 0
+            )
+        }
+    }
+
+    suspend fun saveProfile(
+        displayName: String,
+        aboutMe: String
+    ) {
+        appUserDataStore.updateData { user ->
+            user.copy(
+                displayName = displayName,
+                aboutMe = aboutMe
             )
         }
     }

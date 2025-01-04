@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.get_started.subpages.PixelSpeechBubbleShape
+import de.ljz.questify.ui.features.get_started.sub_pages.PixelSpeechBubbleShape
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 

@@ -15,7 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import de.ljz.questify.ui.features.home.dialogs.CreateQuestDialogState
+import de.ljz.questify.ui.features.main.dialogs.CreateQuestDialogState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
