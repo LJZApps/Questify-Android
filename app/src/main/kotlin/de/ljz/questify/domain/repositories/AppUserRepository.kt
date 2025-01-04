@@ -17,8 +17,6 @@ class AppUserRepository @Inject constructor(
     private val appUserDataStore: DataStore<AppUser>
 ) : BaseRepository() {
 
-    private var cachedAppUser: AppUser? = null
-
     fun getAppUser(): Flow<AppUser> {
         return appUserDataStore.data
     }
@@ -77,7 +75,6 @@ class AppUserRepository @Inject constructor(
             newLevel--
 
             val updatedUser = currentUser.copy(xp = newTotalXP, level = newLevel, points = currentUser.points + points)
-            cachedAppUser = updatedUser
 
             earnedStats.invoke(
                 xp,
