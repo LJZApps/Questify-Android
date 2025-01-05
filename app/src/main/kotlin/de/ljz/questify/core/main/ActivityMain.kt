@@ -100,11 +100,7 @@ class ActivityMain : AppCompatActivity() {
             val allPermissionsGranted: Boolean = (isNotificationPermissionGranted(this) && isOverlayPermissionGranted(this) && isAlarmPermissionGranted(this))
             val isAppReadyState by vm.isAppReady.collectAsState()
             val context = LocalContext.current
-            val changelog = remember {
-                val inputStream = context.assets.open("changelog.yaml")
-                parseYamlChangelog(inputStream)
-            }
-            val showChangelog = remember { mutableStateOf(getLastShownVersion(context) != BuildConfig.VERSION_CODE) }
+
 
             vm.createNotificationChannel(this)
 
@@ -157,18 +153,6 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<MainRoute> {
                                 MainScreen(mainNavController = navController)
-
-                                if (showChangelog.value) {
-                                    ChangelogBottomSheet(
-                                        title = "Version 0.6",
-                                        onDismiss = {
-                                            saveCurrentVersion(context, BuildConfig.VERSION_CODE)
-                                            showChangelog.value = false
-                                        },
-                                        showHideChangelog = false,
-                                        changelogVersion = changelog.versions.find { it.version == BuildConfig.VERSION_CODE}
-                                    )
-                                }
                             }
                             composable<Settings> {
                                 SettingsScreen(mainNavController = navController)

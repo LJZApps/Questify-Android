@@ -46,4 +46,16 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
+
+    fun toggleChangelogVisibility(visible: Boolean) {
+        _uiState.update {
+            it.copy(changelogVisible = visible)
+        }
+    }
+
+    fun dismissNewVersion() {
+        _uiState.update {
+            it.copy(newVersionVisible = false)
+        }
+    }
 }

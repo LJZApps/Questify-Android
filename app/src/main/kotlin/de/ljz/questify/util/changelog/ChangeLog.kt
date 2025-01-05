@@ -27,5 +27,5 @@ data class ChangeLogVersion(
 @Serializable
 data class ChangeLog(
     @SerialName("versions")
-    val versions: List<ChangeLogVersion>
+    val versions: List<ChangeLogVersion> = emptyList()
 )

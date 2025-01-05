@@ -33,12 +33,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.util.changelog.ChangeLog
 import de.ljz.questify.util.changelog.ChangeLogVersion
+import de.ljz.questify.util.changelog.parseYamlChangelog
+import de.ljz.questify.util.getLastShownVersion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,10 +53,12 @@ fun ChangelogBottomSheet(
     onDismiss: (tutorialsEnabled: Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val state = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { false },
     )
+
 
     val tutorialsEnabled = remember { mutableStateOf(true) }
 
