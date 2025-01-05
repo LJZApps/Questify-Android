@@ -17,7 +17,6 @@ import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
 import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.changelog.parseYamlChangelog
-import de.ljz.questify.util.getLastShownVersion
 
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
