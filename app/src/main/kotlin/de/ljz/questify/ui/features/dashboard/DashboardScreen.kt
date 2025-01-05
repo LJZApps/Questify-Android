@@ -2,17 +2,29 @@ package de.ljz.questify.ui.features.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.ui.components.QuestMasterOnboarding
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.components.TutorialBottomSheet
+import de.ljz.questify.ui.components.TutorialStep
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
 import de.ljz.questify.util.NavBarConfig
 
@@ -61,17 +73,27 @@ fun DashboardScreen(
         }
     )
 
-    // QuestMaster Onboarding Overlay
+    // Tutorial Bottom Sheet
     if (!uiState.dashboardOnboardingDone) {
-        QuestMasterOnboarding(
-            messages = listOf(
-                "Hier beginnt dein Weg durchs Dashboard – lass mich dich kurz rumführen.",
-                "Hier vereinen sich deine Statistiken und Quests an einem Ort.",
-                "Nutze das Dashboard, um deine Fortschritte zu erblicken und neue Ziele zu setzen."
-            ),
+        TutorialBottomSheet(
             onDismiss = {
                 viewModel.setDashboardOnboardingDone()
-            }
+            },
+            title = "Das Dashboard",
+            tutorialSteps = listOf(
+                TutorialStep(
+                    icon = Icons.Default.Dashboard,
+                    description = "Willkommen im Dashboard! Hier hast du alle deine Statistiken, Quests und Fortschritte auf einen Blick."
+                ),
+                TutorialStep(
+                    icon = Icons.Default.PieChart,
+                    description = "Verfolge deinen Fortschritt: Sieh dir deine abgeschlossenen Quests, täglichen Aufgaben und Routinen an."
+                ),
+                TutorialStep(
+                    icon = Icons.Default.Settings,
+                    description = "Passe dein Dashboard individuell an: Zeige die Inhalte, die dir am wichtigsten sind."
+                )
+            )
         )
     }
 }

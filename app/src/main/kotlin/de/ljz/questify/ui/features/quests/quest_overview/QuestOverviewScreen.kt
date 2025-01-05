@@ -8,13 +8,22 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
@@ -38,6 +47,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -46,6 +57,8 @@ import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.QuestMasterOnboarding
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.components.TutorialBottomSheet
+import de.ljz.questify.ui.components.TutorialStep
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.ui.features.quests.quest_overview.navigation.QuestBottomRoutes
@@ -173,7 +186,7 @@ fun QuestOverviewScreen(
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
             ) {
                 bottomNavRoutes.forEach { bottomNavRoute ->
                     NavigationBarItem(
@@ -206,15 +219,29 @@ fun QuestOverviewScreen(
     )
 
     if (!uiState.value.questOnboardingDone) {
-        QuestMasterOnboarding(
-            messages = listOf(
-                "Dieser Ort ist deine Schmiede – hier entstehen deine Herausforderungen.",
-                "Hier findest du alles für deinen Fortschritt: Quests, Dailies, Routinen und Gewohnheiten – dein Werkzeug für ein produktiveres Leben!",
-                "Wähle weise, Abenteurer – jede abgeschlossene Quest bringt dich deinem Ziel näher."
-            ),
+        TutorialBottomSheet(
+            title = "Deine Quests",
             onDismiss = {
                 viewModel.setOnboardingDone()
-            }
+            },
+            tutorialSteps = listOf(
+                TutorialStep(
+                    icon = Icons.Default.List, // Passend für Quests
+                    description = "Hier findest du deine Quests – die großen Abenteuer und Herausforderungen, die dich deinem Ziel näher bringen."
+                ),
+                TutorialStep(
+                    icon = Icons.Default.Event, // Passend für Dailies
+                    description = "Dailies: Erstelle tägliche Aufgaben, die dich motivieren und dir helfen, einen konstanten Fortschritt zu erzielen."
+                ),
+                TutorialStep(
+                    icon = Icons.Default.Repeat, // Passend für Routinen
+                    description = "Routinen: Automatisiere deine regelmäßigen Aufgaben und entwickle starke Gewohnheiten, die langfristig wirken."
+                ),
+                TutorialStep(
+                    icon = Icons.Default.EmojiEvents, // Passend für Gewohnheiten
+                    description = "Gewohnheiten: Baue gesunde Gewohnheiten auf und belohne dich für jeden kleinen Erfolg."
+                )
+            )
         )
     }
 }
