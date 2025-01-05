@@ -4,7 +4,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +31,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.components.TutorialBottomSheet
+import de.ljz.questify.ui.components.TutorialStep
 import de.ljz.questify.ui.features.trohies.navigation.TrophiesBottomNavGraph
 import de.ljz.questify.ui.features.trohies.navigation.TrophyBottomRoutes
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
@@ -45,7 +52,7 @@ fun TrophiesOverviewScreen(
     drawerState: DrawerState,
     mainNavController: NavHostController
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiState.collectAsState().value
 
     LaunchedEffect(Unit) {
         NavBarConfig.transparentNavBar = false

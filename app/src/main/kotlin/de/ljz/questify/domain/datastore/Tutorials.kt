@@ -11,13 +11,16 @@ import java.io.OutputStream
 
 @Serializable
 data class Tutorials(
-    @SerialName("dashboard_onboarding_done")
+    @SerialName("tutorials_enabled")
+    val tutorialsEnabled: Boolean = true,
+
+    @SerialName("dashboard_tutorial_done")
     val dashboardOnboarding: Boolean = false,
 
-    @SerialName("quests_onboarding_done")
+    @SerialName("quests_tutorial_done")
     val questsOnboarding: Boolean = false,
 
-    @SerialName("trophies_onboarding_done")
+    @SerialName("trophies_tutorial_done")
     val trophiesOnboarding: Boolean = false
 )
 
@@ -38,7 +41,7 @@ object QuestMasterSerializer : Serializer<Tutorials> {
                 string = input.readBytes().decodeToString()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to deserialize QuestMaster: ${e.stackTraceToString()}")
+            Log.e(TAG, "Failed to deserialize Tutorials: ${e.stackTraceToString()}")
             Tutorials()
         }
     }
@@ -52,7 +55,7 @@ object QuestMasterSerializer : Serializer<Tutorials> {
                 ).encodeToByteArray()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to serialize QuestMaster: ${e.stackTraceToString()}")
+            Log.e(TAG, "Failed to serialize Tutorials: ${e.stackTraceToString()}")
         }
     }
 

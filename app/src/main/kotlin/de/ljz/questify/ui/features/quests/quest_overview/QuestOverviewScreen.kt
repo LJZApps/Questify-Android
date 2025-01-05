@@ -217,31 +217,4 @@ fun QuestOverviewScreen(
             )
         }
     )
-
-    if (!uiState.value.questOnboardingDone) {
-        TutorialBottomSheet(
-            title = "Deine Quests",
-            onDismiss = {
-                viewModel.setOnboardingDone()
-            },
-            tutorialSteps = listOf(
-                TutorialStep(
-                    icon = Icons.Default.List, // Passend für Quests
-                    description = "Hier findest du deine Quests – die großen Abenteuer und Herausforderungen, die dich deinem Ziel näher bringen."
-                ),
-                TutorialStep(
-                    icon = Icons.Default.Event, // Passend für Dailies
-                    description = "Dailies: Erstelle tägliche Aufgaben, die dich motivieren und dir helfen, einen konstanten Fortschritt zu erzielen."
-                ),
-                TutorialStep(
-                    icon = Icons.Default.Repeat, // Passend für Routinen
-                    description = "Routinen: Automatisiere deine regelmäßigen Aufgaben und entwickle starke Gewohnheiten, die langfristig wirken."
-                ),
-                TutorialStep(
-                    icon = Icons.Default.EmojiEvents, // Passend für Gewohnheiten
-                    description = "Gewohnheiten: Baue gesunde Gewohnheiten auf und belohne dich für jeden kleinen Erfolg."
-                )
-            )
-        )
-    }
 }

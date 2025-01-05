@@ -7,12 +7,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class QuestMasterRepository @Inject constructor(
+class TutorialRepository @Inject constructor(
     private val tutorialsDatastore: DataStore<Tutorials>
 ) : BaseRepository() {
 
     fun getQuestMaster(): Flow<Tutorials> {
         return tutorialsDatastore.data
+    }
+
+    suspend fun toggleTutorials(enabled: Boolean) {
+        tutorialsDatastore.updateData {
+            it.copy(
+                tutorialsEnabled = enabled
+            )
+        }
     }
 
     suspend fun setDashboardOnboardingDone() {
@@ -27,6 +35,15 @@ class QuestMasterRepository @Inject constructor(
         tutorialsDatastore.updateData {
             it.copy(
                 questsOnboarding = true
+            )
+        }
+    }
+
+
+    suspend fun setTrophiesOnboardingDone() {
+        tutorialsDatastore.updateData {
+            it.copy(
+                trophiesOnboarding = true
             )
         }
     }

@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.AppUserRepository
-import de.ljz.questify.domain.repositories.QuestMasterRepository
+import de.ljz.questify.domain.repositories.TutorialRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,6 @@ import javax.inject.Inject
 class QuestOverviewViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
-    private val questMasterRepository: QuestMasterRepository,
     private val questNotificationRepository: QuestNotificationRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
@@ -38,16 +37,6 @@ class QuestOverviewViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             quests = quests
-                        )
-                    }
-                }
-            }
-
-            launch {
-                questMasterRepository.getQuestMaster().collectLatest { questMaster ->
-                    _uiState.update {
-                        it.copy(
-                            questOnboardingDone = questMaster.questsOnboarding
                         )
                     }
                 }
@@ -85,12 +74,6 @@ class QuestOverviewViewModel @Inject constructor(
                     onSuccess.invoke(xp, points, level)
                 }
             )
-        }
-    }
-
-    fun setOnboardingDone() {
-        viewModelScope.launch {
-            questMasterRepository.setQuestsOnboardingDone()
         }
     }
 }

@@ -1,27 +1,47 @@
 package de.ljz.questify.ui.components
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.core.compose.UIModePreviews
 import kotlinx.coroutines.launch
 
 data class TutorialStep(
@@ -34,7 +54,7 @@ data class TutorialStep(
 fun TutorialBottomSheet(
     title: String,
     tutorialSteps: List<TutorialStep>,
-    onDismiss: () -> Unit
+    onDismiss: (tutorialsEnabled: Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val state = rememberModalBottomSheetState(
@@ -42,12 +62,14 @@ fun TutorialBottomSheet(
         confirmValueChange = { false },
     )
 
+    val tutorialsEnabled = remember { mutableStateOf(true) }
+
     ModalBottomSheet(
         onDismissRequest = {
             scope.launch {
                 state.hide()
             }
-            onDismiss()
+            onDismiss(tutorialsEnabled.value)
         },
         sheetState = state,
         dragHandle = {}
@@ -88,14 +110,13 @@ fun TutorialBottomSheet(
             tutorialSteps.forEach { step ->
                 Row(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
                 ) {
                     Icon(
                         imageVector = step.icon,
                         contentDescription = null,
                         modifier = Modifier
                             .size(32.dp)
-                            .padding(end = 8.dp)
+                            .padding(end = 12.dp)
                     )
                     Text(
                         text = step.description,
@@ -105,9 +126,39 @@ fun TutorialBottomSheet(
                 }
             }
 
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                onClick = { tutorialsEnabled.value = !tutorialsEnabled.value }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Tutorials weiterhin anzeigen",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
+                        Checkbox(
+                            checked = tutorialsEnabled.value,
+                            onCheckedChange = { tutorialsEnabled.value = it },
+                        )
+                    }
+                }
+            }
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = onDismiss
+                onClick = { onDismiss(tutorialsEnabled.value) }
             ) {
                 Text("Verstanden")
             }
