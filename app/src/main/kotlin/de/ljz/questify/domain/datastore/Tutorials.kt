@@ -26,9 +26,9 @@ object QuestMasterSerializer : Serializer<Tutorials> {
         get() = Tutorials()
 
     val jsonFormat = Json {
-        ignoreUnknownKeys = true // Ignore unknown fields for robustness
-        isLenient = true // Lenient parsing
-        prettyPrint = false // No pretty printing for faster serialization
+        ignoreUnknownKeys = true
+        isLenient = true
+        prettyPrint = false
     }
 
     override suspend fun readFrom(input: InputStream): Tutorials {
