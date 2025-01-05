@@ -16,9 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -33,11 +36,13 @@ import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
+import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.get_started.sub_pages.AdventureScreen
 import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedMainScreen
 import de.ljz.questify.ui.features.main.MainScreen
+import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.features.profile.edit_profile.EditProfileScreen
 import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
 import de.ljz.questify.ui.features.profile.view_profile.ViewProfileScreen
@@ -57,12 +62,14 @@ import de.ljz.questify.ui.navigation.AdventureScreenRoute
 import de.ljz.questify.ui.navigation.GetStartedChooser
 import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
-import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
+import de.ljz.questify.util.changelog.parseYamlChangelog
+import de.ljz.questify.util.getLastShownVersion
 import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
+import de.ljz.questify.util.saveCurrentVersion
 import io.sentry.android.core.SentryAndroid
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.util.concurrent.TimeUnit
@@ -92,6 +99,12 @@ class ActivityMain : AppCompatActivity() {
             val isSetupDone = appUiState.isSetupDone
             val allPermissionsGranted: Boolean = (isNotificationPermissionGranted(this) && isOverlayPermissionGranted(this) && isAlarmPermissionGranted(this))
             val isAppReadyState by vm.isAppReady.collectAsState()
+            val context = LocalContext.current
+            val changelog = remember {
+                val inputStream = context.assets.open("changelog.yaml")
+                parseYamlChangelog(inputStream)
+            }
+            val showChangelog = remember { mutableStateOf(getLastShownVersion(context) != BuildConfig.VERSION_CODE) }
 
             vm.createNotificationChannel(this)
 
@@ -144,6 +157,18 @@ class ActivityMain : AppCompatActivity() {
                             }
                             composable<MainRoute> {
                                 MainScreen(mainNavController = navController)
+
+                                if (showChangelog.value) {
+                                    ChangelogBottomSheet(
+                                        title = "Version 0.6",
+                                        onDismiss = {
+                                            saveCurrentVersion(context, BuildConfig.VERSION_CODE)
+                                            showChangelog.value = false
+                                        },
+                                        showHideChangelog = false,
+                                        changelogVersion = changelog.versions.find { it.version == BuildConfig.VERSION_CODE}
+                                    )
+                                }
                             }
                             composable<Settings> {
                                 SettingsScreen(mainNavController = navController)

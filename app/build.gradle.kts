@@ -113,6 +113,10 @@ dependencies {
     // Gampose https://github.com/ezlifeSol/gampose
     //implementation(libs.gampose)
 
+    // Yaml
+    implementation(libs.jackson.dataformat.yaml)
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)

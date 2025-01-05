@@ -2,6 +2,7 @@ package de.ljz.questify.util
 
 import android.app.AlarmManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.material.icons.Icons
@@ -11,6 +12,9 @@ import androidx.core.app.NotificationManagerCompat
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
+
+const val PREFS_NAME = "changelog_prefs"
+const val PREF_VERSION_KEY = "last_version_shown"
 
 fun isNotificationPermissionGranted(context: Context): Boolean {
     return NotificationManagerCompat.from(context).areNotificationsEnabled()
@@ -36,5 +40,18 @@ fun <T: Any> getSerializedRouteName(route: T): String {
 fun getTrophyIconByName(iconName: String): ImageVector {
     return when(iconName) {
         else -> Icons.Filled.EmojiEvents
+    }
+}
+
+fun getLastShownVersion(context: Context): Int? {
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    return sharedPreferences.getInt(PREF_VERSION_KEY, 0)
+}
+
+fun saveCurrentVersion(context: Context, currentVersion: Int) {
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    with(sharedPreferences.edit()) {
+        putInt(PREF_VERSION_KEY, currentVersion)
+        apply()
     }
 }

@@ -1,0 +1,26 @@
+versions:
+  - version: 7
+    date: "2025-01-01"
+    name: "Das große Trophäen-Update"
+    features:
+      - "Trophäen hinzugefügt"
+      - "Neue Tutorials"
+      - "Das Profil kann jetzt bearbeitet werden"
+    changes:
+      - "Kleinere UI-Verbesserungen, die zur Sichtbarkeit einiger Elemente beitragen"
+    bugfixes:
+      - "Performance verbessert"
+
+  # Version 0.5.1
+  - version: 6
+    date: "2025-01-01"
+    name: "Some smaller UI changes"
+    features:
+      - "Yeaa"
+      - "Nooo"
+    changes:
+      - "Some changes"
+      - "Some more changes"
+    bugfixes:
+      - "We fixed bugs"
+      - "And made new bugs"
