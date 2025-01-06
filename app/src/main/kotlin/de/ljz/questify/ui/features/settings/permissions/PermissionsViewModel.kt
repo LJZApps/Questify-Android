@@ -24,7 +24,7 @@ private const val REQUEST_NOTIFICATION_PERMISSION = 1001
 @HiltViewModel
 class PermissionsViewModel @Inject constructor(
 
-): ViewModel() {
+) : ViewModel() {
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
 
     private val _uiState = MutableStateFlow(PermissionsUiState())

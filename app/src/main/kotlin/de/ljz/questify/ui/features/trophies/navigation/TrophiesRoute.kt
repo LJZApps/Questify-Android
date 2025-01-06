@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.trohies.navigation
+package de.ljz.questify.ui.features.trophies.navigation
 
 import kotlinx.serialization.Serializable
 

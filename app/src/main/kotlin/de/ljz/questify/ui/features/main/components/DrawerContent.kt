@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AutoGraph
-import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.House
@@ -50,7 +49,7 @@ import de.ljz.questify.ui.features.main.MainUiState
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.quest_overview.navigation.Quests
 import de.ljz.questify.ui.features.settings.settings_main.navigation.Settings
-import de.ljz.questify.ui.features.trohies.navigation.TrophiesRoute
+import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi

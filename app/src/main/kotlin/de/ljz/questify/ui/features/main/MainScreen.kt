@@ -32,8 +32,8 @@ import de.ljz.questify.ui.features.main.components.DrawerContent
 import de.ljz.questify.ui.features.quests.quest_overview.QuestOverviewScreen
 import de.ljz.questify.ui.features.quests.quest_overview.navigation.Quests
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
-import de.ljz.questify.ui.features.trohies.TrophiesOverviewScreen
-import de.ljz.questify.ui.features.trohies.navigation.TrophiesRoute
+import de.ljz.questify.ui.features.trophies.TrophiesOverviewScreen
+import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer

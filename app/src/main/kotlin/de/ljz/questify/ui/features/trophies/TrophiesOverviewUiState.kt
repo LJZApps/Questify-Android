@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.trohies
+package de.ljz.questify.ui.features.trophies
 
 import de.ljz.questify.domain.models.trophies.TrophyCategoryEntity
 import de.ljz.questify.domain.models.trophies.TrophyEntity

@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.trohies.sub_pages
+package de.ljz.questify.ui.features.trophies.sub_pages
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,21 +8,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import de.ljz.questify.ui.features.quests.quest_overview.QuestOverviewViewModel
-import de.ljz.questify.ui.features.trohies.TrophiesOverviewViewModel
+import de.ljz.questify.ui.features.trophies.TrophiesOverviewViewModel
 
 @Composable
-fun TrophyCategoriesPage(
+fun AllTrophiesPage(
     modifier: Modifier = Modifier,
     viewModel: TrophiesOverviewViewModel
 ) {
-    val uiState = viewModel.uiState.collectAsState().value.trophiesCategoriesUiState
-
     LazyColumn (
         modifier = modifier.fillMaxSize()
             .padding(8.dp)

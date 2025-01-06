@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.trohies
+package de.ljz.questify.ui.features.trophies
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,8 +26,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.ui.components.TopBar
-import de.ljz.questify.ui.features.trohies.navigation.TrophiesBottomNavGraph
-import de.ljz.questify.ui.features.trohies.navigation.TrophyBottomRoutes
+import de.ljz.questify.ui.features.trophies.navigation.TrophiesBottomNavGraph
+import de.ljz.questify.ui.features.trophies.navigation.TrophyBottomRoutes
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.serialization.ExperimentalSerializationApi

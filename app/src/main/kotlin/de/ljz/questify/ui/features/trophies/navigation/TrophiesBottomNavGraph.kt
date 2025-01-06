@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.trohies.navigation
+package de.ljz.questify.ui.features.trophies.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -6,15 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import de.ljz.questify.ui.features.quests.quest_overview.QuestOverviewViewModel
-import de.ljz.questify.ui.features.quests.quest_overview.navigation.QuestBottomRoutes
-import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.HabitsQuestsPage
-import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.RoutinesQuestsPage
-import de.ljz.questify.ui.features.quests.quest_overview.sub_pages.DailiesQuestsPage
-import de.ljz.questify.ui.features.trohies.TrophiesOverviewViewModel
-import de.ljz.questify.ui.features.trohies.sub_pages.AllTrophiesPage
-import de.ljz.questify.ui.features.trohies.sub_pages.TrophyCategoriesPage
+import de.ljz.questify.ui.features.trophies.TrophiesOverviewViewModel
+import de.ljz.questify.ui.features.trophies.sub_pages.AllTrophiesPage
+import de.ljz.questify.ui.features.trophies.sub_pages.TrophyCategoriesPage
 
 @Composable
 fun TrophiesBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: TrophiesOverviewViewModel) {
