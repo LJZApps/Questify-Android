@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.coroutines.launch
 
@@ -45,9 +46,16 @@ fun FirstSetupScreen(
                     .fillMaxSize()
             ) { currentPage ->
                 when (currentPage) {
-                    0 -> {
-
-                    }
+                    0 -> IntroductionPage(
+                        onNextPage = {
+                            scope.launch {
+                                pagerState.scrollToPage(pagerState.currentPage + 1)
+                            }
+                        },
+                        onCloseApp = {
+                            
+                        }
+                    )
 
                     1 -> {
 
