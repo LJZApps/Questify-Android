@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.login_and_register.register.subpages
+package de.ljz.questify.ui.features.login_and_register.register.sub_pages
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween

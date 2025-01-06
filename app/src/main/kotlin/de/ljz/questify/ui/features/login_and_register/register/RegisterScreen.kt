@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import de.ljz.questify.ui.features.login_and_register.register.subpages.RegisterDoneScreen
-import de.ljz.questify.ui.features.login_and_register.register.subpages.RegisterEmailScreen
-import de.ljz.questify.ui.features.login_and_register.register.subpages.RegisterPasswordScreen
-import de.ljz.questify.ui.features.login_and_register.register.subpages.RegisterUserDataScreen
+import de.ljz.questify.ui.features.login_and_register.register.sub_pages.RegisterDoneScreen
+import de.ljz.questify.ui.features.login_and_register.register.sub_pages.RegisterEmailScreen
+import de.ljz.questify.ui.features.login_and_register.register.sub_pages.RegisterPasswordScreen
+import de.ljz.questify.ui.features.login_and_register.register.sub_pages.RegisterUserDataScreen
 import de.ljz.questify.util.NavBarConfig
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch

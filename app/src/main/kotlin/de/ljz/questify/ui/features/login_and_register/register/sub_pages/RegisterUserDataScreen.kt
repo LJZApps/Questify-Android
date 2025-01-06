@@ -1,25 +1,20 @@
-package de.ljz.questify.ui.features.login_and_register.register.subpages
+package de.ljz.questify.ui.features.login_and_register.register.sub_pages
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Password
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.Error
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -28,8 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,29 +31,25 @@ import androidx.constraintlayout.compose.Dimension
 import de.ljz.questify.core.compose.UIModePreviews
 
 @Composable
-fun RegisterPasswordScreen(
-    onPasswordChange: (String) -> Unit,
-    onConfirmPasswordChange: (String) -> Unit,
-    onPasswordVisibilityChange: () -> Unit,
-    onConfirmPasswordVisibilityChange: () -> Unit,
+fun RegisterUserDataScreen(
     onNextPage: () -> Unit,
+    onUsernameChange: (String) -> Unit,
+    onAboutMeChange: (String) -> Unit,
+    onDisplayNameChange: (String) -> Unit,
     onBackButtonClick: () -> Unit,
-    password: String,
-    confirmPassword: String,
-    passwordError: String,
-    confirmPasswordError: String,
-    passwordVisible: Boolean = false,
-    confirmPasswordVisible: Boolean = false
+    displayName: String,
+    username: String,
+    aboutMe: String,
 ) {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
         val (
-            iconRef, titleRef, backButtonRef, nextButtonRef, passwordTextFieldRef, confirmPasswordTextFieldRef,
+            iconRef, titleRef, subtitleRef, backButtonRef, nextButtonRef, displayNameTextFieldRef, usernameTextFieldRef, aboutMeTextFieldRef,
         ) = createRefs()
 
         Icon(
-            imageVector = Icons.Default.Password,
+            imageVector = Icons.Outlined.AccountBox,
             contentDescription = null,
             modifier = Modifier
               .constrainAs(iconRef) {
@@ -71,7 +60,7 @@ fun RegisterPasswordScreen(
         )
 
         Text(
-            text = "Now set your password",
+            text = "Lastly, your profile info",
             modifier = Modifier.constrainAs(titleRef) {
                 start.linkTo(parent.start, 8.dp)
                 top.linkTo(iconRef.bottom, 8.dp)
@@ -84,87 +73,43 @@ fun RegisterPasswordScreen(
             textAlign = TextAlign.Left
         )
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = onPasswordChange,
-            modifier = Modifier
-                .constrainAs(passwordTextFieldRef) {
-                    start.linkTo(parent.start, 8.dp)
-                    end.linkTo(parent.end, 8.dp)
-                    top.linkTo(titleRef.bottom, 16.dp)
+        Text(
+            text = "Everything can be edited later",
+            modifier = Modifier.constrainAs(subtitleRef) {
+                start.linkTo(parent.start, 8.dp)
+                top.linkTo(titleRef.bottom)
+                end.linkTo(parent.end, 8.dp)
 
-                    width = Dimension.fillToConstraints
-                },
-            label = {
-                Text(text = "Password")
+                width = Dimension.fillToConstraints
             },
-            isError = passwordError.isNotEmpty(),
-            supportingText = {
-                AnimatedVisibility(
-                    visible = passwordError.isNotEmpty(),
-                    enter = slideInVertically(
-                        // Slide in from top
-                        initialOffsetY = { -it },
-                        animationSpec = tween(durationMillis = 250),
-                    ),
-                    exit = slideOutVertically(
-                        // Slide out to top
-                        targetOffsetY = { -it },
-                        animationSpec = tween(durationMillis = 250)
-                    )
-                ) {
-                    Text(text = passwordError)
-                }
-            },
-            shape = RoundedCornerShape(16.dp),
-            leadingIcon = {
-                IconButton(
-                    onClick = onPasswordVisibilityChange
-                ) {
-                    Icon(
-                        imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                        contentDescription = null
-                    )
-                }
-            },
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = passwordError.isNotEmpty(),
-                    enter = scaleIn(animationSpec = tween(250)),
-                    exit = scaleOut(animationSpec = tween(250))
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Error,
-                        contentDescription = null
-                    )
-                }
-            },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next
-            ),
-            singleLine = true
+            fontSize = 14.sp,
+            textAlign = TextAlign.Left
         )
 
         OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = onConfirmPasswordChange,
+            value = displayName,
+            onValueChange = onDisplayNameChange,
             modifier = Modifier
-                .constrainAs(confirmPasswordTextFieldRef) {
+                .constrainAs(displayNameTextFieldRef) {
                     start.linkTo(parent.start, 8.dp)
                     end.linkTo(parent.end, 8.dp)
-                    top.linkTo(passwordTextFieldRef.bottom, 4.dp)
+                    top.linkTo(subtitleRef.bottom, 16.dp)
 
                     width = Dimension.fillToConstraints
                 },
             label = {
-                Text(text = "Confirm password")
+                Text(text = "Display name")
             },
-            isError = confirmPasswordError.isNotEmpty(),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Person,
+                    contentDescription = null
+                )
+            },
+            isError = false, // TODO
             supportingText = {
                 AnimatedVisibility(
-                    visible = confirmPasswordError.isNotEmpty(),
+                    visible = false,
                     enter = slideInVertically(
                         // Slide in from top
                         initialOffsetY = { -it },
@@ -176,43 +121,90 @@ fun RegisterPasswordScreen(
                         animationSpec = tween(durationMillis = 250)
                     )
                 ) {
-                    Text(text = confirmPasswordError)
+                    Text(text = "Error")
+                }
+                AnimatedVisibility(visible = true) {
+                    Text(text = "How others will see you")
                 }
             },
             shape = RoundedCornerShape(16.dp),
-            leadingIcon = {
-                IconButton(
-                    onClick = onConfirmPasswordVisibilityChange
-                ) {
-                    Icon(
-                        imageVector = if (confirmPasswordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                        contentDescription = null
-                    )
-                }
-            },
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = confirmPasswordError.isNotEmpty(),
-                    enter = scaleIn(animationSpec = tween(250)),
-                    exit = scaleOut(animationSpec = tween(250))
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Error,
-                        contentDescription = null
-                    )
-                }
-            },
-            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
+                keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
             ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    onNextPage()
+        )
+
+        OutlinedTextField(
+            value = username,
+            onValueChange = onUsernameChange,
+            modifier = Modifier
+                .constrainAs(usernameTextFieldRef) {
+                    start.linkTo(parent.start, 8.dp)
+                    end.linkTo(parent.end, 8.dp)
+                    top.linkTo(displayNameTextFieldRef.bottom, 8.dp)
+
+                    width = Dimension.fillToConstraints
+                },
+            label = {
+                Text(text = "Username")
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.AccountCircle,
+                    contentDescription = null
+                )
+            },
+            isError = false, // TODO
+            supportingText = {
+                AnimatedVisibility(
+                    visible = false,
+                    enter = slideInVertically(
+                        // Slide in from top
+                        initialOffsetY = { -it },
+                        animationSpec = tween(durationMillis = 250),
+                    ),
+                    exit = slideOutVertically(
+                        // Slide out to top
+                        targetOffsetY = { -it },
+                        animationSpec = tween(durationMillis = 250)
+                    )
+                ) {
+                    Text(text = "Error")
                 }
+                AnimatedVisibility(visible = true) {
+                    Text(text = "How others will find you")
+                }
+            },
+            shape = RoundedCornerShape(16.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
             ),
-            singleLine = true
+        )
+
+        OutlinedTextField(
+            value = aboutMe,
+            onValueChange = onAboutMeChange,
+            modifier = Modifier
+                .constrainAs(aboutMeTextFieldRef) {
+                    start.linkTo(parent.start, 8.dp)
+                    end.linkTo(parent.end, 8.dp)
+                    top.linkTo(usernameTextFieldRef.bottom)
+
+                    width = Dimension.fillToConstraints
+                },
+            label = {
+                Text(text = "About me")
+            },
+            isError = false, // TODO
+            supportingText = {
+                Text(text = "You can leave this empty")
+            },
+            shape = RoundedCornerShape(16.dp),
+            minLines = 3,
+            maxLines = 3
         )
 
         OutlinedButton(
@@ -240,24 +232,22 @@ fun RegisterPasswordScreen(
               }
               .imePadding()
         ) {
-            Text("Next")
+            Text("Finish setup")
         }
     }
 }
 
 @UIModePreviews
 @Composable
-fun RegisterPasswordScreenPreview() {
-    RegisterPasswordScreen(
-        onPasswordChange = { },
-        onConfirmPasswordChange = {},
+fun RegisterUserDataScreenPreview() {
+    RegisterUserDataScreen(
         onNextPage = { /*TODO*/ },
+        onUsernameChange = { },
+        onAboutMeChange = {},
+        onDisplayNameChange = {},
         onBackButtonClick = { /*TODO*/ },
-        onPasswordVisibilityChange = {},
-        onConfirmPasswordVisibilityChange = {},
-        password = "",
-        confirmPassword = "",
-        passwordError = "",
-        confirmPasswordError = "",
+        displayName = "",
+        username = "",
+        aboutMe = ""
     )
 }

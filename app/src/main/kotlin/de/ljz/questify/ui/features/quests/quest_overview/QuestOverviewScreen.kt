@@ -56,11 +56,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 
 
-@OptIn(
-    ExperimentalSerializationApi::class,
-    InternalSerializationApi::class,
-    ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestOverviewScreen(
     drawerState: DrawerState,
