@@ -50,11 +50,7 @@ class QuestNotificationWorker @AssistedInject constructor(
         val intent = Intent(context, QuestNotificationReceiver::class.java).apply {
             putExtra("notificationId", notification.id)
             putExtra("questId", quest.id)
-            if (quest.difficulty != null) {
-                putExtra("title", getRandomNotificationText(quest.difficulty))
-            } else {
-                putExtra("title", "Zeit für eine Quest!")
-            }
+            putExtra("title", "Zeit für eine Quest!")
             putExtra("description", quest.title)
         }
 

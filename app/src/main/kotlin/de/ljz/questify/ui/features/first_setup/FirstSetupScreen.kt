@@ -1,21 +1,17 @@
 package de.ljz.questify.ui.features.first_setup
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.NavigateBefore
-import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -28,79 +24,94 @@ fun FirstSetupScreen(
     viewModel: FirstSetupViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = false
+        NavBarConfig.transparentNavBar = true
     }
 
     Scaffold(
         content = { innerPadding ->
-            HorizontalPager(
-                state = pagerState,
-                userScrollEnabled = false,
+            Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()
-            ) { currentPage ->
-                when (currentPage) {
-                    0 -> IntroductionPage(
-                        onNextPage = {
-                            scope.launch {
-                                pagerState.scrollToPage(pagerState.currentPage + 1)
+            ) {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    userScrollEnabled = false
+                ) { currentPage ->
+                    when (currentPage) {
+                        0 -> IntroductionPage()
+
+                        1 -> {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "Seite 2")
                             }
-                        },
-                        onCloseApp = {
-                            
                         }
-                    )
 
-                    1 -> {
-
+                        2 -> {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "Seite 3")
+                            }
+                        }
                     }
+                }
 
-                    2 -> {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    repeat(pagerState.pageCount) { index ->
+                        val color = if (pagerState.currentPage == index) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                        }
 
+                        Box(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(4.dp)
+                                .background(
+                                    color = color,
+                                    shape = MaterialTheme.shapes.small
+                                )
+                        )
                     }
                 }
             }
         },
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp)
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    scope.launch {
+                        if (pagerState.currentPage < 2) {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        } else {
+                            // Setup abschließen
+                            navController.navigate("NextScreen")
+                        }
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            scope.launch {
-                                pagerState.scrollToPage(pagerState.currentPage - 1)
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                pagerState.scrollToPage(pagerState.currentPage + 1)
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null
-                        )
-                    }
-                }
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Weiter"
+                )
             }
         }
     )
