@@ -13,11 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +34,8 @@ import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.ui.features.first_setup.FirstSetupScreen
+import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
 import de.ljz.questify.ui.features.get_started.sub_pages.AdventureScreen
 import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedMainScreen
@@ -77,7 +75,6 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -101,17 +98,18 @@ class ActivityMain : AppCompatActivity() {
             val isAppReadyState by vm.isAppReady.collectAsState()
             val context = LocalContext.current
 
-
-            vm.createNotificationChannel(this)
+            LaunchedEffect(Unit) {
+                vm.createNotificationChannel(context = context)
+            }
 
             val workRequest =
                 PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
                     .build()
 
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "QuestNotificationWorker",
-                ExistingPeriodicWorkPolicy.REPLACE,
-                workRequest
+                uniqueWorkName = "QuestNotificationWorker",
+                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.REPLACE,
+                request = workRequest
             )
 
             SentryAndroid.init(this) { options ->
@@ -130,8 +128,8 @@ class ActivityMain : AppCompatActivity() {
 
                         NavHost(
                             navController = navController,
-                            startDestination = if (isSetupDone) MainRoute else GetStartedMain,
-//                            startDestination = AdventureScreenRoute,
+//                            startDestination = if (isSetupDone) MainRoute else GetStartedMain,
+                            startDestination = FirstSetupRoute,
                             enterTransition = {
                                 scaleIntoContainer()
                             },
@@ -145,6 +143,9 @@ class ActivityMain : AppCompatActivity() {
                                 scaleOutOfContainer()
                             }
                         ) {
+                            composable<FirstSetupRoute> {
+                                FirstSetupScreen(navController = navController)
+                            }
                             composable<GetStartedMain> {
                                 GetStartedMainScreen(navController = navController)
                             }
