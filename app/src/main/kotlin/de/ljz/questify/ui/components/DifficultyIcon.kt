@@ -11,9 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.ljz.questify.core.compose.UIModePreviews
 
 @Composable
 fun DifficultyIconContainer(content: @Composable BoxScope.() -> Unit) {
@@ -138,7 +138,7 @@ fun DifficultyIconsPreview() {
     }
 }
 
-@UIModePreviews
+@Preview
 @Composable
 fun PreviewDifficultyIcons() {
     MaterialTheme {

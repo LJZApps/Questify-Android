@@ -1,4 +1,3 @@
-// ThemeViewModel.kt
 package de.ljz.questify.ui.ds.theme
 
 import androidx.lifecycle.ViewModel
