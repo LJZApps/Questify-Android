@@ -32,7 +32,6 @@ import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
-import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.first_setup.FirstSetupScreen
 import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
@@ -62,14 +61,10 @@ import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
-import de.ljz.questify.util.changelog.parseYamlChangelog
-import de.ljz.questify.util.getLastShownVersion
 import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
-import de.ljz.questify.util.saveCurrentVersion
 import io.sentry.android.core.SentryAndroid
-import kotlinx.serialization.ExperimentalSerializationApi
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -128,8 +123,8 @@ class ActivityMain : AppCompatActivity() {
 
                         NavHost(
                             navController = navController,
-//                            startDestination = if (isSetupDone) MainRoute else GetStartedMain,
-                            startDestination = FirstSetupRoute,
+                            startDestination = if (isSetupDone) MainRoute else FirstSetupRoute,
+//                            startDestination = FirstSetupRoute,
                             enterTransition = {
                                 scaleIntoContainer()
                             },

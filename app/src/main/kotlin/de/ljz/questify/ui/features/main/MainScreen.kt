@@ -1,14 +1,15 @@
 package de.ljz.questify.ui.features.main
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PieChart
-import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -141,19 +142,19 @@ fun MainScreen(
                                 },
                                 tutorialSteps = listOf(
                                     TutorialStep(
-                                        icon = Icons.Default.List,
+                                        icon = Icons.AutoMirrored.Filled.List,
                                         description = "Hier findest du deine Quests – die großen Abenteuer und Herausforderungen, die dich deinem Ziel näher bringen."
                                     ),
                                     TutorialStep(
-                                        icon = Icons.Default.Event,
+                                        icon = Icons.Filled.CalendarMonth,
                                         description = "Dailies: Erstelle tägliche Aufgaben, die dich motivieren und dir helfen, einen konstanten Fortschritt zu erzielen."
                                     ),
                                     TutorialStep(
-                                        icon = Icons.Default.Repeat,
+                                        icon = Icons.Filled.Schedule,
                                         description = "Routinen: Automatisiere deine regelmäßigen Aufgaben und entwickle starke Gewohnheiten, die langfristig wirken."
                                     ),
                                     TutorialStep(
-                                        icon = Icons.Default.EmojiEvents,
+                                        icon = Icons.Filled.Eco,
                                         description = "Gewohnheiten: Baue gesunde Gewohnheiten auf und belohne dich für jeden kleinen Erfolg."
                                     )
                                 )

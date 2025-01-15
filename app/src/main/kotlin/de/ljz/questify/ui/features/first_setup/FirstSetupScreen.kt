@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
+import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.coroutines.launch
 
@@ -101,8 +102,8 @@ fun FirstSetupScreen(
                         if (pagerState.currentPage < 2) {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         } else {
-                            // Setup abschließen
-                            navController.navigate("NextScreen")
+                            viewModel.setSetupDone()
+                            navController.navigate(MainRoute)
                         }
                     }
                 },

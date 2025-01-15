@@ -26,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -141,7 +140,9 @@ fun TutorialBottomSheet(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { onDismiss(tutorialsEnabled.value) }
+                onClick = {
+                    onDismiss(tutorialsEnabled.value)
+                }
             ) {
                 Text("Verstanden")
             }
