@@ -1,7 +1,6 @@
 package de.ljz.questify.core.main
 
 import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -23,10 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navDeepLink
-import androidx.navigation.toRoute
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -34,34 +30,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
-import de.ljz.questify.ui.features.first_setup.FirstSetupScreen
 import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
-import de.ljz.questify.ui.features.get_started.sub_pages.AdventureScreen
-import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedChooserScreen
-import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedMainScreen
-import de.ljz.questify.ui.features.main.MainScreen
 import de.ljz.questify.ui.features.main.navigation.MainRoute
-import de.ljz.questify.ui.features.profile.edit_profile.EditProfileScreen
-import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
-import de.ljz.questify.ui.features.profile.view_profile.ViewProfileScreen
-import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
-import de.ljz.questify.ui.features.quests.create_quest.CreateQuestScreen
-import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
-import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailScreen
-import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
-import de.ljz.questify.ui.features.settings.permissions.PermissionsScreen
 import de.ljz.questify.ui.features.settings.permissions.PermissionsViewModel
-import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
-import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpScreen
-import de.ljz.questify.ui.features.settings.settings_help.navigation.SettingsHelp
-import de.ljz.questify.ui.features.settings.settings_main.SettingsScreen
-import de.ljz.questify.ui.features.settings.settings_main.navigation.Settings
-import de.ljz.questify.ui.navigation.AdventureScreenRoute
-import de.ljz.questify.ui.navigation.GetStartedChooser
-import de.ljz.questify.ui.navigation.GetStartedMain
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
+import de.ljz.questify.ui.navigation.authenticationRoutes
+import de.ljz.questify.ui.navigation.mainRoutes
+import de.ljz.questify.ui.navigation.questRoutes
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
+import de.ljz.questify.ui.navigation.settingRoutes
 import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
@@ -124,69 +102,32 @@ class ActivityMain : AppCompatActivity() {
                         NavHost(
                             navController = navController,
                             startDestination = if (isSetupDone) MainRoute else FirstSetupRoute,
-//                            startDestination = FirstSetupRoute,
-                            enterTransition = {
-                                scaleIntoContainer()
-                            },
+                            enterTransition = { scaleIntoContainer() },
                             exitTransition = {
                                 scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)
                             },
                             popEnterTransition = {
                                 scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS)
                             },
-                            popExitTransition = {
-                                scaleOutOfContainer()
-                            }
+                            popExitTransition = { scaleOutOfContainer() }
                         ) {
-                            composable<FirstSetupRoute> {
-                                FirstSetupScreen(navController = navController)
-                            }
-                            composable<GetStartedMain> {
-                                GetStartedMainScreen(navController = navController)
-                            }
-                            composable<GetStartedChooser> {
-                                GetStartedChooserScreen(navController = navController)
-                            }
-                            composable<MainRoute> {
-                                MainScreen(mainNavController = navController)
-                            }
-                            composable<Settings> {
-                                SettingsScreen(mainNavController = navController)
-                            }
-                            composable<CreateQuest> {
-                                CreateQuestScreen(mainNavController = navController)
-                            }
-                            composable<QuestDetail>(
-                                deepLinks = listOf(
-                                    navDeepLink<QuestDetail>(basePath = "questify://quest_detail")
-                                ),
-                            ) { backStackEntry ->
-                                QuestDetailScreen(navController = navController)
-                            }
-                            composable<ProfileRoute> {
-                                ViewProfileScreen(navController = navController)
-                            }
-                            composable<EditProfileRoute> {
-                                EditProfileScreen(navController = navController)
-                            }
-                            composable<SettingsHelp> {
-                                SettingsHelpScreen(mainNavController = navController)
-                            }
-                            composable<SettingsPermissionRoute> { backStackEntry ->
-                                val arguments = backStackEntry.toRoute<SettingsPermissionRoute>()
-                                PermissionsScreen(
-                                    mainNavController = navController,
-                                    viewModel = permissionsVm,
-                                    canNavigateBack = arguments.canNavigateBack
-                                )
+                            mainRoutes(
+                                navController = navController
+                            )
 
-                                BackHandler(enabled = !allPermissionsGranted) {
+                            settingRoutes(
+                                navController = navController,
+                                permissionsVm = permissionsVm,
+                                allPermissionsGranted = allPermissionsGranted
+                            )
 
-                                }
-                            }
-                            composable<AdventureScreenRoute> {
-                                AdventureScreen()
-                            }
+                            questRoutes(
+                                navController = navController
+                            )
+
+                            authenticationRoutes(
+                                navController = navController
+                            )
                         }
 
                         DebugOverlay(

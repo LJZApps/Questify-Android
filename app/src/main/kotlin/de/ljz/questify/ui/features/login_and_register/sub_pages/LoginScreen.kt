@@ -34,6 +34,10 @@ import de.ljz.questify.ui.features.login_and_register.LoginViewModel
 import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.util.NavBarConfig
 import io.sentry.compose.SentryTraced
+import kotlinx.serialization.Serializable
+
+@Serializable
+object LoginScreenRoute
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

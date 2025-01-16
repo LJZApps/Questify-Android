@@ -178,11 +178,11 @@ fun MainScreen(
                                 tutorialSteps = listOf(
                                     TutorialStep(
                                         icon = Icons.Default.EmojiEvents,
-                                        description = "Im Trophäen-Screen kannst du all deine verdienten Trophäen ansehen und verwalten. Hier werden deine Erfolge sichtbar!"
+                                        description = "Hier findest du eine Übersicht über deine Trophäen. Sie repräsentieren deine Erfolge und werden direkt mit Quests verknüpft."
                                     ),
                                     TutorialStep(
                                         icon = Icons.Default.Category,
-                                        description = "Nutze den Kategorien-Screen, um deine Trophäen zu organisieren. Erstelle Kategorien und ordne deine Erfolge zu."
+                                        description = "Nutze die Kategorien, um deine Trophäen zu organisieren. Erstelle Kategorien und ordne deine Erfolge zu."
                                     ),
                                     TutorialStep(
                                         icon = Icons.Default.Edit,

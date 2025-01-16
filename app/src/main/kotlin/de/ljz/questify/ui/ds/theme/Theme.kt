@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
@@ -45,7 +46,8 @@ fun QuestifyTheme(
                     ThemeBehavior.SYSTEM_STANDARD -> isSystemInDarkTheme()
                 },
                 isAmoled = uiState.isAmoled,
-                style = uiState.themeStyle
+                style = PaletteStyle.TonalSpot,
+                contrastLevel = 0.0
             )
         }
     }

@@ -23,8 +23,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
+import de.ljz.questify.ui.features.login_and_register.register.RegisterScreenRoute
 import de.ljz.questify.util.NavBarConfig
 import io.sentry.compose.SentryTraced
+import kotlinx.serialization.Serializable
+
+@Serializable
+object AuthChooserScreenRoute
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -88,6 +93,7 @@ fun LoginAndRegisterScreen(
 
                 Button(
                     onClick = {
+                        navController.navigate(RegisterScreenRoute)
                         //navigator.push(RegisterScreen())
                         //navigator.navigate(RegisterScreenDestination)
                     },
@@ -108,8 +114,7 @@ fun LoginAndRegisterScreen(
 
                 OutlinedButton(
                     onClick = {
-                        TODO("NAVIGATE TO LOGIN SCREEN")
-                        //navigator.push(LoginScreen())
+                        navController.navigate(LoginScreenRoute)
                     },
                     modifier = Modifier.constrainAs(loginButtonRef) {
                         bottom.linkTo(parent.bottom, 12.dp)

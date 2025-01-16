@@ -22,6 +22,10 @@ import de.ljz.questify.ui.features.login_and_register.register.sub_pages.Registe
 import de.ljz.questify.util.NavBarConfig
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+
+@Serializable
+object RegisterScreenRoute
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
