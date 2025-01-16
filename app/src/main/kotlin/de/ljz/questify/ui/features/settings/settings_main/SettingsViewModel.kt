@@ -17,28 +17,18 @@ class SettingsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsUIState())
     val uiState = _uiState.asStateFlow()
 
-    private val _themeBehavior = MutableStateFlow(ThemeBehavior.SYSTEM_STANDARD)
-    val themeBehavior: StateFlow<ThemeBehavior> = _themeBehavior.asStateFlow()
-
-    private val _themeColor = MutableStateFlow(ThemeColor.RED)
-    val themeColor: StateFlow<ThemeColor> = _themeColor.asStateFlow()
-
-    private val _dynamicColorsEnabled = MutableStateFlow(false)
-    val dynamicColorsEnabled: StateFlow<Boolean> = _dynamicColorsEnabled.asStateFlow()
-
     init {
         viewModelScope.launch {
             appSettingsRepository.getAppSettings().collectLatest { settings ->
                 _uiState.update {
                     it.copy(
                         isAmoled = settings.isAmoled,
-                        appColor = settings.appColor
+                        appColor = settings.appColor,
+                        themeBehavior = settings.themeBehavior,
+                        themeColor = settings.themeColor,
+                        dynamicColorsEnabled = settings.dynamicThemeColors
                     )
                 }
-
-                _themeBehavior.value = settings.themeBehavior
-                _themeColor.value = settings.themeColor
-                _dynamicColorsEnabled.value = settings.dynamicThemeColors
             }
         }
     }

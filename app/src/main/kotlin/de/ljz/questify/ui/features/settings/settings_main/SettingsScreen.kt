@@ -54,9 +54,6 @@ fun SettingsScreen(
     mainNavController: NavHostController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val dynamicColorsEnabled = viewModel.dynamicColorsEnabled.collectAsState().value
-    val customColor = viewModel.themeColor.collectAsState().value
-    val themeBehavior = viewModel.themeBehavior.collectAsState().value
     val uiState = viewModel.uiState.collectAsState().value
 
     val controller = rememberColorPickerController()
@@ -104,7 +101,7 @@ fun SettingsScreen(
                 title = { Text(text = stringResource(R.string.settings_screen_theme_title)) },
             ) {
                 SettingsSwitch(
-                    state = dynamicColorsEnabled,
+                    state = uiState.dynamicColorsEnabled,
                     title = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_title)) },
                     subtitle = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_subtitle)) },
                     icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
@@ -132,13 +129,13 @@ fun SettingsScreen(
                     initialColor = Color(android.graphics.Color.parseColor(uiState.appColor))
                 )
 
-                AnimatedVisibility(!dynamicColorsEnabled) {
+                AnimatedVisibility(!uiState.dynamicColorsEnabled) {
                     SettingsMenuLink(
                         title = { Text(text = stringResource(R.string.settings_screen_custom_colors_title)) },
-                        enabled = !dynamicColorsEnabled,
+                        enabled = !uiState.dynamicColorsEnabled,
                         subtitle = {
                             Text(
-                                text = colorOptions.first { it.color == customColor }.text
+                                text = colorOptions.first { it.color == uiState.themeColor }.text
                             )
                         },
                         icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
@@ -150,10 +147,10 @@ fun SettingsScreen(
 
                 SettingsMenuLink(
                     title = { Text(text = stringResource(R.string.settings_screen_app_theme_title)) },
-                    subtitle = { Text(text = themOptions.first { it.behavior == themeBehavior }.text) },
+                    subtitle = { Text(text = themOptions.first { it.behavior == uiState.themeBehavior }.text) },
                     icon = {
                         Icon(
-                            when (themeBehavior) {
+                            when (uiState.themeBehavior) {
                                 ThemeBehavior.DARK -> Icons.Outlined.DarkMode
                                 ThemeBehavior.LIGHT -> Icons.Outlined.LightMode
                                 ThemeBehavior.SYSTEM_STANDARD -> {
@@ -216,7 +213,7 @@ fun SettingsScreen(
 
         if (uiState.customColorDialogVisible) {
             CustomColorDialog(
-                selectedColor = customColor,
+                selectedColor = uiState.themeColor,
                 onConfirm = { color ->
                     viewModel.updateCustomColor(color)
                     viewModel.hideCustomColorDialog()
@@ -226,10 +223,9 @@ fun SettingsScreen(
                 }
             )
         }
-
         if (uiState.darkModeDialogVisible) {
             ThemeBehaviorDialog(
-                themeBehavior = themeBehavior,
+                themeBehavior = uiState.themeBehavior,
                 onConfirm = { behavior ->
                     viewModel.updateThemeBehavior(behavior)
                     viewModel.hideDarkModeDialog()

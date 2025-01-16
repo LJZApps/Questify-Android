@@ -39,7 +39,6 @@ fun ReminderDialog(
         ReminderItem("in 5 Minuten", ReminderTime.MIN_5),
         ReminderItem("in 10 Minuten", ReminderTime.MIN_10),
         ReminderItem("in 15 Minuten", ReminderTime.MIN_15),
-//        ReminderItem("Benutzerdefinierte Zeit", ReminderTime.CUSTOM(0)),
     )
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(radioOptions.first { it.time == selectedTime })
@@ -70,7 +69,7 @@ fun ReminderDialog(
                     ) {
                         RadioButton(
                             selected = (timeItem == selectedOption),
-                            onClick = null // null recommended for accessibility with screenreaders
+                            onClick = null
                         )
                         Text(
                             text = timeItem.text,

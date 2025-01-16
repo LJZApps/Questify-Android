@@ -14,7 +14,10 @@ data class SettingsUIState(
     val darkModeDialogVisible: Boolean = false,
     val reminderDialogVisible: Boolean = false,
     val isAmoled: Boolean = false,
-    val appColor: String = Color.Standard.toHex()
+    val appColor: String = Color.Standard.toHex(),
+    val themeBehavior: ThemeBehavior = ThemeBehavior.SYSTEM_STANDARD,
+    val themeColor: ThemeColor = ThemeColor.RED,
+    val dynamicColorsEnabled: Boolean = false
 )
 
 data class CustomColorItem(
