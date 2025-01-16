@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 
@@ -59,3 +60,6 @@ fun Context.shortToast(message: String) {
 fun String?.trimToNull(): String? {
     return if (this.isNullOrBlank()) null else this.trim()
 }
+
+val Color.Companion.Standard: Color
+    get() = Color(0xFFB71C1C)

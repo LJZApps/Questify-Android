@@ -33,6 +33,22 @@ class AppSettingsRepository @Inject constructor(
         }
     }
 
+    suspend fun setAppColor(color: String) {
+        appSettingsDataStore.updateData {
+            it.copy(
+                appColor = color
+            )
+        }
+    }
+
+    suspend fun isAmoledEnabled(enabled: Boolean) {
+        appSettingsDataStore.updateData {
+            it.copy(
+                isAmoled = enabled
+            )
+        }
+    }
+
     suspend fun setDynamicColorsEnabled(enabled: Boolean) {
         appSettingsDataStore.updateData {
             it.copy(

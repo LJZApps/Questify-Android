@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -32,16 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.BuildConfig
-import de.ljz.questify.util.changelog.ChangeLog
 import de.ljz.questify.util.changelog.ChangeLogVersion
-import de.ljz.questify.util.changelog.parseYamlChangelog
-import de.ljz.questify.util.getLastShownVersion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +44,7 @@ fun ChangelogBottomSheet(
     title: String,
     changelogVersion: ChangeLogVersion? = null,
     showHideChangelog: Boolean = true,
-    onDismiss: (tutorialsEnabled: Boolean) -> Unit
+    onDismiss: (changelogEnabled: Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -59,15 +53,14 @@ fun ChangelogBottomSheet(
         confirmValueChange = { false },
     )
 
-
-    val tutorialsEnabled = remember { mutableStateOf(true) }
+    val changelogEnabled = remember { mutableStateOf(true) }
 
     ModalBottomSheet(
         onDismissRequest = {
             scope.launch {
                 state.hide()
             }
-            onDismiss(tutorialsEnabled.value)
+            onDismiss(changelogEnabled.value)
         },
         sheetState = state,
         dragHandle = {}
@@ -241,7 +234,7 @@ fun ChangelogBottomSheet(
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant
                         ),
-                        onClick = { tutorialsEnabled.value = !tutorialsEnabled.value }
+                        onClick = { changelogEnabled.value = !changelogEnabled.value }
                     ) {
                         Row(
                             modifier = Modifier
@@ -258,8 +251,8 @@ fun ChangelogBottomSheet(
 
                             CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
                                 Checkbox(
-                                    checked = tutorialsEnabled.value,
-                                    onCheckedChange = { tutorialsEnabled.value = it },
+                                    checked = changelogEnabled.value,
+                                    onCheckedChange = { changelogEnabled.value = it },
                                 )
                             }
                         }
@@ -268,7 +261,7 @@ fun ChangelogBottomSheet(
 
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onDismiss(tutorialsEnabled.value) }
+                    onClick = { onDismiss(changelogEnabled.value) }
                 ) {
                     Text("Verstanden")
                 }

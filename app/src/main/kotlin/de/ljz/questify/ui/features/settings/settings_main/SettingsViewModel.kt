@@ -29,6 +29,13 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             appSettingsRepository.getAppSettings().collectLatest { settings ->
+                _uiState.update {
+                    it.copy(
+                        isAmoled = settings.isAmoled,
+                        appColor = settings.appColor
+                    )
+                }
+
                 _themeBehavior.value = settings.themeBehavior
                 _themeColor.value = settings.themeColor
                 _dynamicColorsEnabled.value = settings.dynamicThemeColors
@@ -48,6 +55,18 @@ class SettingsViewModel @Inject constructor(
     fun updateDynamicColorsEnabled(enabled: Boolean) {
         viewModelScope.launch {
             appSettingsRepository.setDynamicColorsEnabled(enabled)
+        }
+    }
+
+    fun setAppColor(color: String) {
+        viewModelScope.launch {
+            appSettingsRepository.setAppColor(color)
+        }
+    }
+
+    fun updateIsAmoledEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            appSettingsRepository.isAmoledEnabled(enabled)
         }
     }
 

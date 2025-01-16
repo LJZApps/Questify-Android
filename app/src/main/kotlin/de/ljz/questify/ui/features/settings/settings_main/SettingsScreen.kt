@@ -3,11 +3,16 @@ package de.ljz.questify.ui.features.settings.settings_main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Colorize
+import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
@@ -23,12 +28,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
@@ -49,6 +58,8 @@ fun SettingsScreen(
     val customColor = viewModel.themeColor.collectAsState().value
     val themeBehavior = viewModel.themeBehavior.collectAsState().value
     val uiState = viewModel.uiState.collectAsState().value
+
+    val controller = rememberColorPickerController()
 
     val colorOptions = listOf(
         CustomColorItem(stringResource(R.string.settings_screen_color_red), ThemeColor.RED),
@@ -87,6 +98,7 @@ fun SettingsScreen(
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ) {
             SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_screen_theme_title)) },
@@ -97,6 +109,27 @@ fun SettingsScreen(
                     subtitle = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_subtitle)) },
                     icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
                     onCheckedChange = viewModel::updateDynamicColorsEnabled,
+                )
+
+                SettingsSwitch(
+                    state = uiState.isAmoled,
+                    title = { Text(text = "AMOLED") },
+                    subtitle = { Text(text = "Set the theme to pure dark to safe battery life") },
+                    icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
+                    onCheckedChange = viewModel::updateIsAmoledEnabled,
+                )
+
+                HsvColorPicker(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(450.dp)
+                        .padding(10.dp),
+                    controller = controller,
+                    onColorChanged = { envelope ->
+                        envelope.hexCode
+                        viewModel.setAppColor("#"+envelope.hexCode)
+                    },
+                    initialColor = Color(android.graphics.Color.parseColor(uiState.appColor))
                 )
 
                 AnimatedVisibility(!dynamicColorsEnabled) {

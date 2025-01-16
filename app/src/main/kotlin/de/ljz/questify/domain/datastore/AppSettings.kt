@@ -1,11 +1,15 @@
 package de.ljz.questify.domain.datastore
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.Serializer
-import de.ljz.questify.core.application.ReminderTime
+import com.materialkolor.PaletteStyle
+import com.materialkolor.ktx.toHex
 import de.ljz.questify.core.application.TAG
+import de.ljz.questify.ui.ds.theme.ThemingEngine
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
+import de.ljz.questify.util.Standard
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -27,7 +31,19 @@ data class AppSettings(
     val dynamicThemeColors: Boolean = false,
 
     @SerialName("theme_color")
-    val themeColor: ThemeColor = ThemeColor.RED
+    val themeColor: ThemeColor = ThemeColor.RED,
+
+    @SerialName("theming_engine")
+    val themingEngine: ThemingEngine = ThemingEngine.V2,
+
+    @SerialName("is_amoled")
+    val isAmoled: Boolean = false,
+
+    @SerialName("theme_style")
+    val themeStyle: PaletteStyle = PaletteStyle.TonalSpot,
+
+    @SerialName("app_color")
+    val appColor: String = Color.Standard.toHex()
 )
 
 object AppSettingsSerializer : Serializer<AppSettings> {

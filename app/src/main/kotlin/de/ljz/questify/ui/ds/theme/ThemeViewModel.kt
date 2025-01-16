@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.domain.repositories.AppSettingsRepository
-import de.ljz.questify.ui.state.ThemeBehavior
-import de.ljz.questify.ui.state.ThemeColor
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,21 +12,23 @@ import javax.inject.Inject
 class ThemeViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
-    private val _themeBehavior = MutableStateFlow(ThemeBehavior.SYSTEM_STANDARD)
-    val themeBehavior: StateFlow<ThemeBehavior> = _themeBehavior
-
-    private val _themeColor = MutableStateFlow(ThemeColor.RED)
-    val themeColor: StateFlow<ThemeColor> = _themeColor
-
-    private val _dynamicColorEnabled = MutableStateFlow(false)
-    val dynamicColorsEnabled: StateFlow<Boolean> = _dynamicColorEnabled
+    private val _uiState = MutableStateFlow(ThemeUiState())
+    val uiState: StateFlow<ThemeUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             appSettingsRepository.getAppSettings().collectLatest { settings ->
-                _themeBehavior.value = settings.themeBehavior
-                _themeColor.value = settings.themeColor
-                _dynamicColorEnabled.value = settings.dynamicThemeColors
+                _uiState.update {
+                    it.copy(
+                        themeBehavior = settings.themeBehavior,
+                        themeColor = settings.themeColor,
+                        dynamicColorsEnabled = settings.dynamicThemeColors,
+                        themingEngine = settings.themingEngine,
+                        isAmoled = settings.isAmoled,
+                        themeStyle = settings.themeStyle,
+                        appColor = settings.appColor
+                    )
+                }
             }
         }
     }

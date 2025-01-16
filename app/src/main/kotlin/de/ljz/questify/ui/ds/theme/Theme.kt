@@ -7,11 +7,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.materialkolor.rememberDynamicColorScheme
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 import de.ljz.questify.util.NavBarConfig
@@ -23,13 +25,30 @@ fun QuestifyTheme(
     customThemeColor: ThemeColor? = null,
     content: @Composable () -> Unit
 ) {
-    val themeBehavior by vm.themeBehavior.collectAsState() // Reactively track theme behavior
-    val themeColor by vm.themeColor.collectAsState() // Reactively track theme color
-    val dynamicColorsEnabled by vm.dynamicColorsEnabled.collectAsState() // Reactively track dynamic color setting
+    val uiState by vm.uiState.collectAsState()
+
+    val themeBehavior = uiState.themeBehavior // Reactively track theme behavior
+    val themeColor = uiState.themeColor // Reactively track theme color
+    val dynamicColorsEnabled = uiState.dynamicColorsEnabled // Reactively track dynamic color setting
 
     val transparentNavBarState = NavBarConfig.transparentNavBar
 
-    var colorScheme = getColorScheme(themeBehavior, customThemeColor?: themeColor, darkTheme)
+    var colorScheme = when (uiState.themingEngine) {
+        // FIXME V1 will no longer be updated and will be removed in a future update
+        ThemingEngine.V1 -> getColorScheme(themeBehavior, customThemeColor?: themeColor, darkTheme)
+        ThemingEngine.V2 -> {
+            rememberDynamicColorScheme(
+                seedColor = Color(android.graphics.Color.parseColor(uiState.appColor)),
+                isDark = when (uiState.themeBehavior) {
+                    ThemeBehavior.DARK -> true
+                    ThemeBehavior.LIGHT -> false
+                    ThemeBehavior.SYSTEM_STANDARD -> isSystemInDarkTheme()
+                },
+                isAmoled = uiState.isAmoled,
+                style = uiState.themeStyle
+            )
+        }
+    }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && dynamicColorsEnabled) {
         colorScheme = when (themeBehavior) {

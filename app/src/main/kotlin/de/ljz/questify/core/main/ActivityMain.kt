@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -190,7 +191,7 @@ class ActivityMain : AppCompatActivity() {
                         }
 
                         DebugOverlay(
-                            "DEV",
+                            "DEV\nSubject to change",
                             onResetAppUser = {
                                 vm.resetAppUserStats()
                             }
@@ -212,12 +213,14 @@ fun DebugOverlay(text: String, onResetAppUser: () -> Unit) {
                 .background(Color.Transparent),
             contentAlignment = Alignment.TopEnd
         ) {
+            Color.Yellow
             //Button(onClick = onResetAppUser) { Text("Reset App User Stats") }
 
             Text(
                 text = text,
                 modifier = Modifier.padding(8.dp),
-                color = Color.White,
+                color = Color.White.copy(alpha = 0.4f),
+                textAlign = TextAlign.End,
                 fontSize = 10.sp
             )
         }
