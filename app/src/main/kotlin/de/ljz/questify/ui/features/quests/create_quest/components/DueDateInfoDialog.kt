@@ -28,7 +28,7 @@ fun DueDateInfoDialog(
             Text("Fälligkeit ist nach Erstellung unveränderbar")
         },
         text = {
-            Text("Sobald die Quest erstellt ist, bleibt die Fälligkeit unveränderbar. Plane deine Zeit gut, um die volle Belohnung zu sichern – nach Ablauf gibt’s nur die halbe Punktzahl. Schließe die Quest rechtzeitig ab und hol dir alles!")
+            Text("Sobald die Quest erstellt ist, bleibt die Fälligkeit unveränderbar. Plane deine Zeit gut, um die volle Belohnung zu sichern – nach Ablauf gibt’s nur die halbe Belohnung. Schließe die Quest rechtzeitig ab und hol dir alles!\n\nDie Fälligkeit ist am ausgewählten Tag, ab 0 Uhr, fällig.")
         }
     )
 }

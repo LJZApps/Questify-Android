@@ -1,6 +1,8 @@
 package de.ljz.questify.ui.features.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,7 +19,6 @@ import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
 import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.changelog.parseYamlChangelog
-
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -55,12 +56,11 @@ fun DashboardScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                StatsComponent(
-                    userLevel = uiState.userLevel,
-                    userXP = uiState.userXp
-                )
-
-                AnimatedVisibility(uiState.newVersionVisible) {
+                AnimatedVisibility(
+                    visible = uiState.newVersionVisible,
+                    enter = slideInVertically(),
+                    exit = slideOutVertically()
+                ) {
                     ChangelogComponent(
                         currentVersion = BuildConfig.VERSION_NAME,
                         changelogAvailable = (changelog != null),
@@ -72,6 +72,11 @@ fun DashboardScreen(
                         }
                     )
                 }
+
+                StatsComponent(
+                    userLevel = uiState.userLevel,
+                    userXP = uiState.userXp
+                )
             }
         },
         snackbarHost = {

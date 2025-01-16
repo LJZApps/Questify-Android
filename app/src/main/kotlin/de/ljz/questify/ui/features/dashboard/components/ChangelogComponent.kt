@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.dashboard.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -34,7 +33,6 @@ fun ChangelogComponent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Confetti-Icon
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Celebration,
@@ -45,7 +43,6 @@ fun ChangelogComponent(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // Titel und Untertitel
                 Column {
                     Text(
                         text = "App auf Version $currentVersion aktualisiert!",
@@ -53,7 +50,7 @@ fun ChangelogComponent(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = if(changelogAvailable) "Klicke hier, um den Changelog zu sehen." else "Für diese Version gibt es keinen Changelog.",
+                        text = if(changelogAvailable) "Klicke hier, um die Neuigkeiten zu sehen." else "Für diese Version gibt es keinen Changelog.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Start
@@ -61,7 +58,6 @@ fun ChangelogComponent(
                 }
             }
 
-            // Dismiss-Icon
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "Dismiss Icon",
@@ -69,7 +65,7 @@ fun ChangelogComponent(
                 modifier = Modifier
                     .size(24.dp)
                     .clickable {
-                        onDismiss() // Aktion bei Dismiss
+                        onDismiss()
                     }
             )
         }

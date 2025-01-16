@@ -3,8 +3,9 @@ package de.ljz.questify.ui.features.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.BuildConfig
+import de.ljz.questify.domain.repositories.AppSettingsRepository
 import de.ljz.questify.domain.repositories.AppUserRepository
-import de.ljz.questify.domain.repositories.TutorialRepository
 import de.ljz.questify.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
-    private val questRepository: QuestRepository
+    private val questRepository: QuestRepository,
+    private val appSettingsRepository: AppSettingsRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState = _uiState.asStateFlow()
@@ -44,6 +46,15 @@ class DashboardViewModel @Inject constructor(
                     }
                 }
             }
+
+            launch {
+                appSettingsRepository.getAppSettings().collectLatest { appSettings ->
+                    if (appSettings.lastOpenedVersion < BuildConfig.VERSION_CODE)
+                        _uiState.update {
+                            it.copy(newVersionVisible = true)
+                        }
+                }
+            }
         }
     }
 
@@ -54,8 +65,12 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun dismissNewVersion() {
-        _uiState.update {
-            it.copy(newVersionVisible = false)
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(newVersionVisible = false)
+            }
+
+            appSettingsRepository.setLastOpenedVersion(BuildConfig.VERSION_CODE)
         }
     }
 }

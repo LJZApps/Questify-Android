@@ -98,9 +98,8 @@ class ActivityMain : AppCompatActivity() {
                 vm.createNotificationChannel(context = context)
             }
 
-            val workRequest =
-                PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
-                    .build()
+            val workRequest = PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
+                .build()
 
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 uniqueWorkName = "QuestNotificationWorker",

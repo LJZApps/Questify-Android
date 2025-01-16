@@ -183,10 +183,6 @@ fun CreateQuestScreen(
                     },
                     onDismiss = {
                         viewModel.hideAddingDueDateDialog()
-                    },
-                    addingReminderState = uiState.addingReminderState,
-                    onReminderStateChange = { addingReminderState ->
-                        viewModel.updateReminderState(addingReminderState)
                     }
                 )
             }

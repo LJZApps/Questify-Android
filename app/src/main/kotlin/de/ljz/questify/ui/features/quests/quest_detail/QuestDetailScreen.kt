@@ -143,6 +143,8 @@ fun QuestDetailScreen(
                             .padding(top = 0.dp)
                     ) {
                         options.forEachIndexed { index, label ->
+                            val selected = (index == uiState.difficulty)
+
                             SegmentedButton(
                                 shape = SegmentedButtonDefaults.itemShape(
                                     index = index,
@@ -155,15 +157,18 @@ fun QuestDetailScreen(
                                         Icon(
                                             imageVector = Icons.Outlined.Lock,
                                             contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSecondaryContainer
                                         )
                                     }
                                 }
                             ) {
+                                val tintColor = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
+
                                 when (index) {
-                                    0 -> EasyIcon()
-                                    1 -> MediumIcon()
-                                    2 -> HardIcon()
-                                    3 -> EpicIcon()
+                                    0 -> EasyIcon(tint = tintColor)
+                                    1 -> MediumIcon(tint = tintColor)
+                                    2 -> HardIcon(tint = tintColor)
+                                    3 -> EpicIcon(tint = tintColor)
                                 }
                             }
                         }

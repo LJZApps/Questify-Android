@@ -45,7 +45,8 @@ fun DetailedInformationPage(
     onRemoveReminder: (Int) -> Unit,
     onShowCreateReminderDialog: () -> Unit
 ) {
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
+    val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
+    val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     Column(
         modifier = Modifier
@@ -113,7 +114,7 @@ fun DetailedInformationPage(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val date = Date(uiState.selectedDueDate)
-                            val formattedDate = dateFormat.format(date)
+                            val formattedDate = dueDateFormat.format(date)
 
                             Icon(
                                 Icons.Outlined.Schedule,
@@ -160,7 +161,7 @@ fun DetailedInformationPage(
 
                 uiState.notificationTriggerTimes.sortedBy { it }.forEachIndexed { index, triggerTime ->
                     val date = Date(triggerTime)
-                    val formattedDate = dateFormat.format(date)
+                    val formattedDate = reminderDateFormat.format(date)
 
                     Box(
                         modifier = Modifier
