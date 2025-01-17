@@ -1,11 +1,13 @@
 package de.ljz.questify.ui.features.first_setup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
+import de.ljz.questify.ui.features.first_setup.sub_pages.UserSetupPage
 import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.coroutines.launch
@@ -30,6 +33,16 @@ fun FirstSetupScreen(
 
     LaunchedEffect(Unit) {
         NavBarConfig.transparentNavBar = true
+    }
+
+    BackHandler {
+        scope.launch {
+            if (pagerState.currentPage > 0) {
+                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+            } else {
+                navController.popBackStack()
+            }
+        }
     }
 
     Scaffold(
@@ -49,14 +62,7 @@ fun FirstSetupScreen(
                     when (currentPage) {
                         0 -> IntroductionPage()
 
-                        1 -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "Seite 2")
-                            }
-                        }
+                        1 -> UserSetupPage()
 
                         2 -> {
                             Box(
@@ -109,10 +115,17 @@ fun FirstSetupScreen(
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "Weiter"
-                )
+                if (pagerState.currentPage == 2) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Next screen"
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = "Next screen"
+                    )
+                }
             }
         }
     )

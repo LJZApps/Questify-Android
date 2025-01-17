@@ -37,7 +37,6 @@ fun IntroductionPage() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
