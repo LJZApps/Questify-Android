@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.navigation
+package de.ljz.questify.ui.navigation.routes
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController

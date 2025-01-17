@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.navigation
+package de.ljz.questify.ui.navigation.routes
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -10,6 +10,9 @@ import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedChooserScreen
 import de.ljz.questify.ui.features.get_started.sub_pages.GetStartedMainScreen
 import de.ljz.questify.ui.features.main.MainScreen
 import de.ljz.questify.ui.features.main.navigation.MainRoute
+import de.ljz.questify.ui.navigation.AdventureScreenRoute
+import de.ljz.questify.ui.navigation.GetStartedChooser
+import de.ljz.questify.ui.navigation.GetStartedMain
 
 fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
     composable<FirstSetupRoute> {

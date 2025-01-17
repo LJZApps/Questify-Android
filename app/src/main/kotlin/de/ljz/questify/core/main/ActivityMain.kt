@@ -35,11 +35,12 @@ import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.features.settings.permissions.PermissionsViewModel
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.authenticationRoutes
-import de.ljz.questify.ui.navigation.mainRoutes
-import de.ljz.questify.ui.navigation.questRoutes
+import de.ljz.questify.ui.navigation.routes.mainRoutes
+import de.ljz.questify.ui.navigation.routes.profileRoutes
+import de.ljz.questify.ui.navigation.routes.questRoutes
+import de.ljz.questify.ui.navigation.routes.settingRoutes
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
-import de.ljz.questify.ui.navigation.settingRoutes
 import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
@@ -119,6 +120,10 @@ class ActivityMain : AppCompatActivity() {
                                 navController = navController,
                                 permissionsVm = permissionsVm,
                                 allPermissionsGranted = allPermissionsGranted
+                            )
+
+                            profileRoutes(
+                                navController = navController
                             )
 
                             questRoutes(
