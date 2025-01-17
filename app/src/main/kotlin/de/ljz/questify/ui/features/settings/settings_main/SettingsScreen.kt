@@ -1,23 +1,14 @@
 package de.ljz.questify.ui.features.settings.settings_main
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ColorLens
-import androidx.compose.material.icons.outlined.Colorize
-import androidx.compose.material.icons.outlined.Contrast
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.Feedback
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.VerifiedUser
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,20 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
-import com.alorma.compose.settings.ui.SettingsSwitch
-import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
-import de.ljz.questify.ui.features.settings.settings_help.navigation.SettingsHelp
+import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceRoute
 import de.ljz.questify.ui.features.settings.settings_main.components.CustomColorDialog
 import de.ljz.questify.ui.features.settings.settings_main.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
@@ -97,7 +82,52 @@ fun SettingsScreen(
             modifier = Modifier.padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
+            SettingsMenuLink(
+                title = { Text(text = "Profile") },
+                subtitle = {
+                    Text(
+                        text = "Customize your profile"
+                    )
+                },
+                icon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                onClick = {
+                    mainNavController.navigate(SettingsAppearanceRoute)
+                }
+            )
+
+            SettingsMenuLink(
+                title = { Text(text = "Appearance") },
+                subtitle = {
+                    Text(
+                        text = "Customize the app to your liking"
+                    )
+                },
+                icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
+                onClick = {
+                    mainNavController.navigate(SettingsAppearanceRoute)
+                }
+            )
+
+            SettingsMenuLink(
+                title = { Text(text = "Help") },
+                subtitle = {
+                    Text(
+                        text = "Some app informations"
+                    )
+                },
+                icon = { Icon(Icons.Outlined.HelpOutline, contentDescription = null) },
+                onClick = {
+                    mainNavController.navigate(SettingsAppearanceRoute)
+                }
+            )
+
             SettingsGroup(
+                title = { Text(text = "Social") },
+            ) {
+
+            }
+
+            /*SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_screen_theme_title)) },
             ) {
                 SettingsSwitch(
@@ -167,9 +197,9 @@ fun SettingsScreen(
                         viewModel.showDarkModeDialog()
                     }
                 )
-            }
+            }*/
 
-            SettingsGroup(
+            /*SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_help_screen_help_title)) },
             ) {
                 SettingsMenuLink(
@@ -208,7 +238,7 @@ fun SettingsScreen(
                         // TODO
                     }
                 )
-            }
+            }*/
         }
 
         if (uiState.customColorDialogVisible) {
