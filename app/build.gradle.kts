@@ -51,7 +51,7 @@ android {
     defaultConfig {
         namespace = "de.ljz.questify"
         applicationId = "de.ljz.questify"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 35
         versionCode = 7
         versionName = "0.5.1"

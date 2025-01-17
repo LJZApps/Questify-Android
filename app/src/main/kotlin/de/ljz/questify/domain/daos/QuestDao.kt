@@ -14,11 +14,8 @@ interface QuestDao {
     @Query("SELECT * FROM quest_entity WHERE title LIKE '%' || :query || '%' OR notes LIKE '%' || :query || '%' ORDER BY title, notes DESC")
     suspend fun searchQuests(query: String): List<QuestEntity>
 
-    @Query("SELECT * FROM quest_entity WHERE done = 0 ORDER BY done")
-    fun getMainQuests(): Flow<List<QuestEntity>>
-
-    @Query("SELECT * FROM quest_entity WHERE id = :id")
-    fun findMainQuestById(id: Int): Flow<QuestEntity>
+    @Query("SELECT * FROM quest_entity")
+    fun getAllQuests(): Flow<List<QuestEntity>>
 
     @Query("SELECT * FROM quest_entity WHERE id = :id")
     fun getQuestById(id: Int): QuestEntity

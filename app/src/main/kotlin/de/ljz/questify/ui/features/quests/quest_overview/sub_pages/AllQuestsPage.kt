@@ -30,7 +30,7 @@ fun AllQuestsPage(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(uiState.quests.sortedBy { it.dueDate }.asReversed(), key = { it.id }) { quest ->
+        items(uiState.quests.sortedBy { it.done }.asReversed(), key = { it.id }) { quest ->
             QuestItem(
                 quest = quest,
                 onQuestChecked = {
@@ -55,7 +55,7 @@ fun AllQuestsPage(
                     }
                 },
                 modifier = Modifier
-                    .animateItem() // `animateItem` für sanfte Positionsänderung
+                    .animateItem() // `animateItem` für sanfte Positionsänderung - needs a key provided in "items"
                     .padding(vertical = 4.dp)
             )
         }

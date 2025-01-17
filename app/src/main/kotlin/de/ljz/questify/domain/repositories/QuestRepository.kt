@@ -21,9 +21,7 @@ class QuestRepository @Inject constructor(
         questDao.updateQuestById(id, title, description)
     }
 
-    fun getQuests() = questDao.getMainQuests()
-
-    fun findMainQuestById(id: Int) = questDao.findMainQuestById(id)
+    fun getQuests() = questDao.getAllQuests()
 
     fun getQuestById(id: Int) = questDao.getQuestById(id)
 
