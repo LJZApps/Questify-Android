@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangelogBottomSheet(
-    title: String,
     changelogVersion: ChangeLogVersion? = null,
     showHideChangelog: Boolean = true,
     onDismiss: (changelogEnabled: Boolean) -> Unit

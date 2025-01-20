@@ -88,12 +88,11 @@ fun DashboardScreen(
 
     if (uiState.changelogVisible) {
         ChangelogBottomSheet(
-            title = "Version 0.6",
+            changelogVersion = changelog,
+            showHideChangelog = false,
             onDismiss = {
                 viewModel.toggleChangelogVisibility(false)
-            },
-            showHideChangelog = false,
-            changelogVersion = changelog
+            }
         )
     }
 }
