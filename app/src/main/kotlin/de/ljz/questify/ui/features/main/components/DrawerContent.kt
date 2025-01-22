@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.List
@@ -24,6 +26,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -141,10 +145,10 @@ fun DrawerContent(
     ModalDrawerSheet {
         Column(
             modifier = Modifier
-              .padding(horizontal = 12.dp)
-              .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .fillMaxWidth()
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
@@ -165,17 +169,19 @@ fun DrawerContent(
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Profilbild",
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier
+                                .size(40.dp)
                                 .padding(5.dp),
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
 
-                Row (
+                Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(vertical = 6.dp)
                 ) {
                     Column {
@@ -245,28 +251,60 @@ fun DrawerContent(
                 modifier = Modifier.padding(bottom = 6.dp)
             )
 
-            features.forEach { category ->
-                if (category.featuresEnabled) {
+            Column (
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                features.forEach { category ->
                     if (category.showTitle) {
-                        Text(
-                            text = category.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+                        if (!category.featuresEnabled) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Block,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                                )
+
+                                Text(
+                                    text = category.title,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = category.title,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                                    .fillMaxWidth(),
+                            )
+                        }
                     }
 
                     category.items.forEach { item ->
-                        if (item.featureEnabled) {
-                            NavigationDrawerItem(
-                                label = { Text(text = item.title) },
-                                icon = {
-                                    Icon(
-                                        imageVector = item.icon,
-                                        contentDescription = item.title
-                                    )
-                                },
-                                selected = currentDestination?.route == getSerializedRouteName(item.route),
-                                onClick = {
+                        NavigationDrawerItem(
+                            label = {
+                                Text(
+                                    text = item.title,
+                                    color = if (item.featureEnabled && category.featuresEnabled)
+                                        Color.Unspecified
+                                    else
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                                )
+                            },
+                            icon = {
+                                if (item.featureEnabled && category.featuresEnabled)
+                                    Icon(imageVector = item.icon, contentDescription = item.title)
+                                else
+                                    Icon(Icons.Outlined.Block, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+                            },
+                            selected = currentDestination?.route == getSerializedRouteName(item.route),
+                            onClick = {
+                                if (item.featureEnabled && category.featuresEnabled) {
                                     scope.launch {
                                         drawerState.close()
                                     }
@@ -279,10 +317,12 @@ fun DrawerContent(
                                         launchSingleTop = true
                                         restoreState = true
                                     }
-                                },
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
-                        }
+                                } else {
+                                    null
+                                }
+                            },
+                            modifier = Modifier.padding(vertical = 4.dp),
+                        )
                     }
                 }
             }
