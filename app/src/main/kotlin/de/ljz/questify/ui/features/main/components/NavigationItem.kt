@@ -9,5 +9,6 @@ data class NavigationItem<T : Any>(
      * Disable/Enable only this feature
      */
     val featureEnabled: Boolean = true,
+    val badge: String? = null,
     val route: T
 )
