@@ -1,7 +1,8 @@
-package de.ljz.questify.domain.repositories
+package de.ljz.questify.domain.repositories.app
 
 import androidx.datastore.core.DataStore
 import de.ljz.questify.domain.datastore.Tutorials
+import de.ljz.questify.domain.repositories.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

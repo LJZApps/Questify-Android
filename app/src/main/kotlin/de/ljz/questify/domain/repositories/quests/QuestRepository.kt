@@ -1,7 +1,8 @@
-package de.ljz.questify.domain.repositories
+package de.ljz.questify.domain.repositories.quests
 
 import de.ljz.questify.domain.daos.QuestDao
 import de.ljz.questify.domain.models.quests.QuestEntity
+import de.ljz.questify.domain.repositories.BaseRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

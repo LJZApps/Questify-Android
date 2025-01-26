@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.domain.repositories.QuestRepository
+import de.ljz.questify.domain.repositories.quests.QuestRepository
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject

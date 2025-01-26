@@ -3,7 +3,7 @@ package de.ljz.questify.ui.features.first_setup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.domain.repositories.AppSettingsRepository
+import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

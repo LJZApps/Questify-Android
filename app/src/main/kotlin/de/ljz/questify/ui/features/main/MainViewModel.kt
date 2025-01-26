@@ -3,8 +3,8 @@ package de.ljz.questify.ui.features.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.domain.repositories.AppUserRepository
-import de.ljz.questify.domain.repositories.TutorialRepository
+import de.ljz.questify.domain.repositories.app.AppUserRepository
+import de.ljz.questify.domain.repositories.app.TutorialRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

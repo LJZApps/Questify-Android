@@ -15,8 +15,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.R
 import de.ljz.questify.data.shared_preferences.SessionManager
-import de.ljz.questify.domain.repositories.AppSettingsRepository
-import de.ljz.questify.domain.repositories.AppUserRepository
+import de.ljz.questify.domain.repositories.app.AppSettingsRepository
+import de.ljz.questify.domain.repositories.app.AppUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

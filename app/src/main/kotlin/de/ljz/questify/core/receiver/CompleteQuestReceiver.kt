@@ -9,7 +9,7 @@ import android.content.Intent
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.domain.repositories.QuestRepository
+import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

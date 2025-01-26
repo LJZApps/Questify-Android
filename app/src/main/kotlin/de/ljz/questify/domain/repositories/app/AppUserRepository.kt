@@ -1,13 +1,10 @@
-package de.ljz.questify.domain.repositories
+package de.ljz.questify.domain.repositories.app
 
 import androidx.datastore.core.DataStore
 import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.data.shared.Points
 import de.ljz.questify.domain.datastore.AppUser
+import de.ljz.questify.domain.repositories.BaseRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.onEach
-import okhttp3.internal.notify
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.sqrt

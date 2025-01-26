@@ -7,10 +7,10 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 
+    id("com.google.devtools.ksp")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
-    id("kotlin-kapt")
     id("com.google.gms.google-services")
     id("kotlinx-serialization")
     kotlin("plugin.serialization")
@@ -30,6 +30,10 @@ android {
     val localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
         localProperties.load(FileInputStream(localPropertiesFile))
+    }
+
+    androidResources {
+        localeFilters += listOf("en", "de")
     }
 
     compileSdk = 35
@@ -55,7 +59,6 @@ android {
         targetSdk = 35
         versionCode = 7
         versionName = "0.5.1"
-        resourceConfigurations += listOf("en", "de")
     }
 
     compileOptions {
@@ -100,9 +103,6 @@ android {
             )
         }
     }
-    kapt {
-        correctErrorTypes = true
-    }
 }
 
 val roomVersion by extra("2.6.1")
@@ -121,20 +121,20 @@ dependencies {
 
     // Yaml
     implementation(libs.jackson.dataformat.yaml)
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+    implementation(libs.jackson.module.kotlin)
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.hilt.work)
 
-    //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
-    implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.12.01"))
+    implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.01.00"))
     implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation(libs.androidx.runtime)
 
     implementation(platform(libs.sentry.bom))
 
@@ -182,6 +182,7 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.kotlin.metadata.jvm)
 
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")

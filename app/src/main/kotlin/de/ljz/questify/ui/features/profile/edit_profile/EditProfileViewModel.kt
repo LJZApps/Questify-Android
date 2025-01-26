@@ -2,9 +2,8 @@ package de.ljz.questify.ui.features.profile.edit_profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.domain.repositories.AppUserRepository
+import de.ljz.questify.domain.repositories.app.AppUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest

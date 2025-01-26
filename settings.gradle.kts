@@ -23,5 +23,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Questify"
 include(":app")
-include(":questify")
-include(":WearOS")

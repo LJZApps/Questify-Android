@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(
-    tableName = "quest_checklist_entity",
+    tableName = "quest_task_entity",
     foreignKeys = [
         ForeignKey(
             entity = QuestEntity::class,
@@ -23,7 +23,7 @@ import java.util.Date
         )
     ]
 )
-data class QuestChecklistEntity(
+data class QuestTaskEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int = 0,

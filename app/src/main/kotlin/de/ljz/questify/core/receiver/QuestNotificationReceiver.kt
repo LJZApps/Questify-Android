@@ -11,7 +11,7 @@ import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
 import de.ljz.questify.core.main.ActivityMain
-import de.ljz.questify.domain.repositories.AppSettingsRepository
+import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.ui.features.remind_again.RemindAgainActivity
 import kotlinx.coroutines.CoroutineScope

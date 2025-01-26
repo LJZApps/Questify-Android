@@ -13,7 +13,7 @@ import de.ljz.questify.core.application.AddingReminderState
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.domain.repositories.QuestRepository
+import de.ljz.questify.domain.repositories.quests.QuestRepository
 import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.util.trimToNull
 import kotlinx.coroutines.flow.MutableStateFlow

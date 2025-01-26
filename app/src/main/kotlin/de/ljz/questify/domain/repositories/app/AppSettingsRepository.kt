@@ -1,7 +1,8 @@
-package de.ljz.questify.domain.repositories
+package de.ljz.questify.domain.repositories.app
 
 import androidx.datastore.core.DataStore
 import de.ljz.questify.domain.datastore.AppSettings
+import de.ljz.questify.domain.repositories.BaseRepository
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 import kotlinx.coroutines.flow.Flow

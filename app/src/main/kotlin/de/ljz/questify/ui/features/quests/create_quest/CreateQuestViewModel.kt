@@ -10,7 +10,7 @@ import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.domain.repositories.QuestRepository
+import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
