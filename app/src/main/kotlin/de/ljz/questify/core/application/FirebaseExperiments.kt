@@ -1,14 +1,17 @@
 package de.ljz.questify.core.application
 
-object FIREBASE_EXPERIMENTS {
-    object FEATURES {
-        object DAILIES {
-            const val NAME = "feature_dailies_enabled"
-
-            object VALUES {
-                const val ENABLED = true
-                const val DISABLED = false
-            }
+object FirebaseExperiments {
+    sealed class Feature(val featureName: String) {
+        companion object {
+            const val ENABLED = true
+            const val DISABLED = false
         }
+
+        val enabled get() = ENABLED
+        val disabled get() = DISABLED
+    }
+
+    object Features {
+        object Dailies : Feature("feature_dailies_enabled")
     }
 }
