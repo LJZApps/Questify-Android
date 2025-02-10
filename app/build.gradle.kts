@@ -18,7 +18,7 @@ plugins {
 
     id("androidx.room")
 
-    id("io.sentry.android.gradle") version "4.11.0"
+    id("io.sentry.android.gradle") version "4.14.1"
 }
 
 room {
