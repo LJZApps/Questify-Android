@@ -29,6 +29,7 @@ fun QuestifyTheme(
     content: @Composable () -> Unit
 ) {
     val uiState by vm.uiState.collectAsState()
+    val context = LocalContext.current
 
     val themeBehavior = uiState.themeBehavior // Reactively track theme behavior
     val themeColor = uiState.themeColor // Reactively track theme color
@@ -56,13 +57,13 @@ fun QuestifyTheme(
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && dynamicColorsEnabled) {
         colorScheme = when (themeBehavior) {
-            ThemeBehavior.DARK -> dynamicDarkColorScheme(LocalContext.current)
-            ThemeBehavior.LIGHT -> dynamicLightColorScheme(LocalContext.current)
+            ThemeBehavior.DARK -> dynamicDarkColorScheme(context)
+            ThemeBehavior.LIGHT -> dynamicLightColorScheme(context)
             ThemeBehavior.SYSTEM_STANDARD -> {
                 if (darkTheme) {
-                    dynamicDarkColorScheme(LocalContext.current)
+                    dynamicDarkColorScheme(context)
                 } else {
-                    dynamicLightColorScheme(LocalContext.current)
+                    dynamicLightColorScheme(context)
                 }
             }
         }

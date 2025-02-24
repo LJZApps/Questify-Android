@@ -1,14 +1,14 @@
-package de.ljz.questify.ui.features.quests.quest_overview.sub_pages
+package de.ljz.questify.ui.features.quests.quests_overview.sub_pages
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Schedule
+import androidx.compose.material.icons.twotone.CalendarMonth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import de.ljz.questify.ui.components.FeatureNotAvailable
-import de.ljz.questify.ui.features.quests.quest_overview.QuestOverviewViewModel
+import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewViewModel
 
 @Composable
-fun RoutinesQuestsPage(
+fun DailiesQuestsPage(
     modifier: Modifier = Modifier,
     viewModel: QuestOverviewViewModel
 ) {
@@ -21,6 +21,6 @@ fun RoutinesQuestsPage(
 //        }
 //    }
     FeatureNotAvailable(
-        icon = Icons.TwoTone.Schedule
+        icon = Icons.TwoTone.CalendarMonth
     )
 }

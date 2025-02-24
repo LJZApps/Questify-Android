@@ -30,8 +30,8 @@ import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.dashboard.DashboardScreen
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.components.DrawerContent
-import de.ljz.questify.ui.features.quests.quest_overview.QuestOverviewScreen
-import de.ljz.questify.ui.features.quests.quest_overview.navigation.Quests
+import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewScreen
+import de.ljz.questify.ui.features.quests.quests_overview.navigation.Quests
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.trophies.TrophiesOverviewScreen
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute

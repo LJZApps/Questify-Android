@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.quests.quest_overview
+package de.ljz.questify.ui.features.quests.quests_overview
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,10 +7,11 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.quests.QuestEntity
-import de.ljz.questify.domain.repositories.app.AppUserRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.domain.repositories.app.AppUserRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,4 +81,39 @@ class QuestOverviewViewModel @Inject constructor(
             }
         }
     }
+
+    fun createFastQuest(title: String) {
+        viewModelScope.launch {
+            val fastQuest = QuestEntity(
+                title = title,
+                difficulty = Difficulty.EASY,
+                createdAt = Date()
+            )
+            questRepository.addMainQuest(fastQuest)
+            updateFastAddingText("")
+        }
+    }
+
+    fun deleteQuest(id: Int) {
+        viewModelScope.launch {
+            questRepository.deleteQuest(id)
+        }
+    }
+
+    fun updateIsFastAddingFocused(focused: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isFastAddingFocused = focused
+            )
+        }
+    }
+
+    fun updateFastAddingText(text: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                fastAddingText = text
+            )
+        }
+    }
+
 }
