@@ -27,6 +27,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
@@ -66,6 +68,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -118,10 +122,6 @@ fun QuestOverviewScreen(
     )
 
     val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = false
-    }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomNavRoutes = listOf(
@@ -201,35 +201,41 @@ fun QuestOverviewScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
+                        OutlinedTextField(
+                            value = uiState.fastAddingText,
+                            onValueChange = {
+                                viewModel.updateFastAddingText(it)
+                                showDropdown = it.startsWith("/") && filteredCommands.isNotEmpty()
+                            },
+                            placeholder = { Text("Add quest") },
+                            shape = CircleShape,
                             modifier = Modifier
-                                .weight(1f, fill = false)
-                        ) {
-                            OutlinedTextField(
-                                value = uiState.fastAddingText,
-                                onValueChange = {
-                                    viewModel.updateFastAddingText(it)
-                                    showDropdown = it.startsWith("/") && filteredCommands.isNotEmpty()
-                                },
-                                placeholder = { Text("Add quest") },
-                                shape = CircleShape,
-                                modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .fillMaxWidth()
-                                    .border(0.dp, Color.Transparent)
-                                    .onFocusChanged {
-                                        viewModel.updateIsFastAddingFocused(it.isFocused)
+                                .padding(start = 16.dp)
+                                .weight(1f)
+                                .border(0.dp, Color.Transparent)
+                                .onFocusChanged {
+                                    viewModel.updateIsFastAddingFocused(it.isFocused)
+                                }
+                                .shadow(6.dp, shape = CircleShape),
+                            singleLine = true,
+                            colors = TextFieldDefaults.colors(
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    if (uiState.fastAddingText.isNotEmpty()) {
+                                        viewModel.createFastQuest(uiState.fastAddingText)
                                     }
-                                    .shadow(6.dp, shape = CircleShape),
-                                singleLine = true,
-                                colors = TextFieldDefaults.colors(
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent,
-                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-                                ),
+                                }
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                capitalization = KeyboardCapitalization.Sentences
                             )
-                        }
+                        )
 
                         FloatingActionButton(
                             onClick = {
