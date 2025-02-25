@@ -48,7 +48,7 @@ class QuestDetailViewModel @Inject constructor(
                 description = quest.notes ?: "",
                 notificationTriggerTimes = notifications,
                 selectedDueDate = if (quest.dueDate != null) quest.dueDate.time else 0,
-                difficulty = if (quest.difficulty != null) quest.difficulty.ordinal else 0
+                difficulty = quest.difficulty.ordinal
             )
         }
     }
