@@ -13,6 +13,8 @@ import de.ljz.questify.domain.datastore.AppSettings
 import de.ljz.questify.domain.datastore.AppSettingsSerializer
 import de.ljz.questify.domain.datastore.AppUser
 import de.ljz.questify.domain.datastore.AppUserSerializer
+import de.ljz.questify.domain.datastore.NewFeatureBadges
+import de.ljz.questify.domain.datastore.NewFeatureBadgesSerializer
 import de.ljz.questify.domain.datastore.QuestMasterSerializer
 import de.ljz.questify.domain.datastore.Tutorials
 import kotlinx.coroutines.CoroutineScope
@@ -55,5 +57,16 @@ object DatastoreModule {
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
             produceFile = { File(context.filesDir, "datastore/tutorials.json") }
+        )
+
+    @Singleton
+    @Provides
+    fun provideNewFeatureBadgesDatastore(@ApplicationContext context: Context): DataStore<NewFeatureBadges> =
+        DataStoreFactory.create(
+            serializer = NewFeatureBadgesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { NewFeatureBadges() },
+            migrations = listOf(),
+            scope = CoroutineScope(Dispatchers.IO),
+            produceFile = { File(context.filesDir, "datastore/new_feature_badges.json") }
         )
 }

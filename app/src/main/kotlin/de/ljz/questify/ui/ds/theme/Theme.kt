@@ -6,9 +6,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
@@ -27,6 +29,7 @@ fun QuestifyTheme(
     content: @Composable () -> Unit
 ) {
     val uiState by vm.uiState.collectAsState()
+    val context = LocalContext.current
 
     val themeBehavior = uiState.themeBehavior // Reactively track theme behavior
     val themeColor = uiState.themeColor // Reactively track theme color
@@ -54,13 +57,13 @@ fun QuestifyTheme(
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && dynamicColorsEnabled) {
         colorScheme = when (themeBehavior) {
-            ThemeBehavior.DARK -> dynamicDarkColorScheme(LocalContext.current)
-            ThemeBehavior.LIGHT -> dynamicLightColorScheme(LocalContext.current)
+            ThemeBehavior.DARK -> dynamicDarkColorScheme(context)
+            ThemeBehavior.LIGHT -> dynamicLightColorScheme(context)
             ThemeBehavior.SYSTEM_STANDARD -> {
                 if (darkTheme) {
-                    dynamicDarkColorScheme(LocalContext.current)
+                    dynamicDarkColorScheme(context)
                 } else {
-                    dynamicLightColorScheme(LocalContext.current)
+                    dynamicLightColorScheme(context)
                 }
             }
         }
@@ -72,12 +75,12 @@ fun QuestifyTheme(
             val window = (view.context as Activity).window
             val windowInsetsController = WindowCompat.getInsetsController(window, view)
 
-            window.statusBarColor = colorScheme.background.toArgb()
+            /*window.statusBarColor = colorScheme.background.toArgb()
             window.navigationBarColor = if (!transparentNavBarState) {
                 colorScheme.surfaceContainer.toArgb()
             } else {
                 colorScheme.background.toArgb()
-            }
+            }*/
 
             // Set system bar appearance
             windowInsetsController.apply {

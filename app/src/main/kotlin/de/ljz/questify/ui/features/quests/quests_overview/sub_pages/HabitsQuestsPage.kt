@@ -1,20 +1,17 @@
-package de.ljz.questify.ui.features.trophies.sub_pages
+package de.ljz.questify.ui.features.quests.quests_overview.sub_pages
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Category
+import androidx.compose.material.icons.twotone.Eco
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import de.ljz.questify.ui.components.FeatureNotAvailable
-import de.ljz.questify.ui.features.trophies.TrophiesOverviewViewModel
+import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewViewModel
 
 @Composable
-fun TrophyCategoriesPage(
+fun HabitsQuestsPage(
     modifier: Modifier = Modifier,
-    viewModel: TrophiesOverviewViewModel
+    viewModel: QuestOverviewViewModel
 ) {
-    val uiState = viewModel.uiState.collectAsState().value.trophiesCategoriesUiState
-
 //    LazyColumn (
 //        modifier = modifier.fillMaxSize()
 //            .padding(8.dp)
@@ -23,8 +20,7 @@ fun TrophyCategoriesPage(
 //            Placeholder()
 //        }
 //    }
-
     FeatureNotAvailable(
-        icon = Icons.TwoTone.Category
+        icon = Icons.TwoTone.Eco
     )
 }

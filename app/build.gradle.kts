@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
 
     id("com.google.devtools.ksp")
-    id("com.google.firebase.crashlytics")
+//    id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
@@ -18,7 +18,7 @@ plugins {
 
     id("androidx.room")
 
-    id("io.sentry.android.gradle") version "4.11.0"
+    id("io.sentry.android.gradle") version "4.14.1"
 }
 
 room {
@@ -133,7 +133,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.01.00"))
-    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
+//    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation(libs.androidx.runtime)
 
     implementation(platform(libs.sentry.bom))
@@ -159,8 +159,8 @@ dependencies {
     implementation(libs.composeSettings.ui)
     implementation(libs.composeSettings.ui.extended)
     implementation(libs.converter.moshi)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
+//    implementation(libs.firebase.analytics)
+//    implementation(libs.firebase.crashlytics)
     implementation(libs.gson)
     implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.kotlinx.collections.immutable)
