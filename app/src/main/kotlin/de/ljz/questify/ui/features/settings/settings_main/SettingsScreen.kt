@@ -6,7 +6,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.ColorLens
+import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +29,7 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceRoute
+import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpRoute
 import de.ljz.questify.ui.features.settings.settings_main.components.CustomColorDialog
 import de.ljz.questify.ui.features.settings.settings_main.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
@@ -60,10 +63,6 @@ fun SettingsScreen(
         ThemeItem(stringResource(R.string.settings_screen_theme_light), ThemeBehavior.LIGHT),
     )
 
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -83,15 +82,16 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             SettingsMenuLink(
-                title = { Text(text = "Profile") },
+                title = { Text(text = "Features") },
                 subtitle = {
                     Text(
-                        text = "Customize your profile"
+                        text = "Enable/Disable app features"
                     )
                 },
-                icon = { Icon(Icons.Outlined.Person, contentDescription = null) },
+                icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
                 onClick = {
-                    mainNavController.navigate(SettingsAppearanceRoute)
+                    throw Exception("Das ist ein Test")
+                    /*mainNavController.navigate(SettingsAppearanceRoute)*/
                 }
             )
 
@@ -117,15 +117,9 @@ fun SettingsScreen(
                 },
                 icon = { Icon(Icons.Outlined.HelpOutline, contentDescription = null) },
                 onClick = {
-                    mainNavController.navigate(SettingsAppearanceRoute)
+                    mainNavController.navigate(SettingsHelpRoute)
                 }
             )
-
-            SettingsGroup(
-                title = { Text(text = "Social") },
-            ) {
-
-            }
 
             /*SettingsGroup(
                 title = { Text(text = stringResource(R.string.settings_screen_theme_title)) },

@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.settings.settings_help
+package de.ljz.questify.ui.features.settings.settings_feedback
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsHelpViewModel @Inject constructor(
+class SettingsFeedbackViewModel @Inject constructor(
 
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(SettingsHelpUiState())
+    private val _uiState = MutableStateFlow(SettingsFeedbackUiState())
     val uiState = _uiState.asStateFlow()
 
     fun sendFeedback(
