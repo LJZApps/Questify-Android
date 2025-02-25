@@ -38,8 +38,6 @@ fun TrophiesPage(
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
 
     Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Card(

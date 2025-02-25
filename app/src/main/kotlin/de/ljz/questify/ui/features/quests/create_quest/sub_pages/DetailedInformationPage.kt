@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,8 +54,6 @@ fun DetailedInformationPage(
     val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         OutlinedTextField(
@@ -92,6 +92,7 @@ fun DetailedInformationPage(
                         imageVector = Icons.Outlined.Info,
                         contentDescription = null,
                         modifier = Modifier
+                            .clip(CircleShape)
                             .clickable {
                                 onShowDueDateInfoDialog()
                             }
@@ -105,6 +106,7 @@ fun DetailedInformationPage(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
                             shape = RoundedCornerShape(8.dp)
                         )
+                        .clip(RoundedCornerShape(8.dp))
                         .clickable {
                             onShowAddingDueDateDialog()
                         }
@@ -136,6 +138,7 @@ fun DetailedInformationPage(
                         if (uiState.selectedDueDate > 0) {
                             Box(
                                 modifier = Modifier
+                                    .clip(CircleShape)
                                     .clickable { onRemoveDueDate() }
                                     .padding(0.dp)
                             ) {
@@ -176,6 +179,7 @@ fun DetailedInformationPage(
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
                                 shape = RoundedCornerShape(8.dp)
                             )
+                            .clip(RoundedCornerShape(8.dp))
                             .clickable {
                                 onRemoveReminder(index)
                             }
@@ -204,6 +208,7 @@ fun DetailedInformationPage(
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
                             shape = RoundedCornerShape(8.dp)
                         )
+                        .clip(RoundedCornerShape(8.dp))
                         .clickable {
                             onShowCreateReminderDialog()
                         }
