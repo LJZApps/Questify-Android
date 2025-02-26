@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -60,7 +60,7 @@ fun TrophiesOverviewScreen(
         BottomNavigationRoute(
             "Trophäen",
             TrophyBottomRoutes.AllTrophiesRoute,
-            Icons.Filled.EmojiEvents
+            Icons.Outlined.EmojiEvents
         ),
         BottomNavigationRoute(
             "Kategorien",
