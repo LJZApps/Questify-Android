@@ -172,7 +172,7 @@ fun QuestDetailScreen(
                         }
                     }
                     BasicPlainTooltip(
-                        text = "Edit reminders"
+                        text = "Edit reminders",
                     ) {
                         IconButton(onClick = { /*viewModel.showEditReminderDialog()*/ }) {
                             Icon(Icons.Outlined.Alarm, contentDescription = "Erinnerung ändern")

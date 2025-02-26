@@ -20,7 +20,7 @@ fun BasicPlainTooltip(
         state = tooltipState,
         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
         tooltip = {
-            PlainTooltip { Text(text) }
+            PlainTooltip{ Text(text) }
         }
     ) {
         content()
