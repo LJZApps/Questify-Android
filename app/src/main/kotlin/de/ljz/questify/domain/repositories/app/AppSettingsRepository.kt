@@ -1,6 +1,7 @@
 package de.ljz.questify.domain.repositories.app
 
 import androidx.datastore.core.DataStore
+import com.materialkolor.PaletteStyle
 import de.ljz.questify.domain.datastore.AppSettings
 import de.ljz.questify.domain.repositories.BaseRepository
 import de.ljz.questify.ui.state.ThemeBehavior
@@ -52,6 +53,14 @@ class AppSettingsRepository @Inject constructor(
         appSettingsDataStore.updateData {
             it.copy(
                 isAmoled = enabled
+            )
+        }
+    }
+
+    suspend fun setThemeStyle(themeStyle: PaletteStyle) {
+        appSettingsDataStore.updateData {
+            it.copy(
+                themeStyle = themeStyle
             )
         }
     }

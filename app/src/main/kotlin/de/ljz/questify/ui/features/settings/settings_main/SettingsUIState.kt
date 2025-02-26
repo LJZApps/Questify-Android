@@ -25,10 +25,7 @@ data class CustomColorItem(
     val color: ThemeColor = ThemeColor.RED
 )
 
-data class ThemeItem(
-    val text: String = "",
-    val behavior: ThemeBehavior = ThemeBehavior.SYSTEM_STANDARD
-)
+
 
 data class ReminderItem(
     val text: String = "",

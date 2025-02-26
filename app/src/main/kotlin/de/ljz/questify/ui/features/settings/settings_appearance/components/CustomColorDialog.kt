@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.settings.settings_main.components
+package de.ljz.questify.ui.features.settings.settings_appearance.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,25 +26,25 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.settings.settings_main.ThemeItem
-import de.ljz.questify.ui.state.ThemeBehavior
+import de.ljz.questify.ui.features.settings.settings_main.CustomColorItem
+import de.ljz.questify.ui.state.ThemeColor
 
 @Composable
-fun ThemeBehaviorDialog(
-    themeBehavior: ThemeBehavior,
-    onConfirm: (ThemeBehavior) -> Unit,
+fun CustomColorDialog(
+    selectedColor: ThemeColor,
+    onConfirm: (ThemeColor) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val themOptions = listOf(
-        ThemeItem(
-            stringResource(R.string.settings_screen_theme_system),
-            ThemeBehavior.SYSTEM_STANDARD
-        ),
-        ThemeItem(stringResource(R.string.settings_screen_theme_dark), ThemeBehavior.DARK),
-        ThemeItem(stringResource(R.string.settings_screen_theme_light), ThemeBehavior.LIGHT),
+    val radioOptions = listOf(
+        CustomColorItem(stringResource(R.string.settings_screen_color_red), ThemeColor.RED),
+        CustomColorItem(stringResource(R.string.settings_screen_color_green), ThemeColor.GREEN),
+        CustomColorItem(stringResource(R.string.settings_screen_color_blue), ThemeColor.BLUE),
+        CustomColorItem(stringResource(R.string.settings_screen_color_yellow), ThemeColor.YELLOW),
+        CustomColorItem(stringResource(R.string.settings_screen_color_orange), ThemeColor.ORANGE),
+        CustomColorItem(stringResource(R.string.settings_screen_color_purple), ThemeColor.PURPLE),
     )
     val (selectedOption, onOptionSelected) = remember {
-        mutableStateOf(themOptions.first { it.behavior == themeBehavior })
+        mutableStateOf(radioOptions.first { it.color == selectedColor })
     }
 
     Dialog(
@@ -57,7 +57,7 @@ fun ThemeBehaviorDialog(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                themOptions.forEach { colorItem ->
+                radioOptions.forEach { colorItem ->
                     Row(
                         Modifier.fillMaxWidth()
                             .height(56.dp)
@@ -72,7 +72,7 @@ fun ThemeBehaviorDialog(
                     ) {
                         RadioButton(
                             selected = (colorItem == selectedOption),
-                            onClick = null
+                            onClick = null // null recommended for accessibility with screenreaders
                         )
                         Text(
                             text = colorItem.text,
@@ -91,7 +91,7 @@ fun ThemeBehaviorDialog(
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = {
-                            onConfirm(selectedOption.behavior)
+                            onConfirm(selectedOption.color)
                         }
                     ) {
                         Text(stringResource(R.string.save))

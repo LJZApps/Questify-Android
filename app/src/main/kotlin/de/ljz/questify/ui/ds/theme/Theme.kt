@@ -35,8 +35,6 @@ fun QuestifyTheme(
     val themeColor = uiState.themeColor // Reactively track theme color
     val dynamicColorsEnabled = uiState.dynamicColorsEnabled // Reactively track dynamic color setting
 
-    val transparentNavBarState = NavBarConfig.transparentNavBar
-
     var colorScheme = when (uiState.themingEngine) {
         // FIXME V1 will no longer be updated and will be removed in a future update
         ThemingEngine.V1 -> getColorScheme(themeBehavior, customThemeColor?: themeColor, darkTheme)
@@ -49,7 +47,7 @@ fun QuestifyTheme(
                     ThemeBehavior.SYSTEM_STANDARD -> isSystemInDarkTheme()
                 },
                 isAmoled = uiState.isAmoled,
-                style = PaletteStyle.TonalSpot,
+                style = uiState.themeStyle,
                 contrastLevel = 0.0
             )
         }
