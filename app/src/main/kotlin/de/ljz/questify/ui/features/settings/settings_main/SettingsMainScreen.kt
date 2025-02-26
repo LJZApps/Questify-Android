@@ -29,7 +29,7 @@ import de.ljz.questify.ui.features.settings.settings_appearance.components.Custo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
+fun SettingsMainScreen(
     mainNavController: NavHostController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {

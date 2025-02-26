@@ -51,7 +51,7 @@ import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.MainUiState
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.Quests
-import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsRoute
+import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsMainRoute
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
@@ -249,7 +249,7 @@ fun DrawerContent(
                             scope.launch {
                                 drawerState.close()
                             }
-                            mainNavController.navigate(SettingsRoute)
+                            mainNavController.navigate(SettingsMainRoute)
                         }
                     ) {
                         Icon(Icons.Default.Settings, contentDescription = null)

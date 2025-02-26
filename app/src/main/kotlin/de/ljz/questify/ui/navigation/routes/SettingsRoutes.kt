@@ -14,16 +14,16 @@ import de.ljz.questify.ui.features.settings.settings_feedback.SettingsFeedbackSc
 import de.ljz.questify.ui.features.settings.settings_feedback.navigation.SettingsFeedbackRoute
 import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpRoute
 import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpScreen
-import de.ljz.questify.ui.features.settings.settings_main.SettingsScreen
-import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsRoute
+import de.ljz.questify.ui.features.settings.settings_main.SettingsMainScreen
+import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsMainRoute
 
 fun NavGraphBuilder.settingRoutes(
     navController: NavHostController,
     permissionsVm: PermissionsViewModel,
     allPermissionsGranted: Boolean
 ) {
-    composable<SettingsRoute> {
-        SettingsScreen(mainNavController = navController)
+    composable<SettingsMainRoute> {
+        SettingsMainScreen(mainNavController = navController)
     }
 
     composable<SettingsFeedbackRoute> {

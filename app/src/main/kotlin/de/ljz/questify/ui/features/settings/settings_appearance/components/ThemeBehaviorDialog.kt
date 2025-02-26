@@ -52,7 +52,7 @@ fun ThemeBehaviorDialog(
     ) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)

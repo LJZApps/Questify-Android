@@ -45,12 +45,12 @@ fun PaletteStyleDialog(
     ) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                PaletteStyle.entries.forEach { style ->
+                PaletteStyle.entries.sortedBy { it.name }.forEach { style ->
                     Row(
                         Modifier.fillMaxWidth()
                             .height(56.dp)
@@ -67,11 +67,21 @@ fun PaletteStyleDialog(
                             selected = (style == selectedOption),
                             onClick = null
                         )
-                        Text(
-                            text = style.name,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
+                        Column {
+                            Text(
+                                text = style.name,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(start = 16.dp)
+                            )
+                            if (style == PaletteStyle.TonalSpot) {
+                                Text(
+                                    text = "Default",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                    modifier = Modifier.padding(start = 16.dp)
+                                )
+                            }
+                        }
                     }
                 }
                 Row(

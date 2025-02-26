@@ -24,10 +24,3 @@ data class CustomColorItem(
     val text: String = "",
     val color: ThemeColor = ThemeColor.RED
 )
-
-
-
-data class ReminderItem(
-    val text: String = "",
-    val time: ReminderTime = ReminderTime.MIN_10
-)
