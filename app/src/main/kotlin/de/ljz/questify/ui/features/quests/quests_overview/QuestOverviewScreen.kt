@@ -53,7 +53,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -78,11 +77,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomNavGraph
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
-import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.bounceClick
 import de.ljz.questify.util.getSerializedRouteName
 
@@ -237,42 +236,46 @@ fun QuestOverviewScreen(
                             )
                         )
 
-                        FloatingActionButton(
-                            onClick = {
-                                if (uiState.fastAddingText.isNotEmpty()) {
-                                    viewModel.createFastQuest(uiState.fastAddingText)
-                                } else {
-                                    when (currentDestination?.route) {
-                                        getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
-                                            CreateQuest()
-                                        )
+                        BasicPlainTooltip(
+                            text = "Create new quest"
+                        ) {
+                            FloatingActionButton(
+                                onClick = {
+                                    if (uiState.fastAddingText.isNotEmpty()) {
+                                        viewModel.createFastQuest(uiState.fastAddingText)
+                                    } else {
+                                        when (currentDestination?.route) {
+                                            getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
+                                                CreateQuest()
+                                            )
 
-                                        getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
-                                            // TODO
-                                        }
+                                            getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
+                                                // TODO
+                                            }
 
-                                        getSerializedRouteName(QuestBottomRoutes.Routines) -> {
-                                            // TODO
-                                        }
+                                            getSerializedRouteName(QuestBottomRoutes.Routines) -> {
+                                                // TODO
+                                            }
 
-                                        getSerializedRouteName(QuestBottomRoutes.Habits) -> {
-                                            // TODO
+                                            getSerializedRouteName(QuestBottomRoutes.Habits) -> {
+                                                // TODO
+                                            }
                                         }
                                     }
+                                },
+                                shape = RoundedCornerShape(fabShape),
+                                modifier = Modifier.size(56.dp)
+                                    .bounceClick(enabled = uiState.fastAddingText.isNotEmpty())
+                            ) {
+                                Crossfade(
+                                    targetState = uiState.fastAddingText.isNotEmpty(),
+                                    label = "IconFade"
+                                ) { isFocused ->
+                                    Icon(
+                                        imageVector = if (isFocused) Icons.Filled.Done else Icons.Filled.Add,
+                                        contentDescription = null
+                                    )
                                 }
-                            },
-                            shape = RoundedCornerShape(fabShape),
-                            modifier = Modifier.size(56.dp)
-                                .bounceClick(enabled = uiState.fastAddingText.isNotEmpty())
-                        ) {
-                            Crossfade(
-                                targetState = uiState.fastAddingText.isNotEmpty(),
-                                label = "IconFade"
-                            ) { isFocused ->
-                                Icon(
-                                    imageVector = if (isFocused) Icons.Filled.Done else Icons.Filled.Add,
-                                    contentDescription = null
-                                )
                             }
                         }
                     }

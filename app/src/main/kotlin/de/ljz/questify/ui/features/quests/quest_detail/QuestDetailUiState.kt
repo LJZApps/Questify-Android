@@ -9,6 +9,7 @@ data class QuestDetailUiState (
     val difficulty: Int = 0,
     val isAddingReminder: Boolean = false,
     val selectedDueDate: Long = 0,
+    val isQuestDone: Boolean = false,
     val notificationTriggerTimes: List<Long> = listOf(),
     val addingReminderState: AddingReminderState = AddingReminderState.NONE,
     val isDueDateInfoDialogVisible: Boolean = false,
