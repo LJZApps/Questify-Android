@@ -72,7 +72,7 @@ fun SettingsMainScreen(
                 title = { Text(text = "Appearance") },
                 subtitle = {
                     Text(
-                        text = "Customize the app to your liking"
+                        text = "Customize the app appearance"
                     )
                 },
                 icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
@@ -85,7 +85,7 @@ fun SettingsMainScreen(
                 title = { Text(text = "Help") },
                 subtitle = {
                     Text(
-                        text = "Some app informations"
+                        text = "Get help with the app"
                     )
                 },
                 icon = { Icon(Icons.Outlined.HelpOutline, contentDescription = null) },

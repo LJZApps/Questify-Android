@@ -132,7 +132,7 @@ fun SettingsAppearanceScreen(
                     SettingsSwitch(
                         state = uiState.isAmoled,
                         title = { Text(text = "AMOLED") },
-                        subtitle = { Text(text = "Set the theme to pure dark to safe battery life") },
+                        subtitle = { Text(text = "Pure dark to safe battery life") },
                         icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
                         onCheckedChange = viewModel::updateIsAmoledEnabled,
                     )
