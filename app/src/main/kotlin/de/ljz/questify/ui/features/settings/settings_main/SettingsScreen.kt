@@ -6,11 +6,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.HelpOutline
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,13 +16,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import de.ljz.questify.R
@@ -34,7 +30,6 @@ import de.ljz.questify.ui.features.settings.settings_main.components.CustomColor
 import de.ljz.questify.ui.features.settings.settings_main.components.ThemeBehaviorDialog
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
-import de.ljz.questify.util.NavBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +85,7 @@ fun SettingsScreen(
                 },
                 icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
                 onClick = {
-                    throw Exception("Das ist ein Test")
+
                     /*mainNavController.navigate(SettingsAppearanceRoute)*/
                 }
             )

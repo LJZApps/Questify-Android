@@ -1,6 +1,8 @@
 package de.ljz.questify.ui.features.first_setup.sub_pages
 
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,26 +23,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.PlatformImeOptions
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 
 @Composable
-fun UserSetupPage() {
-    var userName by remember { mutableStateOf("") }
-    var userBio by remember { mutableStateOf("") }
-    var imageUri by remember { mutableStateOf<String?>(null) }
-    var isEditMode by remember { mutableStateOf(true) }
+fun UserSetupPage(
+    displayName: String,
+    aboutMe: String,
+    imageUri: Uri?,
+    onDisplayNameChange: (String) -> Unit,
+    onAboutMeChange: (String) -> Unit,
+    requestImagePicker: () -> Unit
+) {
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -61,28 +63,23 @@ fun UserSetupPage() {
             modifier = Modifier
                 .size(160.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .clickable { requestImagePicker() },
             contentAlignment = Alignment.Center
         ) {
             if (imageUri != null) {
-                // TODO add image picker
-                // Image(
-                //     painter = rememberImagePainter(imageUri),
-                //     contentDescription = "Profilbild",
-                //     modifier = Modifier.fillMaxSize(),
-                //     contentScale = ContentScale.Crop
-                // )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = "Profilbild",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
@@ -93,8 +90,8 @@ fun UserSetupPage() {
         ) {
             // Name Input
             OutlinedTextField(
-                value = userName,
-                onValueChange = { userName = it },
+                value = displayName,
+                onValueChange = { onDisplayNameChange(it) },
                 label = { Text("Anzeigename") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -110,11 +107,10 @@ fun UserSetupPage() {
 
             // Bio Input
             OutlinedTextField(
-                value = userBio,
-                onValueChange = { userBio = it },
+                value = aboutMe,
+                onValueChange = { onAboutMeChange(it) },
                 label = { Text("Über mich") },
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
                 shape = RoundedCornerShape(12.dp),
                 keyboardOptions = KeyboardOptions(

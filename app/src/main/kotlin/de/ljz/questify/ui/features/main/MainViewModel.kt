@@ -32,7 +32,8 @@ class MainViewModel @Inject constructor(
                             userPoints = appUser.points,
                             userXP = appUser.xp,
                             userLevel = appUser.level,
-                            userName = appUser.displayName
+                            userName = appUser.displayName,
+                            userProfilePicture = appUser.profilePicture
                         )
                     }
                 }

@@ -109,6 +109,9 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Coil
+    implementation(libs.coil.compose)
+
     // Compose Color Picker
     implementation(libs.compose.colorpicker)
 

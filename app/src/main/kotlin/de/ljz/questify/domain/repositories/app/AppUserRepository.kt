@@ -30,12 +30,14 @@ class AppUserRepository @Inject constructor(
 
     suspend fun saveProfile(
         displayName: String,
-        aboutMe: String
+        aboutMe: String,
+        imageUri: String
     ) {
         appUserDataStore.updateData { user ->
             user.copy(
                 displayName = displayName,
-                aboutMe = aboutMe
+                aboutMe = aboutMe,
+                profilePicture = imageUri
             )
         }
     }

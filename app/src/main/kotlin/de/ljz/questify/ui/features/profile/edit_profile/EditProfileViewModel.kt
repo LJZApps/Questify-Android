@@ -35,7 +35,8 @@ class EditProfileViewModel @Inject constructor(
         viewModelScope.launch {
             appUserRepository.saveProfile(
                 displayName = _uiState.value.displayName,
-                aboutMe = _uiState.value.aboutMe
+                aboutMe = _uiState.value.aboutMe,
+                imageUri = ""
             )
         }
     }

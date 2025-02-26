@@ -1,6 +1,7 @@
 package de.ljz.questify.ui.features.main.components
 
-import androidx.compose.foundation.background
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,12 +40,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil3.compose.AsyncImage
 import de.ljz.questify.R
+import de.ljz.questify.core.application.TAG
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.MainUiState
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
@@ -143,8 +147,8 @@ fun DrawerContent(
     ModalDrawerSheet {
         Column(
             modifier = Modifier
-              .padding(horizontal = 12.dp)
-              .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .fillMaxWidth()
         ) {
             Row (
                 verticalAlignment = Alignment.CenterVertically,
@@ -160,29 +164,43 @@ fun DrawerContent(
                 ) {
                     Box(
                         modifier = Modifier
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary),
+                            .clip(CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profilbild",
-                            modifier = Modifier.size(40.dp)
-                                .padding(5.dp),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        if (Uri.parse(uiState.userProfilePicture) != null) {
+                            Log.d(TAG, "DrawerContent: ${uiState.userProfilePicture}")
+                            AsyncImage(
+                                model = Uri.parse(uiState.userProfilePicture),
+                                contentDescription = "Profilbild",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Profilbild",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .padding(5.dp),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+
                     }
                 }
 
                 Row (
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(vertical = 6.dp)
                 ) {
                     Column {
                         Text(
-                            text = "Willkommen, ${uiState.userName}!",
+                            text = uiState.userName,
                             style = MaterialTheme.typography.labelLarge,
                         )
 
