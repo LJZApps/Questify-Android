@@ -29,12 +29,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
 import de.ljz.questify.util.NavBarConfig
 
@@ -92,15 +93,25 @@ fun ViewProfileScreen(
                     modifier = Modifier
                         .size(120.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary),
+                        .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profilbild",
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                    if (uiState.profilePictureUrl.isNotEmpty()) {
+                        AsyncImage(
+                            model = uiState.profilePictureUrl,
+                            contentDescription = "Profilbild",
+                            modifier = Modifier.size(120.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Profilbild",
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

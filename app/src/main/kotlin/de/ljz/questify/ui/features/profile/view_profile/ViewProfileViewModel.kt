@@ -24,7 +24,8 @@ class ViewProfileViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(
                         displayName = appUser.displayName,
-                        aboutMe = appUser.aboutMe
+                        aboutMe = appUser.aboutMe,
+                        profilePictureUrl = appUser.profilePicture
                     )
                 }
             }

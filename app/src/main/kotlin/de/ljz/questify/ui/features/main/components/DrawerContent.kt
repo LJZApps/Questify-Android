@@ -1,7 +1,6 @@
 package de.ljz.questify.ui.features.main.components
 
-import android.net.Uri
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +47,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.core.application.TAG
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.MainUiState
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
@@ -164,13 +162,13 @@ fun DrawerContent(
                 ) {
                     Box(
                         modifier = Modifier
-                            .clip(CircleShape),
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (Uri.parse(uiState.userProfilePicture) != null) {
-                            Log.d(TAG, "DrawerContent: ${uiState.userProfilePicture}")
+                        if (uiState.userProfilePicture.isNotEmpty()) {
                             AsyncImage(
-                                model = Uri.parse(uiState.userProfilePicture),
+                                model = uiState.userProfilePicture,
                                 contentDescription = "Profilbild",
                                 modifier = Modifier
                                     .size(40.dp)
@@ -184,7 +182,7 @@ fun DrawerContent(
                                 modifier = Modifier
                                     .size(40.dp)
                                     .padding(5.dp),
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
 
