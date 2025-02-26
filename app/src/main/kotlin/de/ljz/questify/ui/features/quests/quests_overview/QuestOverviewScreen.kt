@@ -226,41 +226,43 @@ fun QuestOverviewScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        OutlinedTextField(
-                            value = uiState.fastAddingText,
-                            onValueChange = {
-                                viewModel.updateFastAddingText(it)
-                                showDropdown = it.startsWith("/") && filteredCommands.isNotEmpty()
-                            },
-                            placeholder = { Text("Add quest") },
-                            shape = CircleShape,
-                            modifier = Modifier
-                                .padding(start = 16.dp)
-                                .weight(1f)
-                                .border(0.dp, Color.Transparent)
-                                .onFocusChanged {
-                                    viewModel.updateIsFastAddingFocused(it.isFocused)
-                                }
-                                .shadow(6.dp, shape = CircleShape),
-                            singleLine = true,
-                            colors = TextFieldDefaults.colors(
-                                unfocusedIndicatorColor = Color.Transparent,
-                                focusedIndicatorColor = Color.Transparent,
-                                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    if (uiState.fastAddingText.isNotEmpty()) {
-                                        viewModel.createFastQuest(uiState.fastAddingText)
+                        if (uiState.featureSettings.fastQuestAddingEnabled) {
+                            OutlinedTextField(
+                                value = uiState.fastAddingText,
+                                onValueChange = {
+                                    viewModel.updateFastAddingText(it)
+                                    showDropdown = it.startsWith("/") && filteredCommands.isNotEmpty()
+                                },
+                                placeholder = { Text("Add quest") },
+                                shape = CircleShape,
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .weight(1f)
+                                    .border(0.dp, Color.Transparent)
+                                    .onFocusChanged {
+                                        viewModel.updateIsFastAddingFocused(it.isFocused)
                                     }
-                                }
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Done,
-                                capitalization = KeyboardCapitalization.Sentences
+                                    .shadow(6.dp, shape = CircleShape),
+                                singleLine = true,
+                                colors = TextFieldDefaults.colors(
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        if (uiState.fastAddingText.isNotEmpty()) {
+                                            viewModel.createFastQuest(uiState.fastAddingText)
+                                        }
+                                    }
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done,
+                                    capitalization = KeyboardCapitalization.Sentences
+                                )
                             )
-                        )
+                        }
 
                         FloatingActionButton(
                             onClick = {

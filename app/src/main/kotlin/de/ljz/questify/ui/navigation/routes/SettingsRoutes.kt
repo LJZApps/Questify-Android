@@ -10,6 +10,8 @@ import de.ljz.questify.ui.features.settings.permissions.PermissionsViewModel
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceRoute
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceScreen
+import de.ljz.questify.ui.features.settings.settings_features.SettingsFeaturesRoute
+import de.ljz.questify.ui.features.settings.settings_features.SettingsFeaturesScreen
 import de.ljz.questify.ui.features.settings.settings_feedback.SettingsFeedbackScreen
 import de.ljz.questify.ui.features.settings.settings_feedback.navigation.SettingsFeedbackRoute
 import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpRoute
@@ -47,5 +49,9 @@ fun NavGraphBuilder.settingRoutes(
 
     composable<SettingsHelpRoute> {
         SettingsHelpScreen(mainNavController = navController)
+    }
+
+    composable<SettingsFeaturesRoute> {
+        SettingsFeaturesScreen(mainNavController = navController)
     }
 }

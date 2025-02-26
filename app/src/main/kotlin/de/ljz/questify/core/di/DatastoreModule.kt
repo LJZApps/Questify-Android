@@ -13,6 +13,8 @@ import de.ljz.questify.domain.datastore.AppSettings
 import de.ljz.questify.domain.datastore.AppSettingsSerializer
 import de.ljz.questify.domain.datastore.AppUser
 import de.ljz.questify.domain.datastore.AppUserSerializer
+import de.ljz.questify.domain.datastore.FeatureSettings
+import de.ljz.questify.domain.datastore.FeatureSettingsSerializer
 import de.ljz.questify.domain.datastore.NewFeatureBadges
 import de.ljz.questify.domain.datastore.NewFeatureBadgesSerializer
 import de.ljz.questify.domain.datastore.QuestMasterSerializer
@@ -68,5 +70,16 @@ object DatastoreModule {
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
             produceFile = { File(context.filesDir, "datastore/new_feature_badges.json") }
+        )
+
+    @Singleton
+    @Provides
+    fun provideFeatureSettingsDatastore(@ApplicationContext context: Context): DataStore<FeatureSettings> =
+        DataStoreFactory.create(
+            serializer = FeatureSettingsSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { FeatureSettings() },
+            migrations = listOf(),
+            scope = CoroutineScope(Dispatchers.IO),
+            produceFile = { File(context.filesDir, "datastore/feature_settings.json") }
         )
 }

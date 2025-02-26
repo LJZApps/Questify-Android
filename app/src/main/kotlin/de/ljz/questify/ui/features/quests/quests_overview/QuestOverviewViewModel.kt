@@ -12,6 +12,7 @@ import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.app.AppUserRepository
+import de.ljz.questify.domain.repositories.app.FeatureSettingsRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class QuestOverviewViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
-    private val questNotificationRepository: QuestNotificationRepository
+    private val questNotificationRepository: QuestNotificationRepository,
+    private val appFeatureSettingsRepository: FeatureSettingsRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
     val uiState: StateFlow<QuestOverviewUIState> = _uiState.asStateFlow()
@@ -38,6 +40,15 @@ class QuestOverviewViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             quests = quests
+                        )
+                    }
+                }
+            }
+            launch {
+                appFeatureSettingsRepository.getFeatureSettings().collectLatest { settings ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            featureSettings = currentState.featureSettings.copy(fastQuestAddingEnabled = settings.questFastAddingEnabled)
                         )
                     }
                 }

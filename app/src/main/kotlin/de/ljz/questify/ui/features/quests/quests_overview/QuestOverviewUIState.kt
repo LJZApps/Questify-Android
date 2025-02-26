@@ -8,5 +8,10 @@ data class QuestOverviewUIState(
     val dailiesEnabled: Boolean = false,
     val isFastAddingFocused: Boolean = false,
     val fastAddingText: String = "",
-    val fastAddingQuestPreview: QuestEntity? = null
+    val fastAddingQuestPreview: QuestEntity? = null,
+    val featureSettings: FeatureSettingsState = FeatureSettingsState()
+)
+
+data class FeatureSettingsState(
+    val fastQuestAddingEnabled: Boolean = true
 )

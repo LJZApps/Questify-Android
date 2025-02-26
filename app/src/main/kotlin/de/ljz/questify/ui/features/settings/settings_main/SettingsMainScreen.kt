@@ -26,6 +26,8 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceRoute
 import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpRoute
 import de.ljz.questify.ui.features.settings.settings_appearance.components.CustomColorDialog
+import de.ljz.questify.ui.features.settings.settings_features.SettingsFeaturesRoute
+import de.ljz.questify.ui.features.settings.settings_features.SettingsFeaturesScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,8 +64,7 @@ fun SettingsMainScreen(
                 },
                 icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
                 onClick = {
-
-                    /*mainNavController.navigate(SettingsAppearanceRoute)*/
+                    mainNavController.navigate(SettingsFeaturesRoute)
                 }
             )
 
