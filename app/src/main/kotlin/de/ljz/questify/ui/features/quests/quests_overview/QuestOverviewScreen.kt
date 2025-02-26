@@ -77,7 +77,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
-import de.ljz.questify.ui.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomNavGraph
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
@@ -104,7 +103,12 @@ fun QuestOverviewScreen(
     val commands = listOf("add reminder", "set difficulty", "set due date", "set description")
     val filteredCommands = remember(uiState.fastAddingText) {
         if (uiState.fastAddingText.startsWith("/")) {
-            commands.filter { it.contains(uiState.fastAddingText.removePrefix("/"), ignoreCase = true) }
+            commands.filter {
+                it.contains(
+                    uiState.fastAddingText.removePrefix("/"),
+                    ignoreCase = true
+                )
+            }
         } else emptyList()
     }
 
@@ -115,7 +119,8 @@ fun QuestOverviewScreen(
     )
 
     val navigationBarHeight by animateDpAsState(
-        targetValue = if (isKeyboardVisible()) 0.dp else 80.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding(), // 50f → komplett rund, 0f → normales FAB
+        targetValue = if (isKeyboardVisible()) 0.dp else 80.dp + WindowInsets.navigationBars.asPaddingValues()
+            .calculateBottomPadding(), // 50f → komplett rund, 0f → normales FAB
         animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing),
         label = "FABShape"
     )
@@ -180,20 +185,41 @@ fun QuestOverviewScreen(
         },
         floatingActionButton = {
             Column(
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier
+                    .padding(start = 16.dp)
                     .imePadding()
             ) {
                 AnimatedVisibility(
-                    visible = !(scrollBehavior.state.collapsedFraction > 0.5f) && enabledViewQuestFeatures.any { getSerializedRouteName(it) == currentDestination?.route },
-                    enter = fadeIn(animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing)) +
+                    visible = !(scrollBehavior.state.collapsedFraction > 0.5f) && enabledViewQuestFeatures.any {
+                        getSerializedRouteName(
+                            it
+                        ) == currentDestination?.route
+                    },
+                    enter = fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = FastOutSlowInEasing
+                        )
+                    ) +
                             slideInVertically(
                                 initialOffsetY = { it / 2 },
-                                animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing)
+                                animationSpec = tween(
+                                    durationMillis = 200,
+                                    easing = FastOutSlowInEasing
+                                )
                             ),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)) +
+                    exit = fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = LinearOutSlowInEasing
+                        )
+                    ) +
                             slideOutVertically(
                                 targetOffsetY = { it / 2 },
-                                animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)
+                                animationSpec = tween(
+                                    durationMillis = 200,
+                                    easing = LinearOutSlowInEasing
+                                )
                             )
                 ) {
                     Row(
@@ -236,46 +262,43 @@ fun QuestOverviewScreen(
                             )
                         )
 
-                        BasicPlainTooltip(
-                            text = "Create new quest"
-                        ) {
-                            FloatingActionButton(
-                                onClick = {
-                                    if (uiState.fastAddingText.isNotEmpty()) {
-                                        viewModel.createFastQuest(uiState.fastAddingText)
-                                    } else {
-                                        when (currentDestination?.route) {
-                                            getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
-                                                CreateQuest()
-                                            )
+                        FloatingActionButton(
+                            onClick = {
+                                if (uiState.fastAddingText.isNotEmpty()) {
+                                    viewModel.createFastQuest(uiState.fastAddingText)
+                                } else {
+                                    when (currentDestination?.route) {
+                                        getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
+                                            CreateQuest()
+                                        )
 
-                                            getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
-                                                // TODO
-                                            }
+                                        getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
+                                            // TODO
+                                        }
 
-                                            getSerializedRouteName(QuestBottomRoutes.Routines) -> {
-                                                // TODO
-                                            }
+                                        getSerializedRouteName(QuestBottomRoutes.Routines) -> {
+                                            // TODO
+                                        }
 
-                                            getSerializedRouteName(QuestBottomRoutes.Habits) -> {
-                                                // TODO
-                                            }
+                                        getSerializedRouteName(QuestBottomRoutes.Habits) -> {
+                                            // TODO
                                         }
                                     }
-                                },
-                                shape = RoundedCornerShape(fabShape),
-                                modifier = Modifier.size(56.dp)
-                                    .bounceClick(enabled = uiState.fastAddingText.isNotEmpty())
-                            ) {
-                                Crossfade(
-                                    targetState = uiState.fastAddingText.isNotEmpty(),
-                                    label = "IconFade"
-                                ) { isFocused ->
-                                    Icon(
-                                        imageVector = if (isFocused) Icons.Filled.Done else Icons.Filled.Add,
-                                        contentDescription = null
-                                    )
                                 }
+                            },
+                            shape = RoundedCornerShape(fabShape),
+                            modifier = Modifier
+                                .size(56.dp)
+                                .bounceClick(enabled = uiState.fastAddingText.isNotEmpty())
+                        ) {
+                            Crossfade(
+                                targetState = uiState.fastAddingText.isNotEmpty(),
+                                label = "IconFade"
+                            ) { isFocused ->
+                                Icon(
+                                    imageVector = if (isFocused) Icons.Filled.Done else Icons.Filled.Add,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
@@ -299,7 +322,9 @@ fun QuestOverviewScreen(
                             )
                         },
                         label = { Text(bottomNavRoute.name) },
-                        selected = currentDestination?.route == getSerializedRouteName(bottomNavRoute.route),
+                        selected = currentDestination?.route == getSerializedRouteName(
+                            bottomNavRoute.route
+                        ),
                         onClick = {
                             bottomNavController.navigate(bottomNavRoute.route) {
                                 popUpTo(bottomNavController.graph.findStartDestination().id) {
