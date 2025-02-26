@@ -80,7 +80,7 @@ fun SettingsScreen(
                 title = { Text(text = "Features") },
                 subtitle = {
                     Text(
-                        text = "Enable/Disable app features"
+                        text = "Toggle app features"
                     )
                 },
                 icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
