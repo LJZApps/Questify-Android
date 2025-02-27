@@ -20,6 +20,11 @@ enum class Difficulty {
     }
 }
 
+enum class SortingDirections {
+    ASCENDING,
+    DESCENDING;
+}
+
 @Serializable
 sealed class ReminderTime(val minutes: Int) {
     @Serializable

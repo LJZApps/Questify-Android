@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,4 +85,12 @@ object DatastoreModule {
             scope = CoroutineScope(Dispatchers.IO),
             produceFile = { File(context.filesDir, "datastore/feature_settings.json") }
         )
+
+    @Provides
+    @Singleton
+    fun provideSortingDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create {
+            context.preferencesDataStoreFile("sorting_preferences")
+        }
+    }
 }
