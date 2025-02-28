@@ -159,26 +159,24 @@ fun QuestDetailScreen(
                     }
                 }
 
-                    if (questState.description.isNotBlank() || uiState.isEditingQuest) {
-                    AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
-                        if (targetState) {
-                            if (questState.description.isNotBlank()) {
-                                Text(
-                                    text = questState.description,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        } else {
-                            OutlinedTextField(
-                                value = editQuestState.description,
-                                onValueChange = { viewModel.updateDescription(it) },
-                                label = { Text(stringResource(R.string.create_quest_note)) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(10.dp),
-                                minLines = 2
+                AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
+                    if (targetState) {
+                        if (questState.description.isNotBlank()) {
+                            Text(
+                                text = questState.description,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
+                    } else {
+                        OutlinedTextField(
+                            value = editQuestState.description,
+                            onValueChange = { viewModel.updateDescription(it) },
+                            label = { Text(stringResource(R.string.create_quest_note)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp),
+                            minLines = 2
+                        )
                     }
                 }
 
@@ -227,7 +225,8 @@ fun QuestDetailScreen(
                                             }
                                         }
                                     ) {
-                                        val tintColor = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
+                                        val tintColor =
+                                            if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
 
                                         when (index) {
                                             0 -> EasyIcon(tint = tintColor)
@@ -281,7 +280,10 @@ fun QuestDetailScreen(
                             Text(text = "Trophäen", style = MaterialTheme.typography.titleMedium)
                             Box(
                                 modifier = Modifier
-                                    .background(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(16.dp))
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                        shape = RoundedCornerShape(16.dp)
+                                    )
                             ) {
                                 Text(
                                     text = getAllFilledIcons().count().toString(),
@@ -360,7 +362,7 @@ fun QuestDetailScreen(
                 },
                 floatingActionButton = {
                     Row(
-                       horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         AnimatedVisibility(
                             visible = uiState.isEditingQuest,
@@ -374,7 +376,7 @@ fun QuestDetailScreen(
                                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                                 shape = RoundedCornerShape(100f)
-                                ) {
+                            ) {
                                 Icon(Icons.Outlined.Close, contentDescription = "Cancel")
                             }
                         }
@@ -387,7 +389,10 @@ fun QuestDetailScreen(
                                             context = context,
                                             onSuccess = {
                                                 scope.launch {
-                                                    snackbarHostState.showSnackbar("Quest updated.", withDismissAction = true)
+                                                    snackbarHostState.showSnackbar(
+                                                        "Quest updated.",
+                                                        withDismissAction = true
+                                                    )
                                                 }
                                                 viewModel.stopEditMode()
                                             }
