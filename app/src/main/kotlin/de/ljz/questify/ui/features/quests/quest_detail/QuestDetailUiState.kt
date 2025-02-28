@@ -13,6 +13,7 @@ data class QuestDetailUiState (
     val notificationTriggerTimes: List<Long> = listOf(),
     val addingReminderState: AddingReminderState = AddingReminderState.NONE,
     val isDueDateInfoDialogVisible: Boolean = false,
-    val isDeleteConfirmationDialogVisible: Boolean = false
+    val isDeleteConfirmationDialogVisible: Boolean = false,
+    val isEditingQuest: Boolean = false
 )
 

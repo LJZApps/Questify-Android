@@ -170,6 +170,8 @@ class QuestDetailViewModel @Inject constructor(
     fun updateDescription(description: String) = updateUiState { copy(description = description) }
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
+    fun showEditQuestBottomSheet() = updateUiState { copy(isEditingQuest = true) }
+    fun hideEditQuestBottomSheet() = updateUiState { copy(isEditingQuest = false) }
     fun showDeleteConfirmationDialog() =
         updateUiState { copy(isDeleteConfirmationDialogVisible = true) }
 

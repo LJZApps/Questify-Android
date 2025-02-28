@@ -200,14 +200,13 @@ fun QuestOverviewScreen(
                             durationMillis = 200,
                             easing = FastOutSlowInEasing
                         )
-                    ) +
-                            slideInVertically(
-                                initialOffsetY = { it / 2 },
-                                animationSpec = tween(
-                                    durationMillis = 200,
-                                    easing = FastOutSlowInEasing
-                                )
-                            ),
+                    ) + slideInVertically(
+                            initialOffsetY = { it / 2 },
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                easing = FastOutSlowInEasing
+                            )
+                        ),
                     exit = fadeOut(
                         animationSpec = tween(
                             durationMillis = 200,
