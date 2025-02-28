@@ -28,5 +28,7 @@ class QuestRepository @Inject constructor(
 
     suspend fun suspendGetQuestById(id: Int) = questDao.suspendGetQuestById(id)
 
+    fun getQuestByIdFlow(id: Int) = questDao.getQuestByIdFlow(id)
+
     suspend fun deleteQuest(id: Int) = questDao.deleteQuest(id)
 }
