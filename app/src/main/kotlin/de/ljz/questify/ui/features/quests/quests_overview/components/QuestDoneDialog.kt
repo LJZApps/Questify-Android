@@ -1,36 +1,32 @@
 package de.ljz.questify.ui.features.quests.quests_overview.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.MilitaryTech
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,17 +36,27 @@ import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.ui.features.quests.quests_overview.QuestDoneDialogState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestDoneDialog(
     state: QuestDoneDialogState,
     onDismiss: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val scaleAnim = remember { Animatable(0.5f) }
+    val scaleAnim = remember { Animatable(0.3f) }
+    val fadeIn = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        scope.launch { scaleAnim.animateTo(1f, animationSpec = tween(500)) }
+        scope.launch {
+            fadeIn.animateTo(1f, animationSpec = tween(500))
+            scaleAnim.animateTo(1f, animationSpec = tween(500, delayMillis = 100))
+        }
+
+        launch {
+            scaleAnim.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+            )
+        }
     }
 
     Dialog(
@@ -67,72 +73,119 @@ fun QuestDoneDialog(
             modifier = Modifier.padding(16.dp)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier.padding(24.dp)
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                AnimatedVisibility(visible = true) {
-                    Icon(
-                        imageVector = Icons.Filled.CheckCircle,
-                        contentDescription = "Quest abgeschlossen",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(64.dp * scaleAnim.value)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Filled.CheckCircle,
+                    contentDescription = "Quest abgeschlossen",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .size(80.dp)
+                )
 
                 Text(
                     text = "Quest abgeschlossen!",
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().alpha(fadeIn.value)
                 )
 
                 Text(
-                    text = "${state.questName}",
+                    text = state.questName,
                     style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
                     color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
                 )
 
-                Divider(color = Color.Gray.copy(alpha = 0.3f), thickness = 1.dp)
+                HorizontalDivider(color = Color.Gray.copy(alpha = 0.3f), thickness = 1.dp)
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Filled.AutoGraph, contentDescription = "XP", tint = MaterialTheme.colorScheme.secondary)
-                    Text("+${state.xp}", style = MaterialTheme.typography.bodyLarge)
+                RewardSection(
+                    xp = state.xp,
+                    points = state.points
+                )
+
+                AnimatedVisibility(visible = state.newLevel > 0) {
+                    LevelUpBanner(newLevel = state.newLevel)
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(imageVector = Icons.Filled.Star, contentDescription = "Punkte", tint = MaterialTheme.colorScheme.secondary)
-                    Text("+${state.points}", style = MaterialTheme.typography.bodyLarge)
+                Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+                    Text("Belohnungen annehmen")
                 }
+            }
+        }
+    }
+}
 
-                if (state.newLevel > 0) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(imageVector = Icons.Filled.MilitaryTech, contentDescription = "Neues Level", tint = MaterialTheme.colorScheme.secondary)
-                        Text("Level ${state.newLevel}", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
+@Composable
+private fun RewardSection(xp: Int, points: Int) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        RewardItem(label = "XP", value = "+$xp")
+        RewardItem(label = "Points", value = "+$points")
+    }
+}
 
-                Button(
-                    onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text("Super!")
-                }
+@Composable
+private fun RewardItem(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 22.sp),
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun LevelUpBanner(newLevel: Int) {
+    val scaleAnim = remember { Animatable(0.8f) }
+    LaunchedEffect(newLevel) {
+        scaleAnim.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+        )
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .scale(scaleAnim.value)
+            .shadow(8.dp, shape = RoundedCornerShape(16.dp))
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .padding(24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.TrendingUp,
+                contentDescription = "Neues Level",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.size(48.dp)
+            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "LEVEL UP!",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Text(
+                    text = "Du hast Level $newLevel erreicht!",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             }
         }
     }
