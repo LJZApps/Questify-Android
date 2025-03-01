@@ -78,6 +78,7 @@ import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
+import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomNavGraph
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
@@ -185,7 +186,12 @@ fun QuestOverviewScreen(
             }
 
             if (questDoneDialogState.visible) {
-
+                QuestDoneDialog(
+                    state = questDoneDialogState,
+                    onDismiss = {
+                        viewModel.hideQuestDoneDialog()
+                    }
+                )
             }
         },
         floatingActionButton = {

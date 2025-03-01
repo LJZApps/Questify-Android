@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import de.ljz.questify.util.trimToNull
 
 @Composable
 fun UserSetupPage(
@@ -67,7 +68,7 @@ fun UserSetupPage(
                 .clickable { requestImagePicker() },
             contentAlignment = Alignment.Center
         ) {
-            if (imageUri != null) {
+            if (imageUri.toString().trimToNull() != null && imageUri.toString() != "null") {
                 AsyncImage(
                     model = imageUri,
                     contentDescription = "Profilbild",
