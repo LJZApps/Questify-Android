@@ -70,13 +70,20 @@ fun EditProfileScreen(
                 actions = {
                     TextButton(
                         onClick = {
-                            val profilePicture = uiState.profilePictureUrl.let {
-                                viewModel.saveImageToInternalStorage(
-                                    context = context,
-                                    uri = Uri.parse(it)
-                                )
+                            if (uiState.pickedProfilePicture && uiState.profilePictureUrl != "null") {
+                                val profilePicture = uiState.profilePictureUrl.let {
+                                    viewModel.saveImageToInternalStorage(
+                                        context = context,
+                                        uri = Uri.parse(it)
+                                    )
+                                }
+                                viewModel.saveProfile(profilePicture?: "")
+                            } else if (uiState.profilePictureUrl.isNotEmpty() && uiState.profilePictureUrl != "null") {
+                                viewModel.saveProfile(uiState.profilePictureUrl)
+                            } else {
+                                viewModel.saveProfile("")
                             }
-                            viewModel.saveProfile(profilePicture?: "")
+
                             navController.navigateUp()
                         }
                     ) {
@@ -113,7 +120,7 @@ fun EditProfileScreen(
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    if (uiState.profilePictureUrl.isNotEmpty()) {
+                    if (uiState.profilePictureUrl.isNotEmpty() && uiState.profilePictureUrl != "null") {
                         AsyncImage(
                             model = uiState.profilePictureUrl,
                             contentDescription = "Profilbild",

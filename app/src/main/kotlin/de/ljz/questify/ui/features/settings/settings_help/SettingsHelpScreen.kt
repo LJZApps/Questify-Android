@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.VerifiedUser
@@ -18,17 +19,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
+import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settings_feedback.navigation.SettingsFeedbackRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsHelpScreen(
-    mainNavController: NavHostController
+    mainNavController: NavHostController,
+    viewModel: SettingsHelpViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -68,6 +72,22 @@ fun SettingsHelpScreen(
                 },
                 onClick = {
                     mainNavController.navigate(SettingsFeedbackRoute)
+                }
+            )
+
+            SettingsMenuLink(
+                title = {
+                    Text("Show onboarding")
+                },
+                icon = { Icon(Icons.Outlined.Explore, contentDescription = null) },
+                onClick = {
+                    viewModel.resetOnboarding()
+
+                    mainNavController.navigate(FirstSetupRoute) {
+                        popUpTo(FirstSetupRoute) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
 

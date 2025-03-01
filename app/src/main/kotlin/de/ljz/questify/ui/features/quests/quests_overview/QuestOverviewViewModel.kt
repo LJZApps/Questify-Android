@@ -56,7 +56,7 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun setQuestDone(quest: QuestEntity, context: Context, onSuccess: (Int, Int, Int?) -> Unit) {
+    fun setQuestDone(quest: QuestEntity, context: Context) {
         viewModelScope.launch {
             launch {
                 questRepository.setQuestDone(quest.id, true)
@@ -86,7 +86,17 @@ class QuestOverviewViewModel @Inject constructor(
                 appUserRepository.addPointsAndXp(
                     difficulty = quest.difficulty,
                     earnedStats = { xp, points, level ->
-                        onSuccess.invoke(xp, points, level)
+                        _uiState.update {
+                            it.copy(
+                                questDoneDialogState = it.questDoneDialogState.copy(
+                                    visible = true,
+                                    xp = xp,
+                                    points = points,
+                                    newLevel = level ?: 0,
+                                    questName = quest.title
+                                )
+                            )
+                        }
                     }
                 )
             }
@@ -127,4 +137,17 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
+    fun hideQuestDoneDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                questDoneDialogState = currentState.questDoneDialogState.copy(
+                    visible = false,
+                    xp = 0,
+                    points = 0,
+                    newLevel = 0,
+                    questName = ""
+                )
+            )
+        }
+    }
 }

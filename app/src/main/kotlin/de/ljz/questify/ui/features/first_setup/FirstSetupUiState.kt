@@ -10,5 +10,6 @@ data class FirstSetupUiState(
 data class UserSetupPageUiState(
     val displayName: String = "",
     val aboutMe: String = "",
-    val imageUri: Uri? = null
+    val imageUri: Uri? = null,
+    val pickedProfilePicture: Boolean = false
 )

@@ -93,6 +93,7 @@ fun QuestOverviewScreen(
     mainNavController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val questDoneDialogState = uiState.questDoneDialogState
 
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
@@ -181,6 +182,10 @@ fun QuestOverviewScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
                 QuestBottomNavGraph(bottomNavController, mainNavController, viewModel)
+            }
+
+            if (questDoneDialogState.visible) {
+
             }
         },
         floatingActionButton = {

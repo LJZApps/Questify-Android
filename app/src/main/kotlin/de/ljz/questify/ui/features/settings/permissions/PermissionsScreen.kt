@@ -2,6 +2,7 @@ package de.ljz.questify.ui.features.settings.permissions
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -60,6 +61,7 @@ fun PermissionsScreen(
                     text = "Bitte starte die App neu, wenn du alle Berechtigungen zugelassen hast.",
                     modifier = Modifier
                         .fillMaxWidth()
+                        .navigationBarsPadding()
                         .padding(8.dp),
                     textAlign = TextAlign.Center
                 )

@@ -10,6 +10,8 @@ import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import de.ljz.questify.domain.repositories.app.AppUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -24,6 +26,24 @@ class FirstSetupViewModel @Inject constructor(
 ): ViewModel() {
     private var _uiState = MutableStateFlow(FirstSetupUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            launch {
+                appUserRepository.getAppUser().collectLatest { appUser ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            userSetupPageUiState = currentState.userSetupPageUiState.copy(
+                                displayName = appUser.displayName,
+                                aboutMe = appUser.aboutMe,
+                                imageUri = Uri.parse(appUser.profilePicture)
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun setSetupDone(profilePicture: String) {
         viewModelScope.launch {
@@ -74,6 +94,7 @@ class FirstSetupViewModel @Inject constructor(
     fun updateImageUri(imageUri: Uri?) {
         _uiState.value = _uiState.value.copy(
             userSetupPageUiState = _uiState.value.userSetupPageUiState.copy(
+                pickedProfilePicture = true,
                 imageUri = imageUri
             )
         )

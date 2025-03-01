@@ -51,7 +51,7 @@ class EditProfileViewModel @Inject constructor(
 
     fun updateProfilePicture(profilePictureUrl: String) {
         _uiState.update {
-            it.copy(profilePictureUrl = profilePictureUrl)
+            it.copy(profilePictureUrl = profilePictureUrl, pickedProfilePicture = true)
         }
     }
 

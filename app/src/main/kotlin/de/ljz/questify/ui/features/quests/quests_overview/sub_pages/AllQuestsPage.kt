@@ -50,10 +50,7 @@ fun AllQuestsPage(
                     onQuestChecked = {
                         viewModel.setQuestDone(
                             quest = quest,
-                            context = context,
-                            onSuccess = { xp, points, level ->
-                                Toast.makeText(context,  "XP: $xp, Punkte: $points" + if (level != null) ", neues Level: $level" else "", Toast.LENGTH_LONG).show()
-                            }
+                            context = context
                         )
                     },
                     onClick = {
@@ -72,7 +69,7 @@ fun AllQuestsPage(
                         }
                     },
                     modifier = Modifier
-                        .animateItem() // `animateItem` für sanfte Positionsänderung - needs a key provided in "items"
+                        .animateItem()
                         .padding(vertical = 4.dp)
                 )
             }

@@ -40,28 +40,30 @@ class QuestDetailViewModel @Inject constructor(
             val questFlow = questRepository.getQuestByIdFlow(questId)
 
             questFlow.collectLatest { quest ->
-                val notificationEntities =
-                    questNotificationRepository.getNotificationsByQuestId(quest.id)
-                val notifications = notificationEntities
-                    .filter { !it.notified }
-                    .map { it.notifyAt.time }
+                quest?.let {
+                    val notificationEntities =
+                        questNotificationRepository.getNotificationsByQuestId(it.id)
+                    val notifications = notificationEntities
+                        .filter { !it.notified }
+                        .map { it.notifyAt.time }
 
-                _uiState.value = _uiState.value.copy(
-                    editQuestState = _uiState.value.editQuestState.copy(
-                        title = quest.title,
-                        description = quest.notes ?: "",
-                        difficulty = quest.difficulty.ordinal
-                    ),
-                    questState = _uiState.value.questState.copy(
-                        questId = quest.id,
-                        title = quest.title,
-                        description = quest.notes ?: "",
-                        notificationTriggerTimes = notifications,
-                        selectedDueDate = if (quest.dueDate != null) quest.dueDate.time else 0,
-                        difficulty = quest.difficulty.ordinal,
-                        isQuestDone = quest.done,
+                    _uiState.value = _uiState.value.copy(
+                        editQuestState = _uiState.value.editQuestState.copy(
+                            title = it.title,
+                            description = it.notes ?: "",
+                            difficulty = it.difficulty.ordinal
+                        ),
+                        questState = _uiState.value.questState.copy(
+                            questId = it.id,
+                            title = it.title,
+                            description = it.notes ?: "",
+                            notificationTriggerTimes = notifications,
+                            selectedDueDate = if (it.dueDate != null) it.dueDate.time else 0,
+                            difficulty = it.difficulty.ordinal,
+                            isQuestDone = it.done,
+                        )
                     )
-                )
+                }
             }
         }
     }

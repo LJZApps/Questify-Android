@@ -27,6 +27,14 @@ class AppSettingsRepository @Inject constructor(
         }
     }
 
+    suspend fun resetOnboarding() {
+        appSettingsDataStore.updateData {
+            it.copy(
+                onboardingState = false
+            )
+        }
+    }
+
     suspend fun setLastOpenedVersion(version: Int) {
         appSettingsDataStore.updateData {
             it.copy(lastOpenedVersion = version)

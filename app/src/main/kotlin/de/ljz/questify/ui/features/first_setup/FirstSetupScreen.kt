@@ -46,6 +46,8 @@ fun FirstSetupScreen(
     navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val userSetupPageUiState = uiState.userSetupPageUiState
+
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -88,9 +90,9 @@ fun FirstSetupScreen(
                         0 -> IntroductionPage()
 
                         1 -> UserSetupPage(
-                            displayName = uiState.userSetupPageUiState.displayName,
-                            aboutMe = uiState.userSetupPageUiState.aboutMe,
-                            imageUri = uiState.userSetupPageUiState.imageUri,
+                            displayName = userSetupPageUiState.displayName,
+                            aboutMe = userSetupPageUiState.aboutMe,
+                            imageUri = userSetupPageUiState.imageUri,
                             onDisplayNameChange = {
                                 viewModel.updateDisplayName(it)
                             },
@@ -146,13 +148,20 @@ fun FirstSetupScreen(
                         if (pagerState.currentPage < 2) {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         } else {
-                            val profilePicture = uiState.userSetupPageUiState.imageUri?.let {
-                                viewModel.saveImageToInternalStorage(
-                                    context = context,
-                                    uri = it
-                                )
+                            if (userSetupPageUiState.pickedProfilePicture) {
+                                val profilePicture = userSetupPageUiState.imageUri?.let {
+                                    viewModel.saveImageToInternalStorage(
+                                        context = context,
+                                        uri = it
+                                    )
+                                }
+                                viewModel.setSetupDone(profilePicture ?: "")
+                            } else if (userSetupPageUiState.imageUri != null) {
+                                viewModel.setSetupDone(userSetupPageUiState.imageUri.toString())
+                            } else {
+                                viewModel.setSetupDone("")
                             }
-                            viewModel.setSetupDone(profilePicture ?: "")
+
                             navController.navigate(MainRoute)
                         }
                     }
