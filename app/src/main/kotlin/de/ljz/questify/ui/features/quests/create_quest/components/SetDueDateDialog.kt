@@ -14,6 +14,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,7 +47,7 @@ fun SetDueDateDialog(
         }
     )
 
-    val combinedDateTime = remember { mutableStateOf(currentTime.timeInMillis) }
+    val combinedDateTime = remember { mutableLongStateOf(currentTime.timeInMillis) }
 
     // Update combinedDateTime whenever the date or time changes
     LaunchedEffect(
@@ -61,7 +62,7 @@ fun SetDueDateDialog(
             calendar.set(Calendar.SECOND, 0)
             calendar.set(Calendar.MILLISECOND, 0)
 
-            combinedDateTime.value = calendar.timeInMillis
+            combinedDateTime.longValue = calendar.timeInMillis
         }
     }
 
@@ -86,7 +87,7 @@ fun SetDueDateDialog(
                 }
             },
             confirmButton = {
-                TextButton(onClick = { onConfirm(combinedDateTime.value) }) {
+                TextButton(onClick = { onConfirm(combinedDateTime.longValue) }) {
                     Text("Speichern")
                 }
             },

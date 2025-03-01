@@ -27,7 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +41,7 @@ import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.ui.features.first_setup.sub_pages.UserSetupPage
 import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.util.NavBarConfig
+import io.ktor.util.valuesOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,6 +55,12 @@ fun FirstSetupScreen(
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    var visible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        visible = true
+    }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -87,7 +97,9 @@ fun FirstSetupScreen(
                     userScrollEnabled = true
                 ) { currentPage ->
                     when (currentPage) {
-                        0 -> IntroductionPage()
+                        0 -> IntroductionPage(
+                            visible = visible
+                        )
 
                         1 -> UserSetupPage(
                             displayName = userSetupPageUiState.displayName,

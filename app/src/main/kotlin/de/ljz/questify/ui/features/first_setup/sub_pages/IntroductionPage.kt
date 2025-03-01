@@ -39,13 +39,9 @@ import androidx.compose.ui.unit.dp
 import de.ljz.questify.ui.features.first_setup.components.FeatureCard
 
 @Composable
-fun IntroductionPage() {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        visible = true
-    }
-
+fun IntroductionPage(
+    visible: Boolean
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -88,7 +84,7 @@ private fun WelcomeHeader() {
                 imageVector = Icons.Default.AutoAwesome,
                 contentDescription = null,
                 modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
 
