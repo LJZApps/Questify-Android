@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.ui.components.EasyIcon
@@ -36,12 +37,12 @@ fun AllQuestsPage(
     viewModel: QuestOverviewViewModel,
     navController: NavHostController
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     if (!uiState.quests.isEmpty()) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
         ) {
             items(uiState.quests.sortedBy { it.done }.asReversed(), key = { it.id }) { quest ->
                 QuestItem(
