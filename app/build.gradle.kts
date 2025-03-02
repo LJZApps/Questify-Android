@@ -109,6 +109,9 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Tensorflow
+    implementation(libs.tensorflow.lite)
+
     // Confetti
     implementation(libs.konfetti.compose)
 

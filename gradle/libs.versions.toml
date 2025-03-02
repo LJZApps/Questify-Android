@@ -44,6 +44,7 @@ sentryBom = "7.19.1"
 composeSettings = "2.4.0"
 composePlugin = "1.7.3"
 datastoreCoreAndroid = "1.1.2"
+tensorflowLite = "2.12.0"
 workRuntimeKtx = "2.10.0"
 colorpicker = "1.1.2"
 
@@ -103,6 +104,7 @@ sandwich-retrofit-serialization = { module = "com.github.skydoves:sandwich-retro
 sentry-android = { module = "io.sentry:sentry-android" }
 sentry-bom = { module = "io.sentry:sentry-bom", version.ref = "sentryBom" }
 sentry-compose-android = { module = "io.sentry:sentry-compose-android" }
+tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }
