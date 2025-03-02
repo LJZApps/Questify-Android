@@ -52,7 +52,8 @@ fun QuestItem(
     onQuestDelete: (id: Int) -> Unit,
     questTaskCount: Int = 0,
     questNotificationCount: Int = 0,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
+        .padding(8.dp),
     onClick: () -> Unit,
     shadow: Dp = 1.dp,
     preview: Boolean = false
@@ -75,7 +76,7 @@ fun QuestItem(
         positionalThreshold = { it * .25f }
     )
 
-    Box(modifier = modifier.padding(8.dp)) {
+    Box(modifier = modifier) {
         SwipeToDismissBox(
             state = dismissState,
             backgroundContent = {

@@ -18,7 +18,9 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
+import de.ljz.questify.ui.features.dashboard.components.LatestQuestsComponent
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
+import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.changelog.parseYamlChangelog
 
@@ -55,8 +57,8 @@ fun DashboardScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 AnimatedVisibility(
                     visible = uiState.newVersionVisible,
@@ -76,8 +78,14 @@ fun DashboardScreen(
                 }
 
                 StatsComponent(
-                    userLevel = uiState.userLevel,
-                    userXP = uiState.userXp
+                    appUser = uiState.appUser,
+                    onClick = {
+                        mainNavController.navigate(ProfileRoute)
+                    }
+                )
+
+                LatestQuestsComponent(
+                    quests = uiState.quests
                 )
             }
         },

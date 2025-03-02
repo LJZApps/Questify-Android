@@ -39,9 +39,7 @@ class DashboardViewModel @Inject constructor(
                 appUserRepository.getAppUser().collect { appUser ->
                     _uiState.update { currentState ->
                         currentState.copy(
-                            userPoints = appUser.points,
-                            userXp = appUser.xp,
-                            userLevel = appUser.level
+                            appUser = appUser
                         )
                     }
                 }
