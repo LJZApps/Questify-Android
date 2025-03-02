@@ -11,6 +11,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
@@ -46,7 +47,7 @@ class QuestNotificationWorker @AssistedInject constructor(
         val intent = Intent(context, QuestNotificationReceiver::class.java).apply {
             putExtra("notificationId", notification.id)
             putExtra("questId", quest.id)
-            putExtra("title", "Zeit für eine Quest!")
+            putExtra("title", context.getString(R.string.quest_notification_title))
             putExtra("description", quest.title)
         }
 

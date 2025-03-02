@@ -1,5 +1,6 @@
 package de.ljz.questify.core.receiver
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -34,8 +35,8 @@ class QuestNotificationReceiver : BroadcastReceiver() {
 
         val notificationId = intent.getIntExtra("notificationId", 0)
         val questId = intent.getIntExtra("questId", 0)
-        val title = intent.getStringExtra("title") ?: "Zeit für deine Quest!"
-        val description = intent.getStringExtra("description") ?: "Du hast eine Quest zu erledigen"
+        val title = intent.getStringExtra("title") ?: context.getString(R.string.quest_notification_title)
+        val description = intent.getStringExtra("description") ?: context.getString(R.string.quest_notification_description)
         var hasNotified: Boolean = false
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -48,7 +49,7 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-        // Abschließen
+        // Complete quest
         val completeQuestIntent = Intent(context, CompleteQuestReceiver::class.java).apply {
             putExtra("notificationId", notificationId)
             putExtra("questId", questId)
@@ -58,11 +59,11 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         )
         val completeQuestAction = NotificationCompat.Action.Builder(
             null,
-            "Abschließen",
+            context.getString(R.string.quest_notification_action_complete),
             completeQuestPendingIntent
         ).build()
 
-        // Erneut erinnern
+        // Remind again
         val remindAgainIntent = Intent(context, RemindAgainActivity::class.java).apply {
             putExtra("notificationId", notificationId)
             putExtra("questId", questId)
@@ -72,7 +73,7 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         )
         val remindAgainAction = NotificationCompat.Action.Builder(
             null,
-            "Erneut erinnern",
+            context.getString(R.string.quest_notification_action_remind_again),
             remindAgainPendingIntent
         ).build()
 
@@ -90,12 +91,12 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             .addAction(remindAgainAction)
             .build()
 
-        val inboxStyle = NotificationCompat.InboxStyle().setBigContentTitle("Level auf, während du deine neuen Quests erledigst!")
+        val inboxStyle = NotificationCompat.InboxStyle()
 
         val summaryNotification = NotificationCompat.Builder(context, "quests")
             .setSmallIcon(R.drawable.ic_stat_name)
-            .setContentTitle("Neue Quests")
-            .setContentText("Es ist Zeit, mehrere Quests zu erledigen.")
+            .setContentTitle(context.getString(R.string.quest_notification_group_title))
+            .setContentText(context.getString(R.string.quest_notification_group_content))
             .setStyle(inboxStyle)
             .setGroup(questsGroupId)
             .setGroupSummary(true)
@@ -114,6 +115,7 @@ class QuestNotificationReceiver : BroadcastReceiver() {
         }
     }
 
+    @SuppressLint("MutatingSharedPrefs")
     private fun saveNotification(context: Context, title: String, description: String) {
         val sharedPreferences = context.getSharedPreferences("quest_notifications", Context.MODE_PRIVATE)
         val notifications = sharedPreferences.getStringSet("notifications", mutableSetOf()) ?: mutableSetOf()

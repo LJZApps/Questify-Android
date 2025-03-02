@@ -73,7 +73,7 @@ class AppViewModel @Inject constructor(
 
     fun createNotificationChannel(context: Context) {
         val groupId = "quest_group"
-        val groupName = "Quests"
+        val groupName = context.getString(R.string.notification_channel_quests_title)
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val questGroup = NotificationChannelGroup(groupId, groupName)
@@ -81,8 +81,9 @@ class AppViewModel @Inject constructor(
 
         val soundUri = Uri.parse("android.resource://" + context.packageName + "/" + R.raw.quest_notification)
 
-        val channel = NotificationChannel("quests", "Erinnerungen", NotificationManager.IMPORTANCE_DEFAULT).apply {
-            description = "Erhalte Quest-Erinnerungen"
+        val channel = NotificationChannel("quests",
+            context.getString(R.string.notification_channel_reminder_title), NotificationManager.IMPORTANCE_DEFAULT).apply {
+            description = context.getString(R.string.notification_channel_reminders_description)
             importance = NotificationManager.IMPORTANCE_HIGH
             group = groupId
             setSound(soundUri, Notification.AUDIO_ATTRIBUTES_DEFAULT)

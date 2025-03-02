@@ -168,4 +168,13 @@
     <string name="trophies_overview_screen_navigation_trophies_title">Trophäen</string>
     <string name="trophies_overview_screen_navigation_categories_title">Kategorien</string>
     <string name="trophies_overview_screen_title">Deine Trophäen</string>
+    <string name="quest_notification_title">Zeit für eine Quest!</string>
+    <string name="quest_notification_description">Du hast eine Quest zu erledigen</string>
+    <string name="quest_notification_action_complete">Abschließen</string>
+    <string name="quest_notification_action_remind_again">Erneut erinnern</string>
+    <string name="quest_notification_group_title">Neue Quests</string>
+    <string name="quest_notification_group_content">Es ist Zeit, mehrere Quests zu erledigen.</string>
+    <string name="notification_channel_quests_title">Quests</string>
+    <string name="notification_channel_reminder_title">Erinnerungen</string>
+    <string name="notification_channel_reminders_description">Erhalte Quest-Erinnerungen</string>
 </resources>
