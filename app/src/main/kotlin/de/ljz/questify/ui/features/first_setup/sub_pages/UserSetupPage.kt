@@ -29,10 +29,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import de.ljz.questify.R
 import de.ljz.questify.util.trimToNull
 
 @Composable
@@ -55,7 +57,7 @@ fun UserSetupPage(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Text(
-            text = "Erstelle dein Profil",
+            text = stringResource(R.string.user_setup_page_title),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -71,7 +73,7 @@ fun UserSetupPage(
             if (imageUri.toString().trimToNull() != null && imageUri.toString() != "null") {
                 AsyncImage(
                     model = imageUri,
-                    contentDescription = "Profilbild",
+                    contentDescription = "Profile picture",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -93,7 +95,7 @@ fun UserSetupPage(
             OutlinedTextField(
                 value = displayName,
                 onValueChange = { onDisplayNameChange(it) },
-                label = { Text("Anzeigename") },
+                label = { Text(stringResource(R.string.text_field_display_name)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
@@ -110,7 +112,7 @@ fun UserSetupPage(
             OutlinedTextField(
                 value = aboutMe,
                 onValueChange = { onAboutMeChange(it) },
-                label = { Text("Über mich") },
+                label = { Text(stringResource(R.string.text_field_about_me)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
                 shape = RoundedCornerShape(12.dp),

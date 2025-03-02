@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
@@ -31,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.compose.UIModePreviews
@@ -50,7 +47,7 @@ fun DetailedInformationPage(
     onRemoveReminder: (Int) -> Unit,
     onShowCreateReminderDialog: () -> Unit
 ) {
-    val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
+    val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     Column(
@@ -59,7 +56,7 @@ fun DetailedInformationPage(
         OutlinedTextField(
             value = uiState.description,
             onValueChange = { onNotesChange(it) },
-            label = { Text(stringResource(R.string.create_quest_note)) },
+            label = { Text(stringResource(R.string.text_field_quest_note)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             minLines = 2,
@@ -84,7 +81,7 @@ fun DetailedInformationPage(
                         .padding(bottom = 4.dp)
                 ) {
                     Text(
-                        text = "Fälligkeit",
+                        text = stringResource(R.string.detailed_information_page_due_date_title),
                         style = MaterialTheme.typography.titleMedium
                     )
 
@@ -130,7 +127,7 @@ fun DetailedInformationPage(
                             )
 
                             Text(
-                                text = if (uiState.selectedDueDate.toInt() == 0) "Keine Fälligkeit" else formattedDate,
+                                text = if (uiState.selectedDueDate.toInt() == 0) stringResource(R.string.detailed_information_page_due_date_empty) else formattedDate,
                                 modifier = Modifier.padding(start = 8.dp)
                             )
                         }
@@ -164,7 +161,7 @@ fun DetailedInformationPage(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = "Erinnerungen",
+                    text = stringResource(R.string.detailed_information_page_reminders_title),
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -223,7 +220,7 @@ fun DetailedInformationPage(
                         )
 
                         Text(
-                            text = "Erinnerung hinzufügen",
+                            text = stringResource(R.string.detailed_information_page_reminders_add),
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }

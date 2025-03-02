@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import de.ljz.questify.R
 
 @Composable
 fun StatsComponent(
@@ -35,8 +37,11 @@ fun StatsComponent(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Level $userLevel", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "${nextLevelXP - userXP} XP bis Level ${userLevel + 1}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(R.string.stats_component_title, userLevel), style = MaterialTheme.typography.bodyMedium)
+            Text(
+                text = stringResource(R.string.stats_component_until_next_level, nextLevelXP - userXP, userLevel + 1),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }

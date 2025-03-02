@@ -5,6 +5,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import de.ljz.questify.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,14 +23,14 @@ fun DueDateInfoDialog(
                     onDismiss()
                 }
             ) {
-                Text("Verstanden")
+                Text(stringResource(R.string.got_it))
             }
         },
         title = {
-            Text("Fälligkeit ist nach Erstellung unveränderbar")
+            Text(stringResource(R.string.due_date_info_dialog_title))
         },
         text = {
-            Text("Sobald die Quest erstellt ist, bleibt die Fälligkeit unveränderbar. Plane deine Zeit gut, um die volle Belohnung zu sichern – nach Ablauf gibt’s nur die halbe Belohnung. Schließe die Quest rechtzeitig ab und hol dir alles!\n\nDie Fälligkeit ist am ausgewählten Tag, ab 0 Uhr, fällig.")
+            Text(stringResource(R.string.due_date_info_dialog_description))
         }
     )
 }

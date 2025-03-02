@@ -49,13 +49,14 @@ fun SettingsHelpScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
 
             SettingsMenuLink(
-                title = { Text(text = "App-Berechtigungen") },
-                subtitle = { Text(text = "Berechtigungen, die zur vollen Funktionsfähigkeit benötigt werden") },
+                title = { Text(text = stringResource(R.string.settings_help_screen_permissions_title)) },
+                subtitle = { Text(text = stringResource(R.string.settings_help_screen_permissions_description)) },
                 icon = {
                     Icon(Icons.Outlined.VerifiedUser, contentDescription = null)
                 },
@@ -77,7 +78,7 @@ fun SettingsHelpScreen(
 
             SettingsMenuLink(
                 title = {
-                    Text("Show onboarding")
+                    Text(stringResource(R.string.settings_help_screen_show_onboarding_title))
                 },
                 icon = { Icon(Icons.Outlined.Explore, contentDescription = null) },
                 onClick = {
@@ -93,17 +94,19 @@ fun SettingsHelpScreen(
 
             SettingsMenuLink(
                 title = {
-                    Text("App-Info")
+                    Text(stringResource(R.string.settings_help_screen_app_info))
                 },
                 subtitle = {
                     Text(
-                        text = "Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                        text = stringResource(
+                            R.string.settings_help_screen_app_info_description,
+                            BuildConfig.VERSION_NAME,
+                            BuildConfig.VERSION_CODE
+                        )
                     )
                 },
                 icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
-                onClick = {
-                    // TODO
-                }
+                onClick = {}
             )
         }
     }

@@ -24,10 +24,8 @@ import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceRoute
-import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpRoute
-import de.ljz.questify.ui.features.settings.settings_appearance.components.CustomColorDialog
 import de.ljz.questify.ui.features.settings.settings_features.SettingsFeaturesRoute
-import de.ljz.questify.ui.features.settings.settings_features.SettingsFeaturesScreen
+import de.ljz.questify.ui.features.settings.settings_help.SettingsHelpRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,14 +50,15 @@ fun SettingsMainScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
             SettingsMenuLink(
-                title = { Text(text = "Features") },
+                title = { Text(text = stringResource(R.string.settings_main_screen_features_title)) },
                 subtitle = {
                     Text(
-                        text = "Toggle app features"
+                        text = stringResource(R.string.settings_main_screen_features_description)
                     )
                 },
                 icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
@@ -69,10 +68,10 @@ fun SettingsMainScreen(
             )
 
             SettingsMenuLink(
-                title = { Text(text = "Appearance") },
+                title = { Text(text = stringResource(R.string.settings_main_screen_appearance_title)) },
                 subtitle = {
                     Text(
-                        text = "Customize the app appearance"
+                        text = stringResource(R.string.settings_main_screen_appearance_description)
                     )
                 },
                 icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
@@ -82,89 +81,15 @@ fun SettingsMainScreen(
             )
 
             SettingsMenuLink(
-                title = { Text(text = "Help") },
+                title = { Text(text = stringResource(R.string.settings_main_screen_help_title)) },
                 subtitle = {
                     Text(
-                        text = "Get help with the app"
+                        text = stringResource(R.string.settings_main_screen_help_description)
                     )
                 },
                 icon = { Icon(Icons.Outlined.HelpOutline, contentDescription = null) },
                 onClick = {
                     mainNavController.navigate(SettingsHelpRoute)
-                }
-            )
-
-            /*SettingsGroup(
-                title = { Text(text = stringResource(R.string.settings_screen_theme_title)) },
-            ) {
-                SettingsSwitch(
-                    state = uiState.dynamicColorsEnabled,
-                    title = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_title)) },
-                    subtitle = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_subtitle)) },
-                    icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
-                    onCheckedChange = viewModel::updateDynamicColorsEnabled,
-                )
-
-                SettingsSwitch(
-                    state = uiState.isAmoled,
-                    title = { Text(text = "AMOLED") },
-                    subtitle = { Text(text = "Set the theme to pure dark to safe battery life") },
-                    icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
-                    onCheckedChange = viewModel::updateIsAmoledEnabled,
-                )
-
-
-
-                AnimatedVisibility(!uiState.dynamicColorsEnabled) {
-                    SettingsMenuLink(
-                        title = { Text(text = stringResource(R.string.settings_screen_custom_colors_title)) },
-                        enabled = !uiState.dynamicColorsEnabled,
-                        subtitle = {
-                            Text(
-                                text = colorOptions.first { it.color == uiState.themeColor }.text
-                            )
-                        },
-                        icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
-                        onClick = {
-                            viewModel.showCustomColorDialog()
-                        }
-                    )
-                }
-
-                SettingsMenuLink(
-                    title = { Text(text = stringResource(R.string.settings_screen_app_theme_title)) },
-                    subtitle = { Text(text = themOptions.first { it.behavior == uiState.themeBehavior }.text) },
-                    icon = {
-                        Icon(
-                            when (uiState.themeBehavior) {
-                                ThemeBehavior.DARK -> Icons.Outlined.DarkMode
-                                ThemeBehavior.LIGHT -> Icons.Outlined.LightMode
-                                ThemeBehavior.SYSTEM_STANDARD -> {
-                                    if (isSystemInDarkTheme())
-                                        Icons.Outlined.DarkMode
-                                    else
-                                        Icons.Outlined.LightMode
-                                }
-                            },
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        viewModel.showDarkModeDialog()
-                    }
-                )
-            }*/
-        }
-
-        if (uiState.customColorDialogVisible) {
-            CustomColorDialog(
-                selectedColor = uiState.themeColor,
-                onConfirm = { color ->
-                    viewModel.updateCustomColor(color)
-                    viewModel.hideCustomColorDialog()
-                },
-                onDismiss = {
-                    viewModel.hideCustomColorDialog()
                 }
             )
         }

@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
@@ -49,7 +46,7 @@ fun BaseInformationPage(
         OutlinedTextField(
             value = uiState.title,
             onValueChange = { onTitleChange(it) },
-            label = { Text(stringResource(R.string.create_quest_title)) },
+            label = { Text(stringResource(R.string.text_field_quest_title)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             singleLine = true,
@@ -68,7 +65,7 @@ fun BaseInformationPage(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(
-                    text = "Schwierigkeit",
+                    text = stringResource(R.string.base_information_page_difficulty_title),
                     modifier = Modifier.padding(bottom = 4.dp),
                     style = MaterialTheme.typography.titleMedium
                 )

@@ -238,7 +238,6 @@ fun QuestItem(
             }
         }
 
-
         if (preview) {
             Badge(
                 modifier = Modifier

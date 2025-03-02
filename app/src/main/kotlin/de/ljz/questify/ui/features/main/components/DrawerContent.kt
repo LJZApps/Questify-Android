@@ -214,7 +214,7 @@ fun DrawerContent(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Text(
-                                text = "${uiState.userXP} XP",
+                                text = stringResource(R.string.drawe_content_xp, uiState.userXP),
                                 style = MaterialTheme.typography.bodySmall
                             )
 
@@ -226,7 +226,10 @@ fun DrawerContent(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Text(
-                                text = "Level ${uiState.userLevel}",
+                                text = stringResource(
+                                    R.string.drawe_content_level,
+                                    uiState.userLevel
+                                ),
                                 style = MaterialTheme.typography.bodySmall
                             )
 
@@ -238,7 +241,10 @@ fun DrawerContent(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Text(
-                                text = "${uiState.userPoints} Punkte",
+                                text = stringResource(
+                                    R.string.drawe_content_points,
+                                    uiState.userPoints
+                                ),
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }

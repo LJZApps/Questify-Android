@@ -9,10 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.BuildConfig
+import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
@@ -45,7 +47,7 @@ fun DashboardScreen(
             TopBar(
                 drawerState = drawerState,
                 navController = mainNavController,
-                title = "Dashboard"
+                title = stringResource(R.string.dashboard_screen_title)
             )
         },
         content = { innerPadding ->

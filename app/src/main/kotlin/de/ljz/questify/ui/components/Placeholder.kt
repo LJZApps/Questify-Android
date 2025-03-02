@@ -7,19 +7,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 
 @Composable
 fun Placeholder(
-    text: String = "Ups! Hier gibt es noch nichts.",
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = "Ups! Hier gibt es noch nichts.",
+        text = stringResource(R.string.placeholder_title),
         style = MaterialTheme.typography.bodyMedium,
         modifier = modifier
-            .background(MaterialTheme.colorScheme.surfaceContainerLow, shape = MaterialTheme.shapes.medium)
+            .background(
+                MaterialTheme.colorScheme.surfaceContainerLow,
+                shape = MaterialTheme.shapes.medium
+            )
             .padding(8.dp)
             .fillMaxWidth(),
         textAlign = TextAlign.Center,

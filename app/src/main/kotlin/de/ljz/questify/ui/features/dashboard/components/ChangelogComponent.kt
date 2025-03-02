@@ -21,8 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 
 @Composable
 fun ChangelogComponent(
@@ -37,7 +39,8 @@ fun ChangelogComponent(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -54,12 +57,16 @@ fun ChangelogComponent(
 
                 Column {
                     Text(
-                        text = "App auf Version $currentVersion aktualisiert!",
+                        text = stringResource(R.string.changelog_component_title, currentVersion),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = if(changelogAvailable) "Klicke hier, um die Neuigkeiten zu sehen." else "Für diese Version gibt es keinen Changelog.",
+                        text = if(changelogAvailable)
+                            stringResource(R.string.changelog_component_view_changelog)
+                        else
+                            stringResource(R.string.changelog_component_no_changelog)
+                        ,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Start

@@ -3,23 +3,16 @@ package de.ljz.questify.ui.features.settings.settings_appearance
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
@@ -34,7 +27,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -44,7 +36,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
-import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.materialkolor.PaletteStyle
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.settings_appearance.components.ColorPickerDialog
@@ -78,7 +69,7 @@ fun SettingsAppearanceScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Appearance")
+                    Text(stringResource(R.string.settings_appearance_screen_title))
                 },
                 navigationIcon = {
                     IconButton(
@@ -131,14 +122,14 @@ fun SettingsAppearanceScreen(
                 Column {
                     SettingsSwitch(
                         state = uiState.isAmoled,
-                        title = { Text(text = "AMOLED") },
-                        subtitle = { Text(text = "Pure dark to safe battery life") },
+                        title = { Text(text = stringResource(R.string.settings_appearance_screen_amoled_title)) },
+                        subtitle = { Text(text = stringResource(R.string.settings_appearance_screen_amoled_description)) },
                         icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
                         onCheckedChange = viewModel::updateIsAmoledEnabled,
                     )
 
                     SettingsMenuLink(
-                        title = { Text(text = "Theme style") },
+                        title = { Text(text = stringResource(R.string.settings_appearance_screen_theme_style_title)) },
                         subtitle = {
                             Text(
                                 text = PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name
@@ -152,10 +143,10 @@ fun SettingsAppearanceScreen(
 
                     if(uiState.paletteStyle != PaletteStyle.Monochrome) {
                         SettingsMenuLink(
-                            title = { Text(text = "App tint") },
+                            title = { Text(text = stringResource(R.string.settings_appearance_screen_app_tint_title)) },
                             subtitle = {
                                 Text(
-                                    text = "Set the tint of the app"
+                                    text = stringResource(R.string.settings_appearance_screen_app_tint_description)
                                 )
                             },
                             icon = {

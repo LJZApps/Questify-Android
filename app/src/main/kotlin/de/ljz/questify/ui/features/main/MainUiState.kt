@@ -5,7 +5,7 @@ data class MainUiState(
     val userPoints: Int = 0,
     val userXP: Int = 0,
     val userLevel: Int = 0,
-    val userName: String = "Abenteurer",
+    val userName: String = "Adventurer",
     val userProfilePicture: String = "",
     val tutorialsUiState: TutorialsUiState = TutorialsUiState()
 )

@@ -20,11 +20,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesBottomNavGraph
 import de.ljz.questify.ui.features.trophies.navigation.TrophyBottomRoutes
@@ -58,12 +60,12 @@ fun TrophiesOverviewScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val bottomNavRoutes = listOf(
         BottomNavigationRoute(
-            "Trophäen",
+            stringResource(R.string.trophies_overview_screen_navigation_trophies_title),
             TrophyBottomRoutes.AllTrophiesRoute,
             Icons.Outlined.EmojiEvents
         ),
         BottomNavigationRoute(
-            "Kategorien",
+            stringResource(R.string.trophies_overview_screen_navigation_categories_title),
             TrophyBottomRoutes.TrophyCategoriesRoute,
             Icons.Outlined.Category
         ),
@@ -74,7 +76,7 @@ fun TrophiesOverviewScreen(
             TopBar(
                 drawerState = drawerState,
                 navController = mainNavController,
-                title = "Deine Trophäen",
+                title = stringResource(R.string.trophies_overview_screen_title),
                 scrollBehavior = scrollBehavior
             )
         },

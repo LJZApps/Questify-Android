@@ -35,10 +35,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dagger.hilt.android.AndroidEntryPoint
+import de.ljz.questify.R
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
@@ -77,7 +79,7 @@ class RemindAgainActivity : ComponentActivity() {
 
                         Toast.makeText(
                             context,
-                            "Du wirst in $minutes Minuten erneut erinnert.",
+                            getString(R.string.remind_again_activity_toast, minutes),
                             Toast.LENGTH_LONG
                         ).show()
 
@@ -120,7 +122,7 @@ fun RemindAgainPopUp(
                         .padding(16.dp)
                         .clickable(enabled = false) {}
                 ) {
-                    Text("Erneut erinnern in...", style = MaterialTheme.typography.headlineSmall)
+                    Text(stringResource(R.string.remind_again_activity_title), style = MaterialTheme.typography.headlineSmall)
 
                     Box(
                         modifier = Modifier
@@ -134,7 +136,17 @@ fun RemindAgainPopUp(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = if (isCustomTimeSelected) "${customTime.toLongOrDefault(0)} Minuten" else "$selectedTime Minuten",
+                            text = if (isCustomTimeSelected)
+                                stringResource(
+                                    R.string.remind_again_activity_minutes,
+                                    customTime.toLongOrDefault(0)
+                                )
+                            else
+                                stringResource(
+                                    R.string.remind_again_activity_minutes,
+                                    selectedTime
+                                )
+                            ,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(8.dp)
                         )
@@ -151,7 +163,7 @@ fun RemindAgainPopUp(
                                 isDropdownExpanded = false
                                 isCustomTimeSelected = false
                             },
-                            text = { Text("5 Minuten") }
+                            text = { Text(stringResource(R.string.remind_again_activity_minutes, 5)) }
                         )
                         DropdownMenuItem(
                             onClick = {
@@ -159,7 +171,7 @@ fun RemindAgainPopUp(
                                 isDropdownExpanded = false
                                 isCustomTimeSelected = false
                             },
-                            text = { Text("10 Minuten") }
+                            text = { Text(stringResource(R.string.remind_again_activity_minutes, 10)) }
                         )
                         DropdownMenuItem(
                             onClick = {
@@ -167,7 +179,7 @@ fun RemindAgainPopUp(
                                 isDropdownExpanded = false
                                 isCustomTimeSelected = false
                             },
-                            text = { Text("15 Minuten") }
+                            text = { Text(stringResource(R.string.remind_again_activity_minutes, 15)) }
                         )
 
                         HorizontalDivider()
@@ -177,7 +189,7 @@ fun RemindAgainPopUp(
                                 isDropdownExpanded = false
                                 isCustomTimeSelected = true
                             },
-                            text = { Text("Benutzerdefiniert") }
+                            text = { Text(stringResource(R.string.remind_again_activity_custom_minutes_item)) }
                         )
                     }
 
@@ -186,10 +198,10 @@ fun RemindAgainPopUp(
                         OutlinedTextField(
                             value = customTime,
                             onValueChange = { customTime = it },
-                            label = { Text("Benutzerdefinierte Minuten") },
+                            label = { Text(stringResource(R.string.text_field_custom_minutes)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
-                            placeholder = { Text("z.B. 20") },
+                            placeholder = { Text(stringResource(R.string.remind_again_activity_example_minutes)) },
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Number
                             )
@@ -211,7 +223,7 @@ fun RemindAgainPopUp(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !(isCustomTimeSelected && customTime.toLongOrDefault(0).toInt() == 0)
                     ) {
-                        Text("Erinnerung setzen")
+                        Text(stringResource(R.string.remind_again_activity_set_reminder_button))
                     }
                 }
             }

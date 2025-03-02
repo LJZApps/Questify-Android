@@ -1,18 +1,12 @@
 package de.ljz.questify.ui.components.information_bottom_sheets
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.BugReport
@@ -36,12 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.util.changelog.ChangeLogVersion
 import kotlinx.coroutines.launch
@@ -54,7 +47,6 @@ fun ChangelogBottomSheet(
     onDismiss: (changelogEnabled: Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val state = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { false },
@@ -92,7 +84,7 @@ fun ChangelogBottomSheet(
                     )
 
                     Text(
-                        text = "Neuigkeiten",
+                        text = stringResource(R.string.changelog_bottom_sheet_title),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary, // Einfärbung mit Theme-Farbe
                         textAlign = TextAlign.Center,
@@ -101,7 +93,7 @@ fun ChangelogBottomSheet(
                     )
 
                     Text(
-                        text = "Version ${BuildConfig.VERSION_NAME}",
+                        text = stringResource(R.string.changelog_bottom_sheet_version, BuildConfig.VERSION_NAME),
                         style = MaterialTheme.typography.bodySmall,
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -127,7 +119,7 @@ fun ChangelogBottomSheet(
                                     .padding(end = 8.dp)
                             )
                             Text(
-                                text = "Neue Funktionen:",
+                                text = stringResource(R.string.changelog_bottom_sheet_new_features),
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Start,
                             )
@@ -167,7 +159,7 @@ fun ChangelogBottomSheet(
                                     .padding(end = 8.dp)
                             )
                             Text(
-                                text = "Änderungen:",
+                                text = stringResource(R.string.changelog_bottom_sheet_changes),
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Start,
                             )
@@ -207,7 +199,7 @@ fun ChangelogBottomSheet(
                                     .padding(end = 8.dp)
                             )
                             Text(
-                                text = "Fehlerbehebungen:",
+                                text = stringResource(R.string.changelog_bottom_sheet_bugfixes),
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Start,
                             )
@@ -251,7 +243,7 @@ fun ChangelogBottomSheet(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Immer nach Update anzeigen",
+                                text = stringResource(R.string.changelog_bottom_sheet_always_display),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -270,7 +262,7 @@ fun ChangelogBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = { onDismiss(changelogEnabled.value) }
                 ) {
-                    Text("Verstanden")
+                    Text(stringResource(R.string.got_it))
                 }
             }
         }

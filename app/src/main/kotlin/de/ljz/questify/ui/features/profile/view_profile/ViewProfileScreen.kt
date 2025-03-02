@@ -30,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
+import de.ljz.questify.R
 import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
 import de.ljz.questify.util.NavBarConfig
 
@@ -54,7 +56,7 @@ fun ViewProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Mein Profil") },
+                title = { Text(text = stringResource(R.string.view_profile_screen_title)) },
                 actions = {
                     IconButton(
                         onClick = {
@@ -100,7 +102,8 @@ fun ViewProfileScreen(
                         AsyncImage(
                             model = uiState.profilePictureUrl,
                             contentDescription = "Profilbild",
-                            modifier = Modifier.size(120.dp)
+                            modifier = Modifier
+                                .size(120.dp)
                                 .clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
@@ -132,7 +135,7 @@ fun ViewProfileScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Über mich",
+                        text = stringResource(R.string.view_profile_screen_about_me),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -141,7 +144,7 @@ fun ViewProfileScreen(
 
                     if (uiState.aboutMe.isEmpty()) {
                         Text(
-                            text = "Keine Informationen",
+                            text = stringResource(R.string.view_profile_screen_no_information),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Start,
                             fontStyle = FontStyle.Italic

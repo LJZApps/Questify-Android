@@ -35,7 +35,7 @@ fun SettingsFeaturesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Features") },
+                title = { Text(text = stringResource(R.string.settings_features_screen_title)) },
                 navigationIcon = {
                     IconButton(
                         onClick = { mainNavController.navigateUp() }
@@ -52,12 +52,12 @@ fun SettingsFeaturesScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             SettingsGroup (
-                title = { Text(text = "Quests") }
+                title = { Text(text = stringResource(R.string.settings_features_screen_category_quests_title)) }
             ) {
                 SettingsSwitch(
                     state = uiState.questFeaturesState.fastAddingEnabled,
-                    title = { Text(text = "Fast quest creation") },
-                    subtitle = { Text(text = "Shows a text field on your quest screen to create a quest") },
+                    title = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_title)) },
+                    subtitle = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_description)) },
                     icon = { Icon(Icons.Outlined.FlashOn, contentDescription = null) },
                     onCheckedChange = viewModel::updateFastAddingEnabled,
                 )

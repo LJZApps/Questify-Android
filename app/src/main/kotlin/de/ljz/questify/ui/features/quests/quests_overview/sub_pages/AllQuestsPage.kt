@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.ui.components.EasyIcon
 import de.ljz.questify.ui.components.EpicIcon
@@ -87,7 +89,7 @@ fun AllQuestsPage(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(64.dp)
             )
-            Text("Du hast noch keine Quests erstellt.")
+            Text(stringResource(R.string.all_quests_page_empty))
             Spacer(modifier = Modifier.weight(1f))
         }
     }

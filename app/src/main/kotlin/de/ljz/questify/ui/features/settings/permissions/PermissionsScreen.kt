@@ -20,10 +20,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsSwitch
+import de.ljz.questify.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +44,7 @@ fun PermissionsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "App-Berechtigungen") },
+                title = { Text(text = stringResource(R.string.permission_screen_title)) },
                 navigationIcon = {
                     if (canNavigateBack)
                         IconButton(
@@ -58,7 +60,7 @@ fun PermissionsScreen(
         bottomBar = {
             if (!canNavigateBack)
                 Text(
-                    text = "Bitte starte die App neu, wenn du alle Berechtigungen zugelassen hast.",
+                    text = stringResource(R.string.permissions_screen_restart_app_hint),
                     modifier = Modifier
                         .fillMaxWidth()
                         .navigationBarsPadding()
@@ -72,8 +74,8 @@ fun PermissionsScreen(
             ) {
                 SettingsSwitch(
                     state = uiState.isNotificationPermissionGiven,
-                    title = { Text(text = "Benachrichtigungen") },
-                    subtitle = { Text(text = "Damit du keine wichtigen Quests verpasst!") },
+                    title = { Text(text = stringResource(R.string.permissions_screen_notifications_title)) },
+                    subtitle = { Text(text = stringResource(R.string.permissions_screen_notifications_description)) },
                     icon = { Icon(Icons.Outlined.Notifications, contentDescription = null) },
                     enabled = !uiState.isNotificationPermissionGiven,
                     onCheckedChange = {
@@ -83,8 +85,8 @@ fun PermissionsScreen(
 
                 SettingsSwitch(
                     state = uiState.isOverlayPermissionsGiven,
-                    title = { Text(text = "Über anderen Apps anzeigen") },
-                    subtitle = { Text(text = "Damit du sorglos eine erneute Erinnerung einrichten kannst.") },
+                    title = { Text(text = stringResource(R.string.permissions_screen_above_other_apps_title)) },
+                    subtitle = { Text(text = stringResource(R.string.permissions_screen_above_other_apps_description)) },
                     icon = { Icon(Icons.Outlined.Layers, contentDescription = null) },
                     enabled = !uiState.isOverlayPermissionsGiven,
                     onCheckedChange = {
@@ -94,8 +96,8 @@ fun PermissionsScreen(
 
                 SettingsSwitch(
                     state = uiState.isAlarmPermissionsGiven,
-                    title = { Text(text = "Alarme setzen") },
-                    subtitle = { Text(text = "Ermöglicht uns, dich für Quests zur richtigen Zeit zu erinnern.") },
+                    title = { Text(text = stringResource(R.string.permissions_screen_set_alarms_title)) },
+                    subtitle = { Text(text = stringResource(R.string.permissions_screen_set_alarms_description)) },
                     icon = { Icon(Icons.Outlined.Alarm, contentDescription = null) },
                     enabled = !uiState.isAlarmPermissionsGiven,
                     onCheckedChange = {

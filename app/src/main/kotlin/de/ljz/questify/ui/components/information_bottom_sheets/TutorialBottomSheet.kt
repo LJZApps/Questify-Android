@@ -26,9 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +78,7 @@ fun TutorialBottomSheet(
 
                 // Subtitle "Tutorial" mit Einfärbung
                 Text(
-                    text = "Tutorial",
+                    text = stringResource(R.string.tutorial_bottom_sheet_title),
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.primary, // Einfärbung mit Theme-Farbe
                     textAlign = TextAlign.Center,
@@ -124,7 +126,7 @@ fun TutorialBottomSheet(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Tutorials weiterhin anzeigen",
+                        text = stringResource(R.string.tutorial_bottom_sheet_always_show),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -144,7 +146,7 @@ fun TutorialBottomSheet(
                     onDismiss(tutorialsEnabled.value)
                 }
             ) {
-                Text("Verstanden")
+                Text(stringResource(R.string.got_it))
             }
         }
     }

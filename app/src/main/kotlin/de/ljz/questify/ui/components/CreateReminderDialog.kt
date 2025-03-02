@@ -34,10 +34,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import de.ljz.questify.R
 import de.ljz.questify.core.application.AddingReminderState
 import java.util.Calendar
 
@@ -115,12 +117,12 @@ fun CreateReminderDialog(
                     ),
                     dismissButton = {
                         TextButton(onClick = onDismiss) {
-                            Text("Abbrechen")
+                            Text(stringResource(R.string.cancel))
                         }
                     },
                     confirmButton = {
                         TextButton(onClick = { onReminderStateChange(AddingReminderState.TIME) }) {
-                            Text("Weiter")
+                            Text(stringResource(R.string.next))
                         }
                     },
                 ) {
@@ -149,7 +151,7 @@ fun CreateReminderDialog(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Zeit auswählen",
+                            text = stringResource(R.string.create_reminder_dialog_title),
                             modifier = Modifier
                                 .padding(bottom = 12.dp)
                                 .fillMaxWidth(),
@@ -180,11 +182,11 @@ fun CreateReminderDialog(
 
                             Row {
                                 TextButton(onClick = { onReminderStateChange(AddingReminderState.DATE) }) {
-                                    Text("Zurück")
+                                    Text(stringResource(R.string.back))
                                 }
                                 Spacer(modifier = Modifier.width(2.dp))
                                 TextButton(onClick = { onConfirm(combinedDateTime.value) }) {
-                                    Text("Erinnerung hinzufügen")
+                                    Text(stringResource(R.string.create_reminder_dialog_add_reminder))
                                 }
                             }
                         }

@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 
 @Composable
 fun FeatureNotAvailable(
@@ -52,7 +54,7 @@ fun FeatureNotAvailable(
                     .background(MaterialTheme.colorScheme.surface, shape = CircleShape)
             )
         }
-        Text("Diese Funktion ist noch nicht eingebaut.")
+        Text(stringResource(R.string.feature_not_available_title))
         Spacer(modifier = Modifier.weight(1f))
     }
 }

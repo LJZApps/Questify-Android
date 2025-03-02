@@ -106,11 +106,11 @@ fun QuestDetailScreen(
     )
 
     val context = LocalContext.current
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     val snackbarHostState = remember { SnackbarHostState() }
 
     val fabShape by animateFloatAsState(
-        targetValue = if (uiState.isEditingQuest) 100f else 50f, // 50f → komplett rund, 0f → normales FAB
+        targetValue = if (uiState.isEditingQuest) 100f else 50f,
         animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
         label = "FABShape"
     )
@@ -151,7 +151,7 @@ fun QuestDetailScreen(
                         OutlinedTextField(
                             value = editQuestState.title,
                             onValueChange = { viewModel.updateTitle(it) },
-                            label = { Text(stringResource(R.string.create_quest_title)) },
+                            label = { Text(stringResource(R.string.text_field_quest_title)) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
                             singleLine = true
@@ -172,7 +172,7 @@ fun QuestDetailScreen(
                         OutlinedTextField(
                             value = editQuestState.description,
                             onValueChange = { viewModel.updateDescription(it) },
-                            label = { Text(stringResource(R.string.create_quest_note)) },
+                            label = { Text(stringResource(R.string.text_field_quest_note)) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
                             minLines = 2
@@ -182,7 +182,7 @@ fun QuestDetailScreen(
 
                 // Schwierigkeit
                 Column {
-                    Text(text = "Schwierigkeit", style = MaterialTheme.typography.titleMedium)
+                    Text(text = stringResource(R.string.quest_detail_screen_difficulty_title), style = MaterialTheme.typography.titleMedium)
 
                     AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
                         if (targetState) {
@@ -243,9 +243,9 @@ fun QuestDetailScreen(
 
                 // Fälligkeit
                 Column {
-                    Text(text = "Fälligkeit", style = MaterialTheme.typography.titleMedium)
+                    Text(text = stringResource(R.string.quest_detail_screen_due_date_title), style = MaterialTheme.typography.titleMedium)
                     val dueDateText = if (questState.selectedDueDate == 0L) {
-                        "Keine Fälligkeit"
+                        stringResource(R.string.quest_detail_screen_due_date_empty)
                     } else {
                         dateFormat.format(Date(questState.selectedDueDate))
                     }
@@ -255,7 +255,7 @@ fun QuestDetailScreen(
                 // Erinnerungen
                 if (questState.notificationTriggerTimes.isNotEmpty()) {
                     Column {
-                        Text(text = "Erinnerungen", style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(R.string.quest_detail_screen_reminders_title), style = MaterialTheme.typography.titleMedium)
                         questState.notificationTriggerTimes.sorted().forEach { triggerTime ->
                             Text(
                                 text = dateFormat.format(Date(triggerTime)),
@@ -277,7 +277,7 @@ fun QuestDetailScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(text = "Trophäen", style = MaterialTheme.typography.titleMedium)
+                            Text(text = stringResource(R.string.quest_detail_screen_trophies_title), style = MaterialTheme.typography.titleMedium)
                             Box(
                                 modifier = Modifier
                                     .background(
@@ -318,7 +318,7 @@ fun QuestDetailScreen(
                                 TrophyCard(
                                     icon = icon,
                                     title = name,
-                                    description = "Dies ist eine gottlos lange verfickte Beschreibung"
+                                    description = "PLACEHOLDER"
                                 )
                             }
                         }
@@ -346,17 +346,17 @@ fun QuestDetailScreen(
             BottomAppBar(
                 actions = {
                     BasicPlainTooltip(
-                        text = "Delete quest"
+                        text = stringResource(R.string.quest_detail_screen_tooltip_delete_quest)
                     ) {
                         IconButton(onClick = { viewModel.showDeleteConfirmationDialog() }) {
-                            Icon(Icons.Outlined.DeleteOutline, contentDescription = "Löschen")
+                            Icon(Icons.Outlined.DeleteOutline, contentDescription = "Delete")
                         }
                     }
                     BasicPlainTooltip(
-                        text = "Edit reminders",
+                        text = stringResource(R.string.quest_detail_screen_tooltip_edit_reminders),
                     ) {
                         IconButton(onClick = { /*viewModel.showEditReminderDialog()*/ }) {
-                            Icon(Icons.Outlined.Alarm, contentDescription = "Erinnerung ändern")
+                            Icon(Icons.Outlined.Alarm, contentDescription = "Edit reminders")
                         }
                     }
                 },
@@ -381,39 +381,37 @@ fun QuestDetailScreen(
                             }
                         }
 
-                        BasicPlainTooltip(text = "Edit quest") {
-                            FloatingActionButton(
-                                onClick = {
-                                    if (uiState.isEditingQuest) {
-                                        viewModel.updateQuest(
-                                            context = context,
-                                            onSuccess = {
-                                                scope.launch {
-                                                    snackbarHostState.showSnackbar(
-                                                        "Quest updated.",
-                                                        withDismissAction = true
-                                                    )
-                                                }
-                                                viewModel.stopEditMode()
+                        FloatingActionButton(
+                            onClick = {
+                                if (uiState.isEditingQuest) {
+                                    viewModel.updateQuest(
+                                        context = context,
+                                        onSuccess = {
+                                            scope.launch {
+                                                snackbarHostState.showSnackbar(
+                                                    context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
+                                                    withDismissAction = true
+                                                )
                                             }
-                                        )
-                                    } else {
-                                        viewModel.startEditMode()
-                                    }
-                                },
-                                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                                shape = RoundedCornerShape(fabShape)
-                            ) {
-                                Crossfade(
-                                    targetState = uiState.isEditingQuest,
-                                    label = "EditQuestIconAnimation"
-                                ) { isFocused ->
-                                    Icon(
-                                        imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
-                                        contentDescription = null
+                                            viewModel.stopEditMode()
+                                        }
                                     )
+                                } else {
+                                    viewModel.startEditMode()
                                 }
+                            },
+                            containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                            shape = RoundedCornerShape(fabShape)
+                        ) {
+                            Crossfade(
+                                targetState = uiState.isEditingQuest,
+                                label = "EditQuestIconAnimation"
+                            ) { isFocused ->
+                                Icon(
+                                    imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
@@ -454,13 +452,13 @@ fun TrophyCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)), // Farbiger Hintergrund
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(24.dp)
                 )
             }

@@ -83,7 +83,7 @@ fun SettingsFeedbackScreen(
                 OutlinedTextField(
                     value = uiState.value.messageTitle,
                     onValueChange = { viewModel.updateMessageTitle(it) },
-                    label = { Text(stringResource(R.string.create_quest_title) + " *") },
+                    label = { Text(stringResource(R.string.text_field_quest_title) + " *") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     singleLine = true,
@@ -95,7 +95,7 @@ fun SettingsFeedbackScreen(
                 OutlinedTextField(
                     value = uiState.value.messageDescription,
                     onValueChange = { viewModel.updateMessageDescription(it) },
-                    label = { Text(stringResource(R.string.create_quest_note)) },
+                    label = { Text(stringResource(R.string.text_field_quest_note)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
                     minLines = 2,

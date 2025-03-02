@@ -216,7 +216,6 @@ fun CreateQuestScreen(
                         Button(
                             onClick = {
                                 viewModel.createQuest(
-                                    context = context,
                                     onSuccess = {
                                         mainNavController.navigateUp()
                                     }

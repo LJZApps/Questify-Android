@@ -37,11 +37,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
+import de.ljz.questify.R
 import de.ljz.questify.util.NavBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +68,7 @@ fun EditProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Profil bearbeiten") },
+                title = { Text(text = stringResource(R.string.edit_profile_screen_title)) },
                 actions = {
                     TextButton(
                         onClick = {
@@ -87,7 +89,7 @@ fun EditProfileScreen(
                             navController.navigateUp()
                         }
                     ) {
-                        Text("Speichern")
+                        Text(stringResource(R.string.save))
                     }
                 },
                 navigationIcon = {
@@ -124,7 +126,8 @@ fun EditProfileScreen(
                         AsyncImage(
                             model = uiState.profilePictureUrl,
                             contentDescription = "Profilbild",
-                            modifier = Modifier.size(120.dp)
+                            modifier = Modifier
+                                .size(120.dp)
                                 .clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
@@ -142,9 +145,10 @@ fun EditProfileScreen(
                 OutlinedTextField(
                     value = uiState.displayName,
                     onValueChange = viewModel::updateDisplayName,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    label = { Text("Anzeigename") },
+                    label = { Text(stringResource(R.string.text_field_display_name)) },
                     shape = RoundedCornerShape(10.dp),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
@@ -155,9 +159,10 @@ fun EditProfileScreen(
                 OutlinedTextField(
                     value = uiState.aboutMe,
                     onValueChange = viewModel::updateAboutMe,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    label = { Text("Über mich") },
+                    label = { Text(stringResource(R.string.text_field_about_me)) },
                     shape = RoundedCornerShape(10.dp),
                     minLines = 2,
                     maxLines = 4,

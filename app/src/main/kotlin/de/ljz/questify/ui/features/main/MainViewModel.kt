@@ -18,8 +18,6 @@ class MainViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val tutorialRepository: TutorialRepository
 ) : ViewModel() {
-
-
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 

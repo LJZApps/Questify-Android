@@ -52,7 +52,8 @@ fun PaletteStyleDialog(
             ) {
                 PaletteStyle.entries.sortedBy { it.name }.forEach { style ->
                     Row(
-                        Modifier.fillMaxWidth()
+                        Modifier
+                            .fillMaxWidth()
                             .height(56.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .selectable(
@@ -75,7 +76,7 @@ fun PaletteStyleDialog(
                             )
                             if (style == PaletteStyle.TonalSpot) {
                                 Text(
-                                    text = "Default",
+                                    text = stringResource(R.string.pallete_style_dialog_default),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                                     modifier = Modifier.padding(start = 16.dp)

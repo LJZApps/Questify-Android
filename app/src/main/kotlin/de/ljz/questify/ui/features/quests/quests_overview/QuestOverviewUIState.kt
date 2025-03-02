@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.quests.quests_overview
 
-import de.ljz.questify.data.shared.Points
 import de.ljz.questify.domain.models.quests.QuestEntity
 
 data class QuestOverviewUIState(

@@ -8,6 +8,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import de.ljz.questify.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +30,7 @@ fun DeleteConfirmationDialog(
                     onConfirm()
                 }
             ) {
-                Text("Löschen")
+                Text(stringResource(R.string.delete))
             }
         },
         dismissButton = {
@@ -37,14 +39,14 @@ fun DeleteConfirmationDialog(
                     onDismiss()
                 }
             ) {
-                Text("Abbrechen")
+                Text(stringResource(R.string.cancel))
             }
         },
         title = {
-            Text("Quest löschen?")
+            Text(stringResource(R.string.delete_confirmation_dialog_title))
         },
         text = {
-            Text("Bist du sicher, dass du diese Quest löschen möchtest? Dieser Vorgang kann nicht rückgängig gemacht werden.")
+            Text(stringResource(R.string.delete_confirmation_dialog_description))
         }
     )
 }

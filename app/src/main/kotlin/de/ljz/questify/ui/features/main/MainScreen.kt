@@ -19,11 +19,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import de.ljz.questify.R
 import de.ljz.questify.ui.components.information_bottom_sheets.TutorialBottomSheet
 import de.ljz.questify.ui.components.information_bottom_sheets.TutorialStep
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
@@ -108,19 +110,19 @@ fun MainScreen(
                                     viewModel.setDashboardOnboardingDone()
                                     viewModel.toggleTutorials(tutorialsEnabled)
                                 },
-                                title = "Das Dashboard",
+                                title = stringResource(R.string.tutorial_dashboard_title),
                                 tutorialSteps = listOf(
                                     TutorialStep(
                                         icon = Icons.Default.Dashboard,
-                                        description = "Willkommen im Dashboard! Hier hast du alle deine Statistiken, Quests und Fortschritte auf einen Blick."
+                                        description = stringResource(R.string.tutorial_dashboard_text_1)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Default.PieChart,
-                                        description = "Verfolge deinen Fortschritt: Sieh dir deine abgeschlossenen Quests, täglichen Aufgaben und Routinen an."
+                                        description = stringResource(R.string.tutorial_dashboard_text_2)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Default.Settings,
-                                        description = "Passe dein Dashboard individuell an: Zeige die Inhalte, die dir am wichtigsten sind."
+                                        description = stringResource(R.string.tutorial_dashboard_text_3)
                                     )
                                 )
                             )
@@ -135,7 +137,7 @@ fun MainScreen(
 
                         if (!uiState.tutorialsUiState.questsOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
                             TutorialBottomSheet(
-                                title = "Deine Quests",
+                                title = stringResource(R.string.tutorial_quests_title),
                                 onDismiss = { tutorialsEnabled ->
                                     viewModel.setQuestOnboardingDone()
                                     viewModel.toggleTutorials(tutorialsEnabled)
@@ -143,19 +145,19 @@ fun MainScreen(
                                 tutorialSteps = listOf(
                                     TutorialStep(
                                         icon = Icons.AutoMirrored.Filled.List,
-                                        description = "Hier findest du deine Quests – die großen Abenteuer und Herausforderungen, die dich deinem Ziel näher bringen."
+                                        description = stringResource(R.string.tutorial_quests_text_1)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Filled.CalendarMonth,
-                                        description = "Dailies: Erstelle tägliche Aufgaben, die dich motivieren und dir helfen, einen konstanten Fortschritt zu erzielen."
+                                        description = stringResource(R.string.tutorial_quests_text_2)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Filled.Schedule,
-                                        description = "Routinen: Automatisiere deine regelmäßigen Aufgaben und entwickle starke Gewohnheiten, die langfristig wirken."
+                                        description = stringResource(R.string.tutorial_quests_text_3)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Filled.Eco,
-                                        description = "Gewohnheiten: Baue gesunde Gewohnheiten auf und belohne dich für jeden kleinen Erfolg."
+                                        description = stringResource(R.string.tutorial_quests_text_4)
                                     )
                                 )
                             )
@@ -174,19 +176,19 @@ fun MainScreen(
                                     viewModel.setTrophiesOnboardingDone()
                                     viewModel.toggleTutorials(tutorialsEnabled)
                                 },
-                                title = "Deine Trophäen",
+                                title = stringResource(R.string.tutorial_trophies_title),
                                 tutorialSteps = listOf(
                                     TutorialStep(
                                         icon = Icons.Default.EmojiEvents,
-                                        description = "Hier findest du eine Übersicht über deine Trophäen. Sie repräsentieren deine Erfolge und werden direkt mit Quests verknüpft."
+                                        description = stringResource(R.string.tutorial_trophies_text_1)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Default.Category,
-                                        description = "Nutze die Kategorien, um deine Trophäen zu organisieren. Erstelle Kategorien und ordne deine Erfolge zu."
+                                        description = stringResource(R.string.tutorial_trophies_text_2)
                                     ),
                                     TutorialStep(
                                         icon = Icons.Default.Edit,
-                                        description = "Verwalte deine Trophäen und Kategorien. Passe Namen, Beschreibungen oder Zuordnungen an, um alles perfekt zu organisieren."
+                                        description = stringResource(R.string.tutorial_trophies_text_3)
                                     )
                                 )
                             )

@@ -33,9 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 import de.ljz.questify.ui.features.first_setup.components.FeatureCard
 
 @Composable
@@ -89,14 +91,14 @@ private fun WelcomeHeader() {
         }
 
         Text(
-            text = "Willkommen bei Questify!",
+            text = stringResource(R.string.introduction_page_title),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
 
         Text(
-            text = "Verwandle deine Ziele in ein spannendes Abenteuer und stelle dich neuen Herausforderungen",
+            text = stringResource(R.string.introduction_page_description),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
             textAlign = TextAlign.Center,
@@ -114,20 +116,20 @@ private fun FeaturesList(visible: Boolean) {
         val features = listOf(
             Feature(
                 icon = Icons.Default.EmojiEvents,
-                title = "Persönliche Quests",
-                description = "Erstelle und meistere Quests, die perfekt zu deinen Zielen passen",
+                title = stringResource(R.string.introduction_page_personal_quests_title),
+                description = stringResource(R.string.introduction_page_personal_quests_description),
                 color = MaterialTheme.colorScheme.primary
             ),
             Feature(
                 icon = Icons.Default.LocalActivity,
-                title = "Belohnungssystem",
-                description = "Sammle XP, Trophäen und spezielle Belohnungen für deine Erfolge",
+                title = stringResource(R.string.introduction_page_reward_system_title),
+                description = stringResource(R.string.introduction_page_reward_system_description),
                 color = MaterialTheme.colorScheme.primary
             ),
             Feature(
                 icon = Icons.Default.Timeline,
-                title = "Fortschrittstracking",
-                description = "Behalte deine Entwicklung im Blick und feiere deine Meilensteine",
+                title = stringResource(R.string.introduction_page_progess_tracking_title),
+                description = stringResource(R.string.introduction_page_progess_tracking_description),
                 color = MaterialTheme.colorScheme.primary
             )
         )

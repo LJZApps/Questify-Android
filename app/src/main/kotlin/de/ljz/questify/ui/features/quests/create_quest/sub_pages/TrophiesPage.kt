@@ -35,9 +35,7 @@ fun TrophiesPage(
     onRemoveReminder: (Int) -> Unit,
     onShowCreateReminderDialog: () -> Unit
 ) {
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm 'Uhr'", Locale.getDefault())
-
-    Column(
+    /*Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Card(
@@ -115,7 +113,7 @@ fun TrophiesPage(
                 }
             }
         }
-    }
+    }*/
 }
 
 @UIModePreviews

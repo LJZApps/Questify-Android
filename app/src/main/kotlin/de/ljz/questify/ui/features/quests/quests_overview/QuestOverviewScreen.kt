@@ -243,7 +243,7 @@ fun QuestOverviewScreen(
                                     viewModel.updateFastAddingText(it)
                                     showDropdown = it.startsWith("/") && filteredCommands.isNotEmpty()
                                 },
-                                placeholder = { Text("Add quest") },
+                                placeholder = { Text(stringResource(R.string.quest_overview_screen_fast_add_quest)) },
                                 shape = CircleShape,
                                 modifier = Modifier
                                     .padding(start = 16.dp)

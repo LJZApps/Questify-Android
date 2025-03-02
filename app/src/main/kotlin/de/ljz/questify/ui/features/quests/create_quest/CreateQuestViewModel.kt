@@ -30,7 +30,6 @@ class CreateQuestViewModel @Inject constructor(
 
     @SuppressLint("NewApi")
     fun createQuest(
-        context: Context,
         onSuccess: () -> Unit,
     ) {
         val quest = QuestEntity(
