@@ -103,7 +103,7 @@ class ActivityMain : AppCompatActivity() {
 
         val aiXpScoring = AIXPScoring(this)
 
-        val scoring = aiXpScoring.predictXPAndPoints("Eine App bauen", 3f)
+        val scoring = aiXpScoring.predictXPAndPoints("Ein neues Feature in meine App einbauen", 3f)
         Toast.makeText(this, "XP: ${scoring.first} Punkte: ${scoring.second}", Toast.LENGTH_LONG).show()
 
         setContent {
