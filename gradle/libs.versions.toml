@@ -47,6 +47,7 @@ datastoreCoreAndroid = "1.1.3"
 tensorflowLite = "1.1.2"
 workRuntimeKtx = "2.10.0"
 colorpicker = "1.1.2"
+tfOps = "2.16.1"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -105,6 +106,7 @@ sentry-android = { module = "io.sentry:sentry-android" }
 sentry-bom = { module = "io.sentry:sentry-bom", version.ref = "sentryBom" }
 sentry-compose-android = { module = "io.sentry:sentry-compose-android" }
 tensorflow-lite = { module = "com.google.ai.edge.litert:litert", version.ref = "tensorflowLite" }
+tensorflow-lite-select-tf-ops = { module = "org.tensorflow:tensorflow-lite-select-tf-ops", version.ref = "tfOps" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }

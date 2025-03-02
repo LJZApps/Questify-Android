@@ -111,6 +111,7 @@ val ktorVersion by extra("2.2.1")
 dependencies {
     // Tensorflow
     implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.select.tf.ops)
 
     // Confetti
     implementation(libs.konfetti.compose)
