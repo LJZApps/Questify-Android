@@ -2,3 +2,4 @@
 google-services.json
 /keystore
 /release
+/src/main/assets/quest_xp_model.tflite
