@@ -177,4 +177,7 @@
     <string name="notification_channel_quests_title">Quests</string>
     <string name="notification_channel_reminder_title">Erinnerungen</string>
     <string name="notification_channel_reminders_description">Erhalte Quest-Erinnerungen</string>
+    <string name="latest_quests_component_title">Neueste Quests</string>
+    <string name="stats_component_level_title">Level Fortschritt</string>
+    <string name="stats_component_xp">%1$s XP</string>
 </resources>
