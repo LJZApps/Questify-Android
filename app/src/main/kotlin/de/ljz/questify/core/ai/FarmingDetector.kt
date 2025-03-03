@@ -1,5 +1,6 @@
 package de.ljz.questify.core.ai
 
+/*
 import android.content.Context
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
@@ -27,4 +28,4 @@ class FarmingDetector(context: Context) {
         interpreter.run(input, output)
         return output[0][0] > 0.5  // Falls >0.5, dann Farming erkannt
     }
-}
+}*/

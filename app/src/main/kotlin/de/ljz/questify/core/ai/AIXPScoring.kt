@@ -1,132 +1,86 @@
 package de.ljz.questify.core.ai
 
+/*
 import android.content.Context
-import org.json.JSONObject
 import org.tensorflow.lite.Interpreter
-import java.io.FileInputStream
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import java.io.FileInputStream
+import org.json.JSONObject
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class AIXPScoring(context: Context) {
+
     private var interpreter: Interpreter
-    private val xpScaler = MinMaxScaler()
-    private val pointsScaler = MinMaxScaler()
+    private var minXp: Float = 0f
+    private var maxXp: Float = 100f
+    private var minPoints: Float = 0f
+    private var maxPoints: Float = 100f
 
     init {
-        // TFLite Modell laden
-        val model = loadModelFile(context, "quest_xp_model.tflite")
-
-        // TensorFlow Lite Optionen konfigurieren
         val options = Interpreter.Options()
-        options.setNumThreads(4) // Anzahl der CPU-Threads
-
-        interpreter = Interpreter(model, options)
-
-        // Skaler-Parameter laden
-        loadScalerParameters(context)
+        options.setUseXNNPACK(true)  // 🚀 Deaktiviert XNNPACK, falls es Probleme macht
+        options.setUseNNAPI(false)
+        interpreter = Interpreter(loadModelFile(context), options)
+        loadScalerParams(context)
     }
 
-    private fun loadModelFile(context: Context, modelName: String): MappedByteBuffer {
-        val fileDescriptor = context.assets.openFd(modelName)
+    private fun loadModelFile(context: Context): MappedByteBuffer {
+        val fileDescriptor = context.assets.openFd("quest_xp_model.tflite")
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
-        return fileChannel.map(
-            FileChannel.MapMode.READ_ONLY,
-            fileDescriptor.startOffset,
-            fileDescriptor.declaredLength
-        )
+        val startOffset = fileDescriptor.startOffset
+        val declaredLength = fileDescriptor.declaredLength
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
     }
 
-    private fun loadScalerParameters(context: Context) {
+    private fun loadScalerParams(context: Context) {
         try {
-            // JSON-Datei aus Assets laden
-            val jsonString = context.assets.open("scaler_params.json").bufferedReader().use { it.readText() }
-            val jsonObject = JSONObject(jsonString)
+            val inputStream = context.assets.open("scaler_params.json")
+            val jsonStr = inputStream.bufferedReader().use { it.readText() }
+            val jsonObj = JSONObject(jsonStr)
 
-            // XP-Skaler Parameter
-            val xpParams = jsonObject.getJSONObject("xp")
-            xpScaler.setParameters(
-                xpParams.getDouble("min").toFloat(),
-                xpParams.getDouble("max").toFloat()
-            )
+            minXp = jsonObj.getJSONObject("xp").getDouble("min").toFloat()
+            maxXp = jsonObj.getJSONObject("xp").getDouble("max").toFloat()
+            minPoints = jsonObj.getJSONObject("points").getDouble("min").toFloat()
+            maxPoints = jsonObj.getJSONObject("points").getDouble("max").toFloat()
 
-            // Points-Skaler Parameter
-            val pointsParams = jsonObject.getJSONObject("points")
-            pointsScaler.setParameters(
-                pointsParams.getDouble("min").toFloat(),
-                pointsParams.getDouble("max").toFloat()
-            )
+            println("✅ Skalierungswerte geladen: XP ($minXp - $maxXp), Points ($minPoints - $maxPoints)")
         } catch (e: Exception) {
-            // Fallback zu Standard-Werten
-            xpScaler.setParameters(0f, 100f)
-            pointsScaler.setParameters(0f, 100f)
-            e.printStackTrace()
+            println("⚠️ Fehler beim Laden von scaler_params.json: ${e.message}")
         }
     }
 
-    fun predictXPAndPoints(questText: String, difficulty: Float): Pair<Int, Int> {
-        try {
-            // Für TensorFlow Lite Inputs vorbereiten
-            val inputs = arrayOf<Any>(
-                arrayOf(questText), // quest_text - Ein String-Array
-                floatArrayOf(difficulty) // difficulty - Ein Float-Array
-            )
+    fun predict(questText: String, difficulty: Float): Pair<Float, Float> {
+        // 🚀 **String wird als `String[]` übergeben**
+        val textInput = arrayOf(questText)  // Kein ByteBuffer mehr nötig
 
-            // Outputs vorbereiten
-            val outputXp = Array(1) { FloatArray(1) } // Ein 1x1 Float-Array für XP
-            val outputPoints = Array(1) { FloatArray(1) } // Ein 1x1 Float-Array für Points
-            val outputs = mapOf(
-                0 to outputXp,
-                1 to outputPoints
-            )
+        // 🚀 Schwierigkeit als FloatBuffer
+        val difficultyBuffer = convertFloatToByteBuffer(difficulty)
 
-            // Vorhersage ausführen
-            interpreter.runForMultipleInputsOutputs(inputs, outputs)
+        // Output-Arrays für XP und Punkte
+        val output = Array(2) { FloatArray(1) }
 
-            // Werte zurückskalieren
-            val scaledXP = xpScaler.inverseTransform(outputXp[0][0])
-            val scaledPoints = pointsScaler.inverseTransform(outputPoints[0][0])
+        // Starte die Vorhersage mit TensorFlow Lite
+        interpreter.runForMultipleInputsOutputs(arrayOf(textInput, difficultyBuffer), mapOf(0 to output[0], 1 to output[1]))
 
-            return Pair(scaledXP.toInt(), scaledPoints.toInt())
-        } catch (e: Exception) {
-            e.printStackTrace()
+        // Skaliere die Werte zurück auf den Originalbereich
+        val xp = rescaleValue(output[0][0], minXp, maxXp)
+        val points = rescaleValue(output[1][0], minPoints, maxPoints)
 
-            // Fallback: Einfache regelbasierte Berechnung
-            return calculateFallbackValues(questText, difficulty)
-        }
+        return Pair(xp, points)
     }
 
-    // Einfache regelbasierte Berechnung als Fallback
-    private fun calculateFallbackValues(questText: String, difficulty: Float): Pair<Int, Int> {
-        val baseXP = when {
-            difficulty <= 0.3f -> 10
-            difficulty <= 0.6f -> 20
-            else -> 30
-        }
-
-        val basePoints = (baseXP * 1.5f).toInt()
-
-        // Textlänge beeinflusst den Wert
-        val lengthMultiplier = (1.0f + questText.length / 100.0f).coerceAtMost(2.0f)
-
-        return Pair(
-            (baseXP * lengthMultiplier).toInt(),
-            (basePoints * lengthMultiplier).toInt()
-        )
+    private fun convertFloatToByteBuffer(value: Float): ByteBuffer {
+        val buffer = ByteBuffer.allocateDirect(4)
+        buffer.order(ByteOrder.nativeOrder())
+        buffer.putFloat(value)
+        buffer.flip()
+        return buffer
     }
 
-    // MinMaxScaler für die Rücktransformation
-    inner class MinMaxScaler {
-        private var min: Float = 0f
-        private var max: Float = 100f
-
-        fun setParameters(min: Float, max: Float) {
-            this.min = min
-            this.max = max
-        }
-
-        fun inverseTransform(normalizedValue: Float): Float {
-            return normalizedValue * (max - min) + min
-        }
+    private fun rescaleValue(value: Float, min: Float, max: Float): Float {
+        return value * (max - min) + min
     }
-}
+}*/

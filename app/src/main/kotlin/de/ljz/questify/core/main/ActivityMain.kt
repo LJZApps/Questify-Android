@@ -2,7 +2,6 @@ package de.ljz.questify.core.main
 
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -37,8 +36,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.BuildConfig
-import de.ljz.questify.core.ai.AIXPScoring
-import de.ljz.questify.core.ai.FarmingDetector
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
@@ -89,22 +86,6 @@ class ActivityMain : AppCompatActivity() {
         }
 
         permissionsVm.initializePermissionLauncher(notificationPermissionLauncher)
-
-        val farmingDetector = FarmingDetector(this)
-
-        // Beispiel-Quest: 5 Minuten, 12 Wiederholungen, Schwer
-        val isFarming = farmingDetector.predict(5f, 12f, 3f)
-
-        if (isFarming) {
-            println("⚠ Farming erkannt! XP werden reduziert.")
-        } else {
-            println("✅ Kein Farming. Quest ist gültig.")
-        }
-
-        val aiXpScoring = AIXPScoring(this)
-
-        val scoring = aiXpScoring.predictXPAndPoints("Auto reparieren", 3f)
-        Toast.makeText(this, "XP: ${scoring.first} Punkte: ${scoring.second}", Toast.LENGTH_LONG).show()
 
         setContent {
             splashScreen.setKeepOnScreenCondition { true }
