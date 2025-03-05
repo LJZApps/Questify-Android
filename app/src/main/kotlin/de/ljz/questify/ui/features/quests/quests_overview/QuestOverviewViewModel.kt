@@ -107,7 +107,7 @@ class QuestOverviewViewModel @Inject constructor(
         viewModelScope.launch {
             val fastQuest = QuestEntity(
                 title = title,
-                difficulty = Difficulty.EASY,
+                difficulty = Difficulty.NONE,
                 createdAt = Date()
             )
             questRepository.addMainQuest(fastQuest)

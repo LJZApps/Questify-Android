@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 const val TAG = "Questify"
 
 enum class Difficulty {
+    NONE,
     EASY,
     MEDIUM,
     HARD,

@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.quests.quests_overview.sub_pages
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +15,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
@@ -49,30 +48,31 @@ fun AllQuestsPage(
             items(uiState.quests.sortedBy { it.done }.asReversed(), key = { it.id }) { quest ->
                 QuestItem(
                     quest = quest,
-                    onQuestChecked = {
-                        viewModel.setQuestDone(
-                            quest = quest,
-                            context = context
-                        )
-                    },
-                    onClick = {
-                        navController.navigate(QuestDetail(id = quest.id))
-                    },
-                    onQuestDelete = {
-                        viewModel.deleteQuest(it)
-                    },
+                    modifier = Modifier
+                        .animateItem()
+                        .padding(vertical = 4.dp, horizontal = 8.dp),
                     difficultyIcon = {
                         when (quest.difficulty) {
                             Difficulty.EASY -> EasyIcon()
                             Difficulty.MEDIUM -> MediumIcon()
                             Difficulty.HARD -> HardIcon()
                             Difficulty.EPIC -> EpicIcon()
+                            Difficulty.NONE -> {}
                             else -> null
                         }
                     },
-                    modifier = Modifier
-                        .animateItem()
-                        .padding(vertical = 4.dp)
+                    onQuestChecked = {
+                        viewModel.setQuestDone(
+                            quest = quest,
+                            context = context
+                        )
+                    },
+                    onQuestDelete = {
+                        viewModel.deleteQuest(it)
+                    },
+                    onClick = {
+                        navController.navigate(QuestDetail(id = quest.id))
+                    }
                 )
             }
         }

@@ -12,7 +12,6 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import de.ljz.questify.R
-import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
@@ -91,46 +90,4 @@ class QuestNotificationWorker @AssistedInject constructor(
             )
         }
     }
-
-    fun getRandomNotificationText(difficulty: Difficulty): String {
-        return when (difficulty) {
-            Difficulty.EASY -> easyTexts.random()
-            Difficulty.MEDIUM -> mediumTexts.random()
-            Difficulty.HARD -> hardTexts.random()
-            Difficulty.EPIC -> epicTexts.random()
-        }
-    }
-
-    private val easyTexts = listOf(
-        "Eine leichte Quest wartet!",
-        "Los geht’s – einfache Aufgabe!",
-        "Nächste kleine Quest ruft!",
-        "Zeit für eine kurze Herausforderung!",
-        "Bereit für eine einfache Quest?"
-    )
-
-    private val mediumTexts = listOf(
-        "Mach dich bereit für eine Quest!",
-        "Bereit für die nächste Mission?",
-        "Zeit für eine neue Quest!",
-        "Eine spannende Aufgabe wartet!",
-        "Nächste Stufe der Quest erwartet dich!"
-    )
-
-    private val hardTexts = listOf(
-        "Eine harte Quest erwartet dich!",
-        "Bereit für eine Herausforderung?",
-        "Anspruchsvolle Quest wartet!",
-        "Bereit, deine Skills zu testen?",
-        "Eine echte Herausforderung ruft!"
-    )
-
-    private val epicTexts = listOf(
-        "Eine epische Quest ruft!",
-        "Die ultimative Aufgabe wartet!",
-        "Legendäres Abenteuer erwartet dich!",
-        "Zeit für eine epische Quest!",
-        "Bereit für den ultimativen Test?"
-    )
-
 }

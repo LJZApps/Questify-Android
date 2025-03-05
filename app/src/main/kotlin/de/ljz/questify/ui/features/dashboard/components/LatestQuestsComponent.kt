@@ -41,11 +41,11 @@ fun LatestQuestsComponent(
                 items(quests.sortedBy { it.createdAt }.takeLast(3)) { quest ->
                     QuestItem(
                         quest = quest,
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         onQuestChecked = {},
                         onQuestDelete = {},
-                        onClick = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        onClick = {}
                     )
                 }
             }

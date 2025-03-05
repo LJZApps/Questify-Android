@@ -63,9 +63,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -99,6 +101,7 @@ fun QuestOverviewScreen(
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     var showDropdown by remember { mutableStateOf(false) }
 
     val commands = listOf("add reminder", "set difficulty", "set due date", "set description")
@@ -240,7 +243,6 @@ fun QuestOverviewScreen(
                                 value = uiState.fastAddingText,
                                 onValueChange = {
                                     viewModel.updateFastAddingText(it)
-                                    showDropdown = it.startsWith("/") && filteredCommands.isNotEmpty()
                                 },
                                 placeholder = { Text(stringResource(R.string.quest_overview_screen_fast_add_quest)) },
                                 shape = CircleShape,
@@ -275,6 +277,7 @@ fun QuestOverviewScreen(
 
                         FloatingActionButton(
                             onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 if (uiState.fastAddingText.isNotEmpty()) {
                                     viewModel.createFastQuest(uiState.fastAddingText)
                                 } else {
@@ -337,6 +340,7 @@ fun QuestOverviewScreen(
                             bottomNavRoute.route
                         ),
                         onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             bottomNavController.navigate(bottomNavRoute.route) {
                                 popUpTo(bottomNavController.graph.findStartDestination().id) {
                                     saveState = true

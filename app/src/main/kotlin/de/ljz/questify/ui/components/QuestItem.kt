@@ -47,13 +47,12 @@ import java.util.Locale
 @Composable
 fun QuestItem(
     quest: QuestEntity,
+    modifier: Modifier = Modifier,
     difficultyIcon: @Composable (() -> Unit)? = null,
     onQuestChecked: () -> Unit,
     onQuestDelete: (id: Int) -> Unit,
     questTaskCount: Int = 0,
     questNotificationCount: Int = 0,
-    modifier: Modifier = Modifier
-        .padding(8.dp),
     onClick: () -> Unit,
     shadow: Dp = 1.dp,
     preview: Boolean = false
@@ -92,12 +91,14 @@ fun QuestItem(
                         ) {
                             Icon(
                                 Icons.Default.Check,
-                                contentDescription = "check"
+                                contentDescription = "check",
+                                tint = Color.Black
                             )
                             Spacer(modifier = Modifier)
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "delete"
+                                contentDescription = "delete",
+                                tint = Color.Black
                             )
                         }
                     }
@@ -112,12 +113,14 @@ fun QuestItem(
                         ) {
                             Icon(
                                 Icons.Default.Check,
-                                contentDescription = "check"
+                                contentDescription = "check",
+                                tint = Color.Black
                             )
                             Spacer(modifier = Modifier)
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "delete"
+                                contentDescription = "delete",
+                                tint = Color.Black
                             )
                         }
                     }
@@ -268,13 +271,13 @@ private fun QuestItemPreview() {
                 dueDate = Date(),
                 difficulty = Difficulty.EASY
             ),
-            onQuestChecked = {},
-            onClick = {},
-            questTaskCount = 7,
             difficultyIcon = {
                 EpicIcon()
             },
-            onQuestDelete = {}
+            onQuestChecked = {},
+            onQuestDelete = {},
+            questTaskCount = 7,
+            onClick = {}
         )
 
         QuestItem(
@@ -287,14 +290,14 @@ private fun QuestItemPreview() {
                 dueDate = Date(),
                 difficulty = Difficulty.EASY
             ),
-            onQuestChecked = {},
-            onClick = {},
-            questTaskCount = 0,
-            questNotificationCount = 3,
             difficultyIcon = {
                 MediumIcon()
             },
-            onQuestDelete = {}
+            onQuestChecked = {},
+            onQuestDelete = {},
+            questTaskCount = 0,
+            questNotificationCount = 3,
+            onClick = {}
         )
 
         QuestItem(
@@ -307,14 +310,14 @@ private fun QuestItemPreview() {
                 dueDate = Date(),
                 difficulty = Difficulty.EASY
             ),
-            onQuestChecked = {},
-            onClick = {},
-            questTaskCount = 0,
-            questNotificationCount = 0,
             difficultyIcon = {
                 EpicIcon()
             },
-            onQuestDelete = {}
+            onQuestChecked = {},
+            onQuestDelete = {},
+            questTaskCount = 0,
+            questNotificationCount = 0,
+            onClick = {}
         )
     }
 }

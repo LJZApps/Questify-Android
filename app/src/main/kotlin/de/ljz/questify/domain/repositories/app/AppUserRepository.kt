@@ -48,12 +48,14 @@ class AppUserRepository @Inject constructor(
         earnedStats: (xp: Int, points: Int, level: Int?) -> Unit
     ) {
         val baseXP = when (difficulty) {
+            Difficulty.NONE -> 0
             Difficulty.EASY -> 10
             Difficulty.MEDIUM -> 20
             Difficulty.HARD -> 25
             Difficulty.EPIC -> 40
         }
         val basePoints = when (difficulty) {
+            Difficulty.NONE -> 0
             Difficulty.EASY -> 5
             Difficulty.MEDIUM -> 10
             Difficulty.HARD -> 15
