@@ -1,6 +1,6 @@
 [versions]
 activityKtx = "1.10.1"
-agp = "8.8.1"
+agp = "8.9.0"
 appcompat = "1.7.0"
 coilCompose = "3.1.0"
 constraintlayoutCompose = "1.1.1"

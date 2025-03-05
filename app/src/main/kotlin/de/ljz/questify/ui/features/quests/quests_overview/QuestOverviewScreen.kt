@@ -85,7 +85,6 @@ import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.util.bounceClick
 import de.ljz.questify.util.getSerializedRouteName
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestOverviewScreen(
