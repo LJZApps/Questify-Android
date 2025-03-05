@@ -109,12 +109,8 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-    // Tensorflow
-//    implementation(libs.tensorflow.lite)
-//    implementation(libs.tensorflow.lite.select.tf.ops)
-//    implementation(libs.tensorflow.lite.support)
-//    implementation(libs.tensorflow.lite.metadata)
-//    implementation(libs.tensorflow.lite.gpu)
+    // Permissions
+    implementation(libs.permissions.compose)
 
     // Confetti
     implementation(libs.konfetti.compose)
@@ -129,7 +125,7 @@ dependencies {
     implementation(libs.material.kolor)
 
     // Gampose https://github.com/ezlifeSol/gampose
-    //implementation(libs.gampose)
+//    implementation(libs.gampose)
 
     // Yaml
     implementation(libs.jackson.dataformat.yaml)
@@ -144,7 +140,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
-    implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.01.00"))
+    implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.02.00"))
 //    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation(libs.androidx.runtime)
 
