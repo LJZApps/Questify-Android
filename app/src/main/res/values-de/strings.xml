@@ -180,4 +180,5 @@
     <string name="latest_quests_component_title">Neueste Quests</string>
     <string name="stats_component_level_title">Level Fortschritt</string>
     <string name="stats_component_xp">%1$s XP</string>
+    <string name="quest_done_dialog_great_button">Super!</string>
 </resources>

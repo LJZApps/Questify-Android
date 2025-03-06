@@ -126,7 +126,12 @@ fun QuestDoneDialog(
                 }
 
                 Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                    Text(if (state.xp > 0 || state.points > 0) stringResource(R.string.quest_done_dialog_take_rewards_button) else "Great!")
+                    Text(
+                        text = if (state.xp > 0 || state.points > 0)
+                                stringResource(R.string.quest_done_dialog_take_rewards_button)
+                            else
+                                stringResource(R.string.quest_done_dialog_great_button)
+                    )
                 }
             }
         }
