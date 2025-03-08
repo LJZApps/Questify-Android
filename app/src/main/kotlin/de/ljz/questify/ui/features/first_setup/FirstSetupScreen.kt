@@ -22,7 +22,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,7 +40,6 @@ import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.ui.features.first_setup.sub_pages.UserSetupPage
 import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.util.NavBarConfig
-import io.ktor.util.valuesOf
 import kotlinx.coroutines.launch
 
 @Composable
@@ -52,7 +50,7 @@ fun FirstSetupScreen(
     val uiState by viewModel.uiState.collectAsState()
     val userSetupPageUiState = uiState.userSetupPageUiState
 
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { 2 })
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -116,14 +114,14 @@ fun FirstSetupScreen(
                             }
                         )
 
-                        2 -> {
+                        /*2 -> {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(text = "Seite 3")
                             }
-                        }
+                        }*/
                     }
                 }
 
@@ -157,7 +155,7 @@ fun FirstSetupScreen(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
-                        if (pagerState.currentPage < 2) {
+                        if (pagerState.currentPage < pagerState.pageCount - 1) {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         } else {
                             if (userSetupPageUiState.pickedProfilePicture) {
@@ -174,13 +172,17 @@ fun FirstSetupScreen(
                                 viewModel.setSetupDone("")
                             }
 
-                            navController.navigate(MainRoute)
+                            navController.navigate(MainRoute) {
+                                popUpTo<MainRoute>{
+                                    inclusive = true
+                                }
+                            }
                         }
                     }
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                if (pagerState.currentPage == 2) {
+                if (pagerState.currentPage == pagerState.pageCount - 1) {
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = "Next screen"

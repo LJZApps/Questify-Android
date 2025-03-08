@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
@@ -34,6 +37,7 @@ fun BaseInformationPage(
     onDifficultyChange: (Int) -> Unit
 ) {
     val options = listOf(
+        stringResource(R.string.difficulty_none),
         stringResource(R.string.difficulty_easy),
         stringResource(R.string.difficulty_medium),
         stringResource(R.string.difficulty_hard),
@@ -89,10 +93,17 @@ fun BaseInformationPage(
                             val tintColor = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
 
                             when (index) {
-                                0 -> EasyIcon(tint = tintColor)
-                                1 -> MediumIcon(tint = tintColor)
-                                2 -> HardIcon(tint = tintColor)
-                                3 -> EpicIcon(tint = tintColor)
+                                0 -> {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Block,
+                                        contentDescription = null,
+                                        tint = tintColor
+                                    )
+                                }
+                                1 -> EasyIcon(tint = tintColor)
+                                2 -> MediumIcon(tint = tintColor)
+                                3 -> HardIcon(tint = tintColor)
+                                4 -> EpicIcon(tint = tintColor)
                             }
                         }
                     }

@@ -30,11 +30,12 @@ import de.ljz.questify.R
 fun ChangelogComponent(
     currentVersion: String,
     changelogAvailable: Boolean,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onDismiss: () -> Unit
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         onClick = onClick
     ) {

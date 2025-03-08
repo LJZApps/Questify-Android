@@ -8,10 +8,12 @@ versions:
       - "Completely new onboarding"
       - "New quick quest creation"
       - "New settings"
+      - "Added haptic feedback"
     changes:
       - "Improved UI elements"
       - "Quest Master temporarily removed until new use-cases have been found"
       - "Reworked settings & new design options"
       - "Features can now be enabled/disabled"
+      - "New Dashboard UI"
     bugfixes:
       - "Performance has been significantly improved"

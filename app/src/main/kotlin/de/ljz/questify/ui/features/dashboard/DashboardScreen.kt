@@ -1,12 +1,20 @@
 package de.ljz.questify.ui.features.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,13 +26,11 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
-import de.ljz.questify.ui.features.dashboard.components.LatestQuestsComponent
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
-import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.changelog.parseYamlChangelog
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     mainNavController: NavHostController,
@@ -39,10 +45,6 @@ fun DashboardScreen(
         parseYamlChangelog(inputStream)
     }.versions.find { it.version == BuildConfig.VERSION_CODE }
     val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
-    }
 
     Scaffold(
         topBar = {
@@ -62,8 +64,8 @@ fun DashboardScreen(
             ) {
                 AnimatedVisibility(
                     visible = uiState.newVersionVisible,
-                    enter = slideInVertically(),
-                    exit = slideOutVertically()
+                    enter = slideInHorizontally(),
+                    exit = slideOutHorizontally()
                 ) {
                     ChangelogComponent(
                         currentVersion = BuildConfig.VERSION_NAME,
@@ -84,9 +86,9 @@ fun DashboardScreen(
                     }
                 )
 
-                LatestQuestsComponent(
+                /*LatestQuestsComponent(
                     quests = uiState.quests
-                )
+                )*/
             }
         },
         snackbarHost = {

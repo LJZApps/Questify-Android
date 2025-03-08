@@ -2,7 +2,18 @@ package de.ljz.questify.ui.features.quests.create_quest
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -10,9 +21,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,7 +53,6 @@ import de.ljz.questify.ui.features.quests.create_quest.components.DueDateInfoDia
 import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.DetailedInformationPage
-import de.ljz.questify.ui.features.quests.create_quest.sub_pages.TrophiesPage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +68,7 @@ fun CreateQuestScreen(
     val steps = listOf(
         NavigationItem(stringResource(R.string.create_quest_screen_general), Icons.Filled.Category),
         NavigationItem(stringResource(R.string.create_quest_screen_details), Icons.Filled.Description),
-        NavigationItem(stringResource(R.string.create_quest_screen_trophies), Icons.Filled.EmojiEvents)
+        /*NavigationItem(stringResource(R.string.create_quest_screen_trophies), Icons.Filled.EmojiEvents)*/
     )
 
     Scaffold(
@@ -76,12 +99,13 @@ fun CreateQuestScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     steps.forEachIndexed { index, (title, icon) ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.weight(1f)
                         ) {
                             Box(
                                 modifier = Modifier
@@ -147,11 +171,11 @@ fun CreateQuestScreen(
                             onShowCreateReminderDialog = { viewModel.showCreateReminderDialog() },
                             onRemoveReminder = { viewModel.removeReminder(it) }
                         )
-                        2 -> TrophiesPage(
+                        /*2 -> TrophiesPage(
                             uiState = uiState,
                             onShowCreateReminderDialog = { viewModel.showCreateReminderDialog() },
                             onRemoveReminder = { viewModel.removeReminder(it) }
-                        )
+                        )*/
                     }
                 }
             }
@@ -201,10 +225,18 @@ fun CreateQuestScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlinedButton(
-                        onClick = { if (currentStep > 0) currentStep-- },
-                        enabled = currentStep > 0
+                        onClick = {
+                            if (currentStep > 0) {
+                                currentStep--
+                            } else {
+                                mainNavController.navigateUp()
+                            }
+                        },
+                        enabled = true // Button ist immer aktiv, da er auf Seite 0 eine andere Funktion hat
                     ) {
-                        Text(stringResource(R.string.back))
+                        Text(
+                            text = if (currentStep > 0) stringResource(R.string.back) else stringResource(R.string.cancel)
+                        )
                     }
                     if (currentStep < steps.size - 1) {
                         Button(

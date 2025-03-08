@@ -25,6 +25,7 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
+import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settings_feedback.navigation.SettingsFeedbackRoute
 
@@ -85,7 +86,7 @@ fun SettingsHelpScreen(
                     viewModel.resetOnboarding()
 
                     mainNavController.navigate(FirstSetupRoute) {
-                        popUpTo(FirstSetupRoute) {
+                        popUpTo(MainRoute) {
                             inclusive = true
                         }
                     }
