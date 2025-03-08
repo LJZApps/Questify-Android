@@ -1,27 +1,17 @@
 versions:
-  - version: 7
-    date: "2025-01-01"
-    name: "Das große Trophäen-Update"
-    features:
-      - "Trophäen hinzugefügt"
-      - "Neue Tutorials"
-      - "Das Profil kann jetzt bearbeitet werden"
-    changes:
-      - "Kleinere UI-Verbesserungen, die zur Sichtbarkeit einiger Elemente beitragen"
-    bugfixes:
-      - "Performance verbessert"
   - version: 8
     date: "2025-02-26"
-    name: "UI-Überarbeitung & Trophäen"
+    name: "UI Overhaul & Themes"
     features:
-      - "Erste Version des Trophäen-Features"
-      - "Neue Tutorials"
-      - "Komplett neues Onboarding"
+      - "New theme options"
+      - "Revamped UI & UX"
+      - "Completely new onboarding"
+      - "New quick quest creation"
+      - "New settings"
     changes:
-      - "Verbesserte UI-Elemente"
-      - "Quest-Master vorübergehend entfernt"
-      - "Quest-Detail-Screen überarbeitet, inkl. Schnell-Quest-Textfeld"
-      - "Einstellungen überarbeitet & neue Design-Optionen"
-      - "Features können jetzt aktiviert/deaktiviert werden"
+      - "Improved UI elements"
+      - "Quest Master temporarily removed until new use-cases have been found"
+      - "Reworked settings & new design options"
+      - "Features can now be enabled/disabled"
     bugfixes:
-      - "Die Performance wurde um einiges verbessert"
+      - "Performance has been significantly improved"

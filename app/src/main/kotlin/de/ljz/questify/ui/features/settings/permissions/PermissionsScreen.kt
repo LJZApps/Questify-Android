@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.settings.permissions
 
-import android.Manifest
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -26,8 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsSwitch
-import com.meticha.permissions_compose.AppPermission
-import com.meticha.permissions_compose.rememberAppPermissionState
 import de.ljz.questify.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,25 +36,6 @@ fun PermissionsScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
-    val permissions = rememberAppPermissionState(
-        permissions = listOf(
-            AppPermission(
-                permission = Manifest.permission.SCHEDULE_EXACT_ALARM,
-                description = "Schedule exact alarm access is needed to take photos. Please grant this permission.",
-                isRequired = true
-            ),
-            AppPermission(
-                permission = Manifest.permission.SYSTEM_ALERT_WINDOW,
-                description = "System alert window access is needed for voice recording. Please grant this permission.",
-                isRequired = true
-            ),
-            AppPermission(
-                permission = Manifest.permission.POST_NOTIFICATIONS,
-                description = "Post notifications access is needed to show the contacts in the App. Please grant this permission",
-                isRequired = true
-            )
-        )
-    )
 
     LaunchedEffect(Unit) {
         viewModel.loadPermissionData(context)
@@ -95,33 +73,33 @@ fun PermissionsScreen(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 SettingsSwitch(
-                    state = permissions.isGranted(Manifest.permission.POST_NOTIFICATIONS),
+                    state = uiState.isNotificationPermissionGiven,
                     title = { Text(text = stringResource(R.string.permissions_screen_notifications_title)) },
                     subtitle = { Text(text = stringResource(R.string.permissions_screen_notifications_description)) },
                     icon = { Icon(Icons.Outlined.Notifications, contentDescription = null) },
-                    enabled = !permissions.isGranted(Manifest.permission.POST_NOTIFICATIONS),
+                    enabled = !uiState.isNotificationPermissionGiven,
                     onCheckedChange = {
                         viewModel.requestNotificationPermission(context)
                     },
                 )
 
                 SettingsSwitch(
-                    state = permissions.isGranted(Manifest.permission.SYSTEM_ALERT_WINDOW),
+                    state = uiState.isOverlayPermissionsGiven,
                     title = { Text(text = stringResource(R.string.permissions_screen_above_other_apps_title)) },
                     subtitle = { Text(text = stringResource(R.string.permissions_screen_above_other_apps_description)) },
                     icon = { Icon(Icons.Outlined.Layers, contentDescription = null) },
-                    enabled = !permissions.isGranted(Manifest.permission.SYSTEM_ALERT_WINDOW),
+                    enabled = !uiState.isOverlayPermissionsGiven,
                     onCheckedChange = {
                         viewModel.requestOverlayPermission(context)
                     },
                 )
 
                 SettingsSwitch(
-                    state = permissions.isGranted(Manifest.permission.SCHEDULE_EXACT_ALARM),
+                    state = uiState.isAlarmPermissionsGiven,
                     title = { Text(text = stringResource(R.string.permissions_screen_set_alarms_title)) },
                     subtitle = { Text(text = stringResource(R.string.permissions_screen_set_alarms_description)) },
                     icon = { Icon(Icons.Outlined.Alarm, contentDescription = null) },
-                    enabled = !permissions.isGranted(Manifest.permission.SCHEDULE_EXACT_ALARM),
+                    enabled = !uiState.isAlarmPermissionsGiven,
                     onCheckedChange = {
                         viewModel.requestAlarmPermission(context)
                     },
