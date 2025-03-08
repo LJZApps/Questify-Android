@@ -92,7 +92,8 @@ fun DrawerContent(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_trophies_navigation_title),
                     icon = Icons.Filled.EmojiEvents,
-                    route = TrophiesRoute
+                    route = TrophiesRoute,
+                    featureEnabled = false
                 ),
                 NavigationItem(
                     title = "Fitness",
