@@ -2,13 +2,14 @@ package de.ljz.questify.ui.features.quests.quest_detail
 
 import de.ljz.questify.core.application.AddingReminderState
 
-data class QuestDetailUiState (
+data class QuestDetailUiState(
     val isAddingReminder: Boolean = false,
     val trophiesExpanded: Boolean = false,
     val addingReminderState: AddingReminderState = AddingReminderState.NONE,
     val isDueDateInfoDialogVisible: Boolean = false,
     val isDeleteConfirmationDialogVisible: Boolean = false,
     val isEditingQuest: Boolean = false,
+    val isShowingReminderBottomSheet: Boolean = false,
 
     val questState: QuestState = QuestState(),
     val editQuestState: EditQuestState = EditQuestState()
@@ -28,5 +29,6 @@ data class EditQuestState(
     val title: String = "",
     val description: String = "",
     val difficulty: Int = 0,
-    val hasUnlockedDifficultyEditing: Boolean = false
+    val hasUnlockedDifficultyEditing: Boolean = false,
+    val notificationTriggerTimes: List<Long> = listOf(),
 )

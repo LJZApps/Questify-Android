@@ -182,4 +182,8 @@
     <string name="stats_component_xp">%1$s XP</string>
     <string name="quest_done_dialog_great_button">Super!</string>
     <string name="difficulty_none">Keine</string>
+    <string name="list_reminder_bottom_sheet_title">Erinnerungen</string>
+    <string name="list_reminder_bottom_sheet_hint">Deine Änderungen werden beim Speichern der Quest angewendet</string>
+    <string name="list_reminder_bottom_sheet_add_reminder_button">Erinnerung hinzufügen</string>
+    <string name="list_reminder_bottom_sheet_no_reminders_hint">Drücke auf \'%1$s\', um eine neue Erinnerung hinzuzufügen.</string>
 </resources>

@@ -10,17 +10,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -33,7 +29,6 @@ import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -56,23 +51,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.ui.components.CreateReminderDialog
 import de.ljz.questify.ui.components.EasyIcon
 import de.ljz.questify.ui.components.EpicIcon
 import de.ljz.questify.ui.components.HardIcon
 import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.ui.features.quests.quest_detail.components.DeleteConfirmationDialog
+import de.ljz.questify.ui.features.quests.quest_detail.components.ListReminderBottomSheet
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -245,7 +238,7 @@ fun QuestDetailScreen(
                 }
 
                 // Erinnerungen
-                if (questState.notificationTriggerTimes.isNotEmpty()) {
+                if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
                     Column {
                         Text(text = stringResource(R.string.quest_detail_screen_reminders_title), style = MaterialTheme.typography.titleMedium)
                         questState.notificationTriggerTimes.sorted().forEach { triggerTime ->
@@ -316,6 +309,21 @@ fun QuestDetailScreen(
                         }
                     }
                 }*/
+
+                if (uiState.isShowingReminderBottomSheet) {
+                    ListReminderBottomSheet(
+                        reminders = editQuestState.notificationTriggerTimes,
+                        onRemoveReminder = {
+                            viewModel.removeReminder(it)
+                        },
+                        onAddReminder = {
+                            viewModel.showCreateReminderDialog()
+                        },
+                        onDismiss = {
+                            viewModel.hideReminderBottomSheet()
+                        }
+                    )
+                }
             }
 
             if (uiState.isDeleteConfirmationDialogVisible) {
@@ -333,6 +341,20 @@ fun QuestDetailScreen(
                     onDismiss = { viewModel.hideDeleteConfirmationDialog() }
                 )
             }
+
+            if (uiState.isAddingReminder) {
+                CreateReminderDialog(
+                    addingReminderState = uiState.addingReminderState,
+                    onDismiss = { viewModel.hideCreateReminderDialog() },
+                    onConfirm = {
+                        viewModel.addReminder(it)
+                        viewModel.hideCreateReminderDialog()
+                    },
+                    onReminderStateChange = {
+                        viewModel.updateReminderState(it)
+                    }
+                )
+            }
         },
         bottomBar = {
             BottomAppBar(
@@ -344,11 +366,18 @@ fun QuestDetailScreen(
                             Icon(Icons.Outlined.DeleteOutline, contentDescription = "Delete")
                         }
                     }
-                    BasicPlainTooltip(
-                        text = stringResource(R.string.quest_detail_screen_tooltip_edit_reminders),
+
+                    AnimatedVisibility(
+                        visible = uiState.isEditingQuest,
+                        exit = slideOutHorizontally(targetOffsetX = { it / -2 }) + fadeOut(),
+                        enter = slideInHorizontally(initialOffsetX = { it / -2 }) + fadeIn()
                     ) {
-                        IconButton(onClick = { /*viewModel.showEditReminderDialog()*/ }) {
-                            Icon(Icons.Outlined.Alarm, contentDescription = "Edit reminders")
+                        BasicPlainTooltip(
+                            text = stringResource(R.string.quest_detail_screen_tooltip_edit_reminders),
+                        ) {
+                            IconButton(onClick = { viewModel.showRemindersBottomSheet() }) {
+                                Icon(Icons.Outlined.Alarm, contentDescription = "Edit reminders")
+                            }
                         }
                     }
                 },
@@ -419,6 +448,7 @@ fun QuestDetailScreen(
     )
 }
 
+/*
 @Composable
 fun TrophyCard(
     icon: ImageVector,
@@ -473,4 +503,4 @@ fun TrophyCard(
             )
         }
     }
-}
+}*/

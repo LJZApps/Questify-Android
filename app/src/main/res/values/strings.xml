@@ -181,4 +181,8 @@
     <string name="stats_component_xp">%1$s XP</string>
     <string name="quest_done_dialog_great_button">Great!</string>
     <string name="difficulty_none">None</string>
+    <string name="list_reminder_bottom_sheet_title">Reminders</string>
+    <string name="list_reminder_bottom_sheet_hint">Your changes will be applied upon saving the quest</string>
+    <string name="list_reminder_bottom_sheet_add_reminder_button">Add reminder</string>
+    <string name="list_reminder_bottom_sheet_no_reminders_hint">Click on \'%1$s\' to add a new reminder.</string>
 </resources>

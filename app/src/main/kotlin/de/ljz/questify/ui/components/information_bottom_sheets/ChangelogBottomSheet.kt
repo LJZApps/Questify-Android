@@ -1,12 +1,13 @@
 package de.ljz.questify.ui.components.information_bottom_sheets
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.BugReport
@@ -34,8 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import de.ljz.questify.R
 import de.ljz.questify.BuildConfig
+import de.ljz.questify.R
 import de.ljz.questify.util.changelog.ChangeLogVersion
 import kotlinx.coroutines.launch
 
@@ -46,10 +47,10 @@ fun ChangelogBottomSheet(
     showHideChangelog: Boolean = true,
     onDismiss: (changelogEnabled: Boolean) -> Unit
 ) {
+    val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val state = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
-        confirmValueChange = { false },
     )
 
     val changelogEnabled = remember { mutableStateOf(true) }
@@ -64,11 +65,10 @@ fun ChangelogBottomSheet(
         sheetState = state,
         dragHandle = {}
     ) {
-        BackHandler {}
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

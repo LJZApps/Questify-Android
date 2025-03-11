@@ -40,6 +40,7 @@ class QuestDetailViewModel @Inject constructor(
             val questFlow = questRepository.getQuestByIdFlow(questId)
 
             questFlow.collectLatest { quest ->
+                // Do not remove "?" for null safety - YES it can be null
                 quest?.let {
                     val notificationEntities =
                         questNotificationRepository.getNotificationsByQuestId(it.id)
@@ -51,7 +52,8 @@ class QuestDetailViewModel @Inject constructor(
                         editQuestState = _uiState.value.editQuestState.copy(
                             title = it.title,
                             description = it.notes ?: "",
-                            difficulty = it.difficulty.ordinal
+                            difficulty = it.difficulty.ordinal,
+                            notificationTriggerTimes = notifications,
                         ),
                         questState = _uiState.value.questState.copy(
                             questId = it.id,
@@ -70,12 +72,6 @@ class QuestDetailViewModel @Inject constructor(
 
     fun updateQuest(context: Context, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            questRepository.updateQuest(
-                id = _uiState.value.questState.questId,
-                title = _uiState.value.editQuestState.title,
-                description = _uiState.value.editQuestState.description.trimToNull()
-            )
-
             val notifications = questNotificationRepository.getNotificationsByQuestId(questId)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -95,14 +91,20 @@ class QuestDetailViewModel @Inject constructor(
             }
             questNotificationRepository.removeNotifications(questId)
 
-            _uiState.value.questState.notificationTriggerTimes.forEach { notificationTriggerTime ->
+            _uiState.value.editQuestState.notificationTriggerTimes.forEach { notificationTriggerTime ->
                 val questNotification = QuestNotificationEntity(
-                    questId = questId.toInt(),
+                    questId = questId,
                     notifyAt = Date(notificationTriggerTime)
                 )
 
                 questNotificationRepository.addQuestNotification(questNotification)
             }
+
+            questRepository.updateQuest(
+                id = _uiState.value.questState.questId,
+                title = _uiState.value.editQuestState.title,
+                description = _uiState.value.editQuestState.description.trimToNull()
+            )
 
             onSuccess.invoke()
         }
@@ -198,6 +200,9 @@ class QuestDetailViewModel @Inject constructor(
     fun hideTrophySection() = updateUiState { copy(trophiesExpanded = false) }
 
     fun toggleTrophySection() = updateUiState { copy(trophiesExpanded = !trophiesExpanded) }
+
+    fun showRemindersBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = true) }
+    fun hideReminderBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = false) }
 
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
