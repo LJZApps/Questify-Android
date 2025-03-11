@@ -16,7 +16,12 @@ import de.ljz.questify.ui.navigation.GetStartedMain
 
 fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
     composable<FirstSetupRoute> {
-        FirstSetupScreen(navController = navController)
+        FirstSetupScreen(
+            navController = navController,
+            onNavigateToMainScreen = {
+                navController.navigate(MainRoute)
+            }
+        )
     }
 
     composable<GetStartedMain> {

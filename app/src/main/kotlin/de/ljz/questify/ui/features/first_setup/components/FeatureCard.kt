@@ -1,7 +1,11 @@
 package de.ljz.questify.ui.features.first_setup.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +29,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.ui.features.first_setup.sub_pages.Feature
@@ -32,51 +41,78 @@ import de.ljz.questify.ui.features.first_setup.sub_pages.Feature
 @Composable
 fun FeatureCard(feature: Feature) {
     var isHovered by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(if (isHovered) 1.02f else 1f)
+    val scale by animateFloatAsState(
+        targetValue = if (isHovered) 1.03f else 1f,
+        animationSpec = tween(300, easing = FastOutSlowInEasing)
+    )
+
+    val secondaryColor = remember(feature.color) {
+        feature.color.copy(alpha = 0.6f)
+    }
+
+    val gradientBrush = remember(feature.color, secondaryColor) {
+        Brush.linearGradient(
+            colors = listOf(feature.color, secondaryColor),
+            start = Offset(0f, 0f),
+            end = Offset(300f, 300f)
+        )
+    }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .scale(scale),
-        shape = RoundedCornerShape(20.dp),
+            .scale(scale)
+            .graphicsLayer {
+                shadowElevation = if (isHovered) 8f else 2f
+                shape = RoundedCornerShape(24.dp)
+            }
+            .clickable { isHovered = !isHovered },
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 0.dp,
-            hoveredElevation = 0.dp
+            defaultElevation = 4.dp,
+            hoveredElevation = 8.dp
         )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(24.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(64.dp)
+                    .shadow(8.dp, CircleShape)
                     .clip(CircleShape)
-                    .background(feature.color.copy(alpha = 0.1f)),
+                    .background(Brush.radialGradient(
+                        colors = listOf(
+                            feature.color,
+                            feature.color.copy(alpha = 0.7f)
+                        )
+                    ))
+                    .border(2.dp, feature.color.copy(alpha = 0.2f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = feature.icon,
                     contentDescription = null,
-                    tint = feature.color,
-                    modifier = Modifier.size(32.dp)
+                    tint = Color.White,
+                    modifier = Modifier.size(36.dp)
                 )
             }
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
                     text = feature.title,
                     style = MaterialTheme.typography.titleLarge,
                     color = feature.color,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.ExtraBold
                 )
                 Text(
                     text = feature.description,

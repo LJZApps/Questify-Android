@@ -173,12 +173,14 @@ private fun RewardItem(label: String, value: String) {
 @Composable
 private fun LevelUpBanner(newLevel: Int) {
     val scaleAnim = remember { Animatable(0.8f) }
+
     LaunchedEffect(newLevel) {
         scaleAnim.animateTo(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
         )
     }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()

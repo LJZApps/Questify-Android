@@ -58,15 +58,3 @@ enum class AddingReminderState {
     DATE,
     TIME;
 }
-
-enum class LastSetupStepState {
-    GET_STARTED,
-    NAME,
-    LETS_START;
-
-    companion object {
-        fun fromIndex(index: Int): LastSetupStepState {
-            return LastSetupStepState.entries[index]
-        }
-    }
-}

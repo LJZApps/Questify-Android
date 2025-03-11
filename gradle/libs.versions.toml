@@ -43,7 +43,6 @@ composePlugin = "1.7.3"
 datastoreCoreAndroid = "1.1.3"
 workRuntimeKtx = "2.10.0"
 colorpicker = "1.1.2"
-permissionsCompose = "0.0.1+2"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -105,7 +104,6 @@ composeSettings-ui = { group = "com.github.alorma.compose-settings", name = "ui-
 composeSettings-ui-extended = { group = "com.github.alorma.compose-settings", name = "ui-tiles-extended", version.ref = "composeSettings" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 compose-colorpicker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
-permissions-compose = { group = "com.meticha", name = "permissions_compose", version.ref = "permissionsCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
