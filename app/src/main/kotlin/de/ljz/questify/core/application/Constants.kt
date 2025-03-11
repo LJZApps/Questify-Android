@@ -21,6 +21,13 @@ enum class Difficulty {
     }
 }
 
+enum class Sorting {
+    CATEGORY,
+    DURATION,
+    NAME,
+    RANDOM;
+}
+
 enum class SortingDirections {
     ASCENDING,
     DESCENDING;

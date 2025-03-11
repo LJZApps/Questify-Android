@@ -55,8 +55,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun FirstSetupScreen(
     viewModel: FirstSetupViewModel = hiltViewModel(),
-    onNavigateToMainScreen: () -> Unit,
-    onNavigateUp: () -> Unit,
     navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
