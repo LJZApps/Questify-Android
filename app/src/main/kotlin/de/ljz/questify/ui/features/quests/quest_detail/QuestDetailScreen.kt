@@ -24,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Lock
@@ -83,7 +84,9 @@ fun QuestDetailScreen(
     val editQuestState = uiState.editQuestState
 
     val scope = rememberCoroutineScope()
+
     val options = listOf(
+        stringResource(R.string.difficulty_none),
         stringResource(R.string.difficulty_easy),
         stringResource(R.string.difficulty_medium),
         stringResource(R.string.difficulty_hard),
@@ -172,11 +175,19 @@ fun QuestDetailScreen(
                     AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
                         if (targetState) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
+                                val tintColor = MaterialTheme.colorScheme.primary
                                 when (questState.difficulty) {
-                                    0 -> EasyIcon(tint = MaterialTheme.colorScheme.primary)
-                                    1 -> MediumIcon(tint = MaterialTheme.colorScheme.primary)
-                                    2 -> HardIcon(tint = MaterialTheme.colorScheme.primary)
-                                    3 -> EpicIcon(tint = MaterialTheme.colorScheme.primary)
+                                    0 -> {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Block,
+                                            contentDescription = null,
+                                            tint = tintColor
+                                        )
+                                    }
+                                    1 -> EasyIcon(tint = tintColor)
+                                    2 -> MediumIcon(tint = tintColor)
+                                    3 -> HardIcon(tint = tintColor)
+                                    4 -> EpicIcon(tint = tintColor)
                                 }
                                 Text(
                                     text = options[questState.difficulty],
@@ -205,7 +216,7 @@ fun QuestDetailScreen(
                                                 Icon(
                                                     imageVector = Icons.Outlined.Lock,
                                                     contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                                    tint = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
                                                 )
                                             }
                                         }
@@ -214,10 +225,17 @@ fun QuestDetailScreen(
                                             if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
 
                                         when (index) {
-                                            0 -> EasyIcon(tint = tintColor)
-                                            1 -> MediumIcon(tint = tintColor)
-                                            2 -> HardIcon(tint = tintColor)
-                                            3 -> EpicIcon(tint = tintColor)
+                                            0 -> {
+                                                Icon(
+                                                    imageVector = Icons.Outlined.Block,
+                                                    contentDescription = null,
+                                                    tint = tintColor
+                                                )
+                                            }
+                                            1 -> EasyIcon(tint = tintColor)
+                                            2 -> MediumIcon(tint = tintColor)
+                                            3 -> HardIcon(tint = tintColor)
+                                            4 -> EpicIcon(tint = tintColor)
                                         }
                                     }
                                 }

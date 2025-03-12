@@ -8,7 +8,8 @@ versions:
       - "Completely new onboarding"
       - "New quick quest creation"
       - "New settings"
-      - "Added haptic feedback"
+      - "Added some haptic feedback but it's still in early development, so don't expect it everywhere"
+      - "Added sorting options for quests - early development"
     changes:
       - "Improved UI elements"
       - "Quest Master temporarily removed until new use-cases have been found"

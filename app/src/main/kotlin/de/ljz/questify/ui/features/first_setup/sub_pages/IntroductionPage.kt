@@ -1,18 +1,14 @@
 package de.ljz.questify.ui.features.first_setup.sub_pages
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -29,10 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -46,54 +39,24 @@ import de.ljz.questify.ui.features.first_setup.components.FeatureCard
 fun IntroductionPage(
     visible: Boolean
 ) {
-    // Dekorative Hintergrundformen
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // Hintergrund-Blobs
-        Box(
-            modifier = Modifier
-                .size(300.dp)
-                .offset((-80).dp, (-100).dp)
-                .blur(70.dp)
-                .background(
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                    CircleShape
-                )
-        )
-
-        Box(
-            modifier = Modifier
-                .size(200.dp)
-                .offset(200.dp, 400.dp)
-                .blur(60.dp)
-                .background(
-                    MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
-                    CircleShape
-                )
-        )
-
-        // Hauptinhalt
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(40.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn(tween(1000)) + slideInVertically(
-                    initialOffsetY = { -80 },
-                    animationSpec = tween(1200)
-                )
+                enter = fadeIn() + slideInVertically(initialOffsetY = { -40 })
             ) {
                 WelcomeHeader()
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             FeaturesList(visible)
         }
@@ -104,37 +67,29 @@ fun IntroductionPage(
 private fun WelcomeHeader() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        modifier = Modifier.padding(vertical = 24.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(vertical = 16.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(100.dp)
-                .shadow(16.dp, CircleShape)
+                .size(80.dp)
                 .clip(CircleShape)
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.primaryContainer
-                        )
-                    )
-                ),
+                .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.AutoAwesome,
                 contentDescription = null,
-                modifier = Modifier.size(50.dp),
-                tint = Color.White
+                modifier = Modifier.size(40.dp),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
 
         Text(
             text = stringResource(R.string.introduction_page_title),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.ExtraBold
+            fontWeight = FontWeight.Bold
         )
 
         Text(
@@ -142,7 +97,7 @@ private fun WelcomeHeader() {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
@@ -150,7 +105,7 @@ private fun WelcomeHeader() {
 @Composable
 private fun FeaturesList(visible: Boolean) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         val features = listOf(
@@ -164,22 +119,21 @@ private fun FeaturesList(visible: Boolean) {
                 icon = Icons.Default.LocalActivity,
                 title = stringResource(R.string.introduction_page_reward_system_title),
                 description = stringResource(R.string.introduction_page_reward_system_description),
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.primary
             ),
             Feature(
                 icon = Icons.Default.Timeline,
                 title = stringResource(R.string.introduction_page_progess_tracking_title),
                 description = stringResource(R.string.introduction_page_progess_tracking_description),
-                color = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.primary
             )
         )
 
         features.forEachIndexed { index, feature ->
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn(tween(1000)) + slideInVertically(
-                    initialOffsetY = { 100 * (index + 1) },
-                    animationSpec = tween(800 + (index * 200))
+                enter = fadeIn() + slideInVertically(
+                    initialOffsetY = { 40 * (index + 1) }
                 )
             ) {
                 FeatureCard(feature)
