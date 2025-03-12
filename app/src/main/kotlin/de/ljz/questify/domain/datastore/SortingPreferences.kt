@@ -17,7 +17,7 @@ data class SortingPreferences(
     val questSorting: QuestSorting = QuestSorting.ID,
 
     @SerialName("quest_sorting_direction")
-    val questSortingDirection: SortingDirections = SortingDirections.ASCENDING,
+    val questSortingDirection: SortingDirections = SortingDirections.DESCENDING,
 
     @SerialName("show_completed_quests")
     val showCompletedQuests: Boolean = false
