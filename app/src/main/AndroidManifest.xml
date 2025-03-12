@@ -25,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Questify"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="tiramisu">
 
         <receiver

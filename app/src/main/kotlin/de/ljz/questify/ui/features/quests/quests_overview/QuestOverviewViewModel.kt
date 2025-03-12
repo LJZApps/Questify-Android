@@ -37,18 +37,16 @@ class QuestOverviewViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 questRepository.getQuests().collectLatest { quests ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            quests = quests
-                        )
-                    }
+                    _uiState.update { it.copy(allQuestPageState = it.allQuestPageState.copy(quests = quests)) }
                 }
             }
             launch {
                 appFeatureSettingsRepository.getFeatureSettings().collectLatest { settings ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            featureSettings = currentState.featureSettings.copy(fastQuestAddingEnabled = settings.questFastAddingEnabled)
+                    _uiState.update {
+                        it.copy(
+                            featureSettings = it.featureSettings.copy(
+                                fastQuestAddingEnabled = settings.questFastAddingEnabled
+                            )
                         )
                     }
                 }
@@ -118,6 +116,22 @@ class QuestOverviewViewModel @Inject constructor(
     fun deleteQuest(id: Int) {
         viewModelScope.launch {
             questRepository.deleteQuest(id)
+        }
+    }
+
+    fun showSortingBottomSheet() {
+        _uiState.update {
+            it.copy(
+                isSortingBottomSheetOpen = true
+            )
+        }
+    }
+
+    fun hideSortingBottomSheet() {
+        _uiState.update {
+            it.copy(
+                isSortingBottomSheetOpen = false
+            )
         }
     }
 

@@ -2,6 +2,8 @@ package de.ljz.questify.ui.features.quests.quests_overview
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -33,7 +35,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
@@ -41,7 +42,6 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -75,14 +75,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
-import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomNavGraph
+import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
+import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.AllQuestsPage
+import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.DailiesQuestsPage
+import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.HabitsQuestsPage
+import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQuestsPage
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.util.bounceClick
 import de.ljz.questify.util.getSerializedRouteName
@@ -164,18 +170,7 @@ fun QuestOverviewScreen(
                 drawerState = drawerState,
                 navController = mainNavController,
                 title = stringResource(R.string.quest_screen_top_bar_title),
-                scrollBehavior = scrollBehavior,
-                actions = {
-                    if (enabledViewQuestFeatures.any { getSerializedRouteName(it) == currentDestination?.route }) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(imageVector = Icons.Filled.FilterList, contentDescription = null)
-                        }
-                    }
-                }
+                scrollBehavior = scrollBehavior
             )
         },
         content = { innerPadding ->
@@ -184,7 +179,39 @@ fun QuestOverviewScreen(
                     .padding(innerPadding)
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
-                QuestBottomNavGraph(bottomNavController, mainNavController, viewModel)
+                NavHost(
+                    navController = bottomNavController,
+                    startDestination = QuestBottomRoutes.AllQuests,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
+                ) {
+                    composable<QuestBottomRoutes.AllQuests> {
+                        AllQuestsPage(
+                            state = uiState.allQuestPageState,
+                            onQuestDone = {
+                                viewModel.setQuestDone(
+                                    it,
+                                    context
+                                )
+                            },
+                            onQuestDelete = viewModel::deleteQuest,
+                            onSortButtonClick = viewModel::showSortingBottomSheet,
+                            navController = mainNavController
+                        )
+                    }
+
+                    composable<QuestBottomRoutes.Dailies> {
+                        DailiesQuestsPage()
+                    }
+
+                    composable<QuestBottomRoutes.Routines> {
+                        RoutinesQuestsPage()
+                    }
+
+                    composable<QuestBottomRoutes.Habits> {
+                        HabitsQuestsPage()
+                    }
+                }
             }
 
             if (questDoneDialogState.visible) {
@@ -193,6 +220,12 @@ fun QuestOverviewScreen(
                     onDismiss = {
                         viewModel.hideQuestDoneDialog()
                     }
+                )
+            }
+
+            if (uiState.isSortingBottomSheetOpen) {
+                QuestSortingBottomSheet(
+                    onDismiss = viewModel::hideSortingBottomSheet,
                 )
             }
         },

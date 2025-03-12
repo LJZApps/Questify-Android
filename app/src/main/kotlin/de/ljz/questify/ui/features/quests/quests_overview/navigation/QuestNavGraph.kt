@@ -1,21 +1,13 @@
 package de.ljz.questify.ui.features.quests.quests_overview.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewViewModel
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.DailiesQuestsPage
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.HabitsQuestsPage
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQuestsPage
 
 @Composable
 fun QuestBottomNavGraph(navController: NavHostController, mainNavController: NavHostController, viewModel: QuestOverviewViewModel) {
 
-    NavHost(
+    /*NavHost(
         navController = navController,
         startDestination = QuestBottomRoutes.AllQuests,
         enterTransition = { EnterTransition.None },
@@ -36,5 +28,5 @@ fun QuestBottomNavGraph(navController: NavHostController, mainNavController: Nav
         composable<QuestBottomRoutes.Habits> {
             HabitsQuestsPage(viewModel = viewModel)
         }
-    }
+    }*/
 }

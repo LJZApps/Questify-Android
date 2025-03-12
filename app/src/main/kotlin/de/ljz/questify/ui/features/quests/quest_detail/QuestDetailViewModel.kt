@@ -138,22 +138,22 @@ class QuestDetailViewModel @Inject constructor(
     }
 
     fun removeReminder(index: Int) {
-        val updatedTimes = _uiState.value.questState.notificationTriggerTimes.toMutableList().apply {
+        val updatedTimes = _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
             removeAt(index)
         }
         _uiState.value = _uiState.value.copy(
-            questState = _uiState.value.questState.copy(
+            editQuestState = _uiState.value.editQuestState.copy(
                 notificationTriggerTimes = updatedTimes
             )
         )
     }
 
     fun addReminder(timestamp: Long) {
-        val updatedTimes = _uiState.value.questState.notificationTriggerTimes.toMutableList().apply {
+        val updatedTimes = _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
             add(timestamp)
         }
         _uiState.value = _uiState.value.copy(
-            questState = _uiState.value.questState.copy(
+            editQuestState = _uiState.value.editQuestState.copy(
                 notificationTriggerTimes = updatedTimes
             )
         )

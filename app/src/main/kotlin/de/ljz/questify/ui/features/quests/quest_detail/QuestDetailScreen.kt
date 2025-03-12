@@ -238,7 +238,7 @@ fun QuestDetailScreen(
                 }
 
                 // Erinnerungen
-                if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
+                if (questState.notificationTriggerTimes.isNotEmpty()) {
                     Column {
                         Text(text = stringResource(R.string.quest_detail_screen_reminders_title), style = MaterialTheme.typography.titleMedium)
                         questState.notificationTriggerTimes.sorted().forEach { triggerTime ->
@@ -368,7 +368,7 @@ fun QuestDetailScreen(
                     }
 
                     AnimatedVisibility(
-                        visible = uiState.isEditingQuest,
+                        visible = uiState.isEditingQuest && !questState.isQuestDone,
                         exit = slideOutHorizontally(targetOffsetX = { it / -2 }) + fadeOut(),
                         enter = slideInHorizontally(initialOffsetX = { it / -2 }) + fadeIn()
                     ) {
@@ -402,37 +402,39 @@ fun QuestDetailScreen(
                             }
                         }
 
-                        FloatingActionButton(
-                            onClick = {
-                                if (uiState.isEditingQuest) {
-                                    viewModel.updateQuest(
-                                        context = context,
-                                        onSuccess = {
-                                            scope.launch {
-                                                snackbarHostState.showSnackbar(
-                                                    context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
-                                                    withDismissAction = true
-                                                )
+                        if (!questState.isQuestDone) {
+                            FloatingActionButton(
+                                onClick = {
+                                    if (uiState.isEditingQuest) {
+                                        viewModel.updateQuest(
+                                            context = context,
+                                            onSuccess = {
+                                                scope.launch {
+                                                    snackbarHostState.showSnackbar(
+                                                        context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
+                                                        withDismissAction = true
+                                                    )
+                                                }
+                                                viewModel.stopEditMode()
                                             }
-                                            viewModel.stopEditMode()
-                                        }
+                                        )
+                                    } else {
+                                        viewModel.startEditMode()
+                                    }
+                                },
+                                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                                shape = RoundedCornerShape(fabShape)
+                            ) {
+                                Crossfade(
+                                    targetState = uiState.isEditingQuest,
+                                    label = "EditQuestIconAnimation"
+                                ) { isFocused ->
+                                    Icon(
+                                        imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
+                                        contentDescription = null
                                     )
-                                } else {
-                                    viewModel.startEditMode()
                                 }
-                            },
-                            containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                            shape = RoundedCornerShape(fabShape)
-                        ) {
-                            Crossfade(
-                                targetState = uiState.isEditingQuest,
-                                label = "EditQuestIconAnimation"
-                            ) { isFocused ->
-                                Icon(
-                                    imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
-                                    contentDescription = null
-                                )
                             }
                         }
                     }

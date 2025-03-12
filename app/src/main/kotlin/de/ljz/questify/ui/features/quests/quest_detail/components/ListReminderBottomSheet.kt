@@ -1,22 +1,23 @@
 package de.ljz.questify.ui.features.quests.quest_detail.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.AlarmAdd
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
@@ -105,44 +107,59 @@ fun ListReminderBottomSheet(
                         val date = Date(triggerTime)
                         val formattedDate = reminderDateFormat.format(date)
 
-                        Box(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .clip(RoundedCornerShape(8.dp))
-                                .clickable {
-                                    onRemoveReminder(index)
-                                }
+                                .clip(RoundedCornerShape(12.dp)) // Runde Ecken attraktiver machen.
+                                .clickable { onRemoveReminder(index) },
+                            elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(8.dp)
+                                horizontalArrangement = Arrangement.SpaceBetween, // Text und Icon trennen.
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .fillMaxWidth()
                             ) {
-                                Icon(
-                                    Icons.Outlined.Delete,
-                                    contentDescription = null
-                                )
-
+                                // Datumstext
                                 Text(
                                     text = formattedDate,
-                                    modifier = Modifier.padding(start = 8.dp)
+                                    style = MaterialTheme.typography.bodyLarge.copy( // Größere, modernere Schriftart
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+
+                                // Icon zum Entfernen der Erinnerung
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Remove Reminder",
                                 )
                             }
                         }
+
                     }
                 }
             }
 
-            Button(
+            OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onAddReminder()
                 }
             ) {
-                Text(stringResource(R.string.list_reminder_bottom_sheet_add_reminder_button))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.AlarmAdd,
+                        contentDescription = null
+                    )
+                    Text(
+                        text = stringResource(R.string.list_reminder_bottom_sheet_add_reminder_button),
+                        modifier = Modifier
+                    )
+                }
             }
         }
     }
