@@ -21,11 +21,12 @@ enum class Difficulty {
     }
 }
 
-enum class Sorting {
-    CATEGORY,
-    DURATION,
-    NAME,
-    RANDOM;
+enum class QuestSorting {
+    ID,
+    TITLE,
+    DONE,
+    NOTES,
+    DUE_DATE
 }
 
 enum class SortingDirections {

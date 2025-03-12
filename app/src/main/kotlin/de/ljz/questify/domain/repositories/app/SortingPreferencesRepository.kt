@@ -1,10 +1,9 @@
 package de.ljz.questify.domain.repositories.app
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
+import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
+import de.ljz.questify.domain.datastore.SortingPreferences
 import de.ljz.questify.domain.repositories.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,31 +12,27 @@ import javax.inject.Singleton
 
 @Singleton
 class SortingPreferencesRepository @Inject constructor(
-    private val sortingDataStore: DataStore<Preferences>
+    private val sortingDataStore: DataStore<SortingPreferences>
 ) : BaseRepository() {
 
-    private fun getSortKey(screenName: String) = stringPreferencesKey("sort_key_$screenName")
-    private fun getSortDirection(screenName: String) = stringPreferencesKey("sort_direction_$screenName")
-
-    suspend fun saveSortKey(screenName: String, key: String) {
-        sortingDataStore.edit { preferences ->
-            preferences[getSortKey(screenName)] = key
+    fun getQuestSortingPreferences(): Flow<QuestSortingData> {
+        return sortingDataStore.data.map {
+            QuestSortingData(
+                questSorting = it.questSorting,
+                questSortingDirection = it.questSortingDirection
+            )
         }
     }
 
-    suspend fun saveSortDirection(screenName: String, direction: String) {
-        sortingDataStore.edit { preferences ->
-            preferences[getSortDirection(screenName)] = direction
+    suspend fun saveQuestSorting(questSorting: QuestSorting) {
+        sortingDataStore.updateData {
+            it.copy(questSorting = questSorting)
         }
     }
 
-    fun getSortKeyFlow(screenName: String): Flow<String> =
-        sortingDataStore.data.map { preferences ->
-            preferences[getSortKey(screenName)] ?: "default"
+    suspend fun saveQuestSortingDirection(sortingDirection: SortingDirections) {
+        sortingDataStore.updateData {
+            it.copy(questSortingDirection = sortingDirection)
         }
-
-    fun getSortDirectionFlow(screenName: String): Flow<String> =
-        sortingDataStore.data.map { preferences ->
-            preferences[getSortDirection(screenName)] ?: SortingDirections.ASCENDING.name
-        }
+    }
 }

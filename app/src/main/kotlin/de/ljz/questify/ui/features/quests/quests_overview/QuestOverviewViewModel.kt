@@ -8,11 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.application.Difficulty
+import de.ljz.questify.core.application.QuestSorting
+import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.app.AppUserRepository
 import de.ljz.questify.domain.repositories.app.FeatureSettingsRepository
+import de.ljz.questify.domain.repositories.app.SortingPreferencesRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +31,8 @@ class QuestOverviewViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
-    private val appFeatureSettingsRepository: FeatureSettingsRepository
+    private val appFeatureSettingsRepository: FeatureSettingsRepository,
+    private val sortingPreferencesRepository: SortingPreferencesRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
     val uiState: StateFlow<QuestOverviewUIState> = _uiState.asStateFlow()
@@ -46,6 +50,18 @@ class QuestOverviewViewModel @Inject constructor(
                         it.copy(
                             featureSettings = it.featureSettings.copy(
                                 fastQuestAddingEnabled = settings.questFastAddingEnabled
+                            )
+                        )
+                    }
+                }
+            }
+            launch {
+                sortingPreferencesRepository.getQuestSortingPreferences().collectLatest { sortingPreferences ->
+                    _uiState.update {
+                        it.copy(
+                            allQuestPageState = it.allQuestPageState.copy(
+                                sortingBy = sortingPreferences.questSorting,
+                                sortingDirections = sortingPreferences.questSortingDirection
                             )
                         )
                     }
@@ -116,6 +132,18 @@ class QuestOverviewViewModel @Inject constructor(
     fun deleteQuest(id: Int) {
         viewModelScope.launch {
             questRepository.deleteQuest(id)
+        }
+    }
+
+    fun updateQuestSorting(questSorting: QuestSorting) {
+        viewModelScope.launch {
+            sortingPreferencesRepository.saveQuestSorting(questSorting)
+        }
+    }
+
+    fun updateQuestSortingDirection(sortingDirection: SortingDirections) {
+        viewModelScope.launch {
+            sortingPreferencesRepository.saveQuestSortingDirection(sortingDirection)
         }
     }
 

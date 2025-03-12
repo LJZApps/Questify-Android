@@ -102,6 +102,7 @@ fun QuestOverviewScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val questDoneDialogState = uiState.questDoneDialogState
+    val allQuestPageState = uiState.allQuestPageState
 
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
@@ -226,6 +227,10 @@ fun QuestOverviewScreen(
             if (uiState.isSortingBottomSheetOpen) {
                 QuestSortingBottomSheet(
                     onDismiss = viewModel::hideSortingBottomSheet,
+                    questSorting = allQuestPageState.sortingBy,
+                    sortingDirection = allQuestPageState.sortingDirections,
+                    onSortingChanged = viewModel::updateQuestSorting,
+                    onSortingDirectionChanged = viewModel::updateQuestSortingDirection
                 )
             }
         },

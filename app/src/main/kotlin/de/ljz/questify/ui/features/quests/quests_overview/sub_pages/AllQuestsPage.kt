@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
+import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.ui.components.EasyIcon
@@ -64,7 +65,7 @@ fun AllQuestsPage(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Icon(
-                            imageVector = if (state.sortingDirections == SortingDirections.DESCENDING) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                            imageVector = if (state.sortingDirections == SortingDirections.ASCENDING) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -86,8 +87,22 @@ fun AllQuestsPage(
                 }
 
             }
-            
-            items(state.quests.sortedBy { it.done }.asReversed(), key = { it.id }) { quest ->
+
+            items(
+                state.quests
+                    .filter { quest -> state.showCompleted || !quest.done }
+                    .sortedWith(
+                        compareBy<QuestEntity> {
+                            when (state.sortingBy) {
+                                QuestSorting.DONE -> it.done
+                                QuestSorting.TITLE -> it.title
+                                QuestSorting.NOTES -> it.notes
+                                QuestSorting.DUE_DATE -> it.dueDate
+                                else -> it.id
+                            }
+                        }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it }
+                    ), key = { it.id }
+            ) { quest ->
                 QuestItem(
                     quest = quest,
                     modifier = Modifier
@@ -100,7 +115,6 @@ fun AllQuestsPage(
                             Difficulty.HARD -> HardIcon()
                             Difficulty.EPIC -> EpicIcon()
                             Difficulty.NONE -> {}
-                            else -> null
                         }
                     },
                     onQuestChecked = {

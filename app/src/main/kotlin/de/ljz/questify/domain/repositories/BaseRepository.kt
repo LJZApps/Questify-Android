@@ -1,5 +1,7 @@
 package de.ljz.questify.domain.repositories
 
+import de.ljz.questify.core.application.QuestSorting
+import de.ljz.questify.core.application.SortingDirections
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -50,4 +52,8 @@ open class BaseRepository {
         )
     }
 
+    data class QuestSortingData(
+        val questSorting: QuestSorting,
+        val questSortingDirection: SortingDirections
+    )
 }

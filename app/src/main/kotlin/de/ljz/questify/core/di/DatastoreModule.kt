@@ -4,9 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +18,8 @@ import de.ljz.questify.domain.datastore.FeatureSettingsSerializer
 import de.ljz.questify.domain.datastore.NewFeatureBadges
 import de.ljz.questify.domain.datastore.NewFeatureBadgesSerializer
 import de.ljz.questify.domain.datastore.QuestMasterSerializer
+import de.ljz.questify.domain.datastore.SortingPreferences
+import de.ljz.questify.domain.datastore.SortingPreferencesSerializer
 import de.ljz.questify.domain.datastore.Tutorials
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -86,11 +85,14 @@ object DatastoreModule {
             produceFile = { File(context.filesDir, "datastore/feature_settings.json") }
         )
 
-    @Provides
     @Singleton
-    fun provideSortingDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
-        return PreferenceDataStoreFactory.create {
-            context.preferencesDataStoreFile("sorting_preferences")
-        }
-    }
+    @Provides
+    fun provideSoringPreferencesDatastore(@ApplicationContext context: Context): DataStore<SortingPreferences> =
+        DataStoreFactory.create(
+            serializer = SortingPreferencesSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { SortingPreferences() },
+            migrations = listOf(),
+            scope = CoroutineScope(Dispatchers.IO),
+            produceFile = { File(context.filesDir, "datastore/sorting_preferences.json") }
+        )
 }
