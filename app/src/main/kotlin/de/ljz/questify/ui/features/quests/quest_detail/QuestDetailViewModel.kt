@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.application.AddingReminderState
+import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
@@ -103,7 +104,8 @@ class QuestDetailViewModel @Inject constructor(
             questRepository.updateQuest(
                 id = _uiState.value.questState.questId,
                 title = _uiState.value.editQuestState.title,
-                description = _uiState.value.editQuestState.description.trimToNull()
+                description = _uiState.value.editQuestState.description.trimToNull(),
+                difficulty = Difficulty.fromIndex(_uiState.value.editQuestState.difficulty),
             )
 
             onSuccess.invoke()
@@ -206,6 +208,9 @@ class QuestDetailViewModel @Inject constructor(
 
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
+
+    fun updateDifficulty(difficulty: Int) = updateUiState { copy(editQuestState = editQuestState.copy(difficulty = difficulty)) }
+
     fun startEditMode() = updateUiState {
         copy(
             isEditingQuest = true,

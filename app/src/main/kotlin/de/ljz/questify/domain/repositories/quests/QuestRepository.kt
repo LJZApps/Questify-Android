@@ -1,5 +1,6 @@
 package de.ljz.questify.domain.repositories.quests
 
+import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.daos.QuestDao
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.BaseRepository
@@ -18,8 +19,13 @@ class QuestRepository @Inject constructor(
         questDao.setQuestDone(id, done)
     }
 
-    suspend fun updateQuest(id: Int, title: String, description: String? = null) {
-        questDao.updateQuestById(id, title, description)
+    suspend fun updateQuest(
+        id: Int,
+        title: String,
+        description: String? = null,
+        difficulty: Difficulty
+    ) {
+        questDao.updateQuestById(id, title, description, difficulty)
     }
 
     fun getQuests() = questDao.getAllQuests()

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,7 +28,6 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -142,7 +143,10 @@ fun QuestDetailScreen(
                             label = { Text(stringResource(R.string.text_field_quest_title)) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
-                            singleLine = true
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences
+                            )
                         )
                     }
                 }
@@ -163,7 +167,10 @@ fun QuestDetailScreen(
                             label = { Text(stringResource(R.string.text_field_quest_note)) },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
-                            minLines = 2
+                            minLines = 2,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences,
+                            )
                         )
                     }
                 }
@@ -172,7 +179,7 @@ fun QuestDetailScreen(
                 Column {
                     Text(text = stringResource(R.string.quest_detail_screen_difficulty_title), style = MaterialTheme.typography.titleMedium)
 
-                    AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
+                    AnimatedContent(targetState = !(uiState.isEditingQuest && questState.difficulty == 0)) { targetState ->
                         if (targetState) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val tintColor = MaterialTheme.colorScheme.primary
@@ -208,18 +215,12 @@ fun QuestDetailScreen(
                                         shape = SegmentedButtonDefaults.itemShape(
                                             index = index,
                                             count = options.size
-                                        ), onClick = { },
+                                        ),
+                                        onClick = {
+                                            viewModel.updateDifficulty(index)
+                                        },
                                         selected = index == editQuestState.difficulty,
-                                        enabled = false,
-                                        icon = {
-                                            if (index == editQuestState.difficulty) {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.Lock,
-                                                    contentDescription = null,
-                                                    tint = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
-                                                )
-                                            }
-                                        }
+                                        icon = {}
                                     ) {
                                         val tintColor =
                                             if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
