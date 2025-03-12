@@ -1,6 +1,11 @@
 package de.ljz.questify.ui.features.quests.quests_overview.sub_pages
 
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,17 +17,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.List
-import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.FormatListNumbered
+import androidx.compose.material.icons.filled.Notes
+import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
@@ -37,6 +50,7 @@ import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.components.QuestItem
 import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
+import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingItem
 
 @Composable
 fun AllQuestsPage(
@@ -47,7 +61,35 @@ fun AllQuestsPage(
     onQuestDelete: (Int) -> Unit,
     onSortButtonClick: () -> Unit,
 ) {
-    if (!state.quests.isEmpty()) {
+    val sortingOptions = listOf(
+        QuestSortingItem(
+            stringResource(R.string.quest_sorting_default),
+            QuestSorting.ID,
+            Icons.Default.FormatListNumbered
+        ),
+        QuestSortingItem(
+            stringResource(R.string.quest_sorting_title),
+            QuestSorting.TITLE,
+            Icons.Default.Title
+        ),
+        QuestSortingItem(
+            stringResource(R.string.quest_sorting_notes),
+            QuestSorting.NOTES,
+            Icons.Default.Notes
+        ),
+        QuestSortingItem(
+            stringResource(R.string.quest_sorting_due_date),
+            QuestSorting.DUE_DATE,
+            Icons.Default.DateRange
+        ),
+        QuestSortingItem(
+            stringResource(R.string.quest_sorting_quest_complete),
+            QuestSorting.DONE,
+            Icons.Default.CheckCircle
+        ),
+    )
+
+    if (state.quests.isNotEmpty()) {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
@@ -55,37 +97,79 @@ fun AllQuestsPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Sorting indicator
+                    // Sortierung anzeigen mit visueller Verbesserung
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
+                        // Sortierrichtung-Icon mit Animation
+                        val sortTransition = updateTransition(
+                            targetState = state.sortingDirections,
+                            label = "SortDirectionTransition"
+                        )
+                        val iconRotation by sortTransition.animateFloat(
+                            label = "IconRotation",
+                            transitionSpec = { tween(durationMillis = 300) }
+                        ) { direction ->
+                            when (direction) {
+                                SortingDirections.ASCENDING -> 0f
+                                SortingDirections.DESCENDING -> 180f
+                            }
+                        }
+
                         Icon(
-                            imageVector = if (state.sortingDirections == SortingDirections.ASCENDING) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                            imageVector = Icons.Default.ArrowUpward,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
+                            modifier = Modifier.graphicsLayer {
+                                rotationZ = iconRotation
+                            }
                         )
-                        Text(
-                            text = "Name",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+
+                        // Sortieroption mit Icon
+                        val sortOption = sortingOptions[state.sortingBy.ordinal]
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            // Icon der aktuellen Sortiermethode
+                            Icon(
+                                imageVector = sortOption.icon, // Du musst deine sortingOptions mit Icons erweitern
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+
+                            Text(
+                                text = sortOption.text,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
 
-                    // Sorting toggle button
+                    // Verbesserter Sortier-Button
                     IconButton(
-                        onClick = { onSortButtonClick() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = null
-                        )
-                    }
+                        onClick = { onSortButtonClick() },
+                        modifier = Modifier.size(36.dp),  // Eine kleinere Größe setzen
+                        interactionSource = remember { MutableInteractionSource() },
+                        content = {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.FilterList,
+                                    contentDescription = "Sortierung ändern",
+                                    modifier = Modifier.size(20.dp)  // Icon-Größe reduzieren
+                                )
+                            }
+                        }
+                    )
                 }
-
             }
 
             items(
@@ -130,7 +214,7 @@ fun AllQuestsPage(
             }
         }
     } else {
-        Column (
+        Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)

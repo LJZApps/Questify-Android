@@ -24,9 +24,9 @@ enum class Difficulty {
 enum class QuestSorting {
     ID,
     TITLE,
-    DONE,
     NOTES,
-    DUE_DATE
+    DUE_DATE,
+    DONE
 }
 
 enum class SortingDirections {
