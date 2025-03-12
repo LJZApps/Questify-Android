@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,16 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,6 +37,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.R
+import de.ljz.questify.ui.ds.components.GameButton
+import de.ljz.questify.ui.ds.components.GameDivider
+import de.ljz.questify.ui.ds.theme.bannerShape
+import de.ljz.questify.ui.ds.theme.scroll
 import de.ljz.questify.ui.features.quests.quests_overview.QuestDoneDialogState
 import kotlinx.coroutines.launch
 
@@ -75,10 +75,19 @@ fun QuestDoneDialog(
             usePlatformDefaultWidth = false
         )
     ) {
-        Surface(
-            shape = RoundedCornerShape(24.dp),
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            modifier = Modifier.padding(16.dp)
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .shadow(8.dp, MaterialTheme.shapes.scroll)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    shape = MaterialTheme.shapes.scroll
+                )
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                    shape = MaterialTheme.shapes.scroll
+                )
         ) {
             Column(
                 modifier = Modifier
@@ -113,7 +122,7 @@ fun QuestDoneDialog(
                 )
 
                 if (state.xp > 0 || state.points > 0 || state.newLevel > 0) {
-                    HorizontalDivider(color = Color.Gray.copy(alpha = 0.3f), thickness = 1.dp)
+                    GameDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f))
                 }
 
                 RewardSection(
@@ -125,14 +134,14 @@ fun QuestDoneDialog(
                     LevelUpBanner(newLevel = state.newLevel)
                 }
 
-                Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = if (state.xp > 0 || state.points > 0)
-                                stringResource(R.string.quest_done_dialog_take_rewards_button)
-                            else
-                                stringResource(R.string.quest_done_dialog_great_button)
-                    )
-                }
+                GameButton(
+                    onClick = onDismiss, 
+                    text = if (state.xp > 0 || state.points > 0)
+                            stringResource(R.string.quest_done_dialog_take_rewards_button)
+                        else
+                            stringResource(R.string.quest_done_dialog_great_button),
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
@@ -185,8 +194,16 @@ private fun LevelUpBanner(newLevel: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .scale(scaleAnim.value)
-            .shadow(8.dp, shape = RoundedCornerShape(16.dp))
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
+            .shadow(8.dp, shape = MaterialTheme.shapes.bannerShape())
+            .background(
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shape = MaterialTheme.shapes.bannerShape()
+            )
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                shape = MaterialTheme.shapes.bannerShape()
+            )
             .padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
