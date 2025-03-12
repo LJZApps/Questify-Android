@@ -185,4 +185,14 @@
     <string name="list_reminder_bottom_sheet_hint">Your changes will be applied upon saving the quest</string>
     <string name="list_reminder_bottom_sheet_add_reminder_button">Add reminder</string>
     <string name="list_reminder_bottom_sheet_no_reminders_hint">Click on \'%1$s\' to add a new reminder.</string>
+    <string name="quest_sorting_default">Default</string>
+    <string name="quest_sorting_title">Title</string>
+    <string name="quest_sorting_notes">Notes</string>
+    <string name="quest_sorting_due_date">Due date</string>
+    <string name="quest_sorting_quest_complete">Quest Complete</string>
+    <string name="sorting_direction_ascending">Ascending</string>
+    <string name="sorting_direction_descending">Descending</string>
+    <string name="quest_sorting_bottom_sheet_title">Sort Quests</string>
+    <string name="quest_sorting_bottom_sheet_sort_by">Sort by</string>
+    <string name="quest_sorting_bottom_sheet_sorting_order">Sorting direction</string>
 </resources>

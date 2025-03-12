@@ -2,7 +2,6 @@ package de.ljz.questify.ui.features.quests.quests_overview.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -32,13 +31,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.ui.features.quests.quests_overview.SortingDirectionItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestSortingBottomSheet(
     onDismiss: () -> Unit,
@@ -53,16 +54,16 @@ fun QuestSortingBottomSheet(
     val scope = rememberCoroutineScope()
 
     val sortingOptions = listOf(
-        QuestSortingItem("Default", QuestSorting.ID, Icons.Default.FormatListNumbered),
-        QuestSortingItem("Title", QuestSorting.TITLE, Icons.Default.Title),
-        QuestSortingItem("Notes", QuestSorting.NOTES, Icons.Default.Notes),
-        QuestSortingItem("Due date", QuestSorting.DUE_DATE, Icons.Default.DateRange),
-        QuestSortingItem("Quest Complete", QuestSorting.DONE, Icons.Default.CheckCircle),
+        QuestSortingItem(stringResource(R.string.quest_sorting_default), QuestSorting.ID, Icons.Default.FormatListNumbered),
+        QuestSortingItem(stringResource(R.string.quest_sorting_title), QuestSorting.TITLE, Icons.Default.Title),
+        QuestSortingItem(stringResource(R.string.quest_sorting_notes), QuestSorting.NOTES, Icons.Default.Notes),
+        QuestSortingItem(stringResource(R.string.quest_sorting_due_date), QuestSorting.DUE_DATE, Icons.Default.DateRange),
+        QuestSortingItem(stringResource(R.string.quest_sorting_quest_complete), QuestSorting.DONE, Icons.Default.CheckCircle),
     )
 
     val sortingDirections = listOf(
-        SortingDirectionItem("Ascending", SortingDirections.ASCENDING),
-        SortingDirectionItem("Descending", SortingDirections.DESCENDING)
+        SortingDirectionItem(stringResource(R.string.sorting_direction_ascending), SortingDirections.ASCENDING),
+        SortingDirectionItem(stringResource(R.string.sorting_direction_descending), SortingDirections.DESCENDING)
     )
 
     ModalBottomSheet(
@@ -84,7 +85,7 @@ fun QuestSortingBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Quests sortieren",
+                text = stringResource(R.string.quest_sorting_bottom_sheet_title),
                 style = MaterialTheme.typography.headlineSmall
             )
 
@@ -99,7 +100,7 @@ fun QuestSortingBottomSheet(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Sortieren nach",
+                        text = stringResource(R.string.quest_sorting_bottom_sheet_sort_by),
                         style = MaterialTheme.typography.titleMedium,
                     )
 
@@ -140,7 +141,7 @@ fun QuestSortingBottomSheet(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Sortierreihenfolge",
+                        text = stringResource(R.string.quest_sorting_bottom_sheet_sorting_order),
                         style = MaterialTheme.typography.titleMedium,
                     )
 

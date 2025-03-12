@@ -186,4 +186,14 @@
     <string name="list_reminder_bottom_sheet_hint">Deine Änderungen werden beim Speichern der Quest angewendet</string>
     <string name="list_reminder_bottom_sheet_add_reminder_button">Erinnerung hinzufügen</string>
     <string name="list_reminder_bottom_sheet_no_reminders_hint">Drücke auf \'%1$s\', um eine neue Erinnerung hinzuzufügen.</string>
+    <string name="sorting_direction_descending">Absteigend</string>
+    <string name="quest_sorting_bottom_sheet_title">Quests sortieren</string>
+    <string name="quest_sorting_bottom_sheet_sort_by">Sortieren nach</string>
+    <string name="quest_sorting_bottom_sheet_sorting_order">Sortierreihenfolge</string>
+    <string name="quest_sorting_default">Standard</string>
+    <string name="quest_sorting_title">Titel</string>
+    <string name="quest_sorting_notes">Notizen</string>
+    <string name="quest_sorting_due_date">Fälligkeitsdatum</string>
+    <string name="quest_sorting_quest_complete">Quest fertig</string>
+    <string name="sorting_direction_ascending">Aufsteigend</string>
 </resources>
