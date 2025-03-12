@@ -2,6 +2,7 @@ package de.ljz.questify.ui.features.quests.quests_overview.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -45,8 +47,10 @@ fun QuestSortingBottomSheet(
     onDismiss: () -> Unit,
     questSorting: QuestSorting,
     sortingDirection: SortingDirections,
+    showCompletedQuests: Boolean,
     onSortingChanged: (QuestSorting) -> Unit,
     onSortingDirectionChanged: (SortingDirections) -> Unit,
+    onShowCompletedQuestsChanged: (Boolean) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -58,7 +62,13 @@ fun QuestSortingBottomSheet(
         QuestSortingItem(stringResource(R.string.quest_sorting_title), QuestSorting.TITLE, Icons.Default.Title),
         QuestSortingItem(stringResource(R.string.quest_sorting_notes), QuestSorting.NOTES, Icons.Default.Notes),
         QuestSortingItem(stringResource(R.string.quest_sorting_due_date), QuestSorting.DUE_DATE, Icons.Default.DateRange),
-        QuestSortingItem(stringResource(R.string.quest_sorting_quest_complete), QuestSorting.DONE, Icons.Default.CheckCircle),
+//        QuestSortingItem(stringResource(R.string.quest_sorting_quest_complete), QuestSorting.DONE, Icons.Default.CheckCircle),
+    ) + listOfNotNull(
+        if (showCompletedQuests) QuestSortingItem(
+            stringResource(R.string.quest_sorting_quest_complete),
+            QuestSorting.DONE,
+            Icons.Default.CheckCircle
+        ) else null
     )
 
     val sortingDirections = listOf(
@@ -170,6 +180,29 @@ fun QuestSortingBottomSheet(
                             }
                         }
                     }
+                }
+            }
+
+            OutlinedCard(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.outlinedCardElevation(defaultElevation = 0.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Show completed Quests",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+
+                    Checkbox(
+                        checked = showCompletedQuests,
+                        onCheckedChange = onShowCompletedQuestsChanged
+                    )
                 }
             }
         }

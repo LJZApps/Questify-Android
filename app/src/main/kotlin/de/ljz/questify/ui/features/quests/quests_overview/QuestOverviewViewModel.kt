@@ -61,7 +61,8 @@ class QuestOverviewViewModel @Inject constructor(
                         it.copy(
                             allQuestPageState = it.allQuestPageState.copy(
                                 sortingBy = sortingPreferences.questSorting,
-                                sortingDirections = sortingPreferences.questSortingDirection
+                                sortingDirections = sortingPreferences.questSortingDirection,
+                                showCompleted = sortingPreferences.showCompletedQuests
                             )
                         )
                     }
@@ -144,6 +145,12 @@ class QuestOverviewViewModel @Inject constructor(
     fun updateQuestSortingDirection(sortingDirection: SortingDirections) {
         viewModelScope.launch {
             sortingPreferencesRepository.saveQuestSortingDirection(sortingDirection)
+        }
+    }
+
+    fun updateShowCompletedQuests(showCompletedQuests: Boolean) {
+        viewModelScope.launch {
+            sortingPreferencesRepository.saveShowCompletedQuests(showCompletedQuests)
         }
     }
 

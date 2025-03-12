@@ -54,6 +54,7 @@ open class BaseRepository {
 
     data class QuestSortingData(
         val questSorting: QuestSorting,
-        val questSortingDirection: SortingDirections
+        val questSortingDirection: SortingDirections,
+        val showCompletedQuests: Boolean = false
     )
 }

@@ -80,6 +80,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
+import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
@@ -229,8 +230,15 @@ fun QuestOverviewScreen(
                     onDismiss = viewModel::hideSortingBottomSheet,
                     questSorting = allQuestPageState.sortingBy,
                     sortingDirection = allQuestPageState.sortingDirections,
+                    showCompletedQuests = allQuestPageState.showCompleted,
                     onSortingChanged = viewModel::updateQuestSorting,
-                    onSortingDirectionChanged = viewModel::updateQuestSortingDirection
+                    onSortingDirectionChanged = viewModel::updateQuestSortingDirection,
+                    onShowCompletedQuestsChanged = { showCompletedQuests ->
+                        viewModel.updateShowCompletedQuests(showCompletedQuests)
+                        if (!showCompletedQuests && allQuestPageState.sortingBy == QuestSorting.DONE) {
+                            viewModel.updateQuestSorting(QuestSorting.ID)
+                        }
+                    }
                 )
             }
         },

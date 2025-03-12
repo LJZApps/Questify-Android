@@ -19,7 +19,8 @@ class SortingPreferencesRepository @Inject constructor(
         return sortingDataStore.data.map {
             QuestSortingData(
                 questSorting = it.questSorting,
-                questSortingDirection = it.questSortingDirection
+                questSortingDirection = it.questSortingDirection,
+                showCompletedQuests = it.showCompletedQuests
             )
         }
     }
@@ -33,6 +34,12 @@ class SortingPreferencesRepository @Inject constructor(
     suspend fun saveQuestSortingDirection(sortingDirection: SortingDirections) {
         sortingDataStore.updateData {
             it.copy(questSortingDirection = sortingDirection)
+        }
+    }
+
+    suspend fun saveShowCompletedQuests(showCompletedQuests: Boolean) {
+        sortingDataStore.updateData {
+            it.copy(showCompletedQuests = showCompletedQuests)
         }
     }
 }
