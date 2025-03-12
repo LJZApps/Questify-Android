@@ -1,5 +1,5 @@
 versions:
-  - version: 8
+  - version: 9
     date: "2025-02-26"
     name: "UI Overhaul & Themes"
     features:
