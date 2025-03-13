@@ -195,4 +195,15 @@
     <string name="quest_sorting_bottom_sheet_title">Sort Quests</string>
     <string name="quest_sorting_bottom_sheet_sort_by">Sort by</string>
     <string name="quest_sorting_bottom_sheet_sorting_order">Sorting direction</string>
+
+    <!-- New strings for improved quest creation UI -->
+    <string name="quest_title_header">Quest Title</string>
+    <string name="difficulty_none_description">No difficulty set</string>
+    <string name="difficulty_easy_description">Simple tasks that don\'t require much effort</string>
+    <string name="difficulty_medium_description">Tasks that require some effort and focus</string>
+    <string name="difficulty_hard_description">Challenging tasks that require significant effort</string>
+    <string name="difficulty_epic_description">Major tasks that require extensive effort and time</string>
+    <string name="notes_helper_text">Good notes help you remember the details of your quest.</string>
+    <string name="due_date_helper_text">Set a deadline for your quest to stay on track:</string>
+    <string name="reminders_helper_text">Add reminders to help you complete your quest on time:</string>
 </resources>

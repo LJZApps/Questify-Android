@@ -196,4 +196,15 @@
     <string name="quest_sorting_due_date">Fälligkeitsdatum</string>
     <string name="quest_sorting_quest_complete">Quest fertig</string>
     <string name="sorting_direction_ascending">Aufsteigend</string>
+
+    <!-- Neue Strings für verbesserte Quest-Erstellungs-UI -->
+    <string name="quest_title_header">Quest-Titel</string>
+    <string name="difficulty_none_description">Keine Schwierigkeit festgelegt</string>
+    <string name="difficulty_easy_description">Einfache Aufgaben, die nicht viel Aufwand erfordern</string>
+    <string name="difficulty_medium_description">Aufgaben, die etwas Aufwand und Konzentration erfordern</string>
+    <string name="difficulty_hard_description">Herausfordernde Aufgaben, die erheblichen Aufwand erfordern</string>
+    <string name="difficulty_epic_description">Große Aufgaben, die umfangreichen Aufwand und Zeit erfordern</string>
+    <string name="notes_helper_text">Gute Notizen helfen dir, die Details deiner Quest zu merken.</string>
+    <string name="due_date_helper_text">Setze eine Frist für deine Quest, um auf Kurs zu bleiben:</string>
+    <string name="reminders_helper_text">Füge Erinnerungen hinzu, um deine Quest rechtzeitig abzuschließen:</string>
 </resources>

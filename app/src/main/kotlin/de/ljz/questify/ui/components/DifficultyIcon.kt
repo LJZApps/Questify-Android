@@ -1,7 +1,12 @@
 package de.ljz.questify.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,27 +31,30 @@ fun DifficultyIconContainer(content: @Composable BoxScope.() -> Unit) {
 
 @Composable
 fun EasyIcon(
+    modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.primary
 ) {
     DifficultyIconContainer {
-        SwordIcon(tint)
+        SwordIcon(modifier, tint)
     }
 }
 
 @Composable
 fun MediumIcon(
+    modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.primary
 ) {
     DifficultyIconContainer {
         Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-            SwordIcon(tint)
-            SwordIcon(tint)
+            SwordIcon(modifier, tint)
+            SwordIcon(modifier, tint)
         }
     }
 }
 
 @Composable
 fun HardIcon(
+    modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.primary
 ) {
     DifficultyIconContainer {
@@ -54,10 +62,10 @@ fun HardIcon(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SwordIcon(tint)
+            SwordIcon(modifier, tint)
             Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwordIcon(tint)
-                SwordIcon(tint)
+                SwordIcon(modifier, tint)
+                SwordIcon(modifier, tint)
             }
         }
     }
@@ -65,17 +73,18 @@ fun HardIcon(
 
 @Composable
 fun EpicIcon(
+    modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.primary
 ) {
     DifficultyIconContainer {
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwordIcon(tint)
-                SwordIcon(tint)
+                SwordIcon(modifier, tint)
+                SwordIcon(modifier, tint)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                SwordIcon(tint)
-                SwordIcon(tint)
+                SwordIcon(modifier, tint)
+                SwordIcon(modifier, tint)
             }
         }
     }
@@ -83,9 +92,10 @@ fun EpicIcon(
 
 @Composable
 fun SwordIcon(
+    modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.primary
 ) {
-    Canvas(modifier = Modifier.size(8.dp)) {
+    Canvas(modifier = modifier.size(8.dp)) {
         rotate(degrees = 45f) {
             drawSword(tint)
         }
