@@ -18,3 +18,9 @@ versions:
       - "New Dashboard UI"
     bugfixes:
       - "Performance has been significantly improved"
+  - version: 10
+    date: "2025-03-13"
+    name: "New Icon & Quest creation"
+    features:
+      - "Brand new Quest creation UI"
+      - "Updated the app icon"

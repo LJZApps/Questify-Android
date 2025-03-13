@@ -125,7 +125,7 @@ fun DetailedInformationPage(
                 )
 
                 AnimatedVisibility(
-                    visible = uiState.description.isNotEmpty(),
+                    visible = uiState.description.isNotEmpty() && false,
                     enter = fadeIn() + expandVertically(
                         animationSpec = spring(
                             dampingRatio = Spring.DampingRatioMediumBouncy,
