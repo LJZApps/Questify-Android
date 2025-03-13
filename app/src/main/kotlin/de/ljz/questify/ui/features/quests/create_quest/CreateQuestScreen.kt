@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -28,7 +29,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -114,17 +114,6 @@ fun CreateQuestScreen(
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Progress indicator
-                        LinearProgressIndicator(
-                            progress = { currentStep.toFloat() / (steps.size - 1) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp)),
-                            color = MaterialTheme.colorScheme.primary,
-                            trackColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
-
                         // Step indicators
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -278,7 +267,8 @@ fun CreateQuestScreen(
                 ),
                 elevation = CardDefaults.cardElevation(
                     defaultElevation = 6.dp
-                )
+                ),
+                shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -300,7 +290,7 @@ fun CreateQuestScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = if (currentStep > 0) Icons.AutoMirrored.Filled.ArrowBack else Icons.Filled.Close,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
                         )
