@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,18 +13,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -40,8 +43,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -95,57 +100,106 @@ fun CreateQuestScreen(
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
             ) {
-                Row(
+                // Enhanced stepper UI
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
-                    steps.forEachIndexed { index, (title, icon) ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.weight(1f)
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Progress indicator
+                        LinearProgressIndicator(
+                            progress = { currentStep.toFloat() / (steps.size - 1) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(8.dp)
+                                .clip(RoundedCornerShape(4.dp)),
+                            color = MaterialTheme.colorScheme.primary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
+
+                        // Step indicators
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        when {
-                                            index < currentStep -> MaterialTheme.colorScheme.primary
-                                            index == currentStep -> MaterialTheme.colorScheme.primaryContainer
-                                            else -> MaterialTheme.colorScheme.surface
-                                        }
-                                    )
-                                    .border(
-                                        width = 1.dp,
-                                        color = if (index == currentStep || index < currentStep) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
-                                        shape = CircleShape
-                                    )
-                                ,
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = icon,
-                                    contentDescription = null,
-                                    tint = when {
-                                        index < currentStep -> MaterialTheme.colorScheme.onPrimary
-                                        index == currentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                                        else -> MaterialTheme.colorScheme.onSurface
+                            steps.forEachIndexed { index, (title, icon) ->
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(56.dp)
+                                            .clip(CircleShape)
+                                            .background(
+                                                when {
+                                                    index < currentStep -> MaterialTheme.colorScheme.primary
+                                                    index == currentStep -> MaterialTheme.colorScheme.primaryContainer
+                                                    else -> MaterialTheme.colorScheme.surface
+                                                }
+                                            )
+                                            .border(
+                                                width = if (index == currentStep) 2.dp else 1.dp,
+                                                color = if (index == currentStep) 
+                                                    MaterialTheme.colorScheme.primary 
+                                                else if (index < currentStep) 
+                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) 
+                                                else 
+                                                    MaterialTheme.colorScheme.outline,
+                                                shape = CircleShape
+                                            ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            imageVector = icon,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(28.dp),
+                                            tint = when {
+                                                index < currentStep -> MaterialTheme.colorScheme.onPrimary
+                                                index == currentStep -> MaterialTheme.colorScheme.onPrimaryContainer
+                                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                                            }
+                                        )
                                     }
-                                )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = title,
+                                        style = if (index == currentStep) 
+                                            MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) 
+                                        else 
+                                            MaterialTheme.typography.bodyMedium,
+                                        textAlign = TextAlign.Center,
+                                        color = if (index <= currentStep)
+                                            MaterialTheme.colorScheme.onSurface
+                                        else
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+
+                                // Add connector lines between steps
+                                if (index < steps.size - 1) {
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(0.2f)
+                                            .height(2.dp)
+                                            .background(
+                                                color = if (index < currentStep)
+                                                    MaterialTheme.colorScheme.primary
+                                                else
+                                                    MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                                            )
+                                    )
+                                }
                             }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = title,
-                                style = MaterialTheme.typography.bodySmall,
-                                textAlign = TextAlign.Center,
-                                color = if (index <= currentStep)
-                                    MaterialTheme.colorScheme.onSurface
-                                else
-                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                            )
                         }
                     }
                 }
@@ -215,15 +269,25 @@ fun CreateQuestScreen(
             }
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.fillMaxWidth()
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
                     .imePadding(),
-                contentPadding = PaddingValues(16.dp)
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 6.dp
+                )
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Back/Cancel button
                     OutlinedButton(
                         onClick = {
                             if (currentStep > 0) {
@@ -232,17 +296,40 @@ fun CreateQuestScreen(
                                 mainNavController.navigateUp()
                             }
                         },
-                        enabled = true // Button ist immer aktiv, da er auf Seite 0 eine andere Funktion hat
+                        modifier = Modifier.padding(end = 8.dp),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = if (currentStep > 0) stringResource(R.string.back) else stringResource(R.string.cancel)
+                            text = if (currentStep > 0) stringResource(R.string.back) else stringResource(R.string.cancel),
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
+
+                    // Next/Save button
                     if (currentStep < steps.size - 1) {
                         Button(
-                            onClick = { currentStep++ }
+                            onClick = { currentStep++ },
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.padding(start = 8.dp)
                         ) {
-                            Text(stringResource(R.string.next))
+                            Text(
+                                text = stringResource(R.string.next),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .rotate(180f)
+                            )
                         }
                     } else {
                         Button(
@@ -252,9 +339,14 @@ fun CreateQuestScreen(
                                         mainNavController.navigateUp()
                                     }
                                 )
-                            }
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.padding(start = 8.dp)
                         ) {
-                            Text(stringResource(R.string.save))
+                            Text(
+                                text = stringResource(R.string.save),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
                 }

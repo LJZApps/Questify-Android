@@ -3,6 +3,7 @@ activityKtx = "1.10.1"
 agp = "8.9.0"
 appcompat = "1.7.0"
 coilCompose = "3.1.0"
+composePlaceholderMaterial3 = "1.0.10"
 constraintlayoutCompose = "1.1.1"
 converterMoshi = "2.11.0"
 coreSplashscreen = "1.0.1"
@@ -68,6 +69,7 @@ androidx-room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+compose-placeholder-material3 = { module = "com.eygraber:compose-placeholder-material3", version.ref = "composePlaceholderMaterial3" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 gampose = { module = "com.github.ezlifeSol:gampose", version.ref = "gampose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }

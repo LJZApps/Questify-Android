@@ -109,6 +109,8 @@ val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // If you're using Material 3, use compose-placeholder-material3
+    implementation(libs.compose.placeholder.material3)
 
     // Coil
     implementation(libs.coil.compose)
