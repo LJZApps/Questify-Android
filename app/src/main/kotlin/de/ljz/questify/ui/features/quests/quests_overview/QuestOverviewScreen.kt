@@ -13,6 +13,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
@@ -42,6 +44,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -55,16 +58,17 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -79,9 +83,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
@@ -93,6 +99,7 @@ import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQues
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.util.bounceClick
 import de.ljz.questify.util.getSerializedRouteName
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,19 +117,7 @@ fun QuestOverviewScreen(
     val currentDestination = navBackStackEntry?.destination
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-    var showDropdown by remember { mutableStateOf(false) }
-
-    val commands = listOf("add reminder", "set difficulty", "set due date", "set description")
-    val filteredCommands = remember(uiState.fastAddingText) {
-        if (uiState.fastAddingText.startsWith("/")) {
-            commands.filter {
-                it.contains(
-                    uiState.fastAddingText.removePrefix("/"),
-                    ignoreCase = true
-                )
-            }
-        } else emptyList()
-    }
+    val scope = rememberCoroutineScope()
 
     val fabShape by animateFloatAsState(
         targetValue = if (uiState.fastAddingText.isNotEmpty()) 100f else 50f, // 50f → komplett rund, 0f → normales FAB
@@ -172,7 +167,45 @@ fun QuestOverviewScreen(
                 drawerState = drawerState,
                 navController = mainNavController,
                 title = stringResource(R.string.quest_screen_top_bar_title),
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            mainNavController.navigate(ProfileRoute)
+                        },
+                        modifier = Modifier.padding(end = 4.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (uiState.userState.profilePictureUrl.isNotEmpty()) {
+                                AsyncImage(
+                                    model = uiState.userState.profilePictureUrl,
+                                    contentDescription = "Profilbild",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Profilbild",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
+                }
             )
         },
         content = { innerPadding ->

@@ -68,6 +68,17 @@ class QuestOverviewViewModel @Inject constructor(
                     }
                 }
             }
+            launch {
+                appUserRepository.getAppUser().collectLatest { appUser ->
+                    _uiState.update {
+                        it.copy(
+                            userState = it.userState.copy(
+                                profilePictureUrl = appUser.profilePicture
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 

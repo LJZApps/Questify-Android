@@ -91,7 +91,7 @@ fun MainScreen(
             ) {
                 NavHost(
                     navController = homeNavHostController,
-                    startDestination = DashboardRoute,
+                    startDestination = Quests,
                     enterTransition = { scaleIntoContainer() },
                     exitTransition = { scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS) },
                     popEnterTransition = { scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS) },

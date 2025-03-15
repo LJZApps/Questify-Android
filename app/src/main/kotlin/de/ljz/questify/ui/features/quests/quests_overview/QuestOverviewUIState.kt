@@ -12,7 +12,12 @@ data class QuestOverviewUIState(
     val isSortingBottomSheetOpen: Boolean = false,
     val allQuestPageState: AllQuestPageState = AllQuestPageState(),
     val questDoneDialogState: QuestDoneDialogState = QuestDoneDialogState(),
-    val featureSettings: FeatureSettingsState = FeatureSettingsState()
+    val featureSettings: FeatureSettingsState = FeatureSettingsState(),
+    val userState: UserState = UserState()
+)
+
+data class UserState(
+    val profilePictureUrl: String = "",
 )
 
 data class AllQuestPageState(

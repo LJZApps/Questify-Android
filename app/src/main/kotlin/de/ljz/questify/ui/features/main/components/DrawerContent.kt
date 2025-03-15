@@ -1,14 +1,11 @@
 package de.ljz.questify.ui.features.main.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.List
@@ -19,7 +16,6 @@ import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -38,18 +34,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.MainUiState
-import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.Quests
 import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsMainRoute
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
@@ -77,7 +69,8 @@ fun DrawerContent(
                 NavigationItem(
                     title = "Dashboard",
                     icon = Icons.Filled.Home,
-                    route = DashboardRoute
+                    route = DashboardRoute,
+                    featureEnabled = false
                 )
             )
         ),
@@ -148,118 +141,77 @@ fun DrawerContent(
                 .padding(horizontal = 12.dp)
                 .fillMaxWidth()
         ) {
-            Row (
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp)
             ) {
+                Column {
+                    Text(
+                        text = uiState.userName,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.padding(top = 4.dp)
+                    ) {
+                        // XP
+                        Icon(
+                            imageVector = Icons.Filled.AutoGraph,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = stringResource(R.string.drawe_content_xp, uiState.userXP),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+
+                        // Level
+                        Icon(
+                            imageVector = Icons.Default.MilitaryTech,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = stringResource(
+                                R.string.drawe_content_level,
+                                uiState.userLevel
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+
+                        // Points
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = stringResource(
+                                R.string.drawe_content_points,
+                                uiState.userPoints
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+
                 IconButton(
                     onClick = {
                         scope.launch {
                             drawerState.close()
                         }
-                        mainNavController.navigate(ProfileRoute)
-                    },
-                    modifier = Modifier.padding(end = 4.dp)
+                        mainNavController.navigate(SettingsMainRoute)
+                    }
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (uiState.userProfilePicture.isNotEmpty()) {
-                            AsyncImage(
-                                model = uiState.userProfilePicture,
-                                contentDescription = "Profilbild",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Profilbild",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(5.dp),
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
-                }
-
-                Row (
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp)
-                ) {
-                    Column {
-                        Text(
-                            text = uiState.userName,
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.padding(top = 4.dp)
-                        ) {
-                            // XP
-                            Icon(
-                                imageVector = Icons.Filled.AutoGraph,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = stringResource(R.string.drawe_content_xp, uiState.userXP),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-
-                            // Level
-                            Icon(
-                                imageVector = Icons.Default.MilitaryTech,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = stringResource(
-                                    R.string.drawe_content_level,
-                                    uiState.userLevel
-                                ),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-
-                            // Points
-                            Icon(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = stringResource(
-                                    R.string.drawe_content_points,
-                                    uiState.userPoints
-                                ),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
-
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                            mainNavController.navigate(SettingsMainRoute)
-                        }
-                    ) {
-                        Icon(Icons.Default.Settings, contentDescription = null)
-                    }
+                    Icon(Icons.Default.Settings, contentDescription = null)
                 }
             }
 
