@@ -207,4 +207,8 @@
     <string name="notes_helper_text">Gute Notizen helfen dir, die Details deiner Quest zu merken.</string>
     <string name="due_date_helper_text">Setze eine Frist für deine Quest, um auf Kurs zu bleiben:</string>
     <string name="reminders_helper_text">Füge Erinnerungen hinzu, um deine Quest rechtzeitig abzuschließen:</string>
+    <string name="permissions_screen_restart_app">App neustarten</string>
+    <string name="permissions_screen_description">Um die App optimal nutzen zu können, bitte die folgenden Berechtigungen erteilen.</string>
+    <string name="permissions_screen_button_grant">Gewähren</string>
+    <string name="permissions_screen_button_granted">Gewährt</string>
 </resources>

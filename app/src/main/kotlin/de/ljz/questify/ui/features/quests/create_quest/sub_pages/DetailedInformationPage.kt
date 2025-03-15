@@ -326,7 +326,7 @@ fun DetailedInformationPage(
                                         onRemoveReminder(index)
                                     },
                                 colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                                 )
                             ) {
                                 Row(
@@ -344,14 +344,14 @@ fun DetailedInformationPage(
                                             modifier = Modifier
                                                 .size(36.dp)
                                                 .clip(RoundedCornerShape(8.dp))
-                                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                                                .background(MaterialTheme.colorScheme.primaryContainer)
                                                 .padding(8.dp),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Icon(
                                                 Icons.Outlined.Notifications,
                                                 contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                                             )
                                         }
 
@@ -391,7 +391,7 @@ fun DetailedInformationPage(
                             onShowCreateReminderDialog()
                         },
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
+                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                     )
                 ) {
                     Row(
@@ -405,14 +405,14 @@ fun DetailedInformationPage(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.tertiaryContainer)
+                                .background(MaterialTheme.colorScheme.primaryContainer)
                                 .padding(8.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 Icons.Outlined.Add,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onTertiaryContainer
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
 

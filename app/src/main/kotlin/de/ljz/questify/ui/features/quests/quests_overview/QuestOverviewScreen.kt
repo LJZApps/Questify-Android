@@ -106,7 +106,8 @@ import kotlinx.coroutines.launch
 fun QuestOverviewScreen(
     drawerState: DrawerState,
     viewModel: QuestOverviewViewModel = hiltViewModel(),
-    mainNavController: NavHostController
+    mainNavController: NavHostController,
+    homeNavHostController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val questDoneDialogState = uiState.questDoneDialogState
@@ -169,41 +170,66 @@ fun QuestOverviewScreen(
                 title = stringResource(R.string.quest_screen_top_bar_title),
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                            mainNavController.navigate(ProfileRoute)
-                        },
-                        modifier = Modifier.padding(end = 4.dp)
+                    Box(
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primaryContainer),
-                            contentAlignment = Alignment.Center
+                        // Profilbild mit Hintergrund
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                mainNavController.navigate(ProfileRoute)
+                                /*mainNavController.navigate(FullscreenDialogDemoRoute)*/
+                            },
+                            modifier = Modifier.padding(end = 4.dp)
                         ) {
-                            if (uiState.userState.profilePictureUrl.isNotEmpty()) {
-                                AsyncImage(
-                                    model = uiState.userState.profilePictureUrl,
-                                    contentDescription = "Profilbild",
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Profilbild",
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .padding(5.dp),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                            Box(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primaryContainer),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (uiState.userState.profilePictureUrl.isNotEmpty()) {
+                                    AsyncImage(
+                                        model = uiState.userState.profilePictureUrl,
+                                        contentDescription = "Profilbild",
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Profilbild",
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .padding(5.dp),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
                             }
                         }
+
+                        // Badge oben rechts über dem Profilbild
+                        /*if (uiState.newVersionVisible) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(20.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.NewReleases,
+                                    contentDescription = "New Version icon",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(16.dp) // Kleinere Größe für das Icon
+                                )
+                            }
+                        }*/
                     }
                 }
             )

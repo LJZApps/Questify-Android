@@ -1,5 +1,7 @@
 package de.ljz.questify.ui.features.main
 
+import de.ljz.questify.util.changelog.ChangeLog
+
 data class MainUiState(
     val createQuestDialogVisible: Boolean = false,
     val userPoints: Int = 0,
@@ -8,6 +10,11 @@ data class MainUiState(
     val userName: String = "Adventurer",
     val userProfilePicture: String = "",
     val tutorialsUiState: TutorialsUiState = TutorialsUiState()
+)
+
+data class ChangelogUiState(
+    val newVersionVisible: Boolean = false,
+    val changelog: ChangeLog? = null,
 )
 
 data class TutorialsUiState(

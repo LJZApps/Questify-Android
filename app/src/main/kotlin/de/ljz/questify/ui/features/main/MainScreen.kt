@@ -128,7 +128,8 @@ fun MainScreen(
                     composable<Quests> {
                         QuestOverviewScreen(
                             drawerState = drawerState,
-                            mainNavController = mainNavController
+                            mainNavController = mainNavController,
+                            homeNavHostController = homeNavHostController
                         )
 
                         if (!uiState.tutorialsUiState.questsOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {

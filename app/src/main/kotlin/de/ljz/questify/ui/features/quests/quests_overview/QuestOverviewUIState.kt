@@ -3,6 +3,7 @@ package de.ljz.questify.ui.features.quests.quests_overview
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.domain.models.quests.QuestEntity
+import de.ljz.questify.util.changelog.ChangeLog
 
 data class QuestOverviewUIState(
     val quests: List<QuestEntity> = listOf(),
@@ -10,6 +11,8 @@ data class QuestOverviewUIState(
     val fastAddingText: String = "",
     val questDoneDialogVisible: Boolean = false,
     val isSortingBottomSheetOpen: Boolean = false,
+    val newVersionVisible: Boolean = false,
+    val changelog: ChangeLog? = null,
     val allQuestPageState: AllQuestPageState = AllQuestPageState(),
     val questDoneDialogState: QuestDoneDialogState = QuestDoneDialogState(),
     val featureSettings: FeatureSettingsState = FeatureSettingsState(),

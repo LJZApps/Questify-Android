@@ -206,4 +206,8 @@
     <string name="notes_helper_text">Good notes help you remember the details of your quest.</string>
     <string name="due_date_helper_text">Set a deadline for your quest to stay on track:</string>
     <string name="reminders_helper_text">Add reminders to help you complete your quest on time:</string>
+    <string name="permissions_screen_restart_app">Restart App</string>
+    <string name="permissions_screen_description">To be able to use the app optimally, please grant the following permissions.</string>
+    <string name="permissions_screen_button_grant">Grant</string>
+    <string name="permissions_screen_button_granted">Granted</string>
 </resources>

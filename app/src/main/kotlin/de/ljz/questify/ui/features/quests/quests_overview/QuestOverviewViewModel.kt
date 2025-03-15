@@ -7,12 +7,14 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import de.ljz.questify.domain.repositories.app.AppUserRepository
 import de.ljz.questify.domain.repositories.app.FeatureSettingsRepository
 import de.ljz.questify.domain.repositories.app.SortingPreferencesRepository
@@ -28,6 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestOverviewViewModel @Inject constructor(
+    private val appSettingsRepository: AppSettingsRepository,
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
@@ -77,6 +80,14 @@ class QuestOverviewViewModel @Inject constructor(
                             )
                         )
                     }
+                }
+            }
+            launch {
+                appSettingsRepository.getAppSettings().collectLatest { appSettings ->
+                    if (appSettings.lastOpenedVersion < BuildConfig.VERSION_CODE)
+                        _uiState.update {
+                            it.copy(newVersionVisible = true)
+                        }
                 }
             }
         }

@@ -1,6 +1,5 @@
 package de.ljz.questify.core.main
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -41,6 +40,7 @@ import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
 import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.authenticationRoutes
+import de.ljz.questify.ui.navigation.routes.dialogRoutes
 import de.ljz.questify.ui.navigation.routes.mainRoutes
 import de.ljz.questify.ui.navigation.routes.profileRoutes
 import de.ljz.questify.ui.navigation.routes.questRoutes
@@ -68,9 +68,7 @@ class ActivityMain : AppCompatActivity() {
             )
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.isNavigationBarContrastEnforced = false
-        }
+        window.isNavigationBarContrastEnforced = false
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -124,6 +122,10 @@ class ActivityMain : AppCompatActivity() {
                         ) {
                             mainRoutes(
                                 navController = navController
+                            )
+
+                            dialogRoutes(
+                                navController = navController,
                             )
 
                             settingRoutes(

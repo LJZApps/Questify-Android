@@ -134,7 +134,7 @@ fun PermissionsScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text(text = "Restart App")
+                    Text(text = stringResource(R.string.permissions_screen_restart_app))
                 }
             }
         },
@@ -151,7 +151,7 @@ fun PermissionsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Um die App optimal nutzen zu können, bitte die folgenden Berechtigungen erteilen.",
+                            text = stringResource(R.string.permissions_screen_description),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center
                         )
@@ -209,11 +209,11 @@ fun PermissionCardNewDesign(permissionItem: PermissionItem) {
                         onClick = permissionItem.requestAction,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Gewähren")
+                        Text(stringResource(R.string.permissions_screen_button_grant))
                     }
                 } else {
                     Text(
-                        text = "Gewährt",
+                        text = stringResource(R.string.permissions_screen_button_granted),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.align(Alignment.End)

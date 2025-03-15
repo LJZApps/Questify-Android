@@ -47,9 +47,7 @@ import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsMai
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
 
-@OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun DrawerContent(
     uiState: MainUiState,
