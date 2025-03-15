@@ -324,6 +324,7 @@ fun QuestOverviewScreen(
                         FloatingActionButton(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
                                 if (uiState.fastAddingText.isNotEmpty()) {
                                     viewModel.createFastQuest(uiState.fastAddingText)
                                 } else {

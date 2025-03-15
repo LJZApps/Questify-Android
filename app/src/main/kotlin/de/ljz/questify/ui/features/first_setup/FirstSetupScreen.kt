@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,11 +33,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
+import de.ljz.questify.ui.features.first_setup.sub_pages.QuickSettingPage
 import de.ljz.questify.ui.features.first_setup.sub_pages.UserSetupPage
 import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.util.NavBarConfig
@@ -50,9 +54,10 @@ fun FirstSetupScreen(
     val uiState by viewModel.uiState.collectAsState()
     val userSetupPageUiState = uiState.userSetupPageUiState
 
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
 
     var visible by remember { mutableStateOf(false) }
 
@@ -114,14 +119,9 @@ fun FirstSetupScreen(
                             }
                         )
 
-                        /*2 -> {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "Seite 3")
-                            }
-                        }*/
+                        2 -> {
+                            QuickSettingPage()
+                        }
                     }
                 }
 
@@ -155,6 +155,8 @@ fun FirstSetupScreen(
             FloatingActionButton(
                 onClick = {
                     scope.launch {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
                         if (pagerState.currentPage < pagerState.pageCount - 1) {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         } else {
@@ -182,16 +184,20 @@ fun FirstSetupScreen(
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                if (pagerState.currentPage == pagerState.pageCount - 1) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Next screen"
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "Next screen"
-                    )
+                Crossfade(
+                    targetState = pagerState.currentPage == pagerState.pageCount - 1,
+                ) {
+                    if (it) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = "Next screen"
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Next screen"
+                        )
+                    }
                 }
             }
         }

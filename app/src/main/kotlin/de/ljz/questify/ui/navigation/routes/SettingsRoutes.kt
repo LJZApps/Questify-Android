@@ -1,12 +1,10 @@
 package de.ljz.questify.ui.navigation.routes
 
-import androidx.activity.compose.BackHandler
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import de.ljz.questify.ui.features.settings.permissions.PermissionsScreen
-import de.ljz.questify.ui.features.settings.permissions.PermissionsViewModel
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceRoute
 import de.ljz.questify.ui.features.settings.settings_appearance.SettingsAppearanceScreen
@@ -20,9 +18,7 @@ import de.ljz.questify.ui.features.settings.settings_main.SettingsMainScreen
 import de.ljz.questify.ui.features.settings.settings_main.navigation.SettingsMainRoute
 
 fun NavGraphBuilder.settingRoutes(
-    navController: NavHostController,
-    permissionsVm: PermissionsViewModel,
-    allPermissionsGranted: Boolean
+    navController: NavHostController
 ) {
     composable<SettingsMainRoute> {
         SettingsMainScreen(mainNavController = navController)
@@ -36,11 +32,8 @@ fun NavGraphBuilder.settingRoutes(
         val arguments = backStackEntry.toRoute<SettingsPermissionRoute>()
         PermissionsScreen(
             mainNavController = navController,
-            viewModel = permissionsVm,
             canNavigateBack = arguments.canNavigateBack
         )
-
-        BackHandler(enabled = !allPermissionsGranted) { }
     }
 
     composable<SettingsAppearanceRoute> {

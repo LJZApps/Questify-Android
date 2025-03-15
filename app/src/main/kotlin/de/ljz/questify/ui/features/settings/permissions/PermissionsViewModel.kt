@@ -19,19 +19,23 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val REQUEST_NOTIFICATION_PERMISSION = 1001
-
 @HiltViewModel
-class PermissionsViewModel @Inject constructor(
-
-) : ViewModel() {
-    private lateinit var permissionLauncher: ActivityResultLauncher<String>
+class PermissionsViewModel @Inject constructor() : ViewModel() {
+    private lateinit var notificationPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var overlayPermissionLauncher: ActivityResultLauncher<Intent>
+    private lateinit var alarmPermissionLauncher: ActivityResultLauncher<Intent>
 
     private val _uiState = MutableStateFlow(PermissionsUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun initializePermissionLauncher(permissionsLauncherFromActivity: ActivityResultLauncher<String>) {
-        permissionLauncher = permissionsLauncherFromActivity
+    fun initializePermissionLauncher(
+        notificationLauncher: ActivityResultLauncher<String>,
+        overlayLauncher: ActivityResultLauncher<Intent>,
+        alarmLauncher: ActivityResultLauncher<Intent>
+    ) {
+        notificationPermissionLauncher = notificationLauncher
+        overlayPermissionLauncher = overlayLauncher
+        alarmPermissionLauncher = alarmLauncher
     }
 
     fun loadPermissionData(context: Context) {
@@ -48,10 +52,8 @@ class PermissionsViewModel @Inject constructor(
 
     fun requestNotificationPermission(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         }
-
-        loadPermissionData(context)
     }
 
     fun requestAlarmPermission(context: Context) {
@@ -61,23 +63,17 @@ class PermissionsViewModel @Inject constructor(
                 val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
                     data = Uri.parse("package:${context.packageName}")
                 }
-                context.startActivity(intent)
+                alarmPermissionLauncher.launch(intent)
             }
         }
-
-        loadPermissionData(context)
     }
 
     fun requestOverlayPermission(context: Context) {
         if (!Settings.canDrawOverlays(context)) {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:${context.packageName}")
-            )
-            context.startActivity(intent)
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).apply {
+                data = Uri.parse("package:${context.packageName}")
+            }
+            overlayPermissionLauncher.launch(intent)
         }
-
-        loadPermissionData(context)
     }
-
 }

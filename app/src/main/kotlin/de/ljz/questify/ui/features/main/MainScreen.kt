@@ -17,6 +17,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -40,7 +41,6 @@ import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
-import de.ljz.questify.util.NavBarConfig
 import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
@@ -56,17 +56,24 @@ fun MainScreen(
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = false
+    val allPermissionsGranted = remember {
+        isNotificationPermissionGranted(context) &&
+                isOverlayPermissionGranted(context) &&
+                isAlarmPermissionGranted(context)
     }
+
+    LaunchedEffect(allPermissionsGranted) {
+        if (!allPermissionsGranted) {
+            mainNavController.navigate(SettingsPermissionRoute(canNavigateBack = false)) {
+                popUpTo(mainNavController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+    }
+
+    if (!allPermissionsGranted) return
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val homeNavHostController = rememberNavController()
-    val allPermissionsGranted: Boolean = (isNotificationPermissionGranted(context) && isOverlayPermissionGranted(context) && isAlarmPermissionGranted(context))
-
-    if (!allPermissionsGranted) {
-        mainNavController.navigate(SettingsPermissionRoute(canNavigateBack = false))
-    }
 
     QuestifyTheme {
         SentryTraced(tag = "home_screen") {
@@ -85,24 +92,13 @@ fun MainScreen(
                 NavHost(
                     navController = homeNavHostController,
                     startDestination = DashboardRoute,
-                    enterTransition = {
-                        scaleIntoContainer()
-                    },
-                    exitTransition = {
-                        scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)
-                    },
-                    popEnterTransition = {
-                        scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS)
-                    },
-                    popExitTransition = {
-                        scaleOutOfContainer()
-                    }
+                    enterTransition = { scaleIntoContainer() },
+                    exitTransition = { scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS) },
+                    popEnterTransition = { scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS) },
+                    popExitTransition = { scaleOutOfContainer() }
                 ) {
                     composable<DashboardRoute> {
-                        DashboardScreen(
-                            mainNavController = mainNavController,
-                            drawerState = drawerState
-                        )
+                        DashboardScreen(mainNavController, drawerState)
 
                         if (!uiState.tutorialsUiState.dashboardOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
                             TutorialBottomSheet(

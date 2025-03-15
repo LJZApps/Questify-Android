@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -40,7 +39,6 @@ import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
 import de.ljz.questify.ui.features.main.navigation.MainRoute
-import de.ljz.questify.ui.features.settings.permissions.PermissionsViewModel
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.authenticationRoutes
 import de.ljz.questify.ui.navigation.routes.mainRoutes
@@ -49,9 +47,6 @@ import de.ljz.questify.ui.navigation.routes.questRoutes
 import de.ljz.questify.ui.navigation.routes.settingRoutes
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
-import de.ljz.questify.util.isAlarmPermissionGranted
-import de.ljz.questify.util.isNotificationPermissionGranted
-import de.ljz.questify.util.isOverlayPermissionGranted
 import io.sentry.android.core.SentryAndroid
 import java.util.concurrent.TimeUnit
 
@@ -79,21 +74,12 @@ class ActivityMain : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val permissionsVm: PermissionsViewModel by viewModels()
-
-        val notificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            permissionsVm.loadPermissionData(this)
-        }
-
-        permissionsVm.initializePermissionLauncher(notificationPermissionLauncher)
-
         setContent {
             splashScreen.setKeepOnScreenCondition { true }
             val vm: AppViewModel by viewModels()
 
             val appUiState by vm.uiState.collectAsState()
             val isSetupDone = appUiState.isSetupDone
-            val allPermissionsGranted: Boolean = (isNotificationPermissionGranted(this) && isOverlayPermissionGranted(this) && isAlarmPermissionGranted(this))
             val isAppReadyState by vm.isAppReady.collectAsState()
             val context = LocalContext.current
 
@@ -141,9 +127,7 @@ class ActivityMain : AppCompatActivity() {
                             )
 
                             settingRoutes(
-                                navController = navController,
-                                permissionsVm = permissionsVm,
-                                allPermissionsGranted = allPermissionsGranted
+                                navController = navController
                             )
 
                             profileRoutes(
