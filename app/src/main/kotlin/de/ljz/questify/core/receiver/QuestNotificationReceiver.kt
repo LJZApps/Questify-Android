@@ -12,8 +12,8 @@ import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
 import de.ljz.questify.core.main.ActivityMain
-import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import de.ljz.questify.ui.features.remind_again.RemindAgainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,24 +90,10 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             .addAction(completeQuestAction)
             .addAction(remindAgainAction)
             .build()
-
-        val inboxStyle = NotificationCompat.InboxStyle()
-
-        val summaryNotification = NotificationCompat.Builder(context, "quests")
-            .setSmallIcon(R.drawable.ic_stat_name)
-            .setContentTitle(context.getString(R.string.quest_notification_group_title))
-            .setContentText(context.getString(R.string.quest_notification_group_content))
-            .setStyle(inboxStyle)
-            .setGroup(questsGroupId)
-            .setGroupSummary(true)
-            .setAutoCancel(true)
-            .build()
-
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (!hasNotified) {
             notificationManager.notify(notificationId, notification)
-            notificationManager.notify(0, summaryNotification)
 
             CoroutineScope(Dispatchers.IO).launch {
                 questNotificationRepository.setNotificationAsNotified(notificationId)

@@ -46,8 +46,8 @@ class QuestNotificationWorker @AssistedInject constructor(
         val intent = Intent(context, QuestNotificationReceiver::class.java).apply {
             putExtra("notificationId", notification.id)
             putExtra("questId", quest.id)
-            putExtra("title", context.getString(R.string.quest_notification_title))
-            putExtra("description", quest.title)
+            putExtra("title", quest.title)
+            putExtra("description", context.getString(R.string.quest_notification_title))
         }
 
         val pendingIntent = PendingIntent.getBroadcast(

@@ -1,6 +1,7 @@
 package de.ljz.questify.ui.features.quests.quests_overview
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -14,8 +15,10 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,16 +29,20 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -81,6 +88,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
+import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
@@ -89,6 +97,7 @@ import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.DailiesQuest
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.HabitsQuestsPage
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQuestsPage
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
+import de.ljz.questify.util.bounceClick
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 
@@ -329,11 +338,11 @@ fun QuestOverviewScreen(
                                     easing = LinearOutSlowInEasing
                                 )
                             )
-                ) {/*
+                ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
-                    ) {*/
+                    ) {
                         if (uiState.featureSettings.fastQuestAddingEnabled) {
                             OutlinedTextField(
                                 value = uiState.fastAddingText,
@@ -344,7 +353,7 @@ fun QuestOverviewScreen(
                                 shape = CircleShape,
                                 modifier = Modifier
                                     .padding(start = 16.dp)
-                                    .fillMaxWidth()
+                                    .weight(1f)
                                     .border(0.dp, Color.Transparent)
                                     .onFocusChanged {
                                         viewModel.updateIsFastAddingFocused(it.isFocused)
@@ -371,7 +380,7 @@ fun QuestOverviewScreen(
                             )
                         }
 
-                        /*FloatingActionButton(
+                        FloatingActionButton(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
@@ -411,8 +420,8 @@ fun QuestOverviewScreen(
                                     contentDescription = null
                                 )
                             }
-                        }*/
-                    /*}*/
+                        }
+                    }
                 }
             }
         },
