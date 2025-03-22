@@ -167,7 +167,7 @@
     <string name="trophies_overview_screen_navigation_trophies_title">Trophies</string>
     <string name="trophies_overview_screen_navigation_categories_title">Categories</string>
     <string name="trophies_overview_screen_title">Your trophies</string>
-    <string name="quest_notification_title">Time for a quest!</string>
+    <string name="quest_notification_title">Your next quest awaits!</string>
     <string name="quest_notification_description">You have a quest to complete</string>
     <string name="quest_notification_action_complete">Complete</string>
     <string name="quest_notification_action_remind_again">Remind again</string>
