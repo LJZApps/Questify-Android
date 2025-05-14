@@ -137,7 +137,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
-    implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.02.00"))
+    implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.05.00"))
 //    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation(libs.androidx.runtime)
 

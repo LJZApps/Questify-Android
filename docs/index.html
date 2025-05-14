@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questify - Dein Alltag als Abenteuer</title>
+    <title>Questify - Transform Your Daily Tasks into Epic Adventures</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,6 +16,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            padding-bottom: 60px; /* Space for footer */
         }
         header {
             background-color: #4CAF50;
@@ -25,6 +26,24 @@
         }
         header h1 {
             margin: 0;
+        }
+        .nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .nav a:hover {
+            background-color: #4CAF50;
+        }
+        .nav a.active {
+            background-color: #4CAF50;
         }
         .content {
             padding: 20px;
@@ -59,61 +78,67 @@
 <body>
 <header>
     <h1>Questify</h1>
-    <p>Dein Alltag als Abenteuer</p>
+    <p>Transform Your Daily Tasks into Epic Adventures</p>
 </header>
+<div class="nav">
+    <a href="index.html" class="active">Home</a>
+    <a href="features.html">Features</a>
+    <a href="getting-started.html">Getting Started</a>
+    <a href="privacy.html">Privacy Policy</a>
+</div>
 <div class="container">
     <div class="content">
-        <h2>Über Questify</h2>
-        <p>Questify verwandelt deine täglichen Aufgaben in spannende Quests. Organisiere deine To-Do-Liste als epische Hauptquests und kleinere Nebenquests. Sammle Punkte und tausche sie im Punkteshop gegen coole Belohnungen ein. Unsere intelligente KI sorgt dafür, dass deine Hauptquests fair bewertet werden.</p>
+        <h2>About Questify</h2>
+        <p>Questify is a gamified task management app that turns your everyday tasks into exciting quests. Organize your to-do list as epic main quests and smaller side quests, earn points, collect trophies, and enjoy a more engaging and motivating way to manage your daily responsibilities.</p>
     </div>
     <div class="content">
-        <h2>Features</h2>
+        <h2>Key Features</h2>
         <div class="features">
             <div class="feature">
-                <h3>Haupt- und Nebenquests</h3>
-                <p>Organisiere deine täglichen Aufgaben in Form von epischen Hauptquests und kleineren Nebenquests. Erfülle sie und sammle wertvolle Punkte!</p>
+                <h3>Main and Side Quests</h3>
+                <p>Organize your daily tasks as epic main quests and smaller side quests. Complete them to earn valuable points!</p>
             </div>
             <div class="feature">
-                <h3>Punkteshop</h3>
-                <p>Tausche deine hart verdienten Punkte gegen coole Belohnungen ein.</p>
+                <h3>Points System</h3>
+                <p>Exchange your hard-earned points for cool rewards in the points shop.</p>
             </div>
             <div class="feature">
-                <h3>KI-Gestützte Aufgabenbewertung</h3>
-                <p>Unsere intelligente KI überprüft deine Hauptquests und sorgt für eine faire Belohnung.</p>
+                <h3>AI-Supported Task Evaluation</h3>
+                <p>Our intelligent AI checks your main quests and ensures fair rewards.</p>
             </div>
             <div class="feature">
-                <h3>Entdeckbare Weltkarte</h3>
-                <p>Entdecke eine mysteriöse Karte, die sich Stück für Stück freischaltet, während du dich bewegst und verdiene dabei zusätzliche Punkte!</p>
+                <h3>Discoverable World Map</h3>
+                <p>Discover a mysterious map that unlocks piece by piece as you move around and earn additional points!</p>
             </div>
             <div class="feature">
-                <h3>Lebensbegleitende Trophäen</h3>
-                <p>Erhalte Trophäen für wichtige Lebensereignisse wie Heirat, den ersten Job oder den Auszug in deine eigene Wohnung.</p>
+                <h3>Life Trophies</h3>
+                <p>Receive trophies for important life events like marriage, your first job, or moving into your own apartment.</p>
             </div>
             <div class="feature">
-                <h3>Freundes-System</h3>
-                <p>Verbinde dich mit Freunden, vergleiche eure Statistiken und motiviert euch gegenseitig.</p>
+                <h3>Friends System</h3>
+                <p>Connect with friends, compare your stats, and motivate each other.</p>
             </div>
             <div class="feature">
-                <h3>Gesundheits- und Lebensstatistiken</h3>
-                <p>Synchronisiere deine Gesundheitsdaten, verdiene Punkte durch Bewegung und behalte den Überblick über deine Lebensziele.</p>
+                <h3>Health and Life Statistics</h3>
+                <p>Sync your health data, earn points through movement, and keep track of your life goals.</p>
             </div>
             <div class="feature">
-                <h3>Plattformübergreifende Verfügbarkeit</h3>
-                <p>Questify läuft nativ auf jeder Plattform, ob iPhone, Android oder andere Geräte.</p>
+                <h3>Cross-Platform Availability</h3>
+                <p>Questify runs natively on every platform, whether iPhone, Android, or other devices.</p>
             </div>
             <div class="feature">
-                <h3>Anpassbare Benutzeroberfläche</h3>
-                <p>Wähle aus verschiedenen Themes und Oberflächen, die deinem Stil entsprechen.</p>
+                <h3>Customizable User Interface</h3>
+                <p>Choose from different themes and interfaces that match your style.</p>
             </div>
         </div>
     </div>
     <div class="content">
         <h2>EpicQuest Battleground</h2>
-        <p>Betrete die Arena und werde zum ultimativen Champion! Mit dem PvP-Mini-Spiel in Questify kannst du dein Können gegen andere Nutzer unter Beweis stellen. Baue deinen Charakter auf, trainiere und trete in spannenden Kämpfen gegen andere Spieler an. Nutze die Punkte, die du durch Quests verdient hast, um deinen Avatar zu verbessern und in den Ranglisten aufzusteigen. Tägliche Herausforderungen, Gilden, saisonale Events und individuelle Anpassungen machen das Mini-Spiel zu einem epischen Erlebnis.</p>
+        <p>Enter the arena and become the ultimate champion! With the PvP mini-game in Questify, you can prove your skills against other users. Build your character, train, and compete in exciting battles against other players. Use the points you've earned through quests to improve your avatar and climb the rankings. Daily challenges, guilds, seasonal events, and individual customizations make the mini-game an epic experience.</p>
     </div>
 </div>
 <footer>
-    <p>&copy; 2024 Questify. Alle Rechte vorbehalten.</p>
+    <p>&copy; 2024 Questify. All rights reserved.</p>
 </footer>
 </body>
 </html>
