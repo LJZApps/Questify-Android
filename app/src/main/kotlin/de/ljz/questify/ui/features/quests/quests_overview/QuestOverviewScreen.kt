@@ -319,25 +319,24 @@ fun QuestOverviewScreen(
                             easing = FastOutSlowInEasing
                         )
                     ) + slideInVertically(
-                            initialOffsetY = { it / 2 },
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                easing = FastOutSlowInEasing
-                            )
-                        ),
+                        initialOffsetY = { it / 2 },
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = FastOutSlowInEasing
+                        )
+                    ),
                     exit = fadeOut(
                         animationSpec = tween(
                             durationMillis = 200,
                             easing = LinearOutSlowInEasing
                         )
-                    ) +
-                            slideOutVertically(
-                                targetOffsetY = { it / 2 },
-                                animationSpec = tween(
-                                    durationMillis = 200,
-                                    easing = LinearOutSlowInEasing
-                                )
-                            )
+                    ) + slideOutVertically(
+                        targetOffsetY = { it / 2 },
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = LinearOutSlowInEasing
+                        )
+                    )
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),

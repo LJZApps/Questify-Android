@@ -15,11 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
-import de.ljz.questify.util.NavBarConfig
 
 @Composable
 fun QuestifyTheme(
@@ -100,6 +98,7 @@ fun QuestifyTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = QuestifyShapes,
         content = content
     )
 }
