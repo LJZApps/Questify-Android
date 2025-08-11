@@ -31,7 +31,6 @@ fun BasicRichTooltip(
             RichTooltip(
                 title = { Text(title) },
                 text = { Text(text) },
-                caretSize = TooltipDefaults.caretSize,
                 action = {
                     TextButton(
                         onClick = {

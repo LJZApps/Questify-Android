@@ -6,25 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
@@ -33,7 +21,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
-import de.ljz.questify.BuildConfig
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
@@ -144,40 +131,9 @@ class ActivityMain : AppCompatActivity() {
                                 navController = navController
                             )
                         }
-
-                        DebugOverlay(
-                            "DEV\nSubject to change",
-                            onResetAppUser = {
-                                vm.resetAppUserStats()
-                            }
-                        )
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun DebugOverlay(text: String, onResetAppUser: () -> Unit) {
-    if (BuildConfig.DEBUG) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-                .background(Color.Transparent),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            Color.Yellow
-            //Button(onClick = onResetAppUser) { Text("Reset App User Stats") }
-
-            Text(
-                text = text,
-                modifier = Modifier.padding(8.dp),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                textAlign = TextAlign.End,
-                fontSize = 10.sp
-            )
         }
     }
 }

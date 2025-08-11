@@ -1,16 +1,5 @@
 package de.ljz.questify.ui.features.main
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.Eco
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.PieChart
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
@@ -20,15 +9,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.ljz.questify.R
-import de.ljz.questify.ui.components.information_bottom_sheets.TutorialBottomSheet
-import de.ljz.questify.ui.components.information_bottom_sheets.TutorialStep
 import de.ljz.questify.ui.ds.theme.QuestifyTheme
 import de.ljz.questify.ui.features.dashboard.DashboardScreen
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
@@ -100,7 +85,7 @@ fun MainScreen(
                     composable<DashboardRoute> {
                         DashboardScreen(mainNavController, drawerState)
 
-                        if (!uiState.tutorialsUiState.dashboardOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
+                        /*if (!uiState.tutorialsUiState.dashboardOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
                             TutorialBottomSheet(
                                 onDismiss = { tutorialsEnabled ->
                                     viewModel.setDashboardOnboardingDone()
@@ -122,7 +107,7 @@ fun MainScreen(
                                     )
                                 )
                             )
-                        }
+                        }*/
                     }
 
                     composable<Quests> {
@@ -132,7 +117,7 @@ fun MainScreen(
                             homeNavHostController = homeNavHostController
                         )
 
-                        if (!uiState.tutorialsUiState.questsOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
+                        /*if (!uiState.tutorialsUiState.questsOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
                             TutorialBottomSheet(
                                 title = stringResource(R.string.tutorial_quests_title),
                                 onDismiss = { tutorialsEnabled ->
@@ -158,7 +143,7 @@ fun MainScreen(
                                     )
                                 )
                             )
-                        }
+                        }*/
                     }
 
                     composable<TrophiesRoute> {
@@ -167,7 +152,7 @@ fun MainScreen(
                             mainNavController = mainNavController
                         )
 
-                        if (!uiState.tutorialsUiState.trophiesOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
+                        /*if (!uiState.tutorialsUiState.trophiesOnboardingDone && uiState.tutorialsUiState.tutorialsEnabled) {
                             TutorialBottomSheet(
                                 onDismiss = { tutorialsEnabled ->
                                     viewModel.setTrophiesOnboardingDone()
@@ -189,7 +174,7 @@ fun MainScreen(
                                     )
                                 )
                             )
-                        }
+                        }*/
                     }
                 }
             }
