@@ -1,59 +1,42 @@
 package de.ljz.questify.ui.features.quests.quests_overview
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -63,9 +46,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
@@ -73,8 +53,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -97,11 +75,10 @@ import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.DailiesQuest
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.HabitsQuestsPage
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQuestsPage
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
-import de.ljz.questify.util.bounceClick
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun QuestOverviewScreen(
     drawerState: DrawerState,
@@ -301,160 +278,70 @@ fun QuestOverviewScreen(
                 )
             }
         },
-        floatingActionButton = {
-            Column(
+        bottomBar = {
+            Box(
                 modifier = Modifier
-                    .padding(start = 16.dp)
-                    .imePadding()
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 8.dp),
+                contentAlignment = Alignment.Center
             ) {
-                AnimatedVisibility(
-                    visible = !(scrollBehavior.state.collapsedFraction > 0.5f) && enabledViewQuestFeatures.any {
-                        getSerializedRouteName(
-                            it
-                        ) == currentDestination?.route
-                    },
-                    enter = fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + slideInVertically(
-                        initialOffsetY = { it / 2 },
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ),
-                    exit = fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            easing = LinearOutSlowInEasing
-                        )
-                    ) + slideOutVertically(
-                        targetOffsetY = { it / 2 },
-                        animationSpec = tween(
-                            durationMillis = 200,
-                            easing = LinearOutSlowInEasing
-                        )
-                    )
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (uiState.featureSettings.fastQuestAddingEnabled) {
-                            OutlinedTextField(
-                                value = uiState.fastAddingText,
-                                onValueChange = {
-                                    viewModel.updateFastAddingText(it)
-                                },
-                                placeholder = { Text(stringResource(R.string.quest_overview_screen_fast_add_quest)) },
-                                shape = CircleShape,
-                                modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .weight(1f)
-                                    .border(0.dp, Color.Transparent)
-                                    .onFocusChanged {
-                                        viewModel.updateIsFastAddingFocused(it.isFocused)
-                                    }
-                                    .shadow(6.dp, shape = CircleShape),
-                                singleLine = true,
-                                colors = TextFieldDefaults.colors(
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent,
-                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onDone = {
-                                        if (uiState.fastAddingText.isNotEmpty()) {
-                                            viewModel.createFastQuest(uiState.fastAddingText)
-                                        }
-                                    }
-                                ),
-                                keyboardOptions = KeyboardOptions(
-                                    imeAction = ImeAction.Done,
-                                    capitalization = KeyboardCapitalization.Sentences
-                                )
-                            )
-                        }
-
+                HorizontalFloatingToolbar(
+                    expanded = true,
+                    floatingActionButton = {
                         FloatingActionButton(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                when (currentDestination?.route) {
+                                    getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
+                                        CreateQuest()
+                                    )
 
-                                if (uiState.fastAddingText.isNotEmpty()) {
-                                    viewModel.createFastQuest(uiState.fastAddingText)
-                                } else {
-                                    when (currentDestination?.route) {
-                                        getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
-                                            CreateQuest()
-                                        )
+                                    getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
+                                        // TODO
+                                    }
 
-                                        getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
-                                            // TODO
-                                        }
+                                    getSerializedRouteName(QuestBottomRoutes.Routines) -> {
+                                        // TODO
+                                    }
 
-                                        getSerializedRouteName(QuestBottomRoutes.Routines) -> {
-                                            // TODO
-                                        }
-
-                                        getSerializedRouteName(QuestBottomRoutes.Habits) -> {
-                                            // TODO
-                                        }
+                                    getSerializedRouteName(QuestBottomRoutes.Habits) -> {
+                                        // TODO
                                     }
                                 }
                             },
-                            shape = RoundedCornerShape(fabShape),
-                            modifier = Modifier
-                                .size(56.dp)
-                                .bounceClick(enabled = uiState.fastAddingText.isNotEmpty())
                         ) {
-                            Crossfade(
-                                targetState = uiState.fastAddingText.isNotEmpty(),
-                                label = "IconFade"
-                            ) { isFocused ->
-                                Icon(
-                                    imageVector = if (isFocused) Icons.Filled.Done else Icons.Filled.Add,
-                                    contentDescription = null
-                                )
-                            }
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = null
+                            )
                         }
                     }
-                }
-            }
-        },
-        bottomBar = {
-            NavigationBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(navigationBarHeight)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .imePadding(),
-            ) {
-                bottomNavRoutes.forEach { bottomNavRoute ->
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = bottomNavRoute.icon,
-                                contentDescription = bottomNavRoute.name
-                            )
-                        },
-                        label = { Text(bottomNavRoute.name) },
-                        selected = currentDestination?.route == getSerializedRouteName(
-                            bottomNavRoute.route
-                        ),
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            bottomNavController.navigate(bottomNavRoute.route) {
-                                popUpTo(bottomNavController.graph.findStartDestination().id) {
-                                    saveState = true
+                ) {
+                    bottomNavRoutes.forEach { bottomNavRoute ->
+                        NavigationBarItem(
+                            icon = {
+                                Icon(
+                                    imageVector = bottomNavRoute.icon,
+                                    contentDescription = bottomNavRoute.name
+                                )
+                            },
+                            label = { Text(bottomNavRoute.name) },
+                            selected = currentDestination?.route == getSerializedRouteName(
+                                bottomNavRoute.route
+                            ),
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                bottomNavController.navigate(bottomNavRoute.route) {
+                                    popUpTo(bottomNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         },

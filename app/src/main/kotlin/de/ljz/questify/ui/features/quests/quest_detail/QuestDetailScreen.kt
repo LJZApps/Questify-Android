@@ -11,10 +11,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,14 +29,15 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -131,6 +133,10 @@ fun QuestDetailScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                LoadingIndicator(
+                    modifier = Modifier.fillMaxWidth()
+                )
+
                 AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
                     if (targetState) {
                         Text(
@@ -377,8 +383,72 @@ fun QuestDetailScreen(
             }
         },
         bottomBar = {
-            BottomAppBar(
-                actions = {
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .navigationBarsPadding(),
+                contentAlignment = Alignment.Center
+            ) {
+                HorizontalFloatingToolbar(
+                    expanded = true,
+                    floatingActionButton = {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            AnimatedVisibility(
+                                visible = uiState.isEditingQuest,
+                                exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut(),
+                                enter = slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn()
+                            ) {
+                                FloatingActionButton(
+                                    onClick = {
+                                        viewModel.stopEditMode()
+                                    },
+                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                                    shape = RoundedCornerShape(100f)
+                                ) {
+                                    Icon(Icons.Outlined.Close, contentDescription = "Cancel")
+                                }
+                            }
+
+                            if (!questState.isQuestDone) {
+                                FloatingActionButton(
+                                    onClick = {
+                                        if (uiState.isEditingQuest) {
+                                            viewModel.updateQuest(
+                                                context = context,
+                                                onSuccess = {
+                                                    scope.launch {
+                                                        snackbarHostState.showSnackbar(
+                                                            context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
+                                                            withDismissAction = true
+                                                        )
+                                                    }
+                                                    viewModel.stopEditMode()
+                                                }
+                                            )
+                                        } else {
+                                            viewModel.startEditMode()
+                                        }
+                                    },
+                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+                                    shape = RoundedCornerShape(fabShape)
+                                ) {
+                                    Crossfade(
+                                        targetState = uiState.isEditingQuest,
+                                        label = "EditQuestIconAnimation"
+                                    ) { isFocused ->
+                                        Icon(
+                                            imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    },
+                ) {
                     BasicPlainTooltip(
                         text = stringResource(R.string.quest_detail_screen_tooltip_delete_quest)
                     ) {
@@ -400,67 +470,8 @@ fun QuestDetailScreen(
                             }
                         }
                     }
-                },
-                floatingActionButton = {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        AnimatedVisibility(
-                            visible = uiState.isEditingQuest,
-                            exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut(),
-                            enter = slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn()
-                        ) {
-                            FloatingActionButton(
-                                onClick = {
-                                    viewModel.stopEditMode()
-                                },
-                                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                                shape = RoundedCornerShape(100f)
-                            ) {
-                                Icon(Icons.Outlined.Close, contentDescription = "Cancel")
-                            }
-                        }
-
-                        if (!questState.isQuestDone) {
-                            FloatingActionButton(
-                                onClick = {
-                                    if (uiState.isEditingQuest) {
-                                        viewModel.updateQuest(
-                                            context = context,
-                                            onSuccess = {
-                                                scope.launch {
-                                                    snackbarHostState.showSnackbar(
-                                                        context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
-                                                        withDismissAction = true
-                                                    )
-                                                }
-                                                viewModel.stopEditMode()
-                                            }
-                                        )
-                                    } else {
-                                        viewModel.startEditMode()
-                                    }
-                                },
-                                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                                shape = RoundedCornerShape(fabShape)
-                            ) {
-                                Crossfade(
-                                    targetState = uiState.isEditingQuest,
-                                    label = "EditQuestIconAnimation"
-                                ) { isFocused ->
-                                    Icon(
-                                        imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    }
-                },
-                modifier = Modifier.imePadding()
-            )
+                }
+            }
         },
         snackbarHost = {
             SnackbarHost(
@@ -469,60 +480,3 @@ fun QuestDetailScreen(
         }
     )
 }
-
-/*
-@Composable
-fun TrophyCard(
-    icon: ImageVector,
-    title: String,
-    description: String,
-    onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
-) {
-    Card(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}*/

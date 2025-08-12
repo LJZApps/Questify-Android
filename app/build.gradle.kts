@@ -43,10 +43,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
-    }
-
     kotlinOptions {
         jvmTarget = "19"
     }
@@ -105,7 +101,6 @@ android {
 }
 
 val roomVersion by extra("2.6.1")
-val composeVersion by extra("1.7.4")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
@@ -137,7 +132,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
-    implementation(project.dependencies.platform("androidx.compose:compose-bom-alpha:2025.05.00"))
+    implementation(project.dependencies.platform("androidx.compose:compose-bom-alpha:2025.07.01"))
 //    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation(libs.androidx.runtime)
 
@@ -190,9 +185,9 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlin.metadata.jvm)
 
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui)
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
