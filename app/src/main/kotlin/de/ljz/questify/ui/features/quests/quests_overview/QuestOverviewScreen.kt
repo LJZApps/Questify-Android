@@ -10,16 +10,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
@@ -27,8 +24,7 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +32,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -66,7 +61,6 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
-import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
@@ -279,69 +273,31 @@ fun QuestOverviewScreen(
             }
         },
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(horizontal = 8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                HorizontalFloatingToolbar(
-                    expanded = true,
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                when (currentDestination?.route) {
-                                    getSerializedRouteName(QuestBottomRoutes.AllQuests) -> mainNavController.navigate(
-                                        CreateQuest()
-                                    )
-
-                                    getSerializedRouteName(QuestBottomRoutes.Dailies) -> {
-                                        // TODO
-                                    }
-
-                                    getSerializedRouteName(QuestBottomRoutes.Routines) -> {
-                                        // TODO
-                                    }
-
-                                    getSerializedRouteName(QuestBottomRoutes.Habits) -> {
-                                        // TODO
-                                    }
-                                }
-                            },
-                        ) {
+            FlexibleBottomAppBar {
+                bottomNavRoutes.forEach { bottomNavRoute ->
+                    NavigationBarItem(
+                        alwaysShowLabel = true,
+                        icon = {
                             Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = null
+                                imageVector = bottomNavRoute.icon,
+                                contentDescription = bottomNavRoute.name
                             )
-                        }
-                    }
-                ) {
-                    bottomNavRoutes.forEach { bottomNavRoute ->
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    imageVector = bottomNavRoute.icon,
-                                    contentDescription = bottomNavRoute.name
-                                )
-                            },
-                            label = { Text(bottomNavRoute.name) },
-                            selected = currentDestination?.route == getSerializedRouteName(
-                                bottomNavRoute.route
-                            ),
-                            onClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                bottomNavController.navigate(bottomNavRoute.route) {
-                                    popUpTo(bottomNavController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+                        },
+//                            label = { Text(bottomNavRoute.name) },
+                        selected = currentDestination?.route == getSerializedRouteName(
+                            bottomNavRoute.route
+                        ),
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            bottomNavController.navigate(bottomNavRoute.route) {
+                                popUpTo(bottomNavController.graph.findStartDestination().id) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
         },
