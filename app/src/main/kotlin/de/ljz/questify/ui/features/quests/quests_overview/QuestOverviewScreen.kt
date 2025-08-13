@@ -32,6 +32,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -283,7 +284,7 @@ fun QuestOverviewScreen(
                                 contentDescription = bottomNavRoute.name
                             )
                         },
-//                            label = { Text(bottomNavRoute.name) },
+                        label = { Text(bottomNavRoute.name) },
                         selected = currentDestination?.route == getSerializedRouteName(
                             bottomNavRoute.route
                         ),
