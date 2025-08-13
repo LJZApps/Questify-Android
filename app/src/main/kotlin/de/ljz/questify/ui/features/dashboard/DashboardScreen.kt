@@ -23,8 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
-import de.ljz.questify.ui.components.TopBar
-import de.ljz.questify.ui.components.information_bottom_sheets.ChangelogBottomSheet
+import de.ljz.questify.core.presentation.components.TopBar
+import de.ljz.questify.core.presentation.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute

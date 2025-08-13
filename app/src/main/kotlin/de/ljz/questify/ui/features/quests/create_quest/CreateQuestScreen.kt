@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.ui.components.CreateReminderDialog
+import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.create_quest.components.DueDateInfoDialog
 import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage

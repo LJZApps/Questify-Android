@@ -6,7 +6,7 @@ import androidx.datastore.core.Serializer
 import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.toHex
 import de.ljz.questify.core.application.TAG
-import de.ljz.questify.ui.ds.theme.ThemingEngine
+import de.ljz.questify.core.presentation.theme.ThemingEngine
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.ui.state.ThemeColor
 import de.ljz.questify.util.Standard

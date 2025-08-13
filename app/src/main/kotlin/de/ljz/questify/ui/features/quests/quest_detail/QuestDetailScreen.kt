@@ -60,11 +60,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.ui.components.CreateReminderDialog
-import de.ljz.questify.ui.components.EasyIcon
-import de.ljz.questify.ui.components.EpicIcon
-import de.ljz.questify.ui.components.HardIcon
-import de.ljz.questify.ui.components.MediumIcon
+import de.ljz.questify.core.presentation.components.EasyIcon
+import de.ljz.questify.core.presentation.components.EpicIcon
+import de.ljz.questify.core.presentation.components.HardIcon
+import de.ljz.questify.core.presentation.components.MediumIcon
+import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.quest_detail.components.DeleteConfirmationDialog
 import de.ljz.questify.ui.features.quests.quest_detail.components.ListReminderBottomSheet
 import de.ljz.questify.util.NavBarConfig

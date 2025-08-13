@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Eco
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import de.ljz.questify.ui.components.FeatureNotAvailable
+import de.ljz.questify.core.presentation.components.FeatureNotAvailable
 
 @Composable
 fun HabitsQuestsPage(

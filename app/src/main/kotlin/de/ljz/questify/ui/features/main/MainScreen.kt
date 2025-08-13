@@ -14,7 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.ljz.questify.ui.ds.theme.QuestifyTheme
+import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.ui.features.dashboard.DashboardScreen
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.components.DrawerContent

@@ -41,12 +41,12 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
+import de.ljz.questify.core.presentation.components.EasyIcon
+import de.ljz.questify.core.presentation.components.EpicIcon
+import de.ljz.questify.core.presentation.components.HardIcon
+import de.ljz.questify.core.presentation.components.MediumIcon
+import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.domain.models.quests.QuestEntity
-import de.ljz.questify.ui.components.EasyIcon
-import de.ljz.questify.ui.components.EpicIcon
-import de.ljz.questify.ui.components.HardIcon
-import de.ljz.questify.ui.components.MediumIcon
-import de.ljz.questify.ui.components.QuestItem
 import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingItem

@@ -5,7 +5,7 @@ import androidx.compose.material.icons.twotone.Category
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import de.ljz.questify.ui.components.FeatureNotAvailable
+import de.ljz.questify.core.presentation.components.FeatureNotAvailable
 import de.ljz.questify.ui.features.trophies.TrophiesOverviewViewModel
 
 @Composable

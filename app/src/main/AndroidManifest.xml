@@ -16,7 +16,7 @@
 
     <!-- FIXME DELETE android:usesCleartextTraffic="true" FOR RELEASE!!! VERY IMPORTANT!!! -->
     <application
-        android:name=".core.application.App"
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -58,7 +58,7 @@
         </provider>
 
         <activity
-            android:name=".core.main.ActivityMain"
+            android:name=".core.presentation.screens.ActivityMain"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.domain.models.quests.QuestEntity
-import de.ljz.questify.ui.components.QuestItem
 
 @Composable
 fun LatestQuestsComponent(

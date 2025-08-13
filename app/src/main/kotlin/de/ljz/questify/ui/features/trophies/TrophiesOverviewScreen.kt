@@ -27,7 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
-import de.ljz.questify.ui.components.TopBar
+import de.ljz.questify.core.presentation.components.TopBar
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesBottomNavGraph
 import de.ljz.questify.ui.features.trophies.navigation.TrophyBottomRoutes
 import de.ljz.questify.ui.navigation.BottomNavigationRoute

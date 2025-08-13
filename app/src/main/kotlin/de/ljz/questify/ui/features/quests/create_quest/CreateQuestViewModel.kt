@@ -1,7 +1,6 @@
 package de.ljz.questify.ui.features.quests.create_quest
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +33,7 @@ class CreateQuestViewModel @Inject constructor(
     ) {
         val quest = QuestEntity(
             title = _uiState.value.title,
-            notes = if (_uiState.value.description.isEmpty()) null else _uiState.value.description,
+            notes = _uiState.value.description.ifEmpty { null },
             difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
             createdAt = Date(),
             dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate)

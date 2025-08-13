@@ -1,15 +1,8 @@
 package de.ljz.questify.domain.datastore
 
 import android.util.Log
-import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.Serializer
-import com.materialkolor.PaletteStyle
-import com.materialkolor.ktx.toHex
 import de.ljz.questify.core.application.TAG
-import de.ljz.questify.ui.ds.theme.ThemingEngine
-import de.ljz.questify.ui.state.ThemeBehavior
-import de.ljz.questify.ui.state.ThemeColor
-import de.ljz.questify.util.Standard
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
