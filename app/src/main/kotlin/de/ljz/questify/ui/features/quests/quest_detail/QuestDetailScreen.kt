@@ -1,22 +1,14 @@
 package de.ljz.questify.ui.features.quests.quest_detail
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,39 +16,44 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Block
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SplitButtonDefaults
+import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -68,11 +65,9 @@ import de.ljz.questify.ui.components.EasyIcon
 import de.ljz.questify.ui.components.EpicIcon
 import de.ljz.questify.ui.components.HardIcon
 import de.ljz.questify.ui.components.MediumIcon
-import de.ljz.questify.ui.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.ui.features.quests.quest_detail.components.DeleteConfirmationDialog
 import de.ljz.questify.ui.features.quests.quest_detail.components.ListReminderBottomSheet
 import de.ljz.questify.util.NavBarConfig
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -88,6 +83,7 @@ fun QuestDetailScreen(
     val editQuestState = uiState.editQuestState
 
     val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
 
     val options = listOf(
         stringResource(R.string.difficulty_none),
@@ -100,12 +96,6 @@ fun QuestDetailScreen(
     val context = LocalContext.current
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val fabShape by animateFloatAsState(
-        targetValue = if (uiState.isEditingQuest) 100f else 50f,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-        label = "FABShape"
-    )
 
     LaunchedEffect(Unit) {
         NavBarConfig.transparentNavBar = true
@@ -121,6 +111,63 @@ fun QuestDetailScreen(
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
+                },
+                actions = {
+                    var checked by remember { mutableStateOf(false) }
+
+                    SplitButtonLayout(
+                        leadingButton = {
+                            SplitButtonDefaults.LeadingButton(onClick = {
+                                viewModel.startEditMode()
+                            }) {
+                                Icon(
+                                    Icons.Filled.Edit,
+                                    modifier = Modifier.size(SplitButtonDefaults.LeadingIconSize),
+                                    contentDescription = "Localized description",
+                                )
+                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                Text("Bearbeiten")
+                            }
+                        },
+                        trailingButton = {
+                            SplitButtonDefaults.TrailingButton(
+                                checked = checked,
+                                onCheckedChange = { checked = it },
+                                enabled = true
+                            ) {
+                                val rotation: Float by
+                                animateFloatAsState(
+                                    targetValue = if (checked) 180f else 0f,
+                                    label = "Trailing Icon Rotation",
+                                )
+                                Icon(
+                                    Icons.Filled.KeyboardArrowDown,
+                                    modifier =
+                                        Modifier
+                                            .size(SplitButtonDefaults.TrailingIconSize)
+                                            .graphicsLayer {
+                                                this.rotationZ = rotation
+                                            },
+                                    contentDescription = "Localized description",
+                                )
+                            }
+                        },
+                    )
+
+                    DropdownMenu(expanded = checked, onDismissRequest = { checked = false }) {
+                        DropdownMenuItem(
+                            text = { Text("Quest löschen") },
+                            onClick = {
+                                viewModel.showDeleteConfirmationDialog()
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Delete,
+                                    contentDescription = null
+                                )
+                            },
+                        )
+                    }
                 }
             )
         },
@@ -133,10 +180,6 @@ fun QuestDetailScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                LoadingIndicator(
-                    modifier = Modifier.fillMaxWidth()
-                )
-
                 AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
                     if (targetState) {
                         Text(
@@ -184,7 +227,10 @@ fun QuestDetailScreen(
 
                 // Schwierigkeit
                 Column {
-                    Text(text = stringResource(R.string.quest_detail_screen_difficulty_title), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = stringResource(R.string.quest_detail_screen_difficulty_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
 
                     AnimatedContent(targetState = !(uiState.isEditingQuest && questState.difficulty == 0)) { targetState ->
                         if (targetState) {
@@ -198,6 +244,7 @@ fun QuestDetailScreen(
                                             tint = tintColor
                                         )
                                     }
+
                                     1 -> EasyIcon(tint = tintColor)
                                     2 -> MediumIcon(tint = tintColor)
                                     3 -> HardIcon(tint = tintColor)
@@ -210,40 +257,45 @@ fun QuestDetailScreen(
                                 )
                             }
                         } else {
-                            SingleChoiceSegmentedButtonRow(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 0.dp)
+                            Row(
+                                Modifier.padding(horizontal = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                             ) {
-                                options.forEachIndexed { index, label ->
-                                    val selected = (index == editQuestState.difficulty)
+                                // Beispiel: unterschiedliche Gewichte pro Button
+                                val modifiers = List(options.size) { Modifier.weight(1f) }
 
-                                    SegmentedButton(
-                                        shape = SegmentedButtonDefaults.itemShape(
-                                            index = index,
-                                            count = options.size
-                                        ),
-                                        onClick = {
+                                options.forEachIndexed { index, label ->
+                                    ToggleButton(
+                                        checked = editQuestState.difficulty == index,
+                                        onCheckedChange = {
+                                            haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
                                             viewModel.updateDifficulty(index)
                                         },
-                                        selected = index == editQuestState.difficulty,
-                                        icon = {}
+                                        modifier = modifiers[index].semantics {
+                                            role = Role.RadioButton
+                                        },
+                                        shapes = when (index) {
+                                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                            options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                        },
                                     ) {
-                                        val tintColor =
-                                            if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.primary
+                                        val tint = if (editQuestState.difficulty == index)
+                                            MaterialTheme.colorScheme.onPrimary
+                                        else
+                                            MaterialTheme.colorScheme.primary
 
                                         when (index) {
-                                            0 -> {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.Block,
-                                                    contentDescription = null,
-                                                    tint = tintColor
-                                                )
-                                            }
-                                            1 -> EasyIcon(tint = tintColor)
-                                            2 -> MediumIcon(tint = tintColor)
-                                            3 -> HardIcon(tint = tintColor)
-                                            4 -> EpicIcon(tint = tintColor)
+                                            0 -> Icon(
+                                                Icons.Outlined.Block,
+                                                contentDescription = null,
+                                                tint = tint
+                                            )
+
+                                            1 -> EasyIcon(tint = tint)
+                                            2 -> MediumIcon(tint = tint)
+                                            3 -> HardIcon(tint = tint)
+                                            4 -> EpicIcon(tint = tint)
                                         }
                                     }
                                 }
@@ -254,7 +306,10 @@ fun QuestDetailScreen(
 
                 // Fälligkeit
                 Column {
-                    Text(text = stringResource(R.string.quest_detail_screen_due_date_title), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = stringResource(R.string.quest_detail_screen_due_date_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     val dueDateText = if (questState.selectedDueDate == 0L) {
                         stringResource(R.string.quest_detail_screen_due_date_empty)
                     } else {
@@ -266,7 +321,10 @@ fun QuestDetailScreen(
                 // Erinnerungen
                 if (questState.notificationTriggerTimes.isNotEmpty()) {
                     Column {
-                        Text(text = stringResource(R.string.quest_detail_screen_reminders_title), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = stringResource(R.string.quest_detail_screen_reminders_title),
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         questState.notificationTriggerTimes.sorted().forEach { triggerTime ->
                             Text(
                                 text = dateFormat.format(Date(triggerTime)),
@@ -383,95 +441,95 @@ fun QuestDetailScreen(
             }
         },
         bottomBar = {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .navigationBarsPadding(),
-                contentAlignment = Alignment.Center
-            ) {
-                HorizontalFloatingToolbar(
-                    expanded = true,
-                    floatingActionButton = {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            AnimatedVisibility(
-                                visible = uiState.isEditingQuest,
-                                exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut(),
-                                enter = slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn()
-                            ) {
-                                FloatingActionButton(
-                                    onClick = {
-                                        viewModel.stopEditMode()
-                                    },
-                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                                    shape = RoundedCornerShape(100f)
-                                ) {
-                                    Icon(Icons.Outlined.Close, contentDescription = "Cancel")
-                                }
-                            }
-
-                            if (!questState.isQuestDone) {
-                                FloatingActionButton(
-                                    onClick = {
-                                        if (uiState.isEditingQuest) {
-                                            viewModel.updateQuest(
-                                                context = context,
-                                                onSuccess = {
-                                                    scope.launch {
-                                                        snackbarHostState.showSnackbar(
-                                                            context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
-                                                            withDismissAction = true
-                                                        )
-                                                    }
-                                                    viewModel.stopEditMode()
-                                                }
-                                            )
-                                        } else {
-                                            viewModel.startEditMode()
-                                        }
-                                    },
-                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                                    shape = RoundedCornerShape(fabShape)
-                                ) {
-                                    Crossfade(
-                                        targetState = uiState.isEditingQuest,
-                                        label = "EditQuestIconAnimation"
-                                    ) { isFocused ->
-                                        Icon(
-                                            imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    },
-                ) {
-                    BasicPlainTooltip(
-                        text = stringResource(R.string.quest_detail_screen_tooltip_delete_quest)
-                    ) {
-                        IconButton(onClick = { viewModel.showDeleteConfirmationDialog() }) {
-                            Icon(Icons.Outlined.DeleteOutline, contentDescription = "Delete")
-                        }
-                    }
-
-                    AnimatedVisibility(
-                        visible = uiState.isEditingQuest && !questState.isQuestDone,
-                        exit = slideOutHorizontally(targetOffsetX = { it / -2 }) + fadeOut(),
-                        enter = slideInHorizontally(initialOffsetX = { it / -2 }) + fadeIn()
-                    ) {
-                        BasicPlainTooltip(
-                            text = stringResource(R.string.quest_detail_screen_tooltip_edit_reminders),
-                        ) {
-                            IconButton(onClick = { viewModel.showRemindersBottomSheet() }) {
-                                Icon(Icons.Outlined.Alarm, contentDescription = "Edit reminders")
-                            }
-                        }
-                    }
-                }
-            }
+//            Box(
+//                modifier = Modifier.fillMaxWidth()
+//                    .navigationBarsPadding(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                HorizontalFloatingToolbar(
+//                    expanded = true,
+//                    floatingActionButton = {
+//                        Row(
+//                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+//                        ) {
+//                            AnimatedVisibility(
+//                                visible = uiState.isEditingQuest,
+//                                exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut(),
+//                                enter = slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn()
+//                            ) {
+//                                FloatingActionButton(
+//                                    onClick = {
+//                                        viewModel.stopEditMode()
+//                                    },
+//                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+//                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+//                                    shape = RoundedCornerShape(100f)
+//                                ) {
+//                                    Icon(Icons.Outlined.Close, contentDescription = "Cancel")
+//                                }
+//                            }
+//
+//                            if (!questState.isQuestDone) {
+//                                FloatingActionButton(
+//                                    onClick = {
+//                                        if (uiState.isEditingQuest) {
+//                                            viewModel.updateQuest(
+//                                                context = context,
+//                                                onSuccess = {
+//                                                    scope.launch {
+//                                                        snackbarHostState.showSnackbar(
+//                                                            context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
+//                                                            withDismissAction = true
+//                                                        )
+//                                                    }
+//                                                    viewModel.stopEditMode()
+//                                                }
+//                                            )
+//                                        } else {
+//                                            viewModel.startEditMode()
+//                                        }
+//                                    },
+//                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+//                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
+//                                    shape = RoundedCornerShape(fabShape)
+//                                ) {
+//                                    Crossfade(
+//                                        targetState = uiState.isEditingQuest,
+//                                        label = "EditQuestIconAnimation"
+//                                    ) { isFocused ->
+//                                        Icon(
+//                                            imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
+//                                            contentDescription = null
+//                                        )
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    },
+//                ) {
+//                    BasicPlainTooltip(
+//                        text = stringResource(R.string.quest_detail_screen_tooltip_delete_quest)
+//                    ) {
+//                        IconButton(onClick = { viewModel.showDeleteConfirmationDialog() }) {
+//                            Icon(Icons.Outlined.DeleteOutline, contentDescription = "Delete")
+//                        }
+//                    }
+//
+//                    AnimatedVisibility(
+//                        visible = uiState.isEditingQuest && !questState.isQuestDone,
+//                        exit = slideOutHorizontally(targetOffsetX = { it / -2 }) + fadeOut(),
+//                        enter = slideInHorizontally(initialOffsetX = { it / -2 }) + fadeIn()
+//                    ) {
+//                        BasicPlainTooltip(
+//                            text = stringResource(R.string.quest_detail_screen_tooltip_edit_reminders),
+//                        ) {
+//                            IconButton(onClick = { viewModel.showRemindersBottomSheet() }) {
+//                                Icon(Icons.Outlined.Alarm, contentDescription = "Edit reminders")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         },
         snackbarHost = {
             SnackbarHost(

@@ -1,22 +1,19 @@
 package de.ljz.questify.ui.features.quests.quests_overview
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
@@ -25,6 +22,8 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FlexibleBottomAppBar
+import androidx.compose.material3.FloatingActionButtonMenu
+import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,15 +32,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleFloatingActionButton
+import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
@@ -62,6 +68,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.ui.components.TopBar
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
+import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
@@ -91,23 +98,13 @@ fun QuestOverviewScreen(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val fabShape by animateFloatAsState(
-        targetValue = if (uiState.fastAddingText.isNotEmpty()) 100f else 50f,
-        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
-        label = "FABShape"
-    )
-
-    val navigationBarHeight by animateDpAsState(
-        targetValue = if (isKeyboardVisible()) 0.dp else 80.dp + WindowInsets.navigationBars.asPaddingValues()
-            .calculateBottomPadding(),
-        animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing),
-        label = "FABShape"
-    )
-
+    var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    BackHandler(fabMenuExpanded) { fabMenuExpanded = false }
+
     val bottomNavRoutes = listOf(
         BottomNavigationRoute(
             stringResource(R.string.quest_screen_bottom_nav_all_quests),
@@ -130,9 +127,6 @@ fun QuestOverviewScreen(
             Icons.Outlined.Eco
         )
     )
-    val enabledViewQuestFeatures = listOf(
-        QuestBottomRoutes.AllQuests
-    )
 
     Scaffold(
         topBar = {
@@ -152,7 +146,6 @@ fun QuestOverviewScreen(
                                     drawerState.close()
                                 }
                                 mainNavController.navigate(ProfileRoute)
-                                /*mainNavController.navigate(FullscreenDialogDemoRoute)*/
                             },
                             modifier = Modifier.padding(end = 4.dp)
                         ) {
@@ -198,13 +191,77 @@ fun QuestOverviewScreen(
                                     imageVector = Icons.Default.NewReleases,
                                     contentDescription = "New Version icon",
                                     tint = MaterialTheme.colorScheme.onPrimary,
-                                    modifier = Modifier.size(16.dp) // Kleinere Größe für das Icon
+                                    modifier = Modifier.size(16.dp)
                                 )
                             }
                         }*/
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButtonMenu(
+                expanded = fabMenuExpanded,
+                button = {
+                    ToggleFloatingActionButton(
+                        checked = fabMenuExpanded,
+                        onCheckedChange = { fabMenuExpanded = !fabMenuExpanded },
+                    ) {
+                        val imageVector by remember {
+                            derivedStateOf {
+                                if (checkedProgress > 0.5f) Icons.Filled.Close else Icons.Filled.Add
+                            }
+                        }
+                        Icon(
+                            painter = rememberVectorPainter(imageVector),
+                            contentDescription = null,
+                            modifier = Modifier.animateIcon({ checkedProgress }),
+                        )
+                    }
+                },
+            ) {
+                FloatingActionButtonMenuItem(
+                    onClick = {
+                        fabMenuExpanded = false
+                        mainNavController.navigate(CreateQuest())
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.List,
+                            contentDescription = null
+                        )
+                    },
+                    text = { Text(text = "Neue Quest") },
+                )
+
+                FloatingActionButtonMenuItem(
+                    onClick = { fabMenuExpanded = false },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.CalendarMonth,
+                            contentDescription = null
+                        )
+                    },
+                    text = { Text(text = "Neues Daily") },
+                )
+
+                FloatingActionButtonMenuItem(
+                    onClick = { fabMenuExpanded = false },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Schedule,
+                            contentDescription = null
+                        )
+                    },
+                    text = { Text(text = "Neue Routine") },
+                )
+
+                FloatingActionButtonMenuItem(
+                    onClick = { fabMenuExpanded = false },
+                    icon = { Icon(imageVector = Icons.Outlined.Eco, contentDescription = null) },
+                    text = { Text(text = "Neue Gewohnheit") },
+                )
+            }
         },
         content = { innerPadding ->
             Box(

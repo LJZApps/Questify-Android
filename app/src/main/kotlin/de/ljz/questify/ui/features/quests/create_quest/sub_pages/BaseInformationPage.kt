@@ -21,17 +21,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +41,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
@@ -52,12 +57,15 @@ import de.ljz.questify.ui.components.HardIcon
 import de.ljz.questify.ui.components.MediumIcon
 import de.ljz.questify.ui.features.quests.create_quest.CreateQuestUiState
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BaseInformationPage(
     uiState: CreateQuestUiState,
     onTitleChange: (String) -> Unit,
     onDifficultyChange: (Int) -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
+
     val options = listOf(
         stringResource(R.string.difficulty_none),
         stringResource(R.string.difficulty_easy),
@@ -172,39 +180,44 @@ fun BaseInformationPage(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier.fillMaxWidth()
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                 ) {
-                    options.forEachIndexed { index, _ ->
-                        val selected = (index == uiState.difficulty)
+                    // Beispiel: unterschiedliche Gewichte pro Button
+                    val modifiers = List(options.size) { Modifier.weight(1f) }
 
-                        SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = options.size
-                            ),
-                            onClick = { onDifficultyChange(index) },
-                            selected = selected,
-                            icon = {}
+                    options.forEachIndexed { index, label ->
+                        ToggleButton(
+                            checked = uiState.difficulty == index,
+                            onCheckedChange = {
+                                haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                onDifficultyChange(index)
+                            },
+                            modifier = modifiers[index].semantics {
+                                role = Role.RadioButton
+                            },
+                            shapes = when (index) {
+                                0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                            },
                         ) {
-                            val tintColor = if (selected) 
-                                MaterialTheme.colorScheme.onSecondaryContainer 
-                            else 
+                            val tint = if (uiState.difficulty == index)
+                                MaterialTheme.colorScheme.onPrimary
+                            else
                                 MaterialTheme.colorScheme.primary
 
                             when (index) {
-                                0 -> {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Block,
-                                        contentDescription = null,
-                                        tint = tintColor,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-                                1 -> EasyIcon(tint = tintColor)
-                                2 -> MediumIcon(tint = tintColor)
-                                3 -> HardIcon(tint = tintColor)
-                                4 -> EpicIcon(tint = tintColor)
+                                0 -> Icon(
+                                    Icons.Outlined.Block,
+                                    contentDescription = null,
+                                    tint = tint
+                                )
+
+                                1 -> EasyIcon(tint = tint)
+                                2 -> MediumIcon(tint = tint)
+                                3 -> HardIcon(tint = tint)
+                                4 -> EpicIcon(tint = tint)
                             }
                         }
                     }
