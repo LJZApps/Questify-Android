@@ -27,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -59,7 +60,7 @@ import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDial
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.DetailedInformationPage
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CreateQuestScreen(
     mainNavController: NavHostController,
@@ -81,10 +82,16 @@ fun CreateQuestScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = if(uiState.title.trim().isEmpty()) stringResource(R.string.create_quest_top_bar_title) else uiState.title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        text = stringResource(R.string.create_quest_top_bar_title)
                     )
+                },
+                subtitle = {
+                    if (!uiState.title.trim().isEmpty())
+                        Text(
+                            text = uiState.title,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
                 },
                 navigationIcon = {
                     IconButton(onClick = { mainNavController.navigateUp() }) {

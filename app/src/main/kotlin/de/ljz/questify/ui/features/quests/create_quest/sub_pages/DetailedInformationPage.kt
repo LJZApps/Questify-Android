@@ -205,13 +205,14 @@ fun DetailedInformationPage(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(CircleShape)
                         .clickable {
                             onShowAddingDueDateDialog()
                         },
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                    )
+                    ),
+                    shape = CircleShape
                 ) {
                     Row(
                         modifier = Modifier
@@ -227,7 +228,7 @@ fun DetailedInformationPage(
                             Box(
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .clip(RoundedCornerShape(8.dp))
+                                    .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(8.dp),
                                 contentAlignment = Alignment.Center
@@ -321,18 +322,19 @@ fun DetailedInformationPage(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(12.dp))
+                                    .clip(CircleShape)
                                     .clickable {
                                         onRemoveReminder(index)
                                     },
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                                )
+                                ),
+                                shape = CircleShape
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(12.dp),
+                                        .padding(16.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -342,8 +344,8 @@ fun DetailedInformationPage(
                                     ) {
                                         Box(
                                             modifier = Modifier
-                                                .size(36.dp)
-                                                .clip(RoundedCornerShape(8.dp))
+                                                .size(40.dp)
+                                                .clip(CircleShape)
                                                 .background(MaterialTheme.colorScheme.primaryContainer)
                                                 .padding(8.dp),
                                             contentAlignment = Alignment.Center
@@ -364,7 +366,7 @@ fun DetailedInformationPage(
 
                                     Box(
                                         modifier = Modifier
-                                            .size(32.dp)
+                                            .size(40.dp)
                                             .clip(CircleShape)
                                             .clickable { onRemoveReminder(index) }
                                             .padding(4.dp),
@@ -386,13 +388,14 @@ fun DetailedInformationPage(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(CircleShape)
                         .clickable {
                             onShowCreateReminderDialog()
                         },
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                    )
+                    ),
+                    shape = CircleShape
                 ) {
                     Row(
                         modifier = Modifier
@@ -403,8 +406,8 @@ fun DetailedInformationPage(
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(36.dp)
-                                .clip(RoundedCornerShape(8.dp))
+                                .size(40.dp)
+                                .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.primaryContainer)
                                 .padding(8.dp),
                             contentAlignment = Alignment.Center

@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,22 +15,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -183,11 +184,10 @@ fun BaseInformationPage(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                 ) {
-                    // Beispiel: unterschiedliche Gewichte pro Button
                     val modifiers = List(options.size) { Modifier.weight(1f) }
 
                     options.forEachIndexed { index, label ->
-                        ToggleButton(
+                        OutlinedToggleButton(
                             checked = uiState.difficulty == index,
                             onCheckedChange = {
                                 haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
@@ -201,11 +201,17 @@ fun BaseInformationPage(
                                 options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                                 else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                             },
+                            colors = ToggleButtonDefaults.toggleButtonColors(
+                                contentColor = if (uiState.difficulty == index)
+                                    MaterialTheme.colorScheme.outlineVariant
+                                else
+                                    MaterialTheme.colorScheme.inverseSurface
+                            )
                         ) {
                             val tint = if (uiState.difficulty == index)
-                                MaterialTheme.colorScheme.onPrimary
+                                MaterialTheme.colorScheme.inverseOnSurface
                             else
-                                MaterialTheme.colorScheme.primary
+                                MaterialTheme.colorScheme.onSurfaceVariant
 
                             when (index) {
                                 0 -> Icon(
@@ -228,23 +234,24 @@ fun BaseInformationPage(
                     visible = true,
                     enter = fadeIn() + expandVertically()
                 ) {
-                    OutlinedCard(
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                        colors = CardDefaults.outlinedCardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                        )
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                        ),
+                        shape = CircleShape
                     ) {
                         Row(
-                            modifier = Modifier.padding(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(RoundedCornerShape(8.dp))
+                                    .clip(CircleShape)
                                     .background(MaterialTheme.colorScheme.primaryContainer)
                                     .padding(6.dp),
                                 contentAlignment = Alignment.Center
