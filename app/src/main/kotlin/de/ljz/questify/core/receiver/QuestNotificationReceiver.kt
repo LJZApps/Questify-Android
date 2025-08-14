@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
@@ -83,7 +82,6 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             .setContentTitle(title)
             .setContentText(description)
             .setSmallIcon(R.drawable.ic_stat_name)
-            .setColor(ContextCompat.getColor(context, R.color.notification_color))
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setGroup(questsGroupId)
