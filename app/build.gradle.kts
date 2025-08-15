@@ -36,7 +36,7 @@ android {
         localeFilters += listOf("en", "de")
     }
 
-    compileSdk = 35
+    compileSdk = 36
 
     buildFeatures {
         compose = true
@@ -51,9 +51,9 @@ android {
         namespace = "de.ljz.questify"
         applicationId = "de.ljz.questify"
         minSdk = 30
-        targetSdk = 35
-        versionCode = 13
-        versionName = "0.6.3"
+        targetSdk = 36
+        versionCode = 14
+        versionName = "0.7.0"
     }
 
     compileOptions {
