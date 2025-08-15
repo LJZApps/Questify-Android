@@ -1,8 +1,6 @@
 package de.ljz.questify.ui.features.quests.create_quest.sub_pages
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
@@ -34,14 +32,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
@@ -83,8 +76,6 @@ fun BaseInformationPage(
         stringResource(R.string.difficulty_epic_description, "Major tasks that require extensive effort and time")
     )
 
-    var titleFieldFocused by remember { mutableStateOf(false) }
-
     Column(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         modifier = Modifier.padding(vertical = 8.dp)
@@ -124,8 +115,7 @@ fun BaseInformationPage(
                     onValueChange = { onTitleChange(it) },
                     label = { Text(stringResource(R.string.text_field_quest_title)) },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .onFocusChanged { titleFieldFocused = it.isFocused },
+                        .fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
@@ -138,23 +128,6 @@ fun BaseInformationPage(
                         capitalization = KeyboardCapitalization.Sentences
                     )
                 )
-
-                AnimatedVisibility(
-                    visible = uiState.title.isNotEmpty(),
-                    enter = fadeIn() + expandVertically(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                ) {
-                    Text(
-                        text = "Great! A clear title helps you remember what this quest is about.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp, start = 4.dp)
-                    )
-                }
             }
         }
 
@@ -176,7 +149,7 @@ fun BaseInformationPage(
                 )
 
                 Text(
-                    text = "Select how challenging this quest will be:",
+                    text = stringResource(R.string.base_information_page_difficulty_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

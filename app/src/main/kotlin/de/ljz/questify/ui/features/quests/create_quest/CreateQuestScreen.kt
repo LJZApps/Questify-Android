@@ -274,7 +274,15 @@ fun CreateQuestScreen(
                     floatingActionButton = {
                         FloatingToolbarDefaults.StandardFloatingActionButton(
                             onClick = {
-                                currentStep++
+                                if (currentStep < steps.size - 1) {
+                                    currentStep++
+                                } else {
+                                    viewModel.createQuest(
+                                        onSuccess = {
+                                            mainNavController.navigateUp()
+                                        }
+                                    )
+                                }
                             }
                         ) {
                             Icon(

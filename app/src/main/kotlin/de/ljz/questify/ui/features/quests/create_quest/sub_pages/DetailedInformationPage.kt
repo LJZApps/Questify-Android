@@ -1,10 +1,5 @@
 package de.ljz.questify.ui.features.quests.create_quest.sub_pages
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Info
@@ -45,9 +39,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.eygraber.compose.placeholder.PlaceholderHighlight
-import com.eygraber.compose.placeholder.material3.placeholder
-import com.eygraber.compose.placeholder.material3.shimmer
 import de.ljz.questify.R
 import de.ljz.questify.core.compose.UIModePreviews
 import de.ljz.questify.ui.features.quests.create_quest.CreateQuestUiState
@@ -67,7 +58,6 @@ fun DetailedInformationPage(
 ) {
     val reminderDateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     val dueDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-
     var notesFieldFocused by remember { mutableStateOf(false) }
 
     Column(
@@ -123,40 +113,6 @@ fun DetailedInformationPage(
                         capitalization = KeyboardCapitalization.Sentences,
                     )
                 )
-
-                AnimatedVisibility(
-                    visible = uiState.description.isNotEmpty(),
-                    enter = fadeIn() + expandVertically(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.AutoAwesome,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-
-                        Text(
-                            text = "PLACEHOLDER AI TEXT\nANOTHER PLACEHOLDER",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier
-                                .padding(top = 4.dp, start = 4.dp)
-                                .fillMaxWidth()
-                                .placeholder(
-                                    visible = true,
-                                    highlight = PlaceholderHighlight.shimmer()
-                                )
-                        )
-                    }
-                }
             }
         }
 
@@ -313,7 +269,8 @@ fun DetailedInformationPage(
                 // Existing reminders
                 if (uiState.notificationTriggerTimes.isNotEmpty()) {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = Modifier.clip(RoundedCornerShape(28.dp))
                     ) {
                         uiState.notificationTriggerTimes.sortedBy { it }.forEachIndexed { index, triggerTime ->
                             val date = Date(triggerTime)
@@ -322,14 +279,14 @@ fun DetailedInformationPage(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(CircleShape)
+                                    .clip(RoundedCornerShape(4.dp))
                                     .clickable {
                                         onRemoveReminder(index)
                                     },
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                                 ),
-                                shape = CircleShape
+                                shape = RoundedCornerShape(4.dp)
                             ) {
                                 Row(
                                     modifier = Modifier

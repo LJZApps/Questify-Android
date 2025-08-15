@@ -1,41 +1,36 @@
 package de.ljz.questify.ui.features.quests.quest_detail
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.NotificationAdd
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SplitButtonDefaults
-import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,17 +39,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,10 +53,13 @@ import de.ljz.questify.core.presentation.components.EasyIcon
 import de.ljz.questify.core.presentation.components.EpicIcon
 import de.ljz.questify.core.presentation.components.HardIcon
 import de.ljz.questify.core.presentation.components.MediumIcon
+import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuCategory
+import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
+import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItemWithTextField
 import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.quest_detail.components.DeleteConfirmationDialog
-import de.ljz.questify.ui.features.quests.quest_detail.components.ListReminderBottomSheet
 import de.ljz.questify.util.NavBarConfig
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -115,48 +107,24 @@ fun QuestDetailScreen(
                 actions = {
                     var checked by remember { mutableStateOf(false) }
 
-                    SplitButtonLayout(
-                        leadingButton = {
-                            SplitButtonDefaults.LeadingButton(onClick = {
-                                viewModel.startEditMode()
-                            }) {
-                                Icon(
-                                    Icons.Filled.Edit,
-                                    modifier = Modifier.size(SplitButtonDefaults.LeadingIconSize),
-                                    contentDescription = "Localized description",
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text("Bearbeiten")
-                            }
-                        },
-                        trailingButton = {
-                            SplitButtonDefaults.TrailingButton(
-                                checked = checked,
-                                onCheckedChange = { checked = it },
-                                enabled = true
-                            ) {
-                                val rotation: Float by
-                                animateFloatAsState(
-                                    targetValue = if (checked) 180f else 0f,
-                                    label = "Trailing Icon Rotation",
-                                )
-                                Icon(
-                                    Icons.Filled.KeyboardArrowDown,
-                                    modifier =
-                                        Modifier
-                                            .size(SplitButtonDefaults.TrailingIconSize)
-                                            .graphicsLayer {
-                                                this.rotationZ = rotation
-                                            },
-                                    contentDescription = "Localized description",
-                                )
-                            }
-                        },
-                    )
+                    FilledTonalIconButton(
+                        onClick = {
+                            viewModel.updateQuest(
+                                context = context,
+                                onSuccess = {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(context.getString(R.string.quest_detail_screen_changes_saved_snackbar), withDismissAction = true)
+                                    }
+                                }
+                            )
+                        }
+                    ) {
+                        Icon(Icons.Outlined.Save, contentDescription = null)
+                    }
 
                     DropdownMenu(expanded = checked, onDismissRequest = { checked = false }) {
                         DropdownMenuItem(
-                            text = { Text("Quest löschen") },
+                            text = { Text(stringResource(R.string.quest_detail_screen_tooltip_delete_quest)) },
                             onClick = {
                                 viewModel.showDeleteConfirmationDialog()
                             },
@@ -177,54 +145,120 @@ fun QuestDetailScreen(
                     .fillMaxWidth()
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .clip(RoundedCornerShape(16.dp))
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
-                    if (targetState) {
-                        Text(
-                            text = questState.title,
-                            style = MaterialTheme.typography.headlineSmall
+                ExpressiveMenuCategory(
+                    title = stringResource(R.string.quest_detail_screen_section_informations),
+                    content = {
+                        ExpressiveMenuItemWithTextField(
+                            text = editQuestState.title,
+                            placeholder = stringResource(R.string.quest_detail_screen_description),
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Title,
+                                    contentDescription = null
+                                )
+                            },
+                            onTextValueChange = {
+                                viewModel.updateTitle(it)
+                            }
                         )
-                    } else {
-                        OutlinedTextField(
-                            value = editQuestState.title,
-                            onValueChange = { viewModel.updateTitle(it) },
-                            label = { Text(stringResource(R.string.text_field_quest_title)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(
-                                capitalization = KeyboardCapitalization.Sentences
-                            )
+
+                        ExpressiveMenuItemWithTextField(
+                            text = editQuestState.description,
+                            placeholder = stringResource(R.string.quest_detail_screen_placeholder_description),
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Description,
+                                    contentDescription = null
+                                )
+                            },
+                            onTextValueChange = {
+                                viewModel.updateDescription(it)
+                            },
+                            singleLine = false
                         )
                     }
-                }
+                )
 
-                AnimatedContent(targetState = !uiState.isEditingQuest) { targetState ->
-                    if (targetState) {
-                        if (questState.description.isNotBlank()) {
-                            Text(
-                                text = questState.description,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                ExpressiveMenuCategory(
+                    title = stringResource(R.string.quest_detail_screen_difficulty_title),
+                    content = {
+                        ExpressiveMenuItem(
+                            title = options[questState.difficulty],
+                            icon = {
+                                val tintColor = LocalContentColor.current
+                                when (questState.difficulty) {
+                                    0 -> {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Block,
+                                            contentDescription = null,
+                                            tint = tintColor
+                                        )
+                                    }
+
+                                    1 -> EasyIcon(tint = tintColor)
+                                    2 -> MediumIcon(tint = tintColor)
+                                    3 -> HardIcon(tint = tintColor)
+                                    4 -> EpicIcon(tint = tintColor)
+                                }
+                            }
+                        )
+                    }
+                )
+
+                ExpressiveMenuCategory(
+                    title = stringResource(R.string.quest_detail_screen_due_date_title),
+                    content = {
+                        val dueDateText = if (questState.selectedDueDate == 0L) {
+                            stringResource(R.string.quest_detail_screen_due_date_empty)
+                        } else {
+                            dateFormat.format(Date(questState.selectedDueDate))
                         }
-                    } else {
-                        OutlinedTextField(
-                            value = editQuestState.description,
-                            onValueChange = { viewModel.updateDescription(it) },
-                            label = { Text(stringResource(R.string.text_field_quest_note)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            minLines = 2,
-                            keyboardOptions = KeyboardOptions(
-                                capitalization = KeyboardCapitalization.Sentences,
-                            )
+
+                        ExpressiveMenuItem(
+                            title = dueDateText,
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Schedule,
+                                    contentDescription = null,
+                                )
+                            }
                         )
                     }
-                }
+                )
 
+                if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
+                    ExpressiveMenuCategory(
+                        title = stringResource(R.string.quest_detail_screen_reminders_title),
+                        content = {
+                            editQuestState.notificationTriggerTimes.sorted()
+                                .forEach { triggerTime ->
+                                    ExpressiveMenuItem(
+                                        title = dateFormat.format(Date(triggerTime)),
+                                        icon = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Notifications,
+                                                contentDescription = null,
+                                            )
+                                        }
+                                    )
+                                }
+                        },
+                        actionIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.NotificationAdd,
+                                contentDescription = null,
+                            )
+                        },
+                        onActionIconClick = {
+                            viewModel.showCreateReminderDialog()
+                        }
+                    )
+                }
+                /*
                 // Schwierigkeit
                 Column {
                     Text(
@@ -317,97 +351,7 @@ fun QuestDetailScreen(
                     }
                     Text(text = dueDateText, style = MaterialTheme.typography.bodyMedium)
                 }
-
-                // Erinnerungen
-                if (questState.notificationTriggerTimes.isNotEmpty()) {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.quest_detail_screen_reminders_title),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        questState.notificationTriggerTimes.sorted().forEach { triggerTime ->
-                            Text(
-                                text = dateFormat.format(Date(triggerTime)),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                }
-
-                // Trophäen
-                /*Column {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(text = stringResource(R.string.quest_detail_screen_trophies_title), style = MaterialTheme.typography.titleMedium)
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        color = MaterialTheme.colorScheme.primaryContainer,
-                                        shape = RoundedCornerShape(16.dp)
-                                    )
-                            ) {
-                                Text(
-                                    text = getAllFilledIcons().count().toString(),
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.padding(horizontal = 8.dp)
-                                )
-                            }
-                        }
-
-                        Icon(
-                            imageVector = if (uiState.trophiesExpanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .clickable {
-                                    viewModel.toggleTrophySection()
-                                }
-                        )
-                    }
-                    AnimatedVisibility(uiState.trophiesExpanded) {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(3),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier
-                                .height(240.dp)
-                                .padding(vertical = 8.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                        ) {
-                            items(getAllFilledIcons()) { (name, icon) ->
-                                TrophyCard(
-                                    icon = icon,
-                                    title = name,
-                                    description = "PLACEHOLDER"
-                                )
-                            }
-                        }
-                    }
-                }*/
-
-                if (uiState.isShowingReminderBottomSheet) {
-                    ListReminderBottomSheet(
-                        reminders = editQuestState.notificationTriggerTimes,
-                        onRemoveReminder = {
-                            viewModel.removeReminder(it)
-                        },
-                        onAddReminder = {
-                            viewModel.showCreateReminderDialog()
-                        },
-                        onDismiss = {
-                            viewModel.hideReminderBottomSheet()
-                        }
-                    )
-                }
+                 */
             }
 
             if (uiState.isDeleteConfirmationDialogVisible) {
@@ -440,100 +384,12 @@ fun QuestDetailScreen(
                 )
             }
         },
-        bottomBar = {
-//            Box(
-//                modifier = Modifier.fillMaxWidth()
-//                    .navigationBarsPadding(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                HorizontalFloatingToolbar(
-//                    expanded = true,
-//                    floatingActionButton = {
-//                        Row(
-//                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                        ) {
-//                            AnimatedVisibility(
-//                                visible = uiState.isEditingQuest,
-//                                exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut(),
-//                                enter = slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn()
-//                            ) {
-//                                FloatingActionButton(
-//                                    onClick = {
-//                                        viewModel.stopEditMode()
-//                                    },
-//                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-//                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-//                                    shape = RoundedCornerShape(100f)
-//                                ) {
-//                                    Icon(Icons.Outlined.Close, contentDescription = "Cancel")
-//                                }
-//                            }
-//
-//                            if (!questState.isQuestDone) {
-//                                FloatingActionButton(
-//                                    onClick = {
-//                                        if (uiState.isEditingQuest) {
-//                                            viewModel.updateQuest(
-//                                                context = context,
-//                                                onSuccess = {
-//                                                    scope.launch {
-//                                                        snackbarHostState.showSnackbar(
-//                                                            context.getString(R.string.quest_detail_screen_snackbar_quest_updated),
-//                                                            withDismissAction = true
-//                                                        )
-//                                                    }
-//                                                    viewModel.stopEditMode()
-//                                                }
-//                                            )
-//                                        } else {
-//                                            viewModel.startEditMode()
-//                                        }
-//                                    },
-//                                    containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-//                                    elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-//                                    shape = RoundedCornerShape(fabShape)
-//                                ) {
-//                                    Crossfade(
-//                                        targetState = uiState.isEditingQuest,
-//                                        label = "EditQuestIconAnimation"
-//                                    ) { isFocused ->
-//                                        Icon(
-//                                            imageVector = if (isFocused) Icons.Filled.Save else Icons.Filled.Edit,
-//                                            contentDescription = null
-//                                        )
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    },
-//                ) {
-//                    BasicPlainTooltip(
-//                        text = stringResource(R.string.quest_detail_screen_tooltip_delete_quest)
-//                    ) {
-//                        IconButton(onClick = { viewModel.showDeleteConfirmationDialog() }) {
-//                            Icon(Icons.Outlined.DeleteOutline, contentDescription = "Delete")
-//                        }
-//                    }
-//
-//                    AnimatedVisibility(
-//                        visible = uiState.isEditingQuest && !questState.isQuestDone,
-//                        exit = slideOutHorizontally(targetOffsetX = { it / -2 }) + fadeOut(),
-//                        enter = slideInHorizontally(initialOffsetX = { it / -2 }) + fadeIn()
-//                    ) {
-//                        BasicPlainTooltip(
-//                            text = stringResource(R.string.quest_detail_screen_tooltip_edit_reminders),
-//                        ) {
-//                            IconButton(onClick = { viewModel.showRemindersBottomSheet() }) {
-//                                Icon(Icons.Outlined.Alarm, contentDescription = "Edit reminders")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-        },
         snackbarHost = {
             SnackbarHost(
-                hostState = snackbarHostState
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .imePadding()
+                    .navigationBarsPadding()
             )
         }
     )

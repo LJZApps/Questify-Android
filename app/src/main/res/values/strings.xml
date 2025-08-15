@@ -210,4 +210,13 @@
     <string name="permissions_screen_description">To be able to use the app optimally, please grant the following permissions.</string>
     <string name="permissions_screen_button_grant">Grant</string>
     <string name="permissions_screen_button_granted">Granted</string>
+    <string name="base_information_page_difficulty_subtitle">Select how challenging this quest will be:</string>
+    <string name="quest_detail_screen_changes_saved_snackbar">Changes saved!</string>
+    <string name="quest_detail_screen_section_informations">Informations</string>
+    <string name="quest_detail_screen_placeholder_description">Description</string>
+    <string name="quest_detail_screen_description">Title</string>
+    <string name="quest_overview_screen_fab_create_quest">New quest</string>
+    <string name="quest_overview_screen_fab_create_daily">New daily</string>
+    <string name="quest_overview_screen_fab_create_routine">New routine</string>
+    <string name="quest_overview_screen_fab_create_habit">New habit</string>
 </resources>
