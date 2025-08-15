@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Questify"
 include(":app")
+include(":wearos")

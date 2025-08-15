@@ -16,8 +16,8 @@ jacksonDataformatYaml = "2.19.2"
 jacksonModuleKotlin = "2.19.2"
 konfettiCompose = "2.0.5"
 kotlin = "2.2.0"
-coreKtx = "1.16.0"
-kotlinMetadataJvm = "2.1.0"
+coreKtx = "1.17.0"
+kotlinMetadataJvm = "2.1.21"
 kotlinStdlibJdk8 = "2.1.20"
 kotlinxCollectionsImmutable = "0.4.0"
 kotlinxSerializationJson = "1.9.0"
@@ -26,7 +26,7 @@ lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
 lifecycleViewmodelCompose = "2.9.2"
 material = "1.12.0"
-material3 = "1.5.0-alpha01"
+material3 = "1.5.0-alpha02"
 materialKolor = "3.0.1"
 moshiAdapters = "1.15.2"
 moshiKotlin = "1.15.2"
@@ -34,7 +34,7 @@ navigationCompose = "2.9.3"
 okHttpVersion = "5.1.0"
 retrofit = "3.0.0"
 roomCompiler = "2.7.2"
-runtime = "1.8.3"
+runtime = "1.9.0"
 sandwich = "2.1.2"
 sandwichRetrofit = "2.1.2"
 sandwichRetrofitSerialization = "2.1.2"
@@ -44,6 +44,12 @@ composePlugin = "1.8.2"
 datastoreCoreAndroid = "1.1.7"
 workRuntimeKtx = "2.10.3"
 colorpicker = "1.1.2"
+playServicesWearable = "19.0.0" # Version aktualisiert für bessere Kompatibilität
+
+# Hinzugefügte Versionen für Wear OS
+composeBom = "2025.08.00"
+wearCompose = "1.4.1"
+horologist = "0.7.15"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -109,6 +115,17 @@ composeSettings-ui = { group = "com.github.alorma.compose-settings", name = "ui-
 composeSettings-ui-extended = { group = "com.github.alorma.compose-settings", name = "ui-tiles-extended", version.ref = "composeSettings" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 compose-colorpicker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
+play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+
+# Hinzugefügte Libraries für Wear OS
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "wearCompose" }
+androidx-wear-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "wearCompose" }
+androidx-wear-compose-navigation = { group = "androidx.wear.compose", name = "compose-navigation", version.ref = "wearCompose" }
+androidx-wear-compose-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "wearCompose" }
+horologist-compose-layout = { group = "com.google.android.horologist", name = "horologist-compose-layout", version.ref = "horologist" }
+horologist-compose-material = { group = "com.google.android.horologist", name = "horologist-compose-material", version.ref = "horologist" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
