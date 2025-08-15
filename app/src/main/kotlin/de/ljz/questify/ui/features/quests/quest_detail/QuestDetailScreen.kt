@@ -113,7 +113,7 @@ fun QuestDetailScreen(
                                 context = context,
                                 onSuccess = {
                                     scope.launch {
-                                        snackbarHostState.showSnackbar("Änderungen gespeichert!", withDismissAction = true)
+                                        snackbarHostState.showSnackbar(context.getString(R.string.quest_detail_screen_changes_saved_snackbar), withDismissAction = true)
                                     }
                                 }
                             )
@@ -124,7 +124,7 @@ fun QuestDetailScreen(
 
                     DropdownMenu(expanded = checked, onDismissRequest = { checked = false }) {
                         DropdownMenuItem(
-                            text = { Text("Quest löschen") },
+                            text = { Text(stringResource(R.string.quest_detail_screen_tooltip_delete_quest)) },
                             onClick = {
                                 viewModel.showDeleteConfirmationDialog()
                             },
@@ -150,11 +150,11 @@ fun QuestDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 ExpressiveMenuCategory(
-                    title = "Informationen",
+                    title = stringResource(R.string.quest_detail_screen_section_informations),
                     content = {
                         ExpressiveMenuItemWithTextField(
                             text = editQuestState.title,
-                            placeholder = "Titel",
+                            placeholder = stringResource(R.string.quest_detail_screen_description),
                             icon = {
                                 Icon(
                                     imageVector = Icons.Outlined.Title,
@@ -168,7 +168,7 @@ fun QuestDetailScreen(
 
                         ExpressiveMenuItemWithTextField(
                             text = editQuestState.description,
-                            placeholder = "Beschreibung",
+                            placeholder = stringResource(R.string.quest_detail_screen_placeholder_description),
                             icon = {
                                 Icon(
                                     imageVector = Icons.Outlined.Description,
@@ -184,7 +184,7 @@ fun QuestDetailScreen(
                 )
 
                 ExpressiveMenuCategory(
-                    title = "Schwierigkeit",
+                    title = stringResource(R.string.quest_detail_screen_difficulty_title),
                     content = {
                         ExpressiveMenuItem(
                             title = options[questState.difficulty],
@@ -210,7 +210,7 @@ fun QuestDetailScreen(
                 )
 
                 ExpressiveMenuCategory(
-                    title = "Fälligkeit",
+                    title = stringResource(R.string.quest_detail_screen_due_date_title),
                     content = {
                         val dueDateText = if (questState.selectedDueDate == 0L) {
                             stringResource(R.string.quest_detail_screen_due_date_empty)
@@ -232,7 +232,7 @@ fun QuestDetailScreen(
 
                 if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
                     ExpressiveMenuCategory(
-                        title = "Erinnerungen",
+                        title = stringResource(R.string.quest_detail_screen_reminders_title),
                         content = {
                             editQuestState.notificationTriggerTimes.sorted()
                                 .forEach { triggerTime ->
@@ -387,7 +387,8 @@ fun QuestDetailScreen(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier.imePadding()
+                modifier = Modifier
+                    .imePadding()
                     .navigationBarsPadding()
             )
         }

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,7 +59,7 @@ fun ExpressiveMenuItemWithTextField(
             value = text,
             onValueChange = onTextValueChange,
             modifier = Modifier.weight(1f),
-            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurface),
             singleLine = singleLine,
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
@@ -76,7 +77,13 @@ fun ExpressiveMenuItemWithTextField(
                         unfocusedContainerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent,
                     ),
-                    placeholder =  { if (placeholder != null) Text(placeholder) },
+                    placeholder = {
+                        if (placeholder != null)
+                            Text(
+                                text = placeholder,
+                                fontStyle = FontStyle.Italic
+                            )
+                    },
                     contentPadding = PaddingValues(0.dp),
                 )
             }

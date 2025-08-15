@@ -236,7 +236,7 @@ fun QuestOverviewScreen(
                             contentDescription = null
                         )
                     },
-                    text = { Text(text = "Neue Quest") },
+                    text = { Text(text = stringResource(R.string.quest_overview_screen_fab_create_quest)) },
                 )
 
                 FloatingActionButtonMenuItem(
@@ -247,7 +247,7 @@ fun QuestOverviewScreen(
                             contentDescription = null
                         )
                     },
-                    text = { Text(text = "Neues Daily") },
+                    text = { Text(text = stringResource(R.string.quest_overview_screen_fab_create_daily)) },
                 )
 
                 FloatingActionButtonMenuItem(
@@ -258,13 +258,13 @@ fun QuestOverviewScreen(
                             contentDescription = null
                         )
                     },
-                    text = { Text(text = "Neue Routine") },
+                    text = { Text(text = stringResource(R.string.quest_overview_screen_fab_create_routine)) },
                 )
 
                 FloatingActionButtonMenuItem(
                     onClick = { fabMenuExpanded = false },
                     icon = { Icon(imageVector = Icons.Outlined.Eco, contentDescription = null) },
-                    text = { Text(text = "Neue Gewohnheit") },
+                    text = { Text(text = stringResource(R.string.quest_overview_screen_fab_create_habit)) },
                 )
             }
         },

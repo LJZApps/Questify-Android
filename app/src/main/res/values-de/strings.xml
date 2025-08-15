@@ -211,4 +211,13 @@
     <string name="permissions_screen_description">Um die App optimal nutzen zu können, bitte die folgenden Berechtigungen erteilen.</string>
     <string name="permissions_screen_button_grant">Gewähren</string>
     <string name="permissions_screen_button_granted">Gewährt</string>
+    <string name="base_information_page_difficulty_subtitle">Wähle aus, wie anspruchsvoll diese Quest wird:</string>
+    <string name="quest_detail_screen_changes_saved_snackbar">Änderungen gespeichert!</string>
+    <string name="quest_detail_screen_section_informations">Informationen</string>
+    <string name="quest_detail_screen_placeholder_description">Beschreibung</string>
+    <string name="quest_detail_screen_description">Titel</string>
+    <string name="quest_overview_screen_fab_create_quest">Neue Quest</string>
+    <string name="quest_overview_screen_fab_create_daily">Neues Daily</string>
+    <string name="quest_overview_screen_fab_create_routine">Neue Routine</string>
+    <string name="quest_overview_screen_fab_create_habit">Neue Gewohnheit</string>
 </resources>
