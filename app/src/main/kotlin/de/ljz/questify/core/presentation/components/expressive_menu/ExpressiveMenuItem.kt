@@ -28,7 +28,7 @@ fun ExpressiveMenuItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
             .clickable(enabled = onClick != null) {
-                onClick
+                onClick?.invoke()
             }
             .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f))
             .padding(vertical = 16.dp, horizontal = 16.dp),

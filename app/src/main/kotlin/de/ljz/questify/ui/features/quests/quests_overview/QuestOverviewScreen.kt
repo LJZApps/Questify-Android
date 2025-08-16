@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.quests.quests_overview
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -19,9 +20,11 @@ import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
@@ -35,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -75,8 +79,11 @@ import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
+import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
+import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
@@ -120,19 +127,45 @@ fun QuestOverviewScreen(
     val inputField =
         @Composable {
             SearchBarDefaults.InputField(
-                modifier = Modifier,
                 searchBarState = searchBarState,
                 textFieldState = textFieldState,
-                onSearch = { scope.launch { searchBarState.animateToCollapsed() } },
-                placeholder = { Text("Quests suchen") },
-                trailingIcon = {
-                    FilledTonalIconButton(
-                        onClick = viewModel::showSortingBottomSheet,
-                        shape = MaterialShapes.Pill.toShape()
-                    ) {
-                        Icon(Icons.Default.SwapVert, contentDescription = null)
-                    }
+                onSearch = {
+                    Toast.makeText(context, "Suche: $it", Toast.LENGTH_SHORT).show()
                 },
+                placeholder = {
+                    Text(
+                        text = "Quests suchen"
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Search,
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = {
+                    if (searchBarState.currentValue == SearchBarValue.Collapsed) {
+                        FilledTonalIconButton(
+                            onClick = viewModel::showSortingBottomSheet,
+                            shape = MaterialShapes.Pill.toShape()
+                        ) {
+                            Icon(Icons.Default.SwapVert, contentDescription = null)
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    searchBarState.animateToCollapsed()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
             )
         }
 
@@ -219,6 +252,22 @@ fun QuestOverviewScreen(
                     }
                 }
             )
+            ExpandedFullScreenSearchBar(state = searchBarState, inputField = inputField) {
+                ExpressiveSettingsSection(
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    uiState.allQuestPageState.quests
+                        .filter { it.title.contains(textFieldState.text, ignoreCase = true) || it.notes?.contains(textFieldState.text, ignoreCase = true) == true }
+                        .forEach { questEntity ->
+                            ExpressiveMenuItem(
+                                title = questEntity.title,
+                                onClick = {
+                                    mainNavController.navigate(QuestDetail(id = questEntity.id))
+                                }
+                            )
+                        }
+                }
+            }
         },
         floatingActionButton = {
             FloatingActionButtonMenu(
@@ -308,8 +357,6 @@ fun QuestOverviewScreen(
                                     context
                                 )
                             },
-                            textFieldState = textFieldState,
-                            searchBarState = searchBarState,
                             onQuestDelete = viewModel::deleteQuest,
                             onSortButtonClick = viewModel::showSortingBottomSheet,
                             navController = mainNavController
