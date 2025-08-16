@@ -9,6 +9,11 @@ converterMoshi = "3.0.0"
 coreSplashscreen = "1.0.1"
 datastorePreferencesCore = "1.1.7"
 gampose = "1.5.0"
+googleApiClient = "2.8.1"
+googleApiClientAndroid = "2.8.1"
+googleApiServicesTasks = "v1-rev20220922-2.0.0"
+googleAuthLibraryOauth2Http = "1.37.1"
+googleHttpClientGson = "2.0.0"
 gson = "2.13.1"
 hiltAndroid = "2.57"
 hiltWork = "1.2.0"
@@ -32,6 +37,7 @@ moshiAdapters = "1.15.2"
 moshiKotlin = "1.15.2"
 navigationCompose = "2.9.3"
 okHttpVersion = "5.1.0"
+playServicesAuth = "21.4.0"
 retrofit = "3.0.0"
 roomCompiler = "2.7.2"
 runtime = "1.9.0"
@@ -116,6 +122,12 @@ composeSettings-ui-extended = { group = "com.github.alorma.compose-settings", na
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 compose-colorpicker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+google-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "21.4.0" }
+google-api-client = { group = "com.google.api-client", name = "google-api-client", version = "2.8.1" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "2.8.1" }
+google-http-client-gson = { group = "com.google.http-client", name = "google-http-client-gson", version = "2.0.0" }
+google-oauth-client = { group = "com.google.oauth-client", name = "google-oauth-client", version = "1.39.0" }
+google-api-services-tasks = { group = "com.google.apis", name = "google-api-services-tasks", version = "v1-rev71-1.25.0" }
 
 # Hinzugefügte Libraries für Wear OS
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
