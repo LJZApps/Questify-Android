@@ -1,33 +1,23 @@
 package de.ljz.questify.core.presentation.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.Badge
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,201 +45,117 @@ fun QuestItem(
     questNotificationCount: Int = 0,
     onClick: () -> Unit,
     shadow: Dp = 1.dp,
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
     preview: Boolean = false
 ) {
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { newValue ->
-            when (newValue) {
-                SwipeToDismissBoxValue.EndToStart -> {
-                    onQuestDelete(quest.id)
-                }
-
-                SwipeToDismissBoxValue.StartToEnd -> {
-                    onQuestChecked()
-                }
-
-                SwipeToDismissBoxValue.Settled -> return@rememberSwipeToDismissBoxState false
-            }
-            return@rememberSwipeToDismissBoxState false
+    Card(
+        modifier = modifier
+            .fillMaxWidth(),
+        onClick = {
+            if (!preview) onClick() else null
         },
-        positionalThreshold = { it * .25f }
-    )
-
-    Box(modifier = modifier) {
-        SwipeToDismissBox(
-            state = dismissState,
-            backgroundContent = {
-                when (dismissState.dismissDirection) {
-                    SwipeToDismissBoxValue.EndToStart -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Red, shape = RoundedCornerShape(12.dp))
-                                .padding(12.dp, 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = "check",
-                                tint = Color.Black
-                            )
-                            Spacer(modifier = Modifier)
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "delete",
-                                tint = Color.Black
-                            )
-                        }
-                    }
-                    SwipeToDismissBoxValue.StartToEnd -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Green, shape = RoundedCornerShape(12.dp))
-                                .padding(12.dp, 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Icon(
-                                Icons.Default.Check,
-                                contentDescription = "check",
-                                tint = Color.Black
-                            )
-                            Spacer(modifier = Modifier)
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "delete",
-                                tint = Color.Black
-                            )
-                        }
-                    }
-
-                    SwipeToDismissBoxValue.Settled -> {}
-                }
-            },
-            enableDismissFromEndToStart = !preview,
-            enableDismissFromStartToEnd = !preview,
-            gesturesEnabled = !preview
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+        ),
+        shape = shape
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
         ) {
-            ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = shadow),
-                onClick = {
-                    if (!preview) onClick() else null
-                }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
+                Checkbox(
+                    checked = quest.done,
+                    onCheckedChange = {
+                        onQuestChecked()
+                    },
+                    modifier = Modifier.padding(end = 8.dp),
+                    enabled = !preview
+                )
+
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Checkbox(
-                            checked = quest.done,
-                            onCheckedChange = {
-                                onQuestChecked()
-                            },
-                            modifier = Modifier.padding(end = 8.dp),
-                            enabled = !preview
+                    Text(
+                        text = quest.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        textDecoration = if (quest.done) TextDecoration.LineThrough else null,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    quest.notes?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                            maxLines = 1,
+                            color = Color.Gray,
+                            overflow = TextOverflow.Ellipsis
                         )
-
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = quest.title,
-                                style = MaterialTheme.typography.titleMedium,
-                                textDecoration = if (quest.done) TextDecoration.LineThrough else null,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            quest.notes?.let {
-                                Text(
-                                    text = it,
-                                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
-                                    maxLines = 1,
-                                    color = Color.Gray,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                        }
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        quest.dueDate?.let {
-                            Icon(
-                                imageVector = Icons.Outlined.Schedule,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(it),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-
-                        if (questTaskCount > 0) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
-                                imageVector = Icons.Outlined.Checklist,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = questTaskCount.toString(),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-
-                        if (questNotificationCount > 0) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
-                                imageVector = Icons.Outlined.Notifications,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = questNotificationCount.toString(),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        difficultyIcon?.let { it() }
                     }
                 }
             }
-        }
 
-        if (preview) {
-            Badge(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp),
-                containerColor = MaterialTheme.colorScheme.primary
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Preview", color = MaterialTheme.colorScheme.onPrimary)
+                quest.dueDate?.let {
+                    Icon(
+                        imageVector = Icons.Outlined.Schedule,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(it),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                if (questTaskCount > 0) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Outlined.Checklist,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = questTaskCount.toString(),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                if (questNotificationCount > 0) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Outlined.Notifications,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = questNotificationCount.toString(),
+                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                difficultyIcon?.let { it() }
             }
         }
     }
@@ -258,7 +164,7 @@ fun QuestItem(
 @UIModePreviews
 @Composable
 private fun QuestItemPreview() {
-    Column (
+    Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         QuestItem(

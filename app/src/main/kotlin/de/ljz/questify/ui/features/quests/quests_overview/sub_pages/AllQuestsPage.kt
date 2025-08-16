@@ -1,39 +1,27 @@
 package de.ljz.questify.ui.features.quests.quests_overview.sub_pages
 
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.List
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -92,7 +80,7 @@ fun AllQuestsPage(
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
-            item {
+            /*item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -141,12 +129,6 @@ fun AllQuestsPage(
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-
-                           /* Text(
-                                text = sortOption.text,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Medium
-                            )*/
                         }
                     }
 
@@ -169,10 +151,10 @@ fun AllQuestsPage(
                         }
                     )
                 }
-            }
+            }*/
 
-            items(
-                state.quests
+            itemsIndexed(
+                items = state.quests
                     .filter { quest -> state.showCompleted || !quest.done }
                     .sortedWith(
                         compareBy<QuestEntity> {
@@ -184,13 +166,14 @@ fun AllQuestsPage(
                                 else -> it.id
                             }
                         }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it }
-                    ), key = { it.id }
-            ) { quest ->
+                    )
+            ) { index, quest ->
                 QuestItem(
                     quest = quest,
                     modifier = Modifier
                         .animateItem()
-                        .padding(vertical = 4.dp, horizontal = 8.dp),
+                        .padding(top = if (index == 0) 8.dp else 1.dp, bottom = 1.dp, start = 16.dp, end = 16.dp),
+                    shape = if (index == 0) RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp) else if (index == state.quests.lastIndex) RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp, topStart = 4.dp, topEnd = 4.dp) else RoundedCornerShape(4.dp),
                     difficultyIcon = {
                         when (quest.difficulty) {
                             Difficulty.EASY -> EasyIcon()

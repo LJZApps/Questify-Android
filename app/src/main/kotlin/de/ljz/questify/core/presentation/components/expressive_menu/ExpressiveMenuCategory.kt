@@ -48,7 +48,7 @@ fun ExpressiveMenuCategory(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondaryContainer)
                 )
 
                 if (actionIcon != null) {
