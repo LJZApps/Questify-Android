@@ -104,17 +104,6 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-    // 1. Google Sign-In für die Authentifizierung des Nutzers
-    implementation(libs.google.auth)
-    implementation(libs.google.api.client)
-    implementation(libs.google.api.client.android)
-    implementation(libs.google.http.client.gson)
-    implementation(libs.google.oauth.client)
-    implementation(libs.google.api.services.tasks) {
-        // Schließt veraltete Bibliotheken aus, um Konflikte zu vermeiden
-        exclude(group = "org.apache.httpcomponents")
-    }
-
     // If you're using Material 3, use compose-placeholder-material3
     implementation(libs.compose.placeholder.material3)
 

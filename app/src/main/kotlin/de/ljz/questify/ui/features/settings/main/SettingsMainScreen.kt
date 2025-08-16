@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.settings.main
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,8 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.alorma.compose.settings.ui.SettingsMenuLink
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
 import de.ljz.questify.ui.features.settings.appearance.SettingsAppearanceRoute
 import de.ljz.questify.ui.features.settings.features.SettingsFeaturesRoute
 import de.ljz.questify.ui.features.settings.help.SettingsHelpRoute
@@ -49,44 +49,32 @@ fun SettingsMainScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        ExpressiveSettingsSection(
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsMenuLink(
-                title = { Text(text = stringResource(R.string.settings_main_screen_features_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(R.string.settings_main_screen_features_description)
-                    )
-                },
+            ExpressiveSettingsMenuLink(
+                title =  stringResource(R.string.settings_main_screen_features_title) ,
+                subtitle =  stringResource(R.string.settings_main_screen_features_description),
                 icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
                 onClick = {
                     mainNavController.navigate(SettingsFeaturesRoute)
                 }
             )
 
-            SettingsMenuLink(
-                title = { Text(text = stringResource(R.string.settings_main_screen_appearance_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(R.string.settings_main_screen_appearance_description)
-                    )
-                },
+            ExpressiveSettingsMenuLink(
+                title = stringResource(R.string.settings_main_screen_appearance_title),
+                subtitle = stringResource(R.string.settings_main_screen_appearance_description),
                 icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
                 onClick = {
                     mainNavController.navigate(SettingsAppearanceRoute)
                 }
             )
 
-            SettingsMenuLink(
-                title = { Text(text = stringResource(R.string.settings_main_screen_help_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(R.string.settings_main_screen_help_description)
-                    )
-                },
+            ExpressiveSettingsMenuLink(
+                title = stringResource(R.string.settings_main_screen_help_title),
+                subtitle = stringResource(R.string.settings_main_screen_help_description),
                 icon = { Icon(Icons.Outlined.HelpOutline, contentDescription = null) },
                 onClick = {
                     mainNavController.navigate(SettingsHelpRoute)

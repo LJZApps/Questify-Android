@@ -46,7 +46,7 @@ fun ExpressiveMenuItemWithTextField(
             .clickable(enabled = onClick != null) {
                 onClick
             }
-            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+            .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f))
             .padding(vertical = 16.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)

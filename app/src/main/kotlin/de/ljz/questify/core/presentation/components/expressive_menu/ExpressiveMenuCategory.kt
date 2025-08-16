@@ -29,16 +29,16 @@ fun ExpressiveMenuCategory(
     onActionIconClick: (() -> Unit)? = null
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp)),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(4.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                .background(MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
