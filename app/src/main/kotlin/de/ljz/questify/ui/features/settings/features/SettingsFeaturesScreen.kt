@@ -18,10 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.alorma.compose.settings.ui.SettingsGroup
-import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,17 +44,16 @@ fun SettingsFeaturesScreen(
             )
         }
     ) { innerPadding ->
-        SettingsGroup {  }
         ExpressiveSettingsSection(
             title = stringResource(R.string.settings_features_screen_category_quests_title),
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsSwitch(
+            ExpressiveSettingsSwitch(
                 state = uiState.questFeaturesState.fastAddingEnabled,
-                title = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_title)) },
-                subtitle = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_description)) },
+                title = stringResource(R.string.settings_features_screen_fast_quest_creation_title),
+                subtitle = stringResource(R.string.settings_features_screen_fast_quest_creation_description),
                 icon = { Icon(Icons.Outlined.FlashOn, contentDescription = null) },
                 onCheckedChange = viewModel::updateFastAddingEnabled,
             )

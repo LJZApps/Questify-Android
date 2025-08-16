@@ -22,17 +22,22 @@ fun ExpressiveSettingsSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(16.dp)),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         if (title != null) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.titleMedium
             )
         }
 
-        content()
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp)),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            content()
+        }
     }
 }

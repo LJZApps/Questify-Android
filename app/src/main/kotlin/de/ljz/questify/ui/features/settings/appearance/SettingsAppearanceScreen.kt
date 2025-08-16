@@ -3,6 +3,7 @@ package de.ljz.questify.ui.features.settings.appearance
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,10 +35,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.alorma.compose.settings.ui.SettingsMenuLink
-import com.alorma.compose.settings.ui.SettingsSwitch
 import com.materialkolor.PaletteStyle
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
 import de.ljz.questify.ui.features.settings.appearance.components.ColorPickerDialog
 import de.ljz.questify.ui.features.settings.appearance.components.PaletteStyleDialog
 import de.ljz.questify.ui.features.settings.appearance.components.ThemeBehaviorDialog
@@ -81,23 +83,23 @@ fun SettingsAppearanceScreen(
             )
         }
     ) { innerPadding ->
-        Column (
+        ExpressiveSettingsSection (
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsSwitch(
+            ExpressiveSettingsSwitch(
                 state = uiState.dynamicColorsEnabled,
-                title = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_title)) },
-                subtitle = { Text(text = stringResource(R.string.settings_screen_dynamic_colors_subtitle)) },
+                title = stringResource(R.string.settings_screen_dynamic_colors_title),
+                subtitle = stringResource(R.string.settings_screen_dynamic_colors_subtitle),
                 icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
                 onCheckedChange = viewModel::updateDynamicColorsEnabled,
             )
 
-            SettingsMenuLink(
-                title = { Text(text = stringResource(R.string.settings_screen_app_theme_title)) },
-                subtitle = { Text(text = themOptions.first { it.behavior == uiState.themeBehavior }.text) },
+            ExpressiveSettingsMenuLink(
+                title = stringResource(R.string.settings_screen_app_theme_title),
+                subtitle = themOptions.first { it.behavior == uiState.themeBehavior }.text,
                 icon = {
                     Icon(
                         when (uiState.themeBehavior) {
@@ -119,22 +121,20 @@ fun SettingsAppearanceScreen(
             )
 
             AnimatedVisibility(!uiState.dynamicColorsEnabled) {
-                Column {
-                    SettingsSwitch(
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    ExpressiveSettingsSwitch(
                         state = uiState.isAmoled,
-                        title = { Text(text = stringResource(R.string.settings_appearance_screen_amoled_title)) },
-                        subtitle = { Text(text = stringResource(R.string.settings_appearance_screen_amoled_description)) },
+                        title = stringResource(R.string.settings_appearance_screen_amoled_title),
+                        subtitle = stringResource(R.string.settings_appearance_screen_amoled_description),
                         icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
                         onCheckedChange = viewModel::updateIsAmoledEnabled,
                     )
 
-                    SettingsMenuLink(
-                        title = { Text(text = stringResource(R.string.settings_appearance_screen_theme_style_title)) },
-                        subtitle = {
-                            Text(
-                                text = PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name
-                            )
-                        },
+                    ExpressiveSettingsMenuLink(
+                        title = stringResource(R.string.settings_appearance_screen_theme_style_title),
+                        subtitle =  PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name,
                         icon = { Icon(Icons.Outlined.Style, contentDescription = null) },
                         onClick = {
                             viewModel.showPaletteStyleDialog()
@@ -142,13 +142,9 @@ fun SettingsAppearanceScreen(
                     )
 
                     if(uiState.paletteStyle != PaletteStyle.Monochrome) {
-                        SettingsMenuLink(
-                            title = { Text(text = stringResource(R.string.settings_appearance_screen_app_tint_title)) },
-                            subtitle = {
-                                Text(
-                                    text = stringResource(R.string.settings_appearance_screen_app_tint_description)
-                                )
-                            },
+                        ExpressiveSettingsMenuLink(
+                            title = stringResource(R.string.settings_appearance_screen_app_tint_title),
+                            subtitle = stringResource(R.string.settings_appearance_screen_app_tint_description),
                             icon = {
                                 Box(
                                     modifier = Modifier

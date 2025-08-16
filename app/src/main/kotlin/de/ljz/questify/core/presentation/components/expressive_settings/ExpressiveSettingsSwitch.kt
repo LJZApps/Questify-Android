@@ -1,32 +1,43 @@
 package de.ljz.questify.core.presentation.components.expressive_settings
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ExpressiveSettingsMenuLink(
+fun ExpressiveSettingsSwitch(
     modifier: Modifier = Modifier,
+    state: Boolean,
     title: String,
     subtitle: String? = null,
     icon: @Composable (() -> Unit)? = null,
-    onClick: (() -> Unit)? = null
+    enabled: Boolean = true,
+    onCheckedChange: (Boolean) -> Unit
 ) {
+    val update: (Boolean) -> Unit = { boolean -> onCheckedChange(boolean) }
+
     ListItem(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
-            .clickable(enabled = onClick != null) {
-                onClick?.invoke()
-            },
+            .toggleable(
+                enabled = enabled,
+                value = state,
+                role = Role.Switch,
+                onValueChange = { update(!state) },
+            )
+            .then(modifier),
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
         ),
@@ -48,6 +59,14 @@ fun ExpressiveSettingsMenuLink(
             if (icon != null) {
                 icon()
             }
+        },
+        trailingContent = {
+            Switch(
+                modifier = Modifier.clearAndSetSemantics { },
+                enabled = enabled,
+                checked = state,
+                onCheckedChange = update
+            )
         }
     )
 }
