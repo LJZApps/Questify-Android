@@ -31,9 +31,9 @@ fun ExpressiveMenuItem(
                 onClick
             }
             .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f))
-            .padding(vertical = 16.dp, horizontal = 8.dp),
+            .padding(vertical = 16.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         if (icon != null) {
             icon()

@@ -1,6 +1,5 @@
 package de.ljz.questify.ui.features.settings.features
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.alorma.compose.settings.ui.SettingsGroup
 import com.alorma.compose.settings.ui.SettingsSwitch
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,22 +45,20 @@ fun SettingsFeaturesScreen(
             )
         }
     ) { innerPadding ->
-        Column(
+        SettingsGroup {  }
+        ExpressiveSettingsSection(
+            title = stringResource(R.string.settings_features_screen_category_quests_title),
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsGroup (
-                title = { Text(text = stringResource(R.string.settings_features_screen_category_quests_title)) }
-            ) {
-                SettingsSwitch(
-                    state = uiState.questFeaturesState.fastAddingEnabled,
-                    title = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_title)) },
-                    subtitle = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_description)) },
-                    icon = { Icon(Icons.Outlined.FlashOn, contentDescription = null) },
-                    onCheckedChange = viewModel::updateFastAddingEnabled,
-                )
-            }
+            SettingsSwitch(
+                state = uiState.questFeaturesState.fastAddingEnabled,
+                title = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_title)) },
+                subtitle = { Text(text = stringResource(R.string.settings_features_screen_fast_quest_creation_description)) },
+                icon = { Icon(Icons.Outlined.FlashOn, contentDescription = null) },
+                onCheckedChange = viewModel::updateFastAddingEnabled,
+            )
         }
     }
 }
