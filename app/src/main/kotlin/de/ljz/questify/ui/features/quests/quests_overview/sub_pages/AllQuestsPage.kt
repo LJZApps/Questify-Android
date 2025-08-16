@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.List
 import androidx.compose.material.icons.filled.CheckCircle
@@ -16,8 +17,11 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FormatListNumbered
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Title
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBarState
+import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,10 +43,13 @@ import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
     state: AllQuestPageState,
+    searchBarState: SearchBarState,
+    textFieldState: TextFieldState,
     navController: NavHostController,
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
@@ -156,6 +163,9 @@ fun AllQuestsPage(
             itemsIndexed(
                 items = state.quests
                     .filter { quest -> state.showCompleted || !quest.done }
+                    .filter { quest ->
+                        if (searchBarState.currentValue == SearchBarValue.Expanded) quest.title.contains(textFieldState.text, ignoreCase = true) || quest.notes?.contains(textFieldState.text, ignoreCase = true) == true else true
+                    }
                     .sortedWith(
                         compareBy<QuestEntity> {
                             when (state.sortingBy) {

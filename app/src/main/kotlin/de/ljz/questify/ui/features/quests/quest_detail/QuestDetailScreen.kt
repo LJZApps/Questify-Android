@@ -119,7 +119,7 @@ fun QuestDetailScreen(
                                 }
                             )
                         },
-                        shape = MaterialShapes.Cookie4Sided.toShape()
+                        shape = MaterialShapes.Sunny.toShape()
                     ) {
                         Icon(Icons.Outlined.Save, contentDescription = null)
                     }
@@ -128,7 +128,7 @@ fun QuestDetailScreen(
                         onClick = {
                             viewModel.showDeleteConfirmationDialog()
                         },
-                        shape = MaterialShapes.Square.toShape(),
+                        shape = MaterialShapes.Ghostish.toShape(),
                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                             containerColor = MaterialTheme.colorScheme.errorContainer

@@ -308,6 +308,8 @@ fun QuestOverviewScreen(
                                     context
                                 )
                             },
+                            textFieldState = textFieldState,
+                            searchBarState = searchBarState,
                             onQuestDelete = viewModel::deleteQuest,
                             onSortButtonClick = viewModel::showSortingBottomSheet,
                             navController = mainNavController
