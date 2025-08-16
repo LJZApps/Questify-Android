@@ -82,79 +82,6 @@ fun AllQuestsPage(
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
-            /*item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Sortierung anzeigen mit visueller Verbesserung
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        // Sortierrichtung-Icon mit Animation
-                        val sortTransition = updateTransition(
-                            targetState = state.sortingDirections,
-                            label = "SortDirectionTransition"
-                        )
-                        val iconRotation by sortTransition.animateFloat(
-                            label = "IconRotation",
-                            transitionSpec = { tween(durationMillis = 300) }
-                        ) { direction ->
-                            when (direction) {
-                                SortingDirections.ASCENDING -> 0f
-                                SortingDirections.DESCENDING -> 180f
-                            }
-                        }
-
-                        Icon(
-                            imageVector = Icons.Default.ArrowUpward,
-                            contentDescription = null,
-                            modifier = Modifier.graphicsLayer {
-                                rotationZ = iconRotation
-                            }
-                        )
-
-                        // Sortieroption mit Icon
-                        val sortOption = sortingOptions[state.sortingBy.ordinal]
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            // Icon der aktuellen Sortiermethode
-                            Icon(
-                                imageVector = sortOption.icon, // Du musst deine sortingOptions mit Icons erweitern
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                    }
-
-                    // Verbesserter Sortier-Button
-                    IconButton(
-                        onClick = { onSortButtonClick() },
-                        modifier = Modifier.size(36.dp),  // Eine kleinere Größe setzen
-                        interactionSource = remember { MutableInteractionSource() },
-                        content = {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.FilterList,
-                                    contentDescription = "Sortierung ändern",
-                                    modifier = Modifier.size(20.dp)  // Icon-Größe reduzieren
-                                )
-                            }
-                        }
-                    )
-                }
-            }*/
-
             itemsIndexed(
                 items = state.quests
                     .filter { quest -> state.showCompleted || !quest.done }
@@ -174,8 +101,12 @@ fun AllQuestsPage(
                     quest = quest,
                     modifier = Modifier
                         .padding(top = if (index == 0) 8.dp else 1.dp, bottom = 1.dp, start = 16.dp, end = 16.dp),
-                    shape = if (index == 0) RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp) else if (index == state.quests.lastIndex) RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp, topStart = 4.dp, topEnd = 4.dp) else RoundedCornerShape(4.dp),
-                    difficultyIcon = {
+                    shape = RoundedCornerShape(
+                        topStart = if (index == 0) 16.dp else 4.dp,
+                        topEnd = if (index == 0) 16.dp else 4.dp,
+                        bottomStart = if (index == state.quests.lastIndex) 16.dp else 4.dp,
+                        bottomEnd = if (index == state.quests.lastIndex) 16.dp else 4.dp
+                    ), difficultyIcon = {
                         when (quest.difficulty) {
                             Difficulty.EASY -> EasyIcon()
                             Difficulty.MEDIUM -> MediumIcon()

@@ -28,7 +28,7 @@ interface QuestDao {
     suspend fun suspendGetQuestById(id: Int): QuestEntity
 
     @Query("SELECT * FROM quest_entity WHERE id = :id")
-    fun getQuestByIdFlow(id: Int): Flow<QuestEntity>
+    fun getQuestByIdFlow(id: Int): Flow<QuestEntity?>
 
     @Transaction
     @Query("UPDATE quest_entity SET done = :done WHERE id = :id")
