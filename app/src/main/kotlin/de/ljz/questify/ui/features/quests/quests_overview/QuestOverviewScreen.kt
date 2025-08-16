@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
@@ -122,7 +123,6 @@ fun QuestOverviewScreen(
 
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState()
-    val searchBarScrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
     val inputField =
         @Composable {
@@ -152,10 +152,11 @@ fun QuestOverviewScreen(
                             Icon(Icons.Default.SwapVert, contentDescription = null)
                         }
                     } else {
-                        IconButton(
+                        FilledTonalIconButton(
                             onClick = {
                                 scope.launch {
                                     searchBarState.animateToCollapsed()
+                                    textFieldState.clearText()
                                 }
                             }
                         ) {
@@ -195,7 +196,6 @@ fun QuestOverviewScreen(
     Scaffold(
         topBar = {
             AppBarWithSearch(
-                scrollBehavior = searchBarScrollBehavior,
                 state = searchBarState,
                 inputField = inputField,
                 colors =

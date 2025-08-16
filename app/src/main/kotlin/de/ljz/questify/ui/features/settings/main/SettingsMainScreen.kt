@@ -6,7 +6,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ColorLens
-import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,7 +23,6 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
 import de.ljz.questify.ui.features.settings.appearance.SettingsAppearanceRoute
-import de.ljz.questify.ui.features.settings.features.SettingsFeaturesRoute
 import de.ljz.questify.ui.features.settings.help.SettingsHelpRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,14 +52,14 @@ fun SettingsMainScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            ExpressiveSettingsMenuLink(
+            /*ExpressiveSettingsMenuLink(
                 title =  stringResource(R.string.settings_main_screen_features_title) ,
                 subtitle =  stringResource(R.string.settings_main_screen_features_description),
                 icon = { Icon(Icons.Outlined.Extension, contentDescription = null) },
                 onClick = {
                     mainNavController.navigate(SettingsFeaturesRoute)
                 }
-            )
+            )*/
 
             ExpressiveSettingsMenuLink(
                 title = stringResource(R.string.settings_main_screen_appearance_title),
