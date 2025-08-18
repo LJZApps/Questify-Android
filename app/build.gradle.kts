@@ -104,6 +104,16 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Adaptive
+    // Haupt-Library für adaptive Komponenten
+    implementation(libs.androidx.adaptive)
+
+    // Speziell für adaptive Layouts
+    implementation(libs.androidx.adaptive.layout)
+
+    // Für die adaptive Navigation
+    implementation(libs.androidx.adaptive.navigation)
+
     // If you're using Material 3, use compose-placeholder-material3
     implementation(libs.compose.placeholder.material3)
 

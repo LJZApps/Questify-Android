@@ -29,23 +29,25 @@ import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationItemIconPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarValue
+import androidx.compose.material3.ShortNavigationBar
+import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -77,6 +79,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.window.core.layout.WindowSizeClass
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
@@ -123,6 +126,7 @@ fun QuestOverviewScreen(
 
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState()
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     val inputField =
         @Composable {
@@ -404,10 +408,14 @@ fun QuestOverviewScreen(
             }
         },
         bottomBar = {
-            FlexibleBottomAppBar {
+            ShortNavigationBar {
                 bottomNavRoutes.forEach { bottomNavRoute ->
-                    NavigationBarItem(
-                        alwaysShowLabel = true,
+                    ShortNavigationBarItem(
+                        iconPosition =
+                            if(windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND))
+                                NavigationItemIconPosition.Start
+                            else
+                                NavigationItemIconPosition.Top,
                         icon = {
                             Icon(
                                 imageVector = bottomNavRoute.icon,
