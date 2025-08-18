@@ -104,6 +104,12 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Jetpack Compose Navigation3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+
     // If you're using Material 3, use compose-placeholder-material3
     implementation(libs.compose.placeholder.material3)
 
