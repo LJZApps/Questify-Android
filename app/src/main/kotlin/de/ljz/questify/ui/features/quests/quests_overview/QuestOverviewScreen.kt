@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -32,7 +31,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationItemIconPosition
@@ -206,20 +204,6 @@ fun QuestOverviewScreen(
                     SearchBarDefaults.appBarWithSearchColors(
                         appBarContainerColor = Color.Transparent
                     ),
-                navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            drawerState.apply {
-                                if (isClosed) open() else close()
-                            }
-                        }
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
                 actions = {
                     Box(
                         contentAlignment = Alignment.Center
@@ -261,7 +245,12 @@ fun QuestOverviewScreen(
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     uiState.allQuestPageState.quests
-                        .filter { it.title.contains(textFieldState.text, ignoreCase = true) || it.notes?.contains(textFieldState.text, ignoreCase = true) == true }
+                        .filter {
+                            it.title.contains(
+                                textFieldState.text,
+                                ignoreCase = true
+                            ) || it.notes?.contains(textFieldState.text, ignoreCase = true) == true
+                        }
                         .forEach { questEntity ->
                             ExpressiveMenuItem(
                                 title = questEntity.title,
@@ -362,7 +351,6 @@ fun QuestOverviewScreen(
                                 )
                             },
                             onQuestDelete = viewModel::deleteQuest,
-                            onSortButtonClick = viewModel::showSortingBottomSheet,
                             navController = mainNavController
                         )
                     }
@@ -409,10 +397,13 @@ fun QuestOverviewScreen(
         },
         bottomBar = {
             ShortNavigationBar {
-                bottomNavRoutes.forEach { bottomNavRoute ->
+                bottomNavRoutes.forEachIndexed { index, bottomNavRoute ->
+                    val selected = currentDestination?.route == getSerializedRouteName(
+                        bottomNavRoute.route
+                    )
                     ShortNavigationBarItem(
                         iconPosition =
-                            if(windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND))
+                            if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND))
                                 NavigationItemIconPosition.Start
                             else
                                 NavigationItemIconPosition.Top,
@@ -422,10 +413,18 @@ fun QuestOverviewScreen(
                                 contentDescription = bottomNavRoute.name
                             )
                         },
-                        label = { Text(bottomNavRoute.name) },
-                        selected = currentDestination?.route == getSerializedRouteName(
-                            bottomNavRoute.route
-                        ),
+                        label = {
+                            Text(
+                                text = bottomNavRoute.name,
+                                color = if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && selected)
+                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                else if (selected)
+                                    MaterialTheme.colorScheme.secondary
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        selected = selected,
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             bottomNavController.navigate(bottomNavRoute.route) {

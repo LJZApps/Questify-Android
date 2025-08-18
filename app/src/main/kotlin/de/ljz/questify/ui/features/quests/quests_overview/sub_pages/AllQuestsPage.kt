@@ -1,5 +1,6 @@
 package de.ljz.questify.ui.features.quests.quests_overview.sub_pages
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,15 +12,13 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.List
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.FormatListNumbered
-import androidx.compose.material.icons.filled.Notes
-import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,9 +37,8 @@ import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
-import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingItem
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
@@ -48,83 +46,58 @@ fun AllQuestsPage(
     navController: NavHostController,
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
-    onSortButtonClick: () -> Unit,
 ) {
-    val sortingOptions = listOf(
-        QuestSortingItem(
-            stringResource(R.string.quest_sorting_default),
-            QuestSorting.ID,
-            Icons.Default.FormatListNumbered
-        ),
-        QuestSortingItem(
-            stringResource(R.string.quest_sorting_title),
-            QuestSorting.TITLE,
-            Icons.Default.Title
-        ),
-        QuestSortingItem(
-            stringResource(R.string.quest_sorting_notes),
-            QuestSorting.NOTES,
-            Icons.Default.Notes
-        ),
-        QuestSortingItem(
-            stringResource(R.string.quest_sorting_due_date),
-            QuestSorting.DUE_DATE,
-            Icons.Default.DateRange
-        ),
-        QuestSortingItem(
-            stringResource(R.string.quest_sorting_quest_complete),
-            QuestSorting.DONE,
-            Icons.Default.CheckCircle
-        ),
-    )
-
-    if (state.quests.isNotEmpty()) {
+    if (state.quests.filter { quest -> state.showCompleted || !quest.done }
+            .sortedWith(compareBy<QuestEntity> {
+                when (state.sortingBy) {
+                    QuestSorting.DONE -> it.done
+                    QuestSorting.TITLE -> it.title
+                    QuestSorting.NOTES -> it.notes
+                    QuestSorting.DUE_DATE -> it.dueDate
+                    else -> it.id
+                }
+            }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
+            .isNotEmpty()
+    ) {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
-            itemsIndexed(
-                items = state.quests
-                    .filter { quest -> state.showCompleted || !quest.done }
-                    .sortedWith(
-                        compareBy<QuestEntity> {
-                            when (state.sortingBy) {
-                                QuestSorting.DONE -> it.done
-                                QuestSorting.TITLE -> it.title
-                                QuestSorting.NOTES -> it.notes
-                                QuestSorting.DUE_DATE -> it.dueDate
-                                else -> it.id
-                            }
-                        }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it }
-                    )
-            ) { index, quest ->
-                QuestItem(
-                    quest = quest,
-                    modifier = Modifier
-                        .padding(top = if (index == 0) 8.dp else 1.dp, bottom = 1.dp, start = 16.dp, end = 16.dp),
-                    shape = RoundedCornerShape(
-                        topStart = if (index == 0) 16.dp else 4.dp,
-                        topEnd = if (index == 0) 16.dp else 4.dp,
-                        bottomStart = if (index == state.quests.lastIndex) 16.dp else 4.dp,
-                        bottomEnd = if (index == state.quests.lastIndex) 16.dp else 4.dp
-                    ), difficultyIcon = {
-                        when (quest.difficulty) {
-                            Difficulty.EASY -> EasyIcon()
-                            Difficulty.MEDIUM -> MediumIcon()
-                            Difficulty.HARD -> HardIcon()
-                            Difficulty.EPIC -> EpicIcon()
-                            Difficulty.NONE -> {}
-                        }
-                    },
-                    onQuestChecked = {
-                        onQuestDone(quest)
-                    },
-                    onQuestDelete = {
-                        onQuestDelete(it)
-                    },
-                    onClick = {
-                        navController.navigate(QuestDetail(id = quest.id))
+            itemsIndexed(items = state.quests.filter { quest -> state.showCompleted || !quest.done }
+                .sortedWith(compareBy<QuestEntity> {
+                    when (state.sortingBy) {
+                        QuestSorting.DONE -> it.done
+                        QuestSorting.TITLE -> it.title
+                        QuestSorting.NOTES -> it.notes
+                        QuestSorting.DUE_DATE -> it.dueDate
+                        else -> it.id
                     }
-                )
+                }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })) { index, quest ->
+                QuestItem(
+                    quest = quest, modifier = Modifier.padding(
+                    top = if (index == 0) 8.dp else 1.dp,
+                    bottom = 1.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                ), shape = RoundedCornerShape(
+                    topStart = if (index == 0) 16.dp else 4.dp,
+                    topEnd = if (index == 0) 16.dp else 4.dp,
+                    bottomStart = if (index == state.quests.lastIndex) 16.dp else 4.dp,
+                    bottomEnd = if (index == state.quests.lastIndex) 16.dp else 4.dp
+                ), difficultyIcon = {
+                    when (quest.difficulty) {
+                        Difficulty.EASY -> EasyIcon()
+                        Difficulty.MEDIUM -> MediumIcon()
+                        Difficulty.HARD -> HardIcon()
+                        Difficulty.EPIC -> EpicIcon()
+                        Difficulty.NONE -> {}
+                    }
+                }, onQuestChecked = {
+                    onQuestDone(quest)
+                }, onQuestDelete = {
+                    onQuestDelete(it)
+                }, onClick = {
+                    navController.navigate(QuestDetail(id = quest.id))
+                })
             }
         }
     } else {
@@ -137,8 +110,14 @@ fun AllQuestsPage(
             Icon(
                 imageVector = Icons.AutoMirrored.TwoTone.List,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(64.dp)
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = MaterialShapes.Pill.toShape()
+                    )
+                    .padding(16.dp)
+                    .size(64.dp)
             )
             Text(stringResource(R.string.all_quests_page_empty))
             Spacer(modifier = Modifier.weight(1f))
