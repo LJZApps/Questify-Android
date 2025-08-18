@@ -219,4 +219,5 @@
     <string name="quest_overview_screen_fab_create_daily">New daily</string>
     <string name="quest_overview_screen_fab_create_routine">New routine</string>
     <string name="quest_overview_screen_fab_create_habit">New habit</string>
+    <string name="filter_show_completed_quests_title">Show completed Quests</string>
 </resources>

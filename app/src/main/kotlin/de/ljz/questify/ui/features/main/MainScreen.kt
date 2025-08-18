@@ -2,24 +2,22 @@ package de.ljz.questify.ui.features.main
 
 import android.app.Activity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.filled.MenuOpen
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalWideNavigationRail
 import androidx.compose.material3.Text
-import androidx.compose.material3.WideNavigationRailItem
-import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
+import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,32 +26,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navDeepLink
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
+import de.ljz.questify.ui.features.first_setup.FirstSetupScreen
+import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
+import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailScreen
+import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewScreen
-import de.ljz.questify.ui.features.quests.quests_overview.navigation.Quests
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
-import de.ljz.questify.ui.navigation.ScaleTransitionDirection
-import de.ljz.questify.ui.navigation.scaleIntoContainer
-import de.ljz.questify.ui.navigation.scaleOutOfContainer
-import de.ljz.questify.util.getSerializedRouteName
 import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
-import io.sentry.compose.SentryTraced
-import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3WindowSizeClassApi::class,
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalMaterial3WindowSizeClassApi::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
@@ -86,16 +80,69 @@ fun MainScreen(
 
     // 📐 Adaptive Info
     val windowInfo = calculateWindowSizeClass(LocalActivity.current as Activity)
-    val isTablet = windowInfo.widthSizeClass != WindowWidthSizeClass.Compact
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    val scaffoldNavigator = rememberSupportingPaneScaffoldNavigator<ListDetailPaneScaffoldRole>()
+
     QuestifyTheme {
+        NavigationSuiteScaffold(
+            navigationSuiteItems = {
+                item(
+                    icon = {
+                        Icon(
+                            Icons.Filled.List,
+                            contentDescription = "Quests"
+                        )
+                    },
+                    label = { Text("Quests") },
+                    selected = true,
+                    onClick = {  }
+                )
+            },
+            layoutType = NavigationSuiteType.WideNavigationRailExpanded
+        ) {
+            NavigableListDetailPaneScaffold(
+                navigator = scaffoldNavigator,
+                listPane = {
+                    AnimatedPane {
+                        QuestOverviewScreen(
+                            mainNavController = mainNavController,
+                            homeNavHostController = homeNavController,
+                            navRailState = state
+                        )
+                    }
+                },
+                detailPane = {
+                    AnimatedPane {
+                        NavHost(
+                            navController = homeNavController,
+                            startDestination = FirstSetupRoute
+                        ) {
+                            composable<QuestDetail>(
+                                deepLinks = listOf(
+                                    navDeepLink<QuestDetail>(basePath = "questify://quest_detail")
+                                ),
+                            ) { backStackEntry ->
+                                QuestDetailScreen(navController = mainNavController)
+                            }
+
+                            composable<FirstSetupRoute> {
+                                FirstSetupScreen(navController = mainNavController)
+                            }
+                        }
+                    }
+                },
+            )
+        }
+        /*
         SentryTraced(tag = "home_screen") {
             Row {
                 ModalWideNavigationRail(
                     state = state,
+                    hideOnCollapse = !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND),
                     header = {
                         IconButton(
                             modifier =
@@ -116,8 +163,9 @@ fun MainScreen(
                         }
                     },
                 ) {
+                    val selected = currentDestination?.route == getSerializedRouteName(Quests)
                     WideNavigationRailItem(
-                        selected = currentDestination?.route == getSerializedRouteName(Quests),
+                        selected = selected,
                         onClick = {
                             if (currentDestination?.route != getSerializedRouteName(Quests)) homeNavController.navigate(
                                 Quests
@@ -130,8 +178,38 @@ fun MainScreen(
                             }
                         },
                         icon = { Icon(Icons.AutoMirrored.Filled.List, null) },
-                        label = { Text("Quests") },
-                        railExpanded = state.targetValue == WideNavigationRailValue.Expanded
+                        label = {
+                            Text(
+                                text = "Quests",
+                                color = if (state.targetValue == WideNavigationRailValue.Expanded && selected)
+                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        railExpanded = state.targetValue == WideNavigationRailValue.Expanded,
+                    )
+
+                    WideNavigationRailItem(
+                        selected = false,
+                        onClick = {
+                            mainNavController.navigate(
+                                SettingsMainRoute
+                            ) {
+                                popUpTo(homeNavController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = { Icon(Icons.Filled.Settings, null) },
+                        label = {
+                            Text(
+                                text = "Einstellungen"
+                            )
+                        },
+                        railExpanded = state.targetValue == WideNavigationRailValue.Expanded,
                     )
                 }
 
@@ -148,11 +226,12 @@ fun MainScreen(
                         QuestOverviewScreen(
                             mainNavController = mainNavController,
                             homeNavHostController = homeNavController,
-                            drawerState = drawerState
+                            navRailState = state
                         )
                     }
                 }
             }
         }
+         */
     }
 }

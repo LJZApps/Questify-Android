@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.core.presentation.components.EasyIcon
 import de.ljz.questify.core.presentation.components.EpicIcon
@@ -49,55 +48,43 @@ fun AllQuestsPage(
 ) {
     if (state.quests.filter { quest -> state.showCompleted || !quest.done }
             .sortedWith(compareBy<QuestEntity> {
-                when (state.sortingBy) {
-                    QuestSorting.DONE -> it.done
-                    QuestSorting.TITLE -> it.title
-                    QuestSorting.NOTES -> it.notes
-                    QuestSorting.DUE_DATE -> it.dueDate
-                    else -> it.id
-                }
+                it.id
             }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
             .isNotEmpty()
     ) {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
-            itemsIndexed(items = state.quests.filter { quest -> state.showCompleted || !quest.done }
-                .sortedWith(compareBy<QuestEntity> {
-                    when (state.sortingBy) {
-                        QuestSorting.DONE -> it.done
-                        QuestSorting.TITLE -> it.title
-                        QuestSorting.NOTES -> it.notes
-                        QuestSorting.DUE_DATE -> it.dueDate
-                        else -> it.id
-                    }
-                }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })) { index, quest ->
+            itemsIndexed(
+                items = state.quests.filter { quest -> state.showCompleted || !quest.done }
+                    .sortedWith(compareBy<QuestEntity> { it.id }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
+            ) { index, quest ->
                 QuestItem(
                     quest = quest, modifier = Modifier.padding(
-                    top = if (index == 0) 8.dp else 1.dp,
-                    bottom = 1.dp,
-                    start = 16.dp,
-                    end = 16.dp
-                ), shape = RoundedCornerShape(
-                    topStart = if (index == 0) 16.dp else 4.dp,
-                    topEnd = if (index == 0) 16.dp else 4.dp,
-                    bottomStart = if (index == state.quests.lastIndex) 16.dp else 4.dp,
-                    bottomEnd = if (index == state.quests.lastIndex) 16.dp else 4.dp
-                ), difficultyIcon = {
-                    when (quest.difficulty) {
-                        Difficulty.EASY -> EasyIcon()
-                        Difficulty.MEDIUM -> MediumIcon()
-                        Difficulty.HARD -> HardIcon()
-                        Difficulty.EPIC -> EpicIcon()
-                        Difficulty.NONE -> {}
-                    }
-                }, onQuestChecked = {
-                    onQuestDone(quest)
-                }, onQuestDelete = {
-                    onQuestDelete(it)
-                }, onClick = {
-                    navController.navigate(QuestDetail(id = quest.id))
-                })
+                        top = if (index == 0) 8.dp else 1.dp,
+                        bottom = 1.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    ), shape = RoundedCornerShape(
+                        topStart = if (index == 0) 16.dp else 4.dp,
+                        topEnd = if (index == 0) 16.dp else 4.dp,
+                        bottomStart = if (index == state.quests.lastIndex) 16.dp else 4.dp,
+                        bottomEnd = if (index == state.quests.lastIndex) 16.dp else 4.dp
+                    ), difficultyIcon = {
+                        when (quest.difficulty) {
+                            Difficulty.EASY -> EasyIcon()
+                            Difficulty.MEDIUM -> MediumIcon()
+                            Difficulty.HARD -> HardIcon()
+                            Difficulty.EPIC -> EpicIcon()
+                            Difficulty.NONE -> {}
+                        }
+                    }, onQuestChecked = {
+                        onQuestDone(quest)
+                    }, onQuestDelete = {
+                        onQuestDelete(it)
+                    }, onClick = {
+                        navController.navigate(QuestDetail(id = quest.id))
+                    })
             }
         }
     } else {
