@@ -27,15 +27,18 @@ import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationItemIconPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarValue
+import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -44,9 +47,11 @@ import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.WideNavigationRailState
 import androidx.compose.material3.WideNavigationRailValue
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.rememberSearchBarState
-import androidx.compose.material3.rememberWideNavigationRailState
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -68,9 +73,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -93,15 +98,19 @@ import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.DailiesQuest
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.HabitsQuestsPage
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQuestsPage
 import de.ljz.questify.ui.navigation.BottomNavigationRoute
+import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3AdaptiveApi::class
+)
 @Composable
 fun QuestOverviewScreen(
     navRailState: WideNavigationRailState,
     viewModel: QuestOverviewViewModel = hiltViewModel(),
     mainNavController: NavHostController,
-    homeNavHostController: NavHostController
+    homeNavHostController: NavHostController,
+    scaffoldNavigator: ThreePaneScaffoldNavigator<ThreePaneScaffoldRole>
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val questDoneDialogState = uiState.questDoneDialogState
@@ -365,7 +374,8 @@ fun QuestOverviewScreen(
                                 )
                             },
                             onQuestDelete = viewModel::deleteQuest,
-                            navController = homeNavHostController
+                            navController = homeNavHostController,
+                            scaffoldNavigator = scaffoldNavigator
                         )
                     }
 
@@ -409,6 +419,52 @@ fun QuestOverviewScreen(
                 )
             }
         },
+        bottomBar = {
+            FlexibleBottomAppBar {
+                bottomNavRoutes.forEach { bottomNavRoute ->
+                    val selected = currentDestination?.route == getSerializedRouteName(
+                        bottomNavRoute.route
+                    )
+                    ShortNavigationBarItem(
+                        iconPosition =
+                                if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND))
+                                    NavigationItemIconPosition.Start
+                                else
+                                    NavigationItemIconPosition.Top,
+                        icon = {
+                            Icon(
+                                imageVector = bottomNavRoute.icon,
+                                contentDescription = bottomNavRoute.name
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = bottomNavRoute.name,
+                                color = if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) && selected)
+                                    MaterialTheme.colorScheme.onSecondaryContainer
+                                else if (selected)
+                                    MaterialTheme.colorScheme.secondary
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        selected = currentDestination?.route == getSerializedRouteName(
+                            bottomNavRoute.route
+                        ),
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            bottomNavController.navigate(bottomNavRoute.route) {
+                                popUpTo(bottomNavController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
+        },
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState
@@ -421,15 +477,4 @@ fun QuestOverviewScreen(
 fun isKeyboardVisible(): Boolean {
     val imeInsets = WindowInsets.ime.getBottom(LocalDensity.current)
     return imeInsets > 0
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-@Preview
-@Composable
-fun QuestOverviewScreenPreview() {
-    QuestOverviewScreen(
-        navRailState = rememberWideNavigationRailState(),
-        mainNavController = rememberNavController(),
-        homeNavHostController = rememberNavController()
-    )
 }

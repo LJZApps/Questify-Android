@@ -18,8 +18,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,28 +41,35 @@ import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3AdaptiveApi::class
+)
 @Composable
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
     state: AllQuestPageState,
+    scaffoldNavigator: ThreePaneScaffoldNavigator<ThreePaneScaffoldRole>,
     navController: NavHostController,
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
 ) {
-    if (state.quests.filter { quest -> state.showCompleted || !quest.done }
-            .sortedWith(compareBy<QuestEntity> {
-                it.id
-            }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
-            .isNotEmpty()
-    ) {
+    val scope = rememberCoroutineScope()
+
+    val quests = state.quests
+        .filter { quest -> state.showCompleted || !quest.done }
+        .sortedWith(compareBy<QuestEntity> {
+            it.id
+        }
+            .let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
+
+    if (quests.isNotEmpty()) {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
             itemsIndexed(
-                items = state.quests.filter { quest -> state.showCompleted || !quest.done }
-                    .sortedWith(compareBy<QuestEntity> { it.id }.let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
+                items = quests
             ) { index, quest ->
                 QuestItem(
                     quest = quest, modifier = Modifier.padding(
@@ -68,8 +80,8 @@ fun AllQuestsPage(
                     ), shape = RoundedCornerShape(
                         topStart = if (index == 0) 16.dp else 4.dp,
                         topEnd = if (index == 0) 16.dp else 4.dp,
-                        bottomStart = if (index == state.quests.lastIndex) 16.dp else 4.dp,
-                        bottomEnd = if (index == state.quests.lastIndex) 16.dp else 4.dp
+                        bottomStart = if (index == quests.lastIndex) 16.dp else 4.dp,
+                        bottomEnd = if (index == quests.lastIndex) 16.dp else 4.dp
                     ), difficultyIcon = {
                         when (quest.difficulty) {
                             Difficulty.EASY -> EasyIcon()
@@ -83,7 +95,10 @@ fun AllQuestsPage(
                     }, onQuestDelete = {
                         onQuestDelete(it)
                     }, onClick = {
-                        navController.navigate(QuestDetail(id = quest.id))
+                        scope.launch {
+                            scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                            navController.navigate(QuestDetail(id = quest.id))
+                        }
                     })
             }
         }

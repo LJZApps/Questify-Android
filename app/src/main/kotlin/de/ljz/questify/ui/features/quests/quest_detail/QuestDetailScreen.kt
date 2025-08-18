@@ -10,7 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
@@ -100,9 +100,9 @@ fun QuestDetailScreen(
                 title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.navigateUp() }
+                        onClick = { navController.popBackStack() }
                     ) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+                        Icon(Icons.Default.Close, contentDescription = null)
                     }
                 },
                 actions = {
