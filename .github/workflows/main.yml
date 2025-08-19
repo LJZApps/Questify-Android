@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'v*' # Löst den Workflow bei Tags aus, die mit 'v' beginnen, z.B. v1.0.0
+      - 'v*'
   pull_request:
     branches:
       - main
@@ -20,7 +20,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Gradle
-        # Nutzt die offizielle Gradle Action, die das JDK-Setup und das Caching optimiert.
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: wrapper
@@ -72,25 +71,42 @@ jobs:
 
   release:
     name: Create GitHub Release
-    # Stellt sicher, dass dieser Job erst nach einem erfolgreichen Build startet.
     needs: build
-    # Führt den Job nur aus, wenn der Push ein neuer Tag ist.
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
-
     steps:
       - name: Download all workflow artifacts
-        # Lädt die APK und AAB von den vorherigen Schritten herunter.
         uses: actions/download-artifact@v4
-
       - name: Create Release
         id: create_release
-        # Eine externe Action, die den Release erstellt.
         uses: softprops/action-gh-release@v1
         env:
-          # Der GITHUB_TOKEN ist automatisch verfügbar, du musst ihn nicht erstellen.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
             release-apk/app-release.apk
             release-aab/app-release.aab
+
+  upload-to-play-store:
+    name: Upload to Google Play Store
+    # Dieser Job startet nur, wenn der "release"-Job erfolgreich war und nur bei einem Tag-Push.
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download AAB artifact
+        # Lädt die AAB-Datei herunter, die wir hochladen wollen.
+        uses: actions/download-artifact@v4
+        with:
+          name: release-aab
+
+      - name: Upload AAB to Play Store
+        # Verwendet eine Action, um die App in den Play Store zu laden.
+        uses: r0adkll/upload-google-play@v1
+        with:
+          # Du musst einen neuen Secret mit deinem API-Schlüssel erstellen.
+          serviceAccountJson: ${{ secrets.PLAY_STORE_API_KEY }}
+          packageName: 'deine.app.package.name' # Ersetze das mit deinem tatsächlichen Package-Namen!
+          releaseFile: 'app-release.aab' # Der Name der heruntergeladenen Datei.
+          track: 'internal' # Wählt den Track. 'internal', 'alpha', 'beta' oder 'production' sind möglich.
+          status: 'completed'
