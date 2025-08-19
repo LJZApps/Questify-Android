@@ -3,6 +3,8 @@ activityKtx = "1.10.1"
 adaptive = "1.1.0"
 agp = "8.12.0"
 appcompat = "1.7.1"
+billingKtx = "8.0.0"
+billing = "8.0.0"
 coilCompose = "3.3.0"
 composePlaceholderMaterial3 = "1.0.11"
 constraintlayoutCompose = "1.1.1"
@@ -85,6 +87,8 @@ androidx-ui = { module = "androidx.compose.ui:ui" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
+billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "billingKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 compose-placeholder-material3 = { module = "com.eygraber:compose-placeholder-material3", version.ref = "composePlaceholderMaterial3" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }

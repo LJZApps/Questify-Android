@@ -104,6 +104,9 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    implementation(libs.billing)
+    implementation(libs.billing.ktx)
+
     // FONT
     implementation(libs.androidx.ui.text.google.fonts)
 
