@@ -218,7 +218,7 @@ fun QuestDetailScreen(
                         val dueDateText = if (editQuestState.selectedDueDate == 0L) {
                             stringResource(R.string.quest_detail_screen_due_date_empty)
                         } else {
-                            dateFormat.format(Date(questState.selectedDueDate))
+                            dateFormat.format(Date(editQuestState.selectedDueDate))
                         }
 
                         ExpressiveMenuItem(
@@ -283,10 +283,6 @@ fun QuestDetailScreen(
                 /*
                 // Schwierigkeit
                 Column {
-                    Text(
-                        text = stringResource(R.string.quest_detail_screen_difficulty_title),
-                        style = MaterialTheme.typography.titleMedium
-                    )
 
                     AnimatedContent(targetState = !(uiState.isEditingQuest && questState.difficulty == 0)) { targetState ->
                         if (targetState) {

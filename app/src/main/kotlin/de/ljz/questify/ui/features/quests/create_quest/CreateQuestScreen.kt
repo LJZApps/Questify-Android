@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.create_quest.components.DueDateInfoDialog
+import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.DetailedInformationPage
 
@@ -250,15 +251,19 @@ fun CreateQuestScreen(
             }
 
             if (uiState.isAddingDueDate) {
-//                SetDueDateDialog(
-//                    onConfirm = { dueDateTimestamp ->
-//                        viewModel.setDueDate(dueDateTimestamp)
-//                        viewModel.hideAddingDueDateDialog()
-//                    },
-//                    onDismiss = {
-//                        viewModel.hideAddingDueDateDialog()
-//                    }
-//                )
+                SetDueDateDialog(
+                    onConfirm = { dueDateTimestamp ->
+                        viewModel.setDueDate(dueDateTimestamp)
+                        viewModel.hideAddingDueDateDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideAddingDueDateDialog()
+                    },
+                    addingDateTimeState = uiState.addingDateTimeState,
+                    onDateTimeStateChange = { addingReminderState ->
+                        viewModel.updateReminderState(addingReminderState)
+                    }
+                )
             }
         },
         bottomBar = {
