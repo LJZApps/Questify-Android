@@ -9,41 +9,43 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.AutoGraph
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import de.ljz.questify.R
+import coil3.compose.AsyncImage
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.MainUiState
+import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
 import de.ljz.questify.ui.features.quests.quests_overview.navigation.Quests
 import de.ljz.questify.ui.features.settings.main.navigation.SettingsMainRoute
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
@@ -68,32 +70,33 @@ fun DrawerContent(
             showTitle = false,
             items = listOf(
                 NavigationItem(
-                    title = "Dashboard",
-                    icon = Icons.Filled.Home,
+                    title = "Your stats",
+                    icon = Icons.Filled.QueryStats,
                     route = DashboardRoute,
                     featureEnabled = false
-                )
-            )
-        ),
-        NavigationCategory(
-            title = stringResource(R.string.drawer_content_quests_title),
-            items = listOf(
+                ),
                 NavigationItem(
-                    title = stringResource(R.string.drawer_content_quests_navigation_title),
+                    title = "Quests",
                     icon = Icons.AutoMirrored.Filled.List,
                     route = Quests
                 ),
                 NavigationItem(
-                    title = stringResource(R.string.drawer_content_trophies_navigation_title),
-                    icon = Icons.Filled.EmojiEvents,
+                    title = "Habits",
+                    icon = Icons.Filled.Eco,
                     route = TrophiesRoute,
-                    featureEnabled = false
+                    featureEnabled = true
                 ),
+            )
+        ),
+        NavigationCategory(
+            title = "Core",
+            featuresEnabled = false,
+            items = listOf(
                 NavigationItem(
                     title = "Fitness",
                     icon = Icons.AutoMirrored.Filled.DirectionsRun,
                     featureEnabled = false,
-                    route = Quests
+                    route = TrophiesRoute
                 ),
             )
         ),
@@ -104,7 +107,7 @@ fun DrawerContent(
                 NavigationItem(
                     title = "Freunde",
                     icon = Icons.Filled.People,
-                    route = Quests
+                    route = TrophiesRoute
                 ),
                 NavigationItem(
                     title = "Gilden",
@@ -120,7 +123,7 @@ fun DrawerContent(
                 NavigationItem(
                     title = "Map",
                     icon = Icons.Filled.Map,
-                    route = Quests
+                    route = TrophiesRoute
                 ),
                 NavigationItem(
                     title = "Häuser",
@@ -149,59 +152,45 @@ fun DrawerContent(
                     .fillMaxWidth()
                     .padding(vertical = 6.dp)
             ) {
-                Column {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FilledTonalIconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            mainNavController.navigate(ProfileRoute)
+                        },
+                        shapes = IconButtonDefaults.shapes(
+                            shape = MaterialShapes.Cookie9Sided.toShape()
+                        )
+                    ) {
+                        if (uiState.userProfilePicture.isNotEmpty()) {
+                            AsyncImage(
+                                model = uiState.userProfilePicture,
+                                contentDescription = "Profilbild",
+                                modifier = Modifier
+                                    .size(40.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Profilbild",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .padding(5.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+
                     Text(
                         text = uiState.userName,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.titleLarge
                     )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        modifier = Modifier.padding(top = 4.dp)
-                    ) {
-                        // XP
-                        Icon(
-                            imageVector = Icons.Filled.AutoGraph,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = stringResource(R.string.drawe_content_xp, uiState.userXP),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-
-                        // Level
-                        Icon(
-                            imageVector = Icons.Default.MilitaryTech,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = stringResource(
-                                R.string.drawe_content_level,
-                                uiState.userLevel
-                            ),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-
-                        // Points
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = stringResource(
-                                R.string.drawe_content_points,
-                                uiState.userPoints
-                            ),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
                 }
 
                 IconButton(
