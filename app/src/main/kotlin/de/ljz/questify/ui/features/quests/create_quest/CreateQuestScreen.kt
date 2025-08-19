@@ -18,8 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
+import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,11 +44,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,6 +74,8 @@ fun CreateQuestScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
+    val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
     var currentStep by remember { mutableIntStateOf(0) }
 
@@ -280,6 +289,7 @@ fun CreateQuestScreen(
                     OutlinedButton(
                         modifier = Modifier.weight(1f),
                         onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             if (currentStep > 0) {
                                 currentStep--
                             } else {
@@ -288,20 +298,38 @@ fun CreateQuestScreen(
                         },
                         shapes = ButtonDefaults.shapes()
                     ) {
-                        if (currentStep > 0) {
-                            Text(
-                                text = stringResource(R.string.back)
-                            )
-                        } else {
-                            Text(
-                                text = stringResource(R.string.cancel)
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                        ) {
+                            if (currentStep > 0) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Outlined.NavigateBefore,
+                                    contentDescription = null
+                                )
+
+                                Text(
+                                    text = stringResource(R.string.back)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.Close,
+                                    contentDescription = null
+                                )
+
+                                Text(
+                                    text = stringResource(R.string.cancel)
+                                )
+                            }
                         }
                     }
 
                     Button(
                         modifier = Modifier.weight(1f),
                         onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             if (currentStep < steps.size - 1) {
                                 currentStep++
                             } else {
@@ -314,14 +342,31 @@ fun CreateQuestScreen(
                         },
                         shapes = ButtonDefaults.shapes()
                     ) {
-                        if (currentStep < steps.size - 1) {
-                            Text(
-                                text = stringResource(R.string.next)
-                            )
-                        } else {
-                            Text(
-                                text = stringResource(R.string.save)
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                        ) {
+                            if (currentStep < steps.size - 1) {
+                                Text(
+                                    text = stringResource(R.string.next)
+                                )
+
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Outlined.NavigateNext,
+                                    contentDescription = null
+                                )
+                            } else {
+                                Text(
+                                    text = stringResource(R.string.save)
+                                )
+
+                                Icon(
+                                    imageVector = Icons.Outlined.Save,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 }
