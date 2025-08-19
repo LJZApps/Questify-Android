@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -281,6 +282,7 @@ fun CreateQuestScreen(
                                 mainNavController.navigateUp()
                             }
                         },
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         if (currentStep > 0) {
                             Text(
@@ -306,6 +308,7 @@ fun CreateQuestScreen(
                                 )
                             }
                         },
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         if (currentStep < steps.size - 1) {
                             Text(
