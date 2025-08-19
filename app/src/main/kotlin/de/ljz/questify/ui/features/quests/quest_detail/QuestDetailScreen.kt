@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.NotificationAdd
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Title
@@ -58,6 +59,7 @@ import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMe
 import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItemWithTextField
 import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
+import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
 import de.ljz.questify.ui.features.quests.quest_detail.components.DeleteConfirmationDialog
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.coroutines.launch
@@ -114,7 +116,7 @@ fun QuestDetailScreen(
                                 context = context,
                                 onSuccess = {
                                     scope.launch {
-                                        snackbarHostState.showSnackbar(context.getString(R.string.quest_detail_screen_changes_saved_snackbar), withDismissAction = true)
+                                        navController.navigateUp()
                                     }
                                 }
                             )
@@ -213,7 +215,7 @@ fun QuestDetailScreen(
                 ExpressiveMenuCategory(
                     title = stringResource(R.string.quest_detail_screen_due_date_title),
                     content = {
-                        val dueDateText = if (questState.selectedDueDate == 0L) {
+                        val dueDateText = if (editQuestState.selectedDueDate == 0L) {
                             stringResource(R.string.quest_detail_screen_due_date_empty)
                         } else {
                             dateFormat.format(Date(questState.selectedDueDate))
@@ -226,39 +228,58 @@ fun QuestDetailScreen(
                                     imageVector = Icons.Outlined.Schedule,
                                     contentDescription = null,
                                 )
+                            },
+                            onClick = {
+                                viewModel.showDueDateSelectionDialog()
                             }
                         )
                     }
                 )
 
-                if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
-                    ExpressiveMenuCategory(
-                        title = stringResource(R.string.quest_detail_screen_reminders_title),
-                        content = {
+
+                ExpressiveMenuCategory(
+                    title = stringResource(R.string.quest_detail_screen_reminders_title),
+                    content = {
+                        if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
                             editQuestState.notificationTriggerTimes.sorted()
-                                .forEach { triggerTime ->
+                                .forEachIndexed { index, triggerTime ->
                                     ExpressiveMenuItem(
                                         title = dateFormat.format(Date(triggerTime)),
                                         icon = {
                                             Icon(
                                                 imageVector = Icons.Outlined.Notifications,
-                                                contentDescription = null,
+                                                contentDescription = null
                                             )
+                                        },
+                                        onClick = {
+                                            viewModel.removeReminder(index)
                                         }
                                     )
                                 }
-                        },
-                        actionIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.NotificationAdd,
-                                contentDescription = null,
+                        } else {
+                            ExpressiveMenuItem(
+                                title = "Keine Erinnerungen",
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.NotificationsOff,
+                                        contentDescription = null,
+                                    )
+                                }
                             )
-                        },
-                        onActionIconClick = {
-                            viewModel.showCreateReminderDialog()
                         }
-                    )
-                }
+
+                    },
+                    actionIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.NotificationAdd,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    },
+                    onActionIconClick = {
+                        viewModel.showCreateReminderDialog()
+                    }
+                )
                 /*
                 // Schwierigkeit
                 Column {
@@ -338,20 +359,6 @@ fun QuestDetailScreen(
                         }
                     }
                 }
-
-                // Fälligkeit
-                Column {
-                    Text(
-                        text = stringResource(R.string.quest_detail_screen_due_date_title),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    val dueDateText = if (questState.selectedDueDate == 0L) {
-                        stringResource(R.string.quest_detail_screen_due_date_empty)
-                    } else {
-                        dateFormat.format(Date(questState.selectedDueDate))
-                    }
-                    Text(text = dueDateText, style = MaterialTheme.typography.bodyMedium)
-                }
                  */
             }
 
@@ -373,7 +380,7 @@ fun QuestDetailScreen(
 
             if (uiState.isAddingReminder) {
                 CreateReminderDialog(
-                    addingReminderState = uiState.addingReminderState,
+                    addingDateTimeState = uiState.addingReminderDateTimeState,
                     onDismiss = { viewModel.hideCreateReminderDialog() },
                     onConfirm = {
                         viewModel.addReminder(it)
@@ -381,6 +388,22 @@ fun QuestDetailScreen(
                     },
                     onReminderStateChange = {
                         viewModel.updateReminderState(it)
+                    }
+                )
+            }
+
+            if (uiState.isDueDateSelectionDialogVisible) {
+                SetDueDateDialog(
+                    onConfirm = { dueDateTimestamp ->
+                        viewModel.setDueDate(dueDateTimestamp)
+                        viewModel.hideDueDateSelectionDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideDueDateSelectionDialog()
+                    },
+                    addingDateTimeState = uiState.addingDueDateTimeState,
+                    onDateTimeStateChange = {
+                        viewModel.updateDueDateState(it)
                     }
                 )
             }

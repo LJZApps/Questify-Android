@@ -140,7 +140,7 @@ fun QuestOverviewScreen(
                 },
                 placeholder = {
                     Text(
-                        text = "Quests suchen"
+                        text = stringResource(R.string.search_quests_title)
                     )
                 },
                 leadingIcon = {

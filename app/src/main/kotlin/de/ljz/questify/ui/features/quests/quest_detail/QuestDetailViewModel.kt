@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.application.AddingReminderState
+import de.ljz.questify.core.application.AddingDateTimeState
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
@@ -55,6 +55,7 @@ class QuestDetailViewModel @Inject constructor(
                             description = it.notes ?: "",
                             difficulty = it.difficulty.ordinal,
                             notificationTriggerTimes = notifications,
+                            selectedDueDate = it.dueDate?.time ?: 0L
                         ),
                         questState = _uiState.value.questState.copy(
                             questId = it.id,
@@ -106,6 +107,7 @@ class QuestDetailViewModel @Inject constructor(
                 title = _uiState.value.editQuestState.title,
                 description = _uiState.value.editQuestState.description.trimToNull(),
                 difficulty = Difficulty.fromIndex(_uiState.value.editQuestState.difficulty),
+                dueDate = Date(_uiState.value.editQuestState.selectedDueDate),
             )
 
             onSuccess.invoke()
@@ -140,9 +142,10 @@ class QuestDetailViewModel @Inject constructor(
     }
 
     fun removeReminder(index: Int) {
-        val updatedTimes = _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
-            removeAt(index)
-        }
+        val updatedTimes =
+            _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
+                removeAt(index)
+            }
         _uiState.value = _uiState.value.copy(
             editQuestState = _uiState.value.editQuestState.copy(
                 notificationTriggerTimes = updatedTimes
@@ -151,9 +154,10 @@ class QuestDetailViewModel @Inject constructor(
     }
 
     fun addReminder(timestamp: Long) {
-        val updatedTimes = _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
-            add(timestamp)
-        }
+        val updatedTimes =
+            _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
+                add(timestamp)
+            }
         _uiState.value = _uiState.value.copy(
             editQuestState = _uiState.value.editQuestState.copy(
                 notificationTriggerTimes = updatedTimes
@@ -163,14 +167,30 @@ class QuestDetailViewModel @Inject constructor(
         updateUiState {
             copy(
                 isAddingReminder = true,
-                addingReminderState = AddingReminderState.DATE
+                addingReminderDateTimeState = AddingDateTimeState.DATE
             )
         }
     }
 
-    fun updateReminderState(reminderState: AddingReminderState) {
+    fun setDueDate(timestamp: Long) {
         updateUiState {
-            copy(addingReminderState = reminderState)
+            copy(
+                editQuestState = editQuestState.copy(
+                    selectedDueDate = timestamp
+                )
+            )
+        }
+    }
+
+    fun updateReminderState(reminderState: AddingDateTimeState) {
+        updateUiState {
+            copy(addingReminderDateTimeState = reminderState)
+        }
+    }
+
+    fun updateDueDateState(reminderState: AddingDateTimeState) {
+        updateUiState {
+            copy(addingDueDateTimeState = reminderState)
         }
     }
 
@@ -181,14 +201,14 @@ class QuestDetailViewModel @Inject constructor(
     fun showCreateReminderDialog() = updateUiState {
         copy(
             isAddingReminder = true,
-            addingReminderState = AddingReminderState.DATE
+            addingReminderDateTimeState = AddingDateTimeState.DATE
         )
     }
 
     fun hideCreateReminderDialog() = updateUiState {
         copy(
             isAddingReminder = false,
-            addingReminderState = AddingReminderState.NONE
+            addingReminderDateTimeState = AddingDateTimeState.NONE
         )
     }
 
@@ -206,10 +226,25 @@ class QuestDetailViewModel @Inject constructor(
     fun showRemindersBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = true) }
     fun hideReminderBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = false) }
 
+    fun showDueDateSelectionDialog() = updateUiState {
+        copy(
+            isDueDateSelectionDialogVisible = true,
+            addingDueDateTimeState = AddingDateTimeState.DATE
+        )
+    }
+
+    fun hideDueDateSelectionDialog() = updateUiState {
+        copy(
+            isDueDateSelectionDialogVisible = false,
+            addingDueDateTimeState = AddingDateTimeState.NONE
+        )
+    }
+
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
 
-    fun updateDifficulty(difficulty: Int) = updateUiState { copy(editQuestState = editQuestState.copy(difficulty = difficulty)) }
+    fun updateDifficulty(difficulty: Int) =
+        updateUiState { copy(editQuestState = editQuestState.copy(difficulty = difficulty)) }
 
     fun startEditMode() = updateUiState {
         copy(
@@ -221,6 +256,7 @@ class QuestDetailViewModel @Inject constructor(
             )
         )
     }
+
     fun stopEditMode() = updateUiState {
         copy(
             isEditingQuest = false

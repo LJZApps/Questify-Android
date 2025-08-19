@@ -54,7 +54,6 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
 import de.ljz.questify.ui.features.quests.create_quest.components.DueDateInfoDialog
-import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage
 import de.ljz.questify.ui.features.quests.create_quest.sub_pages.DetailedInformationPage
 
@@ -235,7 +234,7 @@ fun CreateQuestScreen(
                         viewModel.addReminder(timestamp)
                         viewModel.hideCreateReminderDialog()
                     },
-                    addingReminderState = uiState.addingReminderState,
+                    addingDateTimeState = uiState.addingDateTimeState,
                     onReminderStateChange = { addingReminderState ->
                         viewModel.updateReminderState(addingReminderState)
                     }
@@ -251,15 +250,15 @@ fun CreateQuestScreen(
             }
 
             if (uiState.isAddingDueDate) {
-                SetDueDateDialog(
-                    onConfirm = { dueDateTimestamp ->
-                        viewModel.setDueDate(dueDateTimestamp)
-                        viewModel.hideAddingDueDateDialog()
-                    },
-                    onDismiss = {
-                        viewModel.hideAddingDueDateDialog()
-                    }
-                )
+//                SetDueDateDialog(
+//                    onConfirm = { dueDateTimestamp ->
+//                        viewModel.setDueDate(dueDateTimestamp)
+//                        viewModel.hideAddingDueDateDialog()
+//                    },
+//                    onDismiss = {
+//                        viewModel.hideAddingDueDateDialog()
+//                    }
+//                )
             }
         },
         bottomBar = {
@@ -303,91 +302,6 @@ fun CreateQuestScreen(
                     }
                 }
             }
-            /*
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .imePadding(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
-                ),
-                shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Back/Cancel button
-                    OutlinedButton(
-                        onClick = {
-                            if (currentStep > 0) {
-                                currentStep--
-                            } else {
-                                mainNavController.navigateUp()
-                            }
-                        },
-                        modifier = Modifier.padding(end = 8.dp),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (currentStep > 0) Icons.AutoMirrored.Filled.ArrowBack else Icons.Filled.Close,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = if (currentStep > 0) stringResource(R.string.back) else stringResource(R.string.cancel),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-
-                    // Next/Save button
-                    if (currentStep < steps.size - 1) {
-                        Button(
-                            onClick = { currentStep++ },
-                            shape = RoundedCornerShape(12.dp),
-                            modifier = Modifier.padding(start = 8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.next),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .rotate(180f)
-                            )
-                        }
-                    } else {
-                        Button(
-                            onClick = {
-                                viewModel.createQuest(
-                                    onSuccess = {
-                                        mainNavController.navigateUp()
-                                    }
-                                )
-                            },
-                            shape = RoundedCornerShape(12.dp),
-                            modifier = Modifier.padding(start = 8.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.save),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                }
-            }
-             */
         }
     )
 }

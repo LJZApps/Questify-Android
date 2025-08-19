@@ -4,6 +4,7 @@ import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.daos.QuestDao
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.BaseRepository
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,9 +28,10 @@ class QuestRepository @Inject constructor(
         id: Int,
         title: String,
         description: String? = null,
-        difficulty: Difficulty
+        difficulty: Difficulty,
+        dueDate: Date? = null
     ) {
-        questDao.updateQuestById(id, title, description, difficulty)
+        questDao.updateQuestById(id, title, description, difficulty, dueDate)
     }
 
     fun getQuests() = questDao.getAllQuests()

@@ -1,7 +1,7 @@
 package de.ljz.questify.ui.features.quests.create_quest
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import de.ljz.questify.core.application.AddingReminderState
+import de.ljz.questify.core.application.AddingDateTimeState
 
 data class CreateQuestUiState(
     val title: String = "",
@@ -12,7 +12,7 @@ data class CreateQuestUiState(
     val selectedDueDate: Long = 0,
     val isAlertManagerInfoVisible: Boolean = false,
     val notificationTriggerTimes: List<Long> = listOf(),
-    val addingReminderState: AddingReminderState = AddingReminderState.NONE,
+    val addingDateTimeState: AddingDateTimeState = AddingDateTimeState.NONE,
     val isDueDateInfoDialogVisible: Boolean = false,
     val isAddingDueDate: Boolean = false
 )

@@ -221,4 +221,5 @@
     <string name="quest_overview_screen_fab_create_routine">Neue Routine</string>
     <string name="quest_overview_screen_fab_create_habit">Neue Gewohnheit</string>
     <string name="filter_show_completed_quests_title">Erledigte Quests anzeigen</string>
+    <string name="search_quests_title">Quests suchen</string>
 </resources>

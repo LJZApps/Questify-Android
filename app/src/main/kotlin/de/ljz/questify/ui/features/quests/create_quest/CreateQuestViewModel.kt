@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.application.AddingReminderState
+import de.ljz.questify.core.application.AddingDateTimeState
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.models.quests.QuestEntity
@@ -71,7 +71,7 @@ class CreateQuestViewModel @Inject constructor(
         updateUiState {
             copy(
                 isAddingReminder = true,
-                addingReminderState = AddingReminderState.DATE
+                addingDateTimeState = AddingDateTimeState.DATE
             )
         }
     }
@@ -93,9 +93,9 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    fun updateReminderState(reminderState: AddingReminderState) {
+    fun updateReminderState(reminderState: AddingDateTimeState) {
         updateUiState {
-            copy(addingReminderState = reminderState)
+            copy(addingDateTimeState = reminderState)
         }
     }
 
@@ -103,8 +103,8 @@ class CreateQuestViewModel @Inject constructor(
         _uiState.value = _uiState.value.update()
     }
 
-    fun showCreateReminderDialog() = updateUiState { copy(isAddingReminder = true, addingReminderState = AddingReminderState.DATE) }
-    fun hideCreateReminderDialog() = updateUiState { copy(isAddingReminder = false, addingReminderState = AddingReminderState.NONE) }
+    fun showCreateReminderDialog() = updateUiState { copy(isAddingReminder = true, addingDateTimeState = AddingDateTimeState.DATE) }
+    fun hideCreateReminderDialog() = updateUiState { copy(isAddingReminder = false, addingDateTimeState = AddingDateTimeState.NONE) }
     fun updateTitle(title: String) = updateUiState { copy(title = title) }
     fun updateDescription(description: String) = updateUiState { copy(description = description) }
     fun updateDifficulty(difficulty: Int) = updateUiState { copy(difficulty = difficulty) }
@@ -112,7 +112,7 @@ class CreateQuestViewModel @Inject constructor(
     fun hideAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = false) }
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
-    fun showAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = true, addingReminderState = AddingReminderState.DATE) }
-    fun hideAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = false, addingReminderState = AddingReminderState.NONE) }
+    fun showAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = true, addingDateTimeState = AddingDateTimeState.DATE) }
+    fun hideAddingDueDateDialog() = updateUiState { copy(isAddingDueDate = false, addingDateTimeState = AddingDateTimeState.NONE) }
 
 }

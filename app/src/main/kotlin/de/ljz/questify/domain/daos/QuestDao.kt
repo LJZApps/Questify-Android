@@ -7,6 +7,7 @@ import androidx.room.Upsert
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.domain.models.quests.QuestEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface QuestDao {
@@ -21,8 +22,14 @@ interface QuestDao {
     @Query("SELECT * FROM quest_entity WHERE id = :id")
     fun getQuestById(id: Int): QuestEntity
 
-    @Query("UPDATE quest_entity SET title = :title, notes = :description, difficulty = :difficulty WHERE id = :id")
-    suspend fun updateQuestById(id: Int, title: String, description: String? = null, difficulty: Difficulty)
+    @Query("UPDATE quest_entity SET title = :title, notes = :description, difficulty = :difficulty, due_date = :dueDate WHERE id = :id")
+    suspend fun updateQuestById(
+        id: Int,
+        title: String,
+        description: String? = null,
+        difficulty: Difficulty,
+        dueDate: Date? = null
+    )
 
     @Query("SELECT * FROM quest_entity WHERE id = :id")
     suspend fun suspendGetQuestById(id: Int): QuestEntity

@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.R
-import de.ljz.questify.core.application.AddingReminderState
+import de.ljz.questify.core.application.AddingDateTimeState
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,8 +48,8 @@ import java.util.Calendar
 fun CreateReminderDialog(
     onConfirm: (Long) -> Unit,
     onDismiss: () -> Unit,
-    addingReminderState: AddingReminderState = AddingReminderState.NONE,
-    onReminderStateChange: (AddingReminderState) -> Unit
+    addingDateTimeState: AddingDateTimeState = AddingDateTimeState.NONE,
+    onReminderStateChange: (AddingDateTimeState) -> Unit
 ) {
     val currentTime = Calendar.getInstance()
     val timePickerState = rememberTimePickerState(
@@ -102,9 +102,9 @@ fun CreateReminderDialog(
     cal.set(Calendar.MINUTE, timePickerState.minute)
     cal.set(Calendar.SECOND, 0)
 
-    when (addingReminderState) {
-        AddingReminderState.NONE -> null
-        AddingReminderState.DATE -> {
+    when (addingDateTimeState) {
+        AddingDateTimeState.NONE -> null
+        AddingDateTimeState.DATE -> {
             Column(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -121,7 +121,7 @@ fun CreateReminderDialog(
                         }
                     },
                     confirmButton = {
-                        TextButton(onClick = { onReminderStateChange(AddingReminderState.TIME) }) {
+                        TextButton(onClick = { onReminderStateChange(AddingDateTimeState.TIME) }) {
                             Text(stringResource(R.string.next))
                         }
                     },
@@ -134,7 +134,7 @@ fun CreateReminderDialog(
             }
         }
 
-        AddingReminderState.TIME -> {
+        AddingDateTimeState.TIME -> {
             Dialog(
                 onDismissRequest = onDismiss,
                 properties = DialogProperties(
@@ -181,7 +181,7 @@ fun CreateReminderDialog(
                             }
 
                             Row {
-                                TextButton(onClick = { onReminderStateChange(AddingReminderState.DATE) }) {
+                                TextButton(onClick = { onReminderStateChange(AddingDateTimeState.DATE) }) {
                                     Text(stringResource(R.string.back))
                                 }
                                 Spacer(modifier = Modifier.width(2.dp))
