@@ -89,24 +89,42 @@ jobs:
 
   upload-to-play-store:
     name: Upload to Google Play Store
-    # Dieser Job startet nur, wenn der "release"-Job erfolgreich war und nur bei einem Tag-Push.
     needs: release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Download AAB artifact
-        # Lädt die AAB-Datei herunter, die wir hochladen wollen.
         uses: actions/download-artifact@v4
         with:
           name: release-aab
 
+      - name: Get tag name and determine track
+        id: get_tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/v}
+          # Bestimmt den Track basierend auf dem Suffix im Tag-Namen
+          # z.B. v1.0.0-alpha -> alpha
+          #      v1.0.0-beta  -> beta
+          #      v1.0.0       -> production
+          TRACK="production"
+          if [[ "$TAG_NAME" == *"-alpha" ]]; then
+            TRACK="alpha"
+          elif [[ "$TAG_NAME" == *"-beta" ]]; then
+            TRACK="beta"
+          elif [[ "$TAG_NAME" == *"-internal" ]]; then
+            TRACK="internal"
+          fi
+          echo "track=$TRACK" >> $GITHUB_OUTPUT
+
       - name: Upload AAB to Play Store
-        # Verwendet eine Action, um die App in den Play Store zu laden.
         uses: r0adkll/upload-google-play@v1
         with:
-          # Du musst einen neuen Secret mit deinem API-Schlüssel erstellen.
           serviceAccountJson: ${{ secrets.PLAY_STORE_API_KEY }}
-          packageName: 'deine.app.package.name' # Ersetze das mit deinem tatsächlichen Package-Namen!
-          releaseFile: 'app-release.aab' # Der Name der heruntergeladenen Datei.
-          track: 'internal' # Wählt den Track. 'internal', 'alpha', 'beta' oder 'production' sind möglich.
-          status: 'completed'
+          packageName: 'de.ljz.questify'
+          releaseFile: 'app-release.aab'
+          track: ${{ steps.get_tag.outputs.track }}
+          whatsNewDirectory: fastlane/metadata/android/
+          whatsNewSuffix: changelogs/
