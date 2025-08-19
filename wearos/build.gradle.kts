@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-    namespace = "de.ljz.questify.wearos"
+    namespace = "de.ljz.questify"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "de.ljz.questify.wearos"
+        applicationId = "de.ljz.questify"
         minSdk = 30
         targetSdk = 36
-        versionCode = 1
+        versionCode = 19
         versionName = "0.1"
     }
 
