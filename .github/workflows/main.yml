@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: wrapper
 
@@ -79,10 +79,10 @@ jobs:
       contents: write
     steps:
       - name: Download all workflow artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -102,10 +102,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download AAB artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: release-aab
+      - name: Download all workflow artifacts
+        # Dieser Schritt lädt alle Artefakte des Builds herunter
+        uses: actions/download-artifact@v5
 
       - name: Get tag name and determine track
         id: get_tag
@@ -125,8 +124,8 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: ${{ secrets.PLAY_STORE_API_KEY }}
-          packageName: 'deine.app.package.name'
-          releaseFile: 'app-release.aab'
+          packageName: 'de.ljz.questify'
+          # Aktualisierter Pfad, da der Download in ein Unterverzeichnis geht
+          releaseFiles: 'release-aab/app-release.aab'
           track: ${{ steps.get_tag.outputs.track }}
           whatsNewDirectory: fastlane/metadata/android/
-          whatsNewSuffix: changelogs/
