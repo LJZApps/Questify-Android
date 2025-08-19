@@ -20,8 +20,10 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -46,7 +48,7 @@ import de.ljz.questify.ui.features.settings.appearance.components.ThemeBehaviorD
 import de.ljz.questify.ui.state.ThemeBehavior
 import de.ljz.questify.util.NavBarConfig
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsAppearanceScreen(
     mainNavController: NavHostController,
@@ -75,7 +77,8 @@ fun SettingsAppearanceScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() }
+                        onClick = { mainNavController.navigateUp() },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }

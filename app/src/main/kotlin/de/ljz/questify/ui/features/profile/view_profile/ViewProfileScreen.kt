@@ -17,8 +17,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,7 +43,7 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
 import de.ljz.questify.util.NavBarConfig
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ViewProfileScreen(
     navController: NavHostController,
@@ -61,7 +63,8 @@ fun ViewProfileScreen(
                     IconButton(
                         onClick = {
                             navController.navigate(EditProfileRoute)
-                        }
+                        },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
@@ -73,7 +76,8 @@ fun ViewProfileScreen(
                     IconButton(
                         onClick = {
                             navController.navigateUp()
-                        }
+                        },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }

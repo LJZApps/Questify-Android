@@ -13,12 +13,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.KeyboardHide
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
@@ -43,7 +46,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.AddingDateTimeState
 import java.util.Calendar
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CreateReminderDialog(
     onConfirm: (Long) -> Unit,
@@ -116,12 +119,18 @@ fun CreateReminderDialog(
                         dismissOnClickOutside = false,
                     ),
                     dismissButton = {
-                        TextButton(onClick = onDismiss) {
+                        TextButton(
+                            onClick = onDismiss,
+                            shapes = ButtonDefaults.shapes()
+                        ) {
                             Text(stringResource(R.string.cancel))
                         }
                     },
                     confirmButton = {
-                        TextButton(onClick = { onReminderStateChange(AddingDateTimeState.TIME) }) {
+                        TextButton(
+                            onClick = { onReminderStateChange(AddingDateTimeState.TIME) },
+                            shapes = ButtonDefaults.shapes()
+                        ) {
                             Text(stringResource(R.string.next))
                         }
                     },
@@ -171,7 +180,8 @@ fun CreateReminderDialog(
                                 IconButton(
                                     onClick = {
                                         showTimeInput.value = !showTimeInput.value
-                                    }
+                                    },
+                                    shapes = IconButtonDefaults.shapes()
                                 ) {
                                     Icon(
                                         if (showTimeInput.value) Icons.Outlined.KeyboardHide else Icons.Outlined.Keyboard,
@@ -181,11 +191,17 @@ fun CreateReminderDialog(
                             }
 
                             Row {
-                                TextButton(onClick = { onReminderStateChange(AddingDateTimeState.DATE) }) {
+                                TextButton(
+                                    onClick = { onReminderStateChange(AddingDateTimeState.DATE) },
+                                    shapes = ButtonDefaults.shapes()
+                                ) {
                                     Text(stringResource(R.string.back))
                                 }
                                 Spacer(modifier = Modifier.width(2.dp))
-                                TextButton(onClick = { onConfirm(combinedDateTime.value) }) {
+                                TextButton(
+                                    onClick = { onConfirm(combinedDateTime.value) },
+                                    shapes = ButtonDefaults.shapes()
+                                ) {
                                     Text(stringResource(R.string.create_reminder_dialog_add_reminder))
                                 }
                             }

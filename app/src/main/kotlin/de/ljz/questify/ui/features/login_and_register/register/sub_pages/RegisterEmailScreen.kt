@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun RegisterEmailScreen(
     onEmailChange: (String) -> Unit,
@@ -51,11 +54,11 @@ fun RegisterEmailScreen(
             imageVector = Icons.Outlined.Email,
             contentDescription = null,
             modifier = Modifier
-              .constrainAs(iconRef) {
-                top.linkTo(parent.top, 8.dp)
-                start.linkTo(parent.start, 8.dp)
-              }
-              .size(40.dp)
+                .constrainAs(iconRef) {
+                    top.linkTo(parent.top, 8.dp)
+                    start.linkTo(parent.start, 8.dp)
+                }
+                .size(40.dp)
         )
 
         Text(
@@ -146,11 +149,12 @@ fun RegisterEmailScreen(
                 onBackButtonClick()
             },
             modifier = Modifier
-              .constrainAs(backButtonRef) {
-                start.linkTo(parent.start, 8.dp)
-                bottom.linkTo(parent.bottom, 8.dp)
-              }
-              .imePadding()
+                .constrainAs(backButtonRef) {
+                    start.linkTo(parent.start, 8.dp)
+                    bottom.linkTo(parent.bottom, 8.dp)
+                }
+                .imePadding(),
+            shapes = ButtonDefaults.shapes()
         ) {
             Text(text = "Back")
         }
@@ -160,11 +164,12 @@ fun RegisterEmailScreen(
                 onNextPage()
             },
             modifier = Modifier
-              .constrainAs(nextButtonRef) {
-                end.linkTo(parent.end, 8.dp)
-                bottom.linkTo(parent.bottom, 8.dp)
-              }
-              .imePadding()
+                .constrainAs(nextButtonRef) {
+                    end.linkTo(parent.end, 8.dp)
+                    bottom.linkTo(parent.bottom, 8.dp)
+                }
+                .imePadding(),
+            shapes = ButtonDefaults.shapes()
         ) {
             Text("Next")
         }

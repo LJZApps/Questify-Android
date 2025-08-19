@@ -20,9 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,7 +49,7 @@ import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.util.NavBarConfig
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun EditProfileScreen(
     navController: NavHostController,
@@ -87,7 +90,8 @@ fun EditProfileScreen(
                             }
 
                             navController.navigateUp()
-                        }
+                        },
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.save))
                     }
@@ -96,7 +100,8 @@ fun EditProfileScreen(
                     IconButton(
                         onClick = {
                             navController.navigateUp()
-                        }
+                        },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }

@@ -11,7 +11,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Login
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,7 +50,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 object LoginScreenRoute
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoginScreen(
     navController: NavHostController,
@@ -139,7 +150,8 @@ fun LoginScreen(
                             if (loginAndRegisterUiState.registerState.passwordVisible) "Hide password" else "Show password"
 
                         IconButton(
-                            onClick = { viewModel.togglePasswordVisibility() }
+                            onClick = { viewModel.togglePasswordVisibility() },
+                            shapes = IconButtonDefaults.shapes()
                         ) {
                             Icon(imageVector = image, description)
                         }
@@ -160,7 +172,8 @@ fun LoginScreen(
 
                         width = Dimension.fillToConstraints
                     },
-                    enabled = !loginAndRegisterUiState.isLoading
+                    enabled = !loginAndRegisterUiState.isLoading,
+                    shapes = ButtonDefaults.shapes()
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -198,7 +211,8 @@ fun LoginScreen(
                             TextButton(
                                 onClick = {
                                     viewModel.dismissDialog()
-                                }
+                                },
+                                shapes = ButtonDefaults.shapes()
                             ) {
                                 Text(text = "Got it")
                             }

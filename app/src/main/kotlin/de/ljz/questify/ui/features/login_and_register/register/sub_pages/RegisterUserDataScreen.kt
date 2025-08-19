@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -30,6 +32,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.ljz.questify.core.compose.UIModePreviews
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun RegisterUserDataScreen(
     onNextPage: () -> Unit,
@@ -52,11 +55,11 @@ fun RegisterUserDataScreen(
             imageVector = Icons.Outlined.AccountBox,
             contentDescription = null,
             modifier = Modifier
-              .constrainAs(iconRef) {
-                top.linkTo(parent.top, 8.dp)
-                start.linkTo(parent.start, 8.dp)
-              }
-              .size(40.dp)
+                .constrainAs(iconRef) {
+                    top.linkTo(parent.top, 8.dp)
+                    start.linkTo(parent.start, 8.dp)
+                }
+                .size(40.dp)
         )
 
         Text(
@@ -212,11 +215,12 @@ fun RegisterUserDataScreen(
                 onBackButtonClick()
             },
             modifier = Modifier
-              .constrainAs(backButtonRef) {
-                start.linkTo(parent.start, 8.dp)
-                bottom.linkTo(parent.bottom, 8.dp)
-              }
-              .imePadding()
+                .constrainAs(backButtonRef) {
+                    start.linkTo(parent.start, 8.dp)
+                    bottom.linkTo(parent.bottom, 8.dp)
+                }
+                .imePadding(),
+            shapes = ButtonDefaults.shapes()
         ) {
             Text(text = "Back")
         }
@@ -226,11 +230,12 @@ fun RegisterUserDataScreen(
                 onNextPage()
             },
             modifier = Modifier
-              .constrainAs(nextButtonRef) {
-                end.linkTo(parent.end, 8.dp)
-                bottom.linkTo(parent.bottom, 8.dp)
-              }
-              .imePadding()
+                .constrainAs(nextButtonRef) {
+                    end.linkTo(parent.end, 8.dp)
+                    bottom.linkTo(parent.bottom, 8.dp)
+                }
+                .imePadding(),
+            shapes = ButtonDefaults.shapes()
         ) {
             Text("Finish setup")
         }

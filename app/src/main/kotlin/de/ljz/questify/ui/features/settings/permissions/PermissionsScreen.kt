@@ -23,11 +23,14 @@ import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Layers
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -47,7 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionsScreen(
     viewModel: PermissionsViewModel = hiltViewModel(),
@@ -118,7 +121,10 @@ fun PermissionsScreen(
                 title = { Text(text = stringResource(R.string.permission_screen_title)) },
                 navigationIcon = {
                     if (canNavigateBack) {
-                        IconButton(onClick = { mainNavController.navigateUp() }) {
+                        IconButton(
+                            onClick = { mainNavController.navigateUp() },
+                            shapes = IconButtonDefaults.shapes()
+                        ) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                         }
                     }
@@ -132,7 +138,8 @@ fun PermissionsScreen(
                     enabled = permissionItems.all { it.isGranted },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    shapes = ButtonDefaults.shapes()
                 ) {
                     Text(text = stringResource(R.string.permissions_screen_restart_app))
                 }
@@ -165,7 +172,7 @@ fun PermissionsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionCardNewDesign(permissionItem: PermissionItem) {
     Card(
@@ -207,7 +214,8 @@ fun PermissionCardNewDesign(permissionItem: PermissionItem) {
                 if (!permissionItem.isGranted) {
                     Button(
                         onClick = permissionItem.requestAction,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.permissions_screen_button_grant))
                     }

@@ -12,9 +12,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,7 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsFeedbackScreen(
     viewModel: SettingsFeedbackViewModel = hiltViewModel(),
@@ -45,7 +48,8 @@ fun SettingsFeedbackScreen(
                     IconButton(
                         onClick = {
                             mainNavController.navigateUp()
-                        }
+                        },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
@@ -67,7 +71,8 @@ fun SettingsFeedbackScreen(
                 modifier = Modifier.fillMaxWidth()
                     .padding(12.dp)
                     .imePadding(),
-                enabled = uiState.value.messageTitle.isNotEmpty()
+                enabled = uiState.value.messageTitle.isNotEmpty(),
+                shapes = ButtonDefaults.shapes()
             ) {
                 Text(text = stringResource(R.string.settings_help_screen_send_feedback))
             }

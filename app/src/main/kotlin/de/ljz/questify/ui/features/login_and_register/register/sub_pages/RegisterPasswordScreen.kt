@@ -18,8 +18,11 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -37,6 +40,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import de.ljz.questify.core.compose.UIModePreviews
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun RegisterPasswordScreen(
     onPasswordChange: (String) -> Unit,
@@ -63,11 +67,11 @@ fun RegisterPasswordScreen(
             imageVector = Icons.Default.Password,
             contentDescription = null,
             modifier = Modifier
-              .constrainAs(iconRef) {
-                top.linkTo(parent.top, 8.dp)
-                start.linkTo(parent.start, 8.dp)
-              }
-              .size(40.dp)
+                .constrainAs(iconRef) {
+                    top.linkTo(parent.top, 8.dp)
+                    start.linkTo(parent.start, 8.dp)
+                }
+                .size(40.dp)
         )
 
         Text(
@@ -119,7 +123,8 @@ fun RegisterPasswordScreen(
             shape = RoundedCornerShape(16.dp),
             leadingIcon = {
                 IconButton(
-                    onClick = onPasswordVisibilityChange
+                    onClick = onPasswordVisibilityChange,
+                    shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
@@ -182,7 +187,8 @@ fun RegisterPasswordScreen(
             shape = RoundedCornerShape(16.dp),
             leadingIcon = {
                 IconButton(
-                    onClick = onConfirmPasswordVisibilityChange
+                    onClick = onConfirmPasswordVisibilityChange,
+                    shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(
                         imageVector = if (confirmPasswordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
@@ -220,11 +226,12 @@ fun RegisterPasswordScreen(
                 onBackButtonClick()
             },
             modifier = Modifier
-              .constrainAs(backButtonRef) {
-                start.linkTo(parent.start, 8.dp)
-                bottom.linkTo(parent.bottom, 8.dp)
-              }
-              .imePadding()
+                .constrainAs(backButtonRef) {
+                    start.linkTo(parent.start, 8.dp)
+                    bottom.linkTo(parent.bottom, 8.dp)
+                }
+                .imePadding(),
+            shapes = ButtonDefaults.shapes()
         ) {
             Text(text = "Back")
         }
@@ -234,11 +241,12 @@ fun RegisterPasswordScreen(
                 onNextPage()
             },
             modifier = Modifier
-              .constrainAs(nextButtonRef) {
-                end.linkTo(parent.end, 8.dp)
-                bottom.linkTo(parent.bottom, 8.dp)
-              }
-              .imePadding()
+                .constrainAs(nextButtonRef) {
+                    end.linkTo(parent.end, 8.dp)
+                    bottom.linkTo(parent.bottom, 8.dp)
+                }
+                .imePadding(),
+            shapes = ButtonDefaults.shapes()
         ) {
             Text("Next")
         }

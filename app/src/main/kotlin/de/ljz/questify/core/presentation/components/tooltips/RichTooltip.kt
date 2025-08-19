@@ -1,6 +1,8 @@
 package de.ljz.questify.core.presentation.components.tooltips
 
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -9,7 +11,7 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BasicRichTooltip(
     title: String,
@@ -35,7 +37,8 @@ fun BasicRichTooltip(
                     TextButton(
                         onClick = {
                             tooltipState.dismiss()
-                        }
+                        },
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(dismissText)
                     }

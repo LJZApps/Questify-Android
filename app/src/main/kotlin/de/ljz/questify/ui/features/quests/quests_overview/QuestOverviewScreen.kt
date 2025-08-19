@@ -33,6 +33,7 @@ import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationItemIconPosition
@@ -99,7 +100,8 @@ import de.ljz.questify.ui.navigation.BottomNavigationRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalMaterial3AdaptiveApi::class
 )
 @Composable
@@ -153,7 +155,9 @@ fun QuestOverviewScreen(
                     if (searchBarState.currentValue == SearchBarValue.Collapsed) {
                         FilledTonalIconButton(
                             onClick = viewModel::showSortingBottomSheet,
-                            shape = MaterialShapes.Pill.toShape()
+                            shapes = IconButtonDefaults.shapes(
+                                shape = MaterialShapes.Pill.toShape()
+                            )
                         ) {
                             Icon(Icons.Default.SwapVert, contentDescription = null)
                         }
@@ -164,7 +168,8 @@ fun QuestOverviewScreen(
                                     searchBarState.animateToCollapsed()
                                     textFieldState.clearText()
                                 }
-                            }
+                            },
+                            shapes = IconButtonDefaults.shapes()
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
@@ -209,13 +214,16 @@ fun QuestOverviewScreen(
                         appBarContainerColor = Color.Transparent
                     ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            drawerState.apply {
-                                if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.apply {
+                                    if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                }
                             }
-                        }
-                    }) {
+                        },
+                        shapes = IconButtonDefaults.shapes()
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Localized description"
@@ -234,7 +242,9 @@ fun QuestOverviewScreen(
                                 }
                                 mainNavController.navigate(ProfileRoute)
                             },
-                            shape = MaterialShapes.Cookie9Sided.toShape()
+                            shapes = IconButtonDefaults.shapes(
+                                shape = MaterialShapes.Cookie9Sided.toShape()
+                            )
                         ) {
                             if (uiState.userState.profilePictureUrl.isNotEmpty()) {
                                 AsyncImage(
@@ -421,10 +431,10 @@ fun QuestOverviewScreen(
                     )
                     ShortNavigationBarItem(
                         iconPosition =
-                                if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND))
-                                    NavigationItemIconPosition.Start
-                                else
-                                    NavigationItemIconPosition.Top,
+                            if (windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND))
+                                NavigationItemIconPosition.Start
+                            else
+                                NavigationItemIconPosition.Top,
                         icon = {
                             Icon(
                                 imageVector = bottomNavRoute.icon,

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -29,6 +31,7 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.features.settings.appearance.ThemeItem
 import de.ljz.questify.ui.state.ThemeBehavior
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ThemeBehaviorDialog(
     themeBehavior: ThemeBehavior,
@@ -85,14 +88,18 @@ fun ThemeBehaviorDialog(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    TextButton(
+                        onClick = onDismiss,
+                        shapes = ButtonDefaults.shapes()
+                    ) {
                         Text(stringResource(android.R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = {
                             onConfirm(selectedOption.behavior)
-                        }
+                        },
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.save))
                     }

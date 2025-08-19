@@ -19,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +46,7 @@ import de.ljz.questify.R
 import de.ljz.questify.ui.features.quests.quests_overview.QuestDoneDialogState
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun QuestDoneDialog(
     state: QuestDoneDialogState,
@@ -125,7 +128,11 @@ fun QuestDoneDialog(
                     LevelUpBanner(newLevel = state.newLevel)
                 }
 
-                Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth(),
+                    shapes = ButtonDefaults.shapes()
+                ) {
                     Text(
                         text = if (state.xp > 0 || state.points > 0)
                                 stringResource(R.string.quest_done_dialog_take_rewards_button)

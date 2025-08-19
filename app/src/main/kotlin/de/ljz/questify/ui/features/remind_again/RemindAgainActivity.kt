@@ -18,8 +18,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -94,6 +96,7 @@ class RemindAgainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun RemindAgainPopUp(
     onReminderTimeSelected: (Long, Long) -> Unit,
@@ -221,7 +224,8 @@ fun RemindAgainPopUp(
                             onDismiss()
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !(isCustomTimeSelected && customTime.toLongOrDefault(0).toInt() == 0)
+                        enabled = !(isCustomTimeSelected && customTime.toLongOrDefault(0).toInt() == 0),
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.remind_again_activity_set_reminder_button))
                     }

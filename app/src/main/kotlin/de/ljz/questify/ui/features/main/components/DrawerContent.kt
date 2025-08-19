@@ -22,9 +22,11 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
@@ -48,6 +50,7 @@ import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DrawerContent(
     uiState: MainUiState,
@@ -207,7 +210,8 @@ fun DrawerContent(
                             drawerState.close()
                         }
                         mainNavController.navigate(SettingsMainRoute)
-                    }
+                    },
+                    shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
                 }

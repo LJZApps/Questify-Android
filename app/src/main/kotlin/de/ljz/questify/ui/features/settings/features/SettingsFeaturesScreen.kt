@@ -7,8 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.FlashOn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,7 +24,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsFeaturesScreen(
     mainNavController: NavHostController,
@@ -36,7 +38,8 @@ fun SettingsFeaturesScreen(
                 title = { Text(text = stringResource(R.string.settings_features_screen_title)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() }
+                        onClick = { mainNavController.navigateUp() },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }

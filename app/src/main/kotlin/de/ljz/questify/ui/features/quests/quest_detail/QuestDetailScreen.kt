@@ -102,7 +102,8 @@ fun QuestDetailScreen(
                 title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() }
+                        onClick = { navController.popBackStack() },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.Default.Close, contentDescription = null)
                     }
@@ -121,7 +122,10 @@ fun QuestDetailScreen(
                                 }
                             )
                         },
-                        shape = MaterialShapes.Sunny.toShape()
+                        shapes = IconButtonDefaults.shapes(
+                            shape = MaterialShapes.Sunny.toShape()
+                        )
+
                     ) {
                         Icon(Icons.Outlined.Save, contentDescription = null)
                     }
@@ -130,12 +134,13 @@ fun QuestDetailScreen(
                         onClick = {
                             viewModel.showDeleteConfirmationDialog()
                         },
-                        shape = MaterialShapes.Ghostish.toShape(),
                         colors = IconButtonDefaults.filledTonalIconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
                             containerColor = MaterialTheme.colorScheme.errorContainer
+                        ),
+                        shapes = IconButtonDefaults.shapes(
+                            shape = MaterialShapes.Ghostish.toShape()
                         )
-
                     ) {
                         Icon(Icons.Outlined.Delete, contentDescription = null)
                     }

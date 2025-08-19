@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -31,7 +32,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 object AuthChooserScreenRoute
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoginAndRegisterScreen(
     navController: NavHostController
@@ -107,7 +108,8 @@ fun LoginAndRegisterScreen(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
-                    )
+                    ),
+                    shapes = ButtonDefaults.shapes()
                 ) {
                     Text(text = "Create account")
                 }
@@ -122,7 +124,8 @@ fun LoginAndRegisterScreen(
                         end.linkTo(parent.end, 12.dp)
 
                         width = Dimension.fillToConstraints
-                    }
+                    },
+                    shapes = ButtonDefaults.shapes()
                 ) {
                     Text(text = "Login")
                 }

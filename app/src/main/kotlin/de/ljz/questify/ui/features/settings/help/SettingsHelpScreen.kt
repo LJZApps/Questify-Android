@@ -10,8 +10,10 @@ import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,7 +31,7 @@ import de.ljz.questify.ui.features.main.navigation.MainRoute
 import de.ljz.questify.ui.features.settings.feedback.navigation.SettingsFeedbackRoute
 import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsHelpScreen(
     mainNavController: NavHostController,
@@ -41,7 +43,8 @@ fun SettingsHelpScreen(
                 title = { Text(stringResource(R.string.settings_help_screen_help_title)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() }
+                        onClick = { mainNavController.navigateUp() },
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }

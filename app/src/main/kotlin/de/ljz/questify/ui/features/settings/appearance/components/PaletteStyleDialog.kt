@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -28,6 +30,7 @@ import androidx.compose.ui.window.Dialog
 import com.materialkolor.PaletteStyle
 import de.ljz.questify.R
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PaletteStyleDialog(
     paletteStyle: PaletteStyle,
@@ -87,14 +90,18 @@ fun PaletteStyleDialog(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    TextButton(
+                        onClick = onDismiss,
+                        shapes = ButtonDefaults.shapes()
+                    ) {
                         Text(stringResource(android.R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     TextButton(
                         onClick = {
                             onConfirm(selectedOption)
-                        }
+                        },
+                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.save))
                     }
