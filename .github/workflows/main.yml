@@ -74,6 +74,9 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    # Fügt die Berechtigung zum Erstellen von Releases hinzu
+    permissions:
+      contents: write
     steps:
       - name: Download all workflow artifacts
         uses: actions/download-artifact@v4
@@ -92,6 +95,9 @@ jobs:
     needs: release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    # Auch hier Berechtigungen hinzufügen, falls es bei anderen Schritten Probleme gibt
+    permissions:
+      contents: read
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -105,10 +111,6 @@ jobs:
         id: get_tag
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/v}
-          # Bestimmt den Track basierend auf dem Suffix im Tag-Namen
-          # z.B. v1.0.0-alpha -> alpha
-          #      v1.0.0-beta  -> beta
-          #      v1.0.0       -> production
           TRACK="production"
           if [[ "$TAG_NAME" == *"-alpha" ]]; then
             TRACK="alpha"
@@ -123,7 +125,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: ${{ secrets.PLAY_STORE_API_KEY }}
-          packageName: 'de.ljz.questify'
+          packageName: 'deine.app.package.name'
           releaseFile: 'app-release.aab'
           track: ${{ steps.get_tag.outputs.track }}
           whatsNewDirectory: fastlane/metadata/android/
