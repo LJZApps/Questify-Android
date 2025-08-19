@@ -23,11 +23,12 @@ import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.AppBarWithSearch
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
@@ -38,6 +39,7 @@ import androidx.compose.material3.NavigationItemIconPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarValue
+import androidx.compose.material3.ShortNavigationBar
 import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -45,12 +47,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
 import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.WideNavigationRailState
-import androidx.compose.material3.WideNavigationRailValue
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
-import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -106,11 +104,10 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun QuestOverviewScreen(
-    navRailState: WideNavigationRailState,
+    drawerState: DrawerState,
     viewModel: QuestOverviewViewModel = hiltViewModel(),
     mainNavController: NavHostController,
     homeNavHostController: NavHostController,
-    scaffoldNavigator: ThreePaneScaffoldNavigator<ThreePaneScaffoldRole>
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val questDoneDialogState = uiState.questDoneDialogState
@@ -212,19 +209,17 @@ fun QuestOverviewScreen(
                         appBarContainerColor = Color.Transparent
                     ),
                 navigationIcon = {
-                    if (!windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)) {
-                        IconButton(onClick = {
-                            scope.launch {
-                                navRailState.apply {
-                                    if (navRailState.currentValue == WideNavigationRailValue.Collapsed) expand() else collapse()
-                                }
+                    IconButton(onClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (drawerState.currentValue == DrawerValue.Closed) open() else close()
                             }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Localized description"
-                            )
                         }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Localized description"
+                        )
                     }
                 },
                 actions = {
@@ -235,7 +230,7 @@ fun QuestOverviewScreen(
                         FilledTonalIconButton(
                             onClick = {
                                 scope.launch {
-                                    navRailState.collapse()
+                                    drawerState.close()
                                 }
                                 mainNavController.navigate(ProfileRoute)
                             },
@@ -374,8 +369,7 @@ fun QuestOverviewScreen(
                                 )
                             },
                             onQuestDelete = viewModel::deleteQuest,
-                            navController = homeNavHostController,
-                            scaffoldNavigator = scaffoldNavigator
+                            navController = mainNavController
                         )
                     }
 
@@ -420,7 +414,7 @@ fun QuestOverviewScreen(
             }
         },
         bottomBar = {
-            FlexibleBottomAppBar {
+            ShortNavigationBar {
                 bottomNavRoutes.forEach { bottomNavRoute ->
                     val selected = currentDestination?.route == getSerializedRouteName(
                         bottomNavRoute.route
