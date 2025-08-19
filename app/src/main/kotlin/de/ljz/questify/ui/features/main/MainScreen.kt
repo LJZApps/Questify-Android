@@ -94,7 +94,6 @@ fun MainScreen(
     val state = rememberWideNavigationRailState()
     val scope = rememberCoroutineScope()
 
-    // 📐 Adaptive Info
     val windowInfo = calculateWindowSizeClass(LocalActivity.current as Activity)
 
     val navBackStackEntry by homeNavController.currentBackStackEntryAsState()
