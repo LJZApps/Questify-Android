@@ -40,7 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
-import de.ljz.questify.core.compose.UIModePreviews
+import de.ljz.questify.core.utils.UIModePreviews
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestUiState
 import java.text.SimpleDateFormat
 import java.util.Date

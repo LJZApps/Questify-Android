@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
-import de.ljz.questify.core.domain.repositories.quest_notifications.QuestNotificationRepository
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import okhttp3.internal.toLongOrDefault

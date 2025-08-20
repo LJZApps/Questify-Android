@@ -2,7 +2,7 @@ package de.ljz.questify.feature.settings.domain.models
 
 import android.util.Log
 import androidx.datastore.core.Serializer
-import de.ljz.questify.core.application.TAG
+import de.ljz.questify.core.utils.TAG
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

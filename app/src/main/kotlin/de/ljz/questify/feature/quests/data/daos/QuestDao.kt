@@ -1,11 +1,11 @@
-package de.ljz.questify.feature.quests.domain.daos
+package de.ljz.questify.feature.quests.data.daos
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.core.utils.Difficulty
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 

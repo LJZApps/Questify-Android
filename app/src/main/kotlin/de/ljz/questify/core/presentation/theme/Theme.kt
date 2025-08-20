@@ -17,8 +17,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.materialkolor.rememberDynamicColorScheme
-import de.ljz.questify.core.state.ThemeBehavior
-import de.ljz.questify.core.state.ThemeColor
+import de.ljz.questify.feature.settings.domain.models.ThemeBehavior
+import de.ljz.questify.feature.settings.domain.models.ThemeColor
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -100,7 +100,6 @@ fun QuestifyTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        shapes = QuestifyShapes,
         content = content
     )
 }

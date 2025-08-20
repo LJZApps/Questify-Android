@@ -1,7 +1,7 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import de.ljz.questify.core.application.AddingDateTimeState
+import de.ljz.questify.core.utils.AddingDateTimeState
 
 data class CreateQuestUiState(
     val title: String = "",

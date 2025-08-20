@@ -1,8 +1,8 @@
 package de.ljz.questify.core.domain.repositories.app
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.core.application.QuestSorting
-import de.ljz.questify.core.application.SortingDirections
+import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.core.domain.datastore.SortingPreferences
 import de.ljz.questify.core.domain.repositories.BaseRepository
 import kotlinx.coroutines.flow.Flow

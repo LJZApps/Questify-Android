@@ -5,10 +5,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.datastore.core.Serializer
 import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.toHex
-import de.ljz.questify.core.application.TAG
+import de.ljz.questify.core.utils.TAG
 import de.ljz.questify.core.presentation.theme.ThemingEngine
-import de.ljz.questify.core.state.ThemeBehavior
-import de.ljz.questify.core.state.ThemeColor
 import de.ljz.questify.core.utils.Standard
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

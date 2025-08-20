@@ -3,8 +3,8 @@ package de.ljz.questify.feature.remind_again.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.domain.models.quest_notifications.QuestNotificationEntity
-import de.ljz.questify.core.domain.repositories.quest_notifications.QuestNotificationRepository
+import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.launch
 import java.util.Date

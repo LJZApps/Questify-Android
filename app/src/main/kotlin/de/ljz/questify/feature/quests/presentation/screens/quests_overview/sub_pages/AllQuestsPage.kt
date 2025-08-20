@@ -28,9 +28,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.core.application.SortingDirections
-import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.core.utils.Difficulty
+import de.ljz.questify.core.utils.SortingDirections
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon

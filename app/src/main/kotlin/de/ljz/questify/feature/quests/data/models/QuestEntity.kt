@@ -1,9 +1,9 @@
-package de.ljz.questify.feature.quests.domain.models
+package de.ljz.questify.feature.quests.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import de.ljz.questify.core.application.Difficulty
+import de.ljz.questify.core.utils.Difficulty
 import java.util.Date
 
 @Entity(tableName = "quest_entity")

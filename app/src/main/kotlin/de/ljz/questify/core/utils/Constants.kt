@@ -1,4 +1,4 @@
-package de.ljz.questify.core.application
+package de.ljz.questify.core.utils
 
 import kotlinx.serialization.Serializable
 
@@ -16,7 +16,7 @@ enum class Difficulty {
 
     companion object {
         fun fromIndex(index: Int): Difficulty {
-            return Difficulty.entries[index]
+            return entries[index]
         }
     }
 }

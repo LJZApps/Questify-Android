@@ -1,7 +1,7 @@
 package de.ljz.questify.feature.profile.domain.repositories
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.core.application.Difficulty
+import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.domain.repositories.BaseRepository
 import de.ljz.questify.feature.profile.data.models.AppUser
 import kotlinx.coroutines.flow.Flow

@@ -2,9 +2,9 @@ package de.ljz.questify.core.domain.datastore
 
 import android.util.Log
 import androidx.datastore.core.Serializer
-import de.ljz.questify.core.application.QuestSorting
-import de.ljz.questify.core.application.SortingDirections
-import de.ljz.questify.core.application.TAG
+import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.core.utils.SortingDirections
+import de.ljz.questify.core.utils.TAG
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

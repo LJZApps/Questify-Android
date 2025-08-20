@@ -7,13 +7,13 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.application.QuestSorting
-import de.ljz.questify.core.application.SortingDirections
+import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.core.domain.repositories.app.SortingPreferencesRepository
-import de.ljz.questify.core.domain.repositories.quest_notifications.QuestNotificationRepository
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
-import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

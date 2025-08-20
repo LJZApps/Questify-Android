@@ -1,4 +1,4 @@
-package de.ljz.questify.core.compose
+package de.ljz.questify.core.utils
 
 import androidx.compose.ui.tooling.preview.Preview
 

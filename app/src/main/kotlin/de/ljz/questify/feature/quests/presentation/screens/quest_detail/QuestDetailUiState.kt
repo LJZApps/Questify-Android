@@ -1,6 +1,6 @@
 package de.ljz.questify.feature.quests.presentation.screens.quest_detail
 
-import de.ljz.questify.core.application.AddingDateTimeState
+import de.ljz.questify.core.utils.AddingDateTimeState
 
 data class QuestDetailUiState(
     val isAddingReminder: Boolean = false,

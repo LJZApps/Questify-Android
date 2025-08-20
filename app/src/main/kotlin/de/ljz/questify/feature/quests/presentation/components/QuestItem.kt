@@ -26,9 +26,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.core.compose.UIModePreviews
-import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.core.utils.Difficulty
+import de.ljz.questify.core.utils.UIModePreviews
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

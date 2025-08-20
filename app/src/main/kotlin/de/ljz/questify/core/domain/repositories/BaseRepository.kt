@@ -1,7 +1,7 @@
 package de.ljz.questify.core.domain.repositories
 
-import de.ljz.questify.core.application.QuestSorting
-import de.ljz.questify.core.application.SortingDirections
+import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.core.utils.SortingDirections
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

@@ -1,11 +1,10 @@
-package de.ljz.questify.core.domain.models.quest_notifications
+package de.ljz.questify.feature.quests.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import de.ljz.questify.feature.quests.domain.models.QuestEntity
 import java.util.Date
 
 @Entity(
@@ -15,7 +14,7 @@ import java.util.Date
             entity = QuestEntity::class,
             parentColumns = ["id"],
             childColumns = ["quest_id"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.Companion.CASCADE
         )
     ],
     indices = [

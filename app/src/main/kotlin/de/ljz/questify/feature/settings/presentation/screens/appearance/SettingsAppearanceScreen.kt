@@ -42,7 +42,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
-import de.ljz.questify.core.state.ThemeBehavior
+import de.ljz.questify.feature.settings.domain.models.ThemeBehavior
 import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.settings.presentation.dialogs.ColorPickerDialog
 import de.ljz.questify.feature.settings.presentation.dialogs.PaletteStyleDialog

@@ -1,8 +1,8 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
-import de.ljz.questify.core.application.QuestSorting
-import de.ljz.questify.core.application.SortingDirections
-import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.core.utils.SortingDirections
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 
 data class QuestOverviewUIState(
     val questDoneDialogVisible: Boolean = false,

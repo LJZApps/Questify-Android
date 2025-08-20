@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.R
-import de.ljz.questify.core.application.AddingDateTimeState
+import de.ljz.questify.core.utils.AddingDateTimeState
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
