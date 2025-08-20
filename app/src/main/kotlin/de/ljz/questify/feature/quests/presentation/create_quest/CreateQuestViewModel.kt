@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.application.AddingDateTimeState
 import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.core.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.core.domain.repositories.quests.QuestNotificationRepository
-import de.ljz.questify.core.domain.repositories.quests.QuestRepository
+import de.ljz.questify.core.domain.models.quest_notifications.QuestNotificationEntity
+import de.ljz.questify.core.domain.repositories.quest_notifications.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

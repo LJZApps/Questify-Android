@@ -25,7 +25,7 @@ import de.ljz.questify.core.utils.isOverlayPermissionGranted
 import de.ljz.questify.feature.main.components.DrawerContent
 import de.ljz.questify.feature.quests.presentation.quests_overview.QuestOverviewScreen
 import de.ljz.questify.feature.quests.presentation.quests_overview.QuestsRoute
-import de.ljz.questify.feature.settings.permissions.SettingsPermissionRoute
+import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 import io.sentry.compose.SentryTraced
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)

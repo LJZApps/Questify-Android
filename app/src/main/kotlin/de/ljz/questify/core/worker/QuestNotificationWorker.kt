@@ -12,10 +12,10 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import de.ljz.questify.R
-import de.ljz.questify.core.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.core.domain.repositories.quests.QuestNotificationRepository
-import de.ljz.questify.core.domain.repositories.quests.QuestRepository
+import de.ljz.questify.core.domain.models.quest_notifications.QuestNotificationEntity
+import de.ljz.questify.core.domain.repositories.quest_notifications.QuestNotificationRepository
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
+import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.collectLatest
 
 @HiltWorker

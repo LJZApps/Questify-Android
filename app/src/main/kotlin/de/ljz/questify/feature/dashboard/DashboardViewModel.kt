@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.BuildConfig
-import de.ljz.questify.core.domain.repositories.app.AppSettingsRepository
-import de.ljz.questify.core.domain.repositories.app.AppUserRepository
-import de.ljz.questify.core.domain.repositories.quests.QuestRepository
+import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
+import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest

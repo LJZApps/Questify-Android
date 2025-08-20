@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.core.domain.datastore.AppUser
+import de.ljz.questify.feature.profile.domain.models.AppUser
 
 @Composable
 fun StatsComponent(

@@ -41,9 +41,9 @@ import de.ljz.questify.core.utils.getSerializedRouteName
 import de.ljz.questify.feature.dashboard.DashboardRoute
 import de.ljz.questify.feature.habits.HabitsRoute
 import de.ljz.questify.feature.main.MainUiState
-import de.ljz.questify.feature.profile.view_profile.ViewProfileRoute
+import de.ljz.questify.feature.profile.presentation.view_profile.ViewProfileRoute
 import de.ljz.questify.feature.quests.presentation.quests_overview.QuestsRoute
-import de.ljz.questify.feature.settings.main.SettingsMainRoute
+import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

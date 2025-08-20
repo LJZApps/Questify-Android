@@ -28,7 +28,7 @@ import de.ljz.questify.core.presentation.components.information_bottom_sheets.Ch
 import de.ljz.questify.core.utils.changelog.parseYamlChangelog
 import de.ljz.questify.feature.dashboard.components.ChangelogComponent
 import de.ljz.questify.feature.dashboard.components.StatsComponent
-import de.ljz.questify.feature.profile.view_profile.ViewProfileRoute
+import de.ljz.questify.feature.profile.presentation.view_profile.ViewProfileRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

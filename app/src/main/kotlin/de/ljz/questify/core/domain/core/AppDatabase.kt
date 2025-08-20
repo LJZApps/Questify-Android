@@ -10,9 +10,9 @@ import de.ljz.questify.core.domain.core.migrations.MainQuestAutoMigration
 import de.ljz.questify.core.domain.core.migrations.QuestEntityAutoMigration
 import de.ljz.questify.core.domain.core.migrations.QuestTaskAutoMigration
 import de.ljz.questify.core.domain.core.migrations.RemoveQuestTaskAutoMigration
-import de.ljz.questify.core.domain.daos.quest.QuestDao
-import de.ljz.questify.core.domain.daos.quest.QuestNotificationDao
-import de.ljz.questify.core.domain.models.notifications.QuestNotificationEntity
+import de.ljz.questify.core.domain.models.quest_notifications.QuestNotificationEntity
+import de.ljz.questify.feature.quests.domain.daos.QuestDao
+import de.ljz.questify.feature.quests.domain.daos.QuestNotificationDao
 import de.ljz.questify.feature.quests.domain.models.QuestEntity
 
 @Database(
