@@ -26,10 +26,10 @@ import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
-import de.ljz.questify.ui.features.main.navigation.MainRoute
-import de.ljz.questify.ui.features.settings.feedback.navigation.SettingsFeedbackRoute
-import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
+import de.ljz.questify.ui.features.first_setup.FirstSetupRoute
+import de.ljz.questify.ui.features.main.MainRoute
+import de.ljz.questify.ui.features.settings.feedback.SettingsFeedbackRoute
+import de.ljz.questify.ui.features.settings.permissions.SettingsPermissionRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable

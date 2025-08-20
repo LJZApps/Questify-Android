@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.settings.permissions.navigation
+package de.ljz.questify.ui.features.settings.permissions
 
 import kotlinx.serialization.Serializable
 

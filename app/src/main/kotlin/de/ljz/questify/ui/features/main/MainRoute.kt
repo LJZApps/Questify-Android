@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.main.navigation
+package de.ljz.questify.ui.features.main
 
 import kotlinx.serialization.Serializable
 

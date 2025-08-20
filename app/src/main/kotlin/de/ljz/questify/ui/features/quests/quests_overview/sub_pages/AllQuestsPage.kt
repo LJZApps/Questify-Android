@@ -36,7 +36,7 @@ import de.ljz.questify.core.presentation.components.HardIcon
 import de.ljz.questify.core.presentation.components.MediumIcon
 import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.domain.models.quests.QuestEntity
-import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
+import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailRoute
 import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
 
 @OptIn(
@@ -97,7 +97,7 @@ fun AllQuestsPage(
                         onQuestDelete(it)
                     },
                     onClick = {
-                        navController.navigate(QuestDetail(id = quest.id))
+                        navController.navigate(QuestDetailRoute(id = quest.id))
                     })
             }
         }

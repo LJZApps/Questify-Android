@@ -8,14 +8,14 @@ import de.ljz.questify.ui.features.settings.appearance.SettingsAppearanceRoute
 import de.ljz.questify.ui.features.settings.appearance.SettingsAppearanceScreen
 import de.ljz.questify.ui.features.settings.features.SettingsFeaturesRoute
 import de.ljz.questify.ui.features.settings.features.SettingsFeaturesScreen
+import de.ljz.questify.ui.features.settings.feedback.SettingsFeedbackRoute
 import de.ljz.questify.ui.features.settings.feedback.SettingsFeedbackScreen
-import de.ljz.questify.ui.features.settings.feedback.navigation.SettingsFeedbackRoute
 import de.ljz.questify.ui.features.settings.help.SettingsHelpRoute
 import de.ljz.questify.ui.features.settings.help.SettingsHelpScreen
+import de.ljz.questify.ui.features.settings.main.SettingsMainRoute
 import de.ljz.questify.ui.features.settings.main.SettingsMainScreen
-import de.ljz.questify.ui.features.settings.main.navigation.SettingsMainRoute
 import de.ljz.questify.ui.features.settings.permissions.PermissionsScreen
-import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
+import de.ljz.questify.ui.features.settings.permissions.SettingsPermissionRoute
 
 fun NavGraphBuilder.settingRoutes(
     navController: NavHostController

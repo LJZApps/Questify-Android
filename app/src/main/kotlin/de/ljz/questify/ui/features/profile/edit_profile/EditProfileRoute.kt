@@ -1,4 +1,4 @@
-package de.ljz.questify.ui.features.profile.edit_profile.navigation
+package de.ljz.questify.ui.features.profile.edit_profile
 
 import kotlinx.serialization.Serializable
 

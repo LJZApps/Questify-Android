@@ -43,7 +43,7 @@ import androidx.navigation.NavController
 import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.ui.features.first_setup.sub_pages.QuickSettingPage
 import de.ljz.questify.ui.features.first_setup.sub_pages.UserSetupPage
-import de.ljz.questify.ui.features.main.navigation.MainRoute
+import de.ljz.questify.ui.features.main.MainRoute
 import de.ljz.questify.util.NavBarConfig
 import kotlinx.coroutines.launch
 

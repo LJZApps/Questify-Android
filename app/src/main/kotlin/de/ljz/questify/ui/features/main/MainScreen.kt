@@ -16,14 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
-import de.ljz.questify.ui.features.dashboard.DashboardScreen
-import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.components.DrawerContent
 import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewScreen
 import de.ljz.questify.ui.features.quests.quests_overview.QuestsRoute
-import de.ljz.questify.ui.features.settings.permissions.navigation.SettingsPermissionRoute
-import de.ljz.questify.ui.features.trophies.TrophiesOverviewScreen
-import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
+import de.ljz.questify.ui.features.settings.permissions.SettingsPermissionRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
 import de.ljz.questify.ui.navigation.scaleIntoContainer
 import de.ljz.questify.ui.navigation.scaleOutOfContainer
@@ -31,7 +27,6 @@ import de.ljz.questify.util.isAlarmPermissionGranted
 import de.ljz.questify.util.isNotificationPermissionGranted
 import de.ljz.questify.util.isOverlayPermissionGranted
 import io.sentry.compose.SentryTraced
-
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -83,22 +78,10 @@ fun MainScreen(
                     popEnterTransition = { scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS) },
                     popExitTransition = { scaleOutOfContainer() }
                 ) {
-                    composable<DashboardRoute> {
-                        DashboardScreen(mainNavController, drawerState)
-                    }
-
                     composable<QuestsRoute> {
                         QuestOverviewScreen(
                             drawerState = drawerState,
                             mainNavController = mainNavController,
-                            homeNavHostController = homeNavHostController
-                        )
-                    }
-
-                    composable<TrophiesRoute> {
-                        TrophiesOverviewScreen(
-                            drawerState = drawerState,
-                            mainNavController = mainNavController
                         )
                     }
                 }

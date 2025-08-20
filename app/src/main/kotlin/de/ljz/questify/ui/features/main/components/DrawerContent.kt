@@ -7,17 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Eco
-import androidx.compose.material.icons.filled.House
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -43,12 +37,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
-import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
+import de.ljz.questify.ui.features.dashboard.DashboardRoute
+import de.ljz.questify.ui.features.habits.HabitsRoute
 import de.ljz.questify.ui.features.main.MainUiState
-import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
+import de.ljz.questify.ui.features.profile.view_profile.ViewProfileRoute
 import de.ljz.questify.ui.features.quests.quests_overview.QuestsRoute
-import de.ljz.questify.ui.features.settings.main.navigation.SettingsMainRoute
-import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
+import de.ljz.questify.ui.features.settings.main.SettingsMainRoute
 import de.ljz.questify.util.getSerializedRouteName
 import kotlinx.coroutines.launch
 
@@ -83,58 +77,9 @@ fun DrawerContent(
                 NavigationItem(
                     title = "Habits",
                     icon = Icons.Filled.Eco,
-                    route = TrophiesRoute,
+                    route = HabitsRoute,
                     featureEnabled = true
                 ),
-            )
-        ),
-        NavigationCategory(
-            title = "Core",
-            featuresEnabled = false,
-            items = listOf(
-                NavigationItem(
-                    title = "Fitness",
-                    icon = Icons.AutoMirrored.Filled.DirectionsRun,
-                    featureEnabled = false,
-                    route = TrophiesRoute
-                ),
-            )
-        ),
-        NavigationCategory(
-            title = "Social",
-            featuresEnabled = false,
-            items = listOf(
-                NavigationItem(
-                    title = "Freunde",
-                    icon = Icons.Filled.People,
-                    route = TrophiesRoute
-                ),
-                NavigationItem(
-                    title = "Gilden",
-                    icon = Icons.Filled.Shield,
-                    route = TrophiesRoute
-                )
-            )
-        ),
-        NavigationCategory(
-            title = "Village of Ventures",
-            featuresEnabled = false,
-            items = listOf(
-                NavigationItem(
-                    title = "Map",
-                    icon = Icons.Filled.Map,
-                    route = TrophiesRoute
-                ),
-                NavigationItem(
-                    title = "Häuser",
-                    icon = Icons.Filled.House,
-                    route = TrophiesRoute
-                ),
-                NavigationItem(
-                    title = "Shop",
-                    icon = Icons.Filled.ShoppingCart,
-                    route = TrophiesRoute
-                )
             )
         )
     )
@@ -161,7 +106,7 @@ fun DrawerContent(
                             scope.launch {
                                 drawerState.close()
                             }
-                            mainNavController.navigate(ProfileRoute)
+                            mainNavController.navigate(ViewProfileRoute)
                         },
                         shapes = IconButtonDefaults.shapes(
                             shape = MaterialShapes.Cookie9Sided.toShape()

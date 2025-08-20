@@ -4,19 +4,19 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import de.ljz.questify.ui.features.quests.create_quest.CreateQuestRoute
 import de.ljz.questify.ui.features.quests.create_quest.CreateQuestScreen
-import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
+import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailRoute
 import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailScreen
-import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 
 fun NavGraphBuilder.questRoutes(navController: NavHostController) {
-    composable<CreateQuest> {
+    composable<CreateQuestRoute> {
         CreateQuestScreen(mainNavController = navController)
     }
 
-    composable<QuestDetail>(
+    composable<QuestDetailRoute>(
         deepLinks = listOf(
-            navDeepLink<QuestDetail>(basePath = "questify://quest_detail")
+            navDeepLink<QuestDetailRoute>(basePath = "questify://quest_detail")
         ),
     ) { backStackEntry ->
         QuestDetailScreen(navController = navController)

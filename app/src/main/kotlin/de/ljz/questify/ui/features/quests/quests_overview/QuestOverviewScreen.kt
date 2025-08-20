@@ -57,8 +57,8 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
-import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
+import de.ljz.questify.ui.features.quests.create_quest.CreateQuestRoute
+import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailRoute
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.AllQuestsPage
@@ -188,7 +188,7 @@ fun QuestOverviewScreen(
                             ExpressiveMenuItem(
                                 title = questEntity.title,
                                 onClick = {
-                                    mainNavController.navigate(QuestDetail(id = questEntity.id))
+                                    mainNavController.navigate(QuestDetailRoute(id = questEntity.id))
                                 }
                             )
                         }
@@ -198,7 +198,7 @@ fun QuestOverviewScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    mainNavController.navigate(CreateQuest())
+                    mainNavController.navigate(CreateQuestRoute)
                 }
             ) {
                 Icon(

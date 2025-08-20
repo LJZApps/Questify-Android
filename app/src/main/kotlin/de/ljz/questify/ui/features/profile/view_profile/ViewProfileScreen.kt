@@ -40,7 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.profile.edit_profile.navigation.EditProfileRoute
+import de.ljz.questify.ui.features.profile.edit_profile.EditProfileRoute
 import de.ljz.questify.util.NavBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)

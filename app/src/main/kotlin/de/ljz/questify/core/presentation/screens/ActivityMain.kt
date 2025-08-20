@@ -24,10 +24,9 @@ import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.worker.QuestNotificationWorker
-import de.ljz.questify.ui.features.first_setup.navigation.FirstSetupRoute
-import de.ljz.questify.ui.features.main.navigation.MainRoute
+import de.ljz.questify.ui.features.first_setup.FirstSetupRoute
+import de.ljz.questify.ui.features.main.MainRoute
 import de.ljz.questify.ui.navigation.ScaleTransitionDirection
-import de.ljz.questify.ui.navigation.authenticationRoutes
 import de.ljz.questify.ui.navigation.routes.dialogRoutes
 import de.ljz.questify.ui.navigation.routes.mainRoutes
 import de.ljz.questify.ui.navigation.routes.profileRoutes
@@ -73,8 +72,9 @@ class ActivityMain : AppCompatActivity() {
                 vm.createNotificationChannel(context = context)
             }
 
-            val workRequest = PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
-                .build()
+            val workRequest =
+                PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
+                    .build()
 
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 uniqueWorkName = "QuestNotificationWorker",
@@ -125,10 +125,6 @@ class ActivityMain : AppCompatActivity() {
                             )
 
                             questRoutes(
-                                navController = navController
-                            )
-
-                            authenticationRoutes(
                                 navController = navController
                             )
                         }

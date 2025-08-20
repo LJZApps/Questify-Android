@@ -27,7 +27,7 @@ import de.ljz.questify.core.presentation.components.TopBar
 import de.ljz.questify.core.presentation.components.information_bottom_sheets.ChangelogBottomSheet
 import de.ljz.questify.ui.features.dashboard.components.ChangelogComponent
 import de.ljz.questify.ui.features.dashboard.components.StatsComponent
-import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
+import de.ljz.questify.ui.features.profile.view_profile.ViewProfileRoute
 import de.ljz.questify.util.changelog.parseYamlChangelog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,7 +82,7 @@ fun DashboardScreen(
                 StatsComponent(
                     appUser = uiState.appUser,
                     onClick = {
-                        mainNavController.navigate(ProfileRoute)
+                        mainNavController.navigate(ViewProfileRoute)
                     }
                 )
 

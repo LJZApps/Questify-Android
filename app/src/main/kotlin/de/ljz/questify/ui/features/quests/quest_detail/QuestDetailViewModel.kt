@@ -15,7 +15,6 @@ import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
-import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.util.trimToNull
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +32,7 @@ class QuestDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(QuestDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val questDetailRoute = savedStateHandle.toRoute<QuestDetail>()
+    private val questDetailRoute = savedStateHandle.toRoute<QuestDetailRoute>()
     val questId = questDetailRoute.id
 
     init {
