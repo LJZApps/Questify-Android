@@ -74,9 +74,9 @@ fun CreateQuestScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    val context = LocalContext.current
+    LocalContext.current
     var currentStep by remember { mutableIntStateOf(0) }
 
     val steps = listOf(

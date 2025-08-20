@@ -1,24 +1,8 @@
 package de.ljz.questify.data.api.core
 
-import android.util.Log
 import com.squareup.moshi.Moshi
-import de.ljz.questify.BuildConfig
-import de.ljz.questify.core.application.TAG
 import de.ljz.questify.data.api.responses.common.ErrorResponse
 import de.ljz.questify.data.api.responses.common.SuccessResponse
-import de.ljz.questify.data.api.responses.login.LoginResponse
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.parameter
-import io.ktor.client.request.request
-import io.ktor.client.request.url
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpMethod
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 
 object NetworkUtils {
 
@@ -38,6 +22,7 @@ object NetworkUtils {
         }
     }
 
+    /*
     suspend fun loginWithRefreshToken(refreshToken: String): LoginResponse? {
         val httpClient = HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -68,4 +53,6 @@ object NetworkUtils {
             }
         }
     }
+
+     */
 }

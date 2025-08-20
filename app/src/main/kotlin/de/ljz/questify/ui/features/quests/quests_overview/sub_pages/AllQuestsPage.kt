@@ -51,7 +51,7 @@ fun AllQuestsPage(
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
 
     val quests = state.quests
         .filter { quest -> state.showCompleted || !quest.done }

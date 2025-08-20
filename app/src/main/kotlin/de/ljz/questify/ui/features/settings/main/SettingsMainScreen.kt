@@ -5,8 +5,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.ColorLens
-import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -33,7 +33,7 @@ fun SettingsMainScreen(
     mainNavController: NavHostController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
+    viewModel.uiState.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -76,7 +76,7 @@ fun SettingsMainScreen(
             ExpressiveSettingsMenuLink(
                 title = stringResource(R.string.settings_main_screen_help_title),
                 subtitle = stringResource(R.string.settings_main_screen_help_description),
-                icon = { Icon(Icons.Outlined.HelpOutline, contentDescription = null) },
+                icon = { Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = null) },
                 onClick = {
                     mainNavController.navigate(SettingsHelpRoute)
                 }

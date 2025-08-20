@@ -79,7 +79,7 @@ fun QuestOverviewScreen(
     val allQuestPageState = uiState.allQuestPageState
 
     val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
+    LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 

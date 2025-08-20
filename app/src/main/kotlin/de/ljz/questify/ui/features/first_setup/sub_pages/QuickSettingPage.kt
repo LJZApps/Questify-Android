@@ -33,7 +33,6 @@ import de.ljz.questify.R
 fun QuickSettingPage() {
     var useDynamicColors by remember { mutableStateOf(false) }
     var enableNotifications by remember { mutableStateOf(true) }
-    var enableDarkMode by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
