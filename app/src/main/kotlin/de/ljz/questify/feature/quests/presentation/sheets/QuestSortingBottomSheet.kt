@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.SortingDirectionItem
 import kotlinx.coroutines.launch
 

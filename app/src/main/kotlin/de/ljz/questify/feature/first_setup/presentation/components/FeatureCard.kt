@@ -27,7 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import de.ljz.questify.feature.first_setup.presentation.sub_pages.Feature
+import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.Feature
 
 @Composable
 fun FeatureCard(feature: Feature) {

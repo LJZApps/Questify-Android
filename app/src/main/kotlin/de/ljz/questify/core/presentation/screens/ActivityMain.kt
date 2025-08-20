@@ -23,7 +23,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
-import de.ljz.questify.core.presentation.navigation.routes.dialogRoutes
 import de.ljz.questify.core.presentation.navigation.routes.mainRoutes
 import de.ljz.questify.core.presentation.navigation.routes.profileRoutes
 import de.ljz.questify.core.presentation.navigation.routes.questRoutes
@@ -32,8 +31,8 @@ import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
 import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.worker.QuestNotificationWorker
-import de.ljz.questify.feature.first_setup.presentation.FirstSetupRoute
-import de.ljz.questify.feature.main.presentation.MainRoute
+import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupRoute
+import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import io.sentry.android.core.SentryAndroid
 import java.util.concurrent.TimeUnit
 
@@ -112,9 +111,6 @@ class ActivityMain : AppCompatActivity() {
                                 navController = navController
                             )
 
-                            dialogRoutes(
-                                navController = navController,
-                            )
 
                             settingRoutes(
                                 navController = navController

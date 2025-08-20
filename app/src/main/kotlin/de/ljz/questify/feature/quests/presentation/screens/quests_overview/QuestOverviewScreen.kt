@@ -55,8 +55,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
-import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute

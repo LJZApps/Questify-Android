@@ -22,8 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.feature.settings.presentation.screens.appearance.SettingsAppearanceRoute
 import de.ljz.questify.feature.settings.presentation.screens.help.SettingsHelpRoute
 

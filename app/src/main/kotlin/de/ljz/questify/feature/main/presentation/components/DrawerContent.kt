@@ -38,9 +38,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import de.ljz.questify.core.utils.getSerializedRouteName
-import de.ljz.questify.feature.dashboard.presentation.DashboardRoute
-import de.ljz.questify.feature.habits.presentation.HabitsRoute
-import de.ljz.questify.feature.main.presentation.MainUiState
+import de.ljz.questify.feature.dashboard.presentation.screens.dashboard.DashboardRoute
+import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
+import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
 import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute

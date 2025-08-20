@@ -30,12 +30,12 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.application.SortingDirections
-import de.ljz.questify.core.presentation.components.EasyIcon
-import de.ljz.questify.core.presentation.components.EpicIcon
-import de.ljz.questify.core.presentation.components.HardIcon
-import de.ljz.questify.core.presentation.components.MediumIcon
-import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import de.ljz.questify.feature.quests.presentation.components.EasyIcon
+import de.ljz.questify.feature.quests.presentation.components.EpicIcon
+import de.ljz.questify.feature.quests.presentation.components.HardIcon
+import de.ljz.questify.feature.quests.presentation.components.MediumIcon
+import de.ljz.questify.feature.quests.presentation.components.QuestItem
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQuestPageState
 

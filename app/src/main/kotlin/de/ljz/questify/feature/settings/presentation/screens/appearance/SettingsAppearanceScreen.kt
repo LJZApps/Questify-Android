@@ -39,9 +39,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.materialkolor.PaletteStyle
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
 import de.ljz.questify.core.state.ThemeBehavior
 import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.settings.presentation.dialogs.ColorPickerDialog

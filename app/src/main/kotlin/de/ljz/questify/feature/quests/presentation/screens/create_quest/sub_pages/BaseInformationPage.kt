@@ -45,10 +45,10 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.compose.UIModePreviews
-import de.ljz.questify.core.presentation.components.EasyIcon
-import de.ljz.questify.core.presentation.components.EpicIcon
-import de.ljz.questify.core.presentation.components.HardIcon
-import de.ljz.questify.core.presentation.components.MediumIcon
+import de.ljz.questify.feature.quests.presentation.components.EasyIcon
+import de.ljz.questify.feature.quests.presentation.components.EpicIcon
+import de.ljz.questify.feature.quests.presentation.components.HardIcon
+import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestUiState
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
