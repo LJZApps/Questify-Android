@@ -2,10 +2,7 @@ package de.ljz.questify.feature.settings.presentation.screens.appearance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.materialkolor.PaletteStyle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.feature.settings.data.models.ThemeBehavior
-import de.ljz.questify.feature.settings.data.models.ThemeColor
 import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,52 +36,87 @@ class SettingsAppearanceViewModel @Inject constructor(
         }
     }
 
-    private fun updateUiState(update: SettingsAppearanceUiState.() -> SettingsAppearanceUiState) {
-        _uiState.value = _uiState.value.update()
-    }
+    fun onUiEvent(event: SettingsAppearanceUiEvent) {
+        when(event) {
+            is SettingsAppearanceUiEvent.UpdateDynamicColorsEnabled -> {
+                viewModelScope.launch {
+                    appSettingsRepository.setDynamicColorsEnabled(event.enabled)
+                }
+            }
 
-    fun showCustomColorDialog() = updateUiState { copy(customColorDialogVisible = true) }
-    fun hideCustomColorDialog() = updateUiState { copy(customColorDialogVisible = false) }
-    fun showDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = true) }
-    fun hideDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = false) }
-    fun showPaletteStyleDialog() = updateUiState { copy(paletteStyleDialogVisible = true) }
-    fun hidePaletteStyleDialog() = updateUiState { copy(paletteStyleDialogVisible = false) }
-    fun showColorPickerDialog() = updateUiState { copy(colorPickerDialogVisible = true) }
-    fun hideColorPickerDialog() = updateUiState { copy(colorPickerDialogVisible = false) }
+            is SettingsAppearanceUiEvent.ShowDarkModeDialog -> {
+                _uiState.update {
+                    it.copy(
+                        darkModeDialogVisible = true
+                    )
+                }
+            }
 
-    fun updateDynamicColorsEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            appSettingsRepository.setDynamicColorsEnabled(enabled)
-        }
-    }
+            is SettingsAppearanceUiEvent.HideDarkModeDialog -> {
+                _uiState.update {
+                    it.copy(
+                        darkModeDialogVisible = false
+                    )
+                }
+            }
 
-    fun setAppColor(color: String) {
-        viewModelScope.launch {
-            appSettingsRepository.setAppColor(color)
-        }
-    }
+            is SettingsAppearanceUiEvent.UpdateIsAmoledEnabled -> {
+                viewModelScope.launch {
+                    appSettingsRepository.isAmoledEnabled(event.enabled)
+                }
+            }
 
-    fun updatePaletteStyle(style: PaletteStyle) {
-        viewModelScope.launch {
-            appSettingsRepository.setThemeStyle(style)
-        }
-    }
+            is SettingsAppearanceUiEvent.ShowPaletteStyleDialog -> {
+                _uiState.update {
+                    it.copy(
+                        paletteStyleDialogVisible = true
+                    )
+                }
+            }
 
-    fun updateIsAmoledEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            appSettingsRepository.isAmoledEnabled(enabled)
-        }
-    }
+            is SettingsAppearanceUiEvent.HidePaletteStyleDialog -> {
+                _uiState.update {
+                    it.copy(
+                        paletteStyleDialogVisible = false
+                    )
+                }
+            }
 
-    fun updateCustomColor(color: ThemeColor) {
-        viewModelScope.launch {
-            appSettingsRepository.setCustomColor(color)
-        }
-    }
+            is SettingsAppearanceUiEvent.ShowColorPickerDialog -> {
+                _uiState.update {
+                    it.copy(
+                        colorPickerDialogVisible = true
+                    )
+                }
+            }
 
-    fun updateThemeBehavior(themeBehavior: ThemeBehavior) {
-        viewModelScope.launch {
-            appSettingsRepository.setDarkModeBehavior(themeBehavior)
+            is SettingsAppearanceUiEvent.HideColorPickerDialog -> {
+                _uiState.update {
+                    it.copy(
+                        colorPickerDialogVisible = false
+                    )
+                }
+            }
+
+            is SettingsAppearanceUiEvent.UpdateThemeBehavior -> {
+                viewModelScope.launch {
+                    appSettingsRepository.setDarkModeBehavior(event.behavior)
+                }
+            }
+
+            is SettingsAppearanceUiEvent.UpdatePaletteStyle -> {
+                viewModelScope.launch {
+                    appSettingsRepository.setThemeStyle(event.style)
+                }
+            }
+
+            is SettingsAppearanceUiEvent.UpdateAppColor -> {
+                viewModelScope.launch {
+                    appSettingsRepository.setAppColor(event.color)
+                }
+            }
+
+            else -> Unit
         }
     }
 }

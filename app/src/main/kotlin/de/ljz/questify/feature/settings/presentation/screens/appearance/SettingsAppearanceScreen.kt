@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.materialkolor.PaletteStyle
@@ -42,8 +43,8 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
-import de.ljz.questify.feature.settings.data.models.ThemeBehavior
 import de.ljz.questify.core.utils.NavBarConfig
+import de.ljz.questify.feature.settings.data.models.ThemeBehavior
 import de.ljz.questify.feature.settings.presentation.dialogs.ColorPickerDialog
 import de.ljz.questify.feature.settings.presentation.dialogs.PaletteStyleDialog
 import de.ljz.questify.feature.settings.presentation.dialogs.ThemeBehaviorDialog
@@ -56,6 +57,26 @@ fun SettingsAppearanceScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
+    LaunchedEffect(Unit) {
+        NavBarConfig.transparentNavBar = true
+    }
+
+    SettingsAppearanceScreenContent(
+        uiState = uiState
+    ) { event ->
+        when (event) {
+            is SettingsAppearanceUiEvent.NavigateUp -> mainNavController.navigateUp()
+            else -> viewModel.onUiEvent(event)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@Composable
+private fun SettingsAppearanceScreenContent(
+    uiState: SettingsAppearanceUiState,
+    onUiEvent: (SettingsAppearanceUiEvent) -> Unit
+) {
     val themOptions = listOf(
         ThemeItem(
             stringResource(R.string.settings_screen_theme_system),
@@ -65,10 +86,6 @@ fun SettingsAppearanceScreen(
         ThemeItem(stringResource(R.string.settings_screen_theme_light), ThemeBehavior.LIGHT),
     )
 
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,7 +94,9 @@ fun SettingsAppearanceScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() },
+                        onClick = {
+                            onUiEvent.invoke(SettingsAppearanceUiEvent.NavigateUp)
+                        },
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
@@ -97,7 +116,13 @@ fun SettingsAppearanceScreen(
                 title = stringResource(R.string.settings_screen_dynamic_colors_title),
                 subtitle = stringResource(R.string.settings_screen_dynamic_colors_subtitle),
                 icon = { Icon(Icons.Outlined.Colorize, contentDescription = null) },
-                onCheckedChange = viewModel::updateDynamicColorsEnabled,
+                onCheckedChange = {
+                    onUiEvent.invoke(
+                        SettingsAppearanceUiEvent.UpdateDynamicColorsEnabled(
+                            it
+                        )
+                    )
+                }
             )
 
             ExpressiveSettingsMenuLink(
@@ -119,7 +144,7 @@ fun SettingsAppearanceScreen(
                     )
                 },
                 onClick = {
-                    viewModel.showDarkModeDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.ShowDarkModeDialog)
                 }
             )
 
@@ -132,7 +157,9 @@ fun SettingsAppearanceScreen(
                         title = stringResource(R.string.settings_appearance_screen_amoled_title),
                         subtitle = stringResource(R.string.settings_appearance_screen_amoled_description),
                         icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
-                        onCheckedChange = viewModel::updateIsAmoledEnabled,
+                        onCheckedChange = { enabled ->
+                            onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateIsAmoledEnabled(enabled))
+                        },
                     )
 
                     ExpressiveSettingsMenuLink(
@@ -140,7 +167,7 @@ fun SettingsAppearanceScreen(
                         subtitle = PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name,
                         icon = { Icon(Icons.Outlined.Style, contentDescription = null) },
                         onClick = {
-                            viewModel.showPaletteStyleDialog()
+                            onUiEvent.invoke(SettingsAppearanceUiEvent.ShowPaletteStyleDialog)
                         }
                     )
 
@@ -154,11 +181,11 @@ fun SettingsAppearanceScreen(
                                         .padding(vertical = 8.dp)
                                         .size(24.dp)
                                         .clip(CircleShape)
-                                        .background(Color(android.graphics.Color.parseColor(uiState.appColor)))
+                                        .background(Color(uiState.appColor.toColorInt()))
                                 )
                             },
                             onClick = {
-                                viewModel.showColorPickerDialog()
+                                onUiEvent.invoke(SettingsAppearanceUiEvent.ShowColorPickerDialog)
                             }
                         )
                     }
@@ -170,11 +197,11 @@ fun SettingsAppearanceScreen(
             ThemeBehaviorDialog(
                 themeBehavior = uiState.themeBehavior,
                 onConfirm = { behavior ->
-                    viewModel.updateThemeBehavior(behavior)
-                    viewModel.hideDarkModeDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateThemeBehavior(behavior))
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.HideDarkModeDialog)
                 },
                 onDismiss = {
-                    viewModel.hideDarkModeDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.HideDarkModeDialog)
                 }
             )
         }
@@ -183,11 +210,11 @@ fun SettingsAppearanceScreen(
             PaletteStyleDialog(
                 paletteStyle = uiState.paletteStyle,
                 onConfirm = { style ->
-                    viewModel.updatePaletteStyle(style)
-                    viewModel.hidePaletteStyleDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdatePaletteStyle(style))
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.HidePaletteStyleDialog)
                 },
                 onDismiss = {
-                    viewModel.hidePaletteStyleDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.HidePaletteStyleDialog)
                 }
             )
         }
@@ -196,11 +223,11 @@ fun SettingsAppearanceScreen(
             ColorPickerDialog(
                 appColor = uiState.appColor,
                 onConfirm = { color ->
-                    viewModel.setAppColor(color)
-                    viewModel.hideColorPickerDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateAppColor(color))
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.HideColorPickerDialog)
                 },
                 onDismiss = {
-                    viewModel.hideColorPickerDialog()
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.HideColorPickerDialog)
                 }
             )
         }

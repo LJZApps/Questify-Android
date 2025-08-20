@@ -22,7 +22,7 @@ object AppUserModule {
 
     @Singleton
     @Provides
-    fun provideUserDatastore(@ApplicationContext context: Context): DataStore<AppUser> =
+    fun provideAppUserDatastore(@ApplicationContext context: Context): DataStore<AppUser> =
         DataStoreFactory.create(
             serializer = AppUserSerializer,
             corruptionHandler = ReplaceFileCorruptionHandler { AppUser() },

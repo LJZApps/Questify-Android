@@ -3,14 +3,13 @@ package de.ljz.questify.feature.settings.presentation.screens.appearance
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.toHex
+import de.ljz.questify.core.utils.Standard
 import de.ljz.questify.feature.settings.data.models.ThemeBehavior
 import de.ljz.questify.feature.settings.data.models.ThemeColor
-import de.ljz.questify.core.utils.Standard
 
 data class SettingsAppearanceUiState(
     val selectedThemeColor: ThemeColor = ThemeColor.RED,
     val selectedDarkMode: ThemeBehavior = ThemeBehavior.SYSTEM_STANDARD,
-    val customColorDialogVisible: Boolean = false,
     val darkModeDialogVisible: Boolean = false,
     val paletteStyleDialogVisible: Boolean = false,
     val colorPickerDialogVisible: Boolean = false,
