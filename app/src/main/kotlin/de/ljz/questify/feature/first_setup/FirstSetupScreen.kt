@@ -41,10 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.core.utils.NavBarConfig
-import de.ljz.questify.ui.features.first_setup.sub_pages.IntroductionPage
-import de.ljz.questify.ui.features.first_setup.sub_pages.QuickSettingPage
-import de.ljz.questify.ui.features.first_setup.sub_pages.UserSetupPage
-import de.ljz.questify.ui.features.main.MainRoute
+import de.ljz.questify.feature.first_setup.sub_pages.IntroductionPage
+import de.ljz.questify.feature.first_setup.sub_pages.QuickSettingPage
+import de.ljz.questify.feature.first_setup.sub_pages.UserSetupPage
+import de.ljz.questify.feature.main.MainRoute
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -177,7 +177,7 @@ fun FirstSetupScreen(
                             }
 
                             navController.navigate(MainRoute) {
-                                popUpTo<MainRoute>{
+                                popUpTo<MainRoute> {
                                     inclusive = true
                                 }
                             }

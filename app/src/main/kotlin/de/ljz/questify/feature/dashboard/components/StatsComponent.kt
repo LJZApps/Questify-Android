@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.domain.datastore.AppUser
+import de.ljz.questify.core.domain.datastore.AppUser
 
 @Composable
 fun StatsComponent(
@@ -40,7 +40,11 @@ fun StatsComponent(
 ) {
     val currentLevelXP = calculateXPForLevel(appUser.level)
     val nextLevelXP = calculateXPForLevel(appUser.level + 1)
-    val progress = ((appUser.xp - currentLevelXP).toFloat() / (nextLevelXP - currentLevelXP).toFloat()).coerceIn(0f, 1f)
+    val progress =
+        ((appUser.xp - currentLevelXP).toFloat() / (nextLevelXP - currentLevelXP).toFloat()).coerceIn(
+            0f,
+            1f
+        )
     val animatedProgress by animateFloatAsState(targetValue = progress, label = "XP Progress")
 
     Card(
@@ -48,7 +52,7 @@ fun StatsComponent(
             .fillMaxWidth(),
         onClick = onClick
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
