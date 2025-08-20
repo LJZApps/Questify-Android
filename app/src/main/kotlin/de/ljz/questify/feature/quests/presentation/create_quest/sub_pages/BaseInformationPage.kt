@@ -49,7 +49,7 @@ import de.ljz.questify.core.presentation.components.EasyIcon
 import de.ljz.questify.core.presentation.components.EpicIcon
 import de.ljz.questify.core.presentation.components.HardIcon
 import de.ljz.questify.core.presentation.components.MediumIcon
-import de.ljz.questify.ui.features.quests.create_quest.CreateQuestUiState
+import de.ljz.questify.feature.quests.presentation.create_quest.CreateQuestUiState
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -70,10 +70,22 @@ fun BaseInformationPage(
 
     val difficultyDescriptions = listOf(
         stringResource(R.string.difficulty_none_description, "No difficulty set"),
-        stringResource(R.string.difficulty_easy_description, "Simple tasks that don't require much effort"),
-        stringResource(R.string.difficulty_medium_description, "Tasks that require some effort and focus"),
-        stringResource(R.string.difficulty_hard_description, "Challenging tasks that require significant effort"),
-        stringResource(R.string.difficulty_epic_description, "Major tasks that require extensive effort and time")
+        stringResource(
+            R.string.difficulty_easy_description,
+            "Simple tasks that don't require much effort"
+        ),
+        stringResource(
+            R.string.difficulty_medium_description,
+            "Tasks that require some effort and focus"
+        ),
+        stringResource(
+            R.string.difficulty_hard_description,
+            "Challenging tasks that require significant effort"
+        ),
+        stringResource(
+            R.string.difficulty_epic_description,
+            "Major tasks that require extensive effort and time"
+        )
     )
 
     Column(
@@ -235,6 +247,7 @@ fun BaseInformationPage(
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
+
                                     1 -> EasyIcon(tint = MaterialTheme.colorScheme.onPrimaryContainer)
                                     2 -> MediumIcon(tint = MaterialTheme.colorScheme.onPrimaryContainer)
                                     3 -> HardIcon(tint = MaterialTheme.colorScheme.onPrimaryContainer)

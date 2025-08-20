@@ -41,7 +41,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.compose.UIModePreviews
-import de.ljz.questify.ui.features.quests.create_quest.CreateQuestUiState
+import de.ljz.questify.feature.quests.presentation.create_quest.CreateQuestUiState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -200,9 +200,9 @@ fun DetailedInformationPage(
                             val formattedDate = dueDateFormat.format(date)
 
                             Text(
-                                text = if (uiState.selectedDueDate.toInt() == 0) 
-                                    stringResource(R.string.detailed_information_page_due_date_empty) 
-                                else 
+                                text = if (uiState.selectedDueDate.toInt() == 0)
+                                    stringResource(R.string.detailed_information_page_due_date_empty)
+                                else
                                     formattedDate,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -272,72 +272,75 @@ fun DetailedInformationPage(
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                         modifier = Modifier.clip(RoundedCornerShape(28.dp))
                     ) {
-                        uiState.notificationTriggerTimes.sortedBy { it }.forEachIndexed { index, triggerTime ->
-                            val date = Date(triggerTime)
-                            val formattedDate = reminderDateFormat.format(date)
+                        uiState.notificationTriggerTimes.sortedBy { it }
+                            .forEachIndexed { index, triggerTime ->
+                                val date = Date(triggerTime)
+                                val formattedDate = reminderDateFormat.format(date)
 
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .clickable {
-                                        onRemoveReminder(index)
-                                    },
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-                                ),
-                                shape = RoundedCornerShape(4.dp)
-                            ) {
-                                Row(
+                                Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .clickable {
+                                            onRemoveReminder(index)
+                                        },
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(
+                                            alpha = 0.3f
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(4.dp)
                                 ) {
                                     Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(40.dp)
+                                                    .clip(CircleShape)
+                                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                                                    .padding(8.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Icon(
+                                                    Icons.Outlined.Notifications,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                            }
+
+                                            Text(
+                                                text = formattedDate,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+
                                         Box(
                                             modifier = Modifier
                                                 .size(40.dp)
                                                 .clip(CircleShape)
-                                                .background(MaterialTheme.colorScheme.primaryContainer)
-                                                .padding(8.dp),
+                                                .clickable { onRemoveReminder(index) }
+                                                .padding(4.dp),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Icon(
-                                                Icons.Outlined.Notifications,
-                                                contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                Icons.Outlined.Delete,
+                                                contentDescription = "Remove reminder",
+                                                tint = MaterialTheme.colorScheme.error
                                             )
                                         }
-
-                                        Text(
-                                            text = formattedDate,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-
-                                    Box(
-                                        modifier = Modifier
-                                            .size(40.dp)
-                                            .clip(CircleShape)
-                                            .clickable { onRemoveReminder(index) }
-                                            .padding(4.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            Icons.Outlined.Delete,
-                                            contentDescription = "Remove reminder",
-                                            tint = MaterialTheme.colorScheme.error
-                                        )
                                     }
                                 }
                             }
-                        }
                     }
                 }
 

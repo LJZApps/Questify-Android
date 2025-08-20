@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.first_setup.components.FeatureCard
+import de.ljz.questify.feature.first_setup.components.FeatureCard
 
 @Composable
 fun IntroductionPage(

@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.R
-import de.ljz.questify.ui.features.quests.quests_overview.QuestDoneDialogState
+import de.ljz.questify.feature.quests.presentation.quests_overview.QuestDoneDialogState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -135,9 +135,9 @@ fun QuestDoneDialog(
                 ) {
                     Text(
                         text = if (state.xp > 0 || state.points > 0)
-                                stringResource(R.string.quest_done_dialog_take_rewards_button)
-                            else
-                                stringResource(R.string.quest_done_dialog_great_button)
+                            stringResource(R.string.quest_done_dialog_take_rewards_button)
+                        else
+                            stringResource(R.string.quest_done_dialog_great_button)
                     )
                 }
             }
@@ -156,7 +156,10 @@ private fun RewardSection(xp: Int, points: Int) {
         }
 
         if (points > 0) {
-            RewardItem(label = stringResource(R.string.quest_done_dialog_points), value = "+$points")
+            RewardItem(
+                label = stringResource(R.string.quest_done_dialog_points),
+                value = "+$points"
+            )
         }
     }
 }
@@ -214,7 +217,10 @@ private fun LevelUpBanner(newLevel: Int) {
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = stringResource(R.string.quest_done_dialog_level_up_description, newLevel),
+                    text = stringResource(
+                        R.string.quest_done_dialog_level_up_description,
+                        newLevel
+                    ),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )

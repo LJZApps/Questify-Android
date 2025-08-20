@@ -61,10 +61,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
-import de.ljz.questify.ui.features.quests.create_quest.components.DueDateInfoDialog
-import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
-import de.ljz.questify.ui.features.quests.create_quest.sub_pages.BaseInformationPage
-import de.ljz.questify.ui.features.quests.create_quest.sub_pages.DetailedInformationPage
+import de.ljz.questify.feature.quests.presentation.create_quest.components.DueDateInfoDialog
+import de.ljz.questify.feature.quests.presentation.create_quest.components.SetDueDateDialog
+import de.ljz.questify.feature.quests.presentation.create_quest.sub_pages.BaseInformationPage
+import de.ljz.questify.feature.quests.presentation.create_quest.sub_pages.DetailedInformationPage
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -81,7 +81,10 @@ fun CreateQuestScreen(
 
     val steps = listOf(
         NavigationItem(stringResource(R.string.create_quest_screen_general), Icons.Filled.Category),
-        NavigationItem(stringResource(R.string.create_quest_screen_details), Icons.Filled.Description),
+        NavigationItem(
+            stringResource(R.string.create_quest_screen_details),
+            Icons.Filled.Description
+        ),
         /*NavigationItem(stringResource(R.string.create_quest_screen_trophies), Icons.Filled.EmojiEvents)*/
     )
 
@@ -156,11 +159,11 @@ fun CreateQuestScreen(
                                             )
                                             .border(
                                                 width = if (index == currentStep) 2.dp else 1.dp,
-                                                color = if (index == currentStep) 
-                                                    MaterialTheme.colorScheme.primary 
-                                                else if (index < currentStep) 
-                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) 
-                                                else 
+                                                color = if (index == currentStep)
+                                                    MaterialTheme.colorScheme.primary
+                                                else if (index < currentStep)
+                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                                else
                                                     MaterialTheme.colorScheme.outline,
                                                 shape = CircleShape
                                             ),
@@ -180,9 +183,9 @@ fun CreateQuestScreen(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
                                         text = title,
-                                        style = if (index == currentStep) 
-                                            MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) 
-                                        else 
+                                        style = if (index == currentStep)
+                                            MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                                        else
                                             MaterialTheme.typography.bodyMedium,
                                         textAlign = TextAlign.Center,
                                         color = if (index <= currentStep)
@@ -223,6 +226,7 @@ fun CreateQuestScreen(
                             onTitleChange = { viewModel.updateTitle(it) },
                             onDifficultyChange = { viewModel.updateDifficulty(it) }
                         )
+
                         1 -> DetailedInformationPage(
                             uiState = uiState,
                             onNotesChange = { viewModel.updateDescription(it) },
@@ -301,7 +305,8 @@ fun CreateQuestScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(horizontal = 8.dp)
                         ) {
                             if (currentStep > 0) {
@@ -345,7 +350,8 @@ fun CreateQuestScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(horizontal = 8.dp)
                         ) {
                             if (currentStep < steps.size - 1) {

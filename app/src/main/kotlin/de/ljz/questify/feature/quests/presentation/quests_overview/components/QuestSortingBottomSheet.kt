@@ -34,7 +34,7 @@ import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
-import de.ljz.questify.ui.features.quests.quests_overview.SortingDirectionItem
+import de.ljz.questify.feature.quests.presentation.quests_overview.SortingDirectionItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -55,8 +55,14 @@ fun QuestSortingBottomSheet(
     val haptic = LocalHapticFeedback.current
 
     val sortingDirections = listOf(
-        SortingDirectionItem(stringResource(R.string.sorting_direction_ascending), SortingDirections.ASCENDING),
-        SortingDirectionItem(stringResource(R.string.sorting_direction_descending), SortingDirections.DESCENDING)
+        SortingDirectionItem(
+            stringResource(R.string.sorting_direction_ascending),
+            SortingDirections.ASCENDING
+        ),
+        SortingDirectionItem(
+            stringResource(R.string.sorting_direction_descending),
+            SortingDirections.DESCENDING
+        )
     )
 
     ModalBottomSheet(

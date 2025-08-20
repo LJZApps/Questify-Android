@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import de.ljz.questify.R
 import de.ljz.questify.core.state.ThemeBehavior
-import de.ljz.questify.ui.features.settings.appearance.ThemeItem
+import de.ljz.questify.feature.settings.appearance.ThemeItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -62,7 +62,8 @@ fun ThemeBehaviorDialog(
             ) {
                 themOptions.forEach { colorItem ->
                     Row(
-                        Modifier.fillMaxWidth()
+                        Modifier
+                            .fillMaxWidth()
                             .height(56.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .selectable(

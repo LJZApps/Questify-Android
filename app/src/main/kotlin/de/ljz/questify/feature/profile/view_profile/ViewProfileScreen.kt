@@ -41,7 +41,7 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.NavBarConfig
-import de.ljz.questify.ui.features.profile.edit_profile.EditProfileRoute
+import de.ljz.questify.feature.profile.edit_profile.EditProfileRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable

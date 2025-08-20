@@ -24,8 +24,8 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.ui.features.settings.appearance.SettingsAppearanceRoute
-import de.ljz.questify.ui.features.settings.help.SettingsHelpRoute
+import de.ljz.questify.feature.settings.appearance.SettingsAppearanceRoute
+import de.ljz.questify.feature.settings.help.SettingsHelpRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable

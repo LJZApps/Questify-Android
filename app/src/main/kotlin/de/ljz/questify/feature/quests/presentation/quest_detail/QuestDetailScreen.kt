@@ -58,8 +58,8 @@ import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMe
 import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItemWithTextField
 import de.ljz.questify.core.presentation.components.modals.CreateReminderDialog
 import de.ljz.questify.core.utils.NavBarConfig
-import de.ljz.questify.ui.features.quests.create_quest.components.SetDueDateDialog
-import de.ljz.questify.ui.features.quests.quest_detail.components.DeleteConfirmationDialog
+import de.ljz.questify.feature.quests.presentation.create_quest.components.SetDueDateDialog
+import de.ljz.questify.feature.quests.presentation.quest_detail.components.DeleteConfirmationDialog
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date

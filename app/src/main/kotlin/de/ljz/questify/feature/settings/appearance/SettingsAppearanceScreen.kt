@@ -44,9 +44,9 @@ import de.ljz.questify.core.presentation.components.expressive_settings.Expressi
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSwitch
 import de.ljz.questify.core.state.ThemeBehavior
 import de.ljz.questify.core.utils.NavBarConfig
-import de.ljz.questify.ui.features.settings.appearance.components.ColorPickerDialog
-import de.ljz.questify.ui.features.settings.appearance.components.PaletteStyleDialog
-import de.ljz.questify.ui.features.settings.appearance.components.ThemeBehaviorDialog
+import de.ljz.questify.feature.settings.appearance.components.ColorPickerDialog
+import de.ljz.questify.feature.settings.appearance.components.PaletteStyleDialog
+import de.ljz.questify.feature.settings.appearance.components.ThemeBehaviorDialog
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -69,7 +69,7 @@ fun SettingsAppearanceScreen(
         NavBarConfig.transparentNavBar = true
     }
 
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
                 title = {
@@ -86,7 +86,7 @@ fun SettingsAppearanceScreen(
             )
         }
     ) { innerPadding ->
-        ExpressiveSettingsSection (
+        ExpressiveSettingsSection(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -137,14 +137,14 @@ fun SettingsAppearanceScreen(
 
                     ExpressiveSettingsMenuLink(
                         title = stringResource(R.string.settings_appearance_screen_theme_style_title),
-                        subtitle =  PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name,
+                        subtitle = PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name,
                         icon = { Icon(Icons.Outlined.Style, contentDescription = null) },
                         onClick = {
                             viewModel.showPaletteStyleDialog()
                         }
                     )
 
-                    if(uiState.paletteStyle != PaletteStyle.Monochrome) {
+                    if (uiState.paletteStyle != PaletteStyle.Monochrome) {
                         ExpressiveSettingsMenuLink(
                             title = stringResource(R.string.settings_appearance_screen_app_tint_title),
                             subtitle = stringResource(R.string.settings_appearance_screen_app_tint_description),

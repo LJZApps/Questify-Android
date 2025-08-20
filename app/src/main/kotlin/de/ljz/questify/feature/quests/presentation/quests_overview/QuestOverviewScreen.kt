@@ -57,11 +57,11 @@ import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.ui.features.quests.create_quest.CreateQuestRoute
-import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailRoute
-import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
-import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.AllQuestsPage
+import de.ljz.questify.feature.quests.presentation.create_quest.CreateQuestRoute
+import de.ljz.questify.feature.quests.presentation.quest_detail.QuestDetailRoute
+import de.ljz.questify.feature.quests.presentation.quests_overview.components.QuestDoneDialog
+import de.ljz.questify.feature.quests.presentation.quests_overview.components.QuestSortingBottomSheet
+import de.ljz.questify.feature.quests.presentation.quests_overview.sub_pages.AllQuestsPage
 import kotlinx.coroutines.launch
 
 @OptIn(

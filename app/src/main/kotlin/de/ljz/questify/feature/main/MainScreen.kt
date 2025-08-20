@@ -22,10 +22,10 @@ import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.utils.isAlarmPermissionGranted
 import de.ljz.questify.core.utils.isNotificationPermissionGranted
 import de.ljz.questify.core.utils.isOverlayPermissionGranted
-import de.ljz.questify.ui.features.main.components.DrawerContent
-import de.ljz.questify.ui.features.quests.quests_overview.QuestOverviewScreen
-import de.ljz.questify.ui.features.quests.quests_overview.QuestsRoute
-import de.ljz.questify.ui.features.settings.permissions.SettingsPermissionRoute
+import de.ljz.questify.feature.main.components.DrawerContent
+import de.ljz.questify.feature.quests.presentation.quests_overview.QuestOverviewScreen
+import de.ljz.questify.feature.quests.presentation.quests_overview.QuestsRoute
+import de.ljz.questify.feature.settings.permissions.SettingsPermissionRoute
 import io.sentry.compose.SentryTraced
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)

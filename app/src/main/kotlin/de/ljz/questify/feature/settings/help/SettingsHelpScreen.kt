@@ -26,10 +26,10 @@ import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.ui.features.first_setup.FirstSetupRoute
-import de.ljz.questify.ui.features.main.MainRoute
-import de.ljz.questify.ui.features.settings.feedback.SettingsFeedbackRoute
-import de.ljz.questify.ui.features.settings.permissions.SettingsPermissionRoute
+import de.ljz.questify.feature.first_setup.FirstSetupRoute
+import de.ljz.questify.feature.main.MainRoute
+import de.ljz.questify.feature.settings.feedback.SettingsFeedbackRoute
+import de.ljz.questify.feature.settings.permissions.SettingsPermissionRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -96,10 +96,10 @@ fun SettingsHelpScreen(
             ExpressiveSettingsMenuLink(
                 title = stringResource(R.string.settings_help_screen_app_info),
                 subtitle = stringResource(
-                            R.string.settings_help_screen_app_info_description,
-                            BuildConfig.VERSION_NAME,
-                            BuildConfig.VERSION_CODE
-                        ),
+                    R.string.settings_help_screen_app_info_description,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE
+                ),
                 icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
                 onClick = {}
             )

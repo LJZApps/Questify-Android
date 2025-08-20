@@ -36,8 +36,8 @@ import de.ljz.questify.core.presentation.components.HardIcon
 import de.ljz.questify.core.presentation.components.MediumIcon
 import de.ljz.questify.core.presentation.components.QuestItem
 import de.ljz.questify.feature.quests.domain.models.QuestEntity
-import de.ljz.questify.ui.features.quests.quest_detail.QuestDetailRoute
-import de.ljz.questify.ui.features.quests.quests_overview.AllQuestPageState
+import de.ljz.questify.feature.quests.presentation.quest_detail.QuestDetailRoute
+import de.ljz.questify.feature.quests.presentation.quests_overview.AllQuestPageState
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
