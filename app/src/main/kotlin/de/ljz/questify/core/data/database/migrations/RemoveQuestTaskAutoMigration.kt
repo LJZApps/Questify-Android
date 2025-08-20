@@ -1,4 +1,4 @@
-package de.ljz.questify.core.domain.core.migrations
+package de.ljz.questify.core.data.database.migrations
 
 import androidx.room.DeleteTable
 import androidx.room.migration.AutoMigrationSpec

@@ -3,9 +3,9 @@ package de.ljz.questify.feature.settings.domain.repositories
 import androidx.datastore.core.DataStore
 import com.materialkolor.PaletteStyle
 import de.ljz.questify.core.domain.repositories.BaseRepository
-import de.ljz.questify.feature.settings.domain.models.ThemeBehavior
-import de.ljz.questify.feature.settings.domain.models.ThemeColor
-import de.ljz.questify.feature.settings.domain.models.AppSettings
+import de.ljz.questify.feature.settings.data.models.ThemeBehavior
+import de.ljz.questify.feature.settings.data.models.ThemeColor
+import de.ljz.questify.feature.settings.data.models.AppSettings
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

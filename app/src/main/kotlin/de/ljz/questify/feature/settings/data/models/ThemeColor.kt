@@ -1,4 +1,4 @@
-package de.ljz.questify.feature.settings.domain.models
+package de.ljz.questify.feature.settings.data.models
 
 enum class ThemeColor {
     RED,

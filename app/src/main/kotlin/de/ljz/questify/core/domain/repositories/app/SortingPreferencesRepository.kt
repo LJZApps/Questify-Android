@@ -3,7 +3,7 @@ package de.ljz.questify.core.domain.repositories.app
 import androidx.datastore.core.DataStore
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
-import de.ljz.questify.core.domain.datastore.SortingPreferences
+import de.ljz.questify.core.data.models.SortingPreferences
 import de.ljz.questify.core.domain.repositories.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

@@ -28,7 +28,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import de.ljz.questify.R
-import de.ljz.questify.feature.settings.domain.models.ThemeBehavior
+import de.ljz.questify.feature.settings.data.models.ThemeBehavior
 import de.ljz.questify.feature.settings.presentation.screens.appearance.ThemeItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

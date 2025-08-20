@@ -1,19 +1,19 @@
-package de.ljz.questify.core.domain.core
+package de.ljz.questify.core.data.database
 
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import de.ljz.questify.core.domain.core.converters.AppDatabaseConverters
-import de.ljz.questify.core.domain.core.migrations.InitialMigrationSpec
-import de.ljz.questify.core.domain.core.migrations.MainQuestAutoMigration
-import de.ljz.questify.core.domain.core.migrations.QuestEntityAutoMigration
-import de.ljz.questify.core.domain.core.migrations.QuestTaskAutoMigration
-import de.ljz.questify.core.domain.core.migrations.RemoveQuestTaskAutoMigration
-import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.core.data.database.adapters.DateAdapter
+import de.ljz.questify.core.data.database.migrations.InitialMigrationSpec
+import de.ljz.questify.core.data.database.migrations.MainQuestAutoMigration
+import de.ljz.questify.core.data.database.migrations.QuestEntityAutoMigration
+import de.ljz.questify.core.data.database.migrations.QuestTaskAutoMigration
+import de.ljz.questify.core.data.database.migrations.RemoveQuestTaskAutoMigration
 import de.ljz.questify.feature.quests.data.daos.QuestDao
 import de.ljz.questify.feature.quests.data.daos.QuestNotificationDao
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 
 @Database(
     entities = [
@@ -32,7 +32,7 @@ import de.ljz.questify.feature.quests.data.models.QuestEntity
         AutoMigration(from = 5, to = 6, spec = RemoveQuestTaskAutoMigration::class)
     ]
 )
-@TypeConverters(AppDatabaseConverters::class)
+@TypeConverters(DateAdapter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getQuestDao(): QuestDao
     abstract fun getQuestNotificationDao(): QuestNotificationDao

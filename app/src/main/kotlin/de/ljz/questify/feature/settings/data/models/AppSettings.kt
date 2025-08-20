@@ -1,4 +1,4 @@
-package de.ljz.questify.feature.settings.domain.models
+package de.ljz.questify.feature.settings.data.models
 
 import android.util.Log
 import androidx.compose.ui.graphics.Color

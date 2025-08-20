@@ -3,8 +3,8 @@ package de.ljz.questify.feature.settings.presentation.screens.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.feature.settings.domain.models.ThemeBehavior
-import de.ljz.questify.feature.settings.domain.models.ThemeColor
+import de.ljz.questify.feature.settings.data.models.ThemeBehavior
+import de.ljz.questify.feature.settings.data.models.ThemeColor
 import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

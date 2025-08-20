@@ -9,8 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import de.ljz.questify.feature.settings.domain.models.AppSettings
-import de.ljz.questify.feature.settings.domain.models.AppSettingsSerializer
+import de.ljz.questify.feature.settings.data.models.AppSettings
+import de.ljz.questify.feature.settings.data.models.AppSettingsSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.File

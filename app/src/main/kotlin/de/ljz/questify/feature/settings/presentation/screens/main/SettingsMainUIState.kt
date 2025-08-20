@@ -2,8 +2,8 @@ package de.ljz.questify.feature.settings.presentation.screens.main
 
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.ktx.toHex
-import de.ljz.questify.feature.settings.domain.models.ThemeBehavior
-import de.ljz.questify.feature.settings.domain.models.ThemeColor
+import de.ljz.questify.feature.settings.data.models.ThemeBehavior
+import de.ljz.questify.feature.settings.data.models.ThemeColor
 import de.ljz.questify.core.utils.Standard
 
 data class SettingsUIState(

@@ -1,9 +1,9 @@
-package de.ljz.questify.core.domain.core.converters
+package de.ljz.questify.core.data.database.adapters
 
 import androidx.room.TypeConverter
 import java.util.Date
 
-class AppDatabaseConverters {
+class DateAdapter {
 
     @TypeConverter
     fun fromDate(value: Date?): Long? {
