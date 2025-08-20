@@ -78,7 +78,7 @@ fun DrawerContent(
                     title = "Habits",
                     icon = Icons.Filled.Eco,
                     route = HabitsRoute,
-                    featureEnabled = true
+                    featureEnabled = false
                 ),
             )
         )
