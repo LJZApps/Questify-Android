@@ -7,16 +7,12 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.BuildConfig
-import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.application.SortingDirections
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.domain.repositories.app.AppSettingsRepository
 import de.ljz.questify.domain.repositories.app.AppUserRepository
-import de.ljz.questify.domain.repositories.app.FeatureSettingsRepository
 import de.ljz.questify.domain.repositories.app.SortingPreferencesRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,16 +21,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class QuestOverviewViewModel @Inject constructor(
-    private val appSettingsRepository: AppSettingsRepository,
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
-    private val appFeatureSettingsRepository: FeatureSettingsRepository,
     private val sortingPreferencesRepository: SortingPreferencesRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
@@ -48,17 +41,6 @@ class QuestOverviewViewModel @Inject constructor(
                 }
             }
             launch {
-                appFeatureSettingsRepository.getFeatureSettings().collectLatest { settings ->
-                    _uiState.update {
-                        it.copy(
-                            featureSettings = it.featureSettings.copy(
-                                fastQuestAddingEnabled = settings.questFastAddingEnabled
-                            )
-                        )
-                    }
-                }
-            }
-            launch {
                 sortingPreferencesRepository.getQuestSortingPreferences().collectLatest { sortingPreferences ->
                     _uiState.update {
                         it.copy(
@@ -69,25 +51,6 @@ class QuestOverviewViewModel @Inject constructor(
                             )
                         )
                     }
-                }
-            }
-            launch {
-                appUserRepository.getAppUser().collectLatest { appUser ->
-                    _uiState.update {
-                        it.copy(
-                            userState = it.userState.copy(
-                                profilePictureUrl = appUser.profilePicture
-                            )
-                        )
-                    }
-                }
-            }
-            launch {
-                appSettingsRepository.getAppSettings().collectLatest { appSettings ->
-                    if (appSettings.lastOpenedVersion < BuildConfig.VERSION_CODE)
-                        _uiState.update {
-                            it.copy(newVersionVisible = true)
-                        }
                 }
             }
         }
@@ -140,17 +103,6 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun createFastQuest(title: String) {
-        viewModelScope.launch {
-            val fastQuest = QuestEntity(
-                title = title,
-                difficulty = Difficulty.NONE,
-                createdAt = Date()
-            )
-            questRepository.addMainQuest(fastQuest)
-            updateFastAddingText("")
-        }
-    }
 
     fun deleteQuest(id: Int) {
         viewModelScope.launch {
@@ -188,22 +140,6 @@ class QuestOverviewViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 isSortingBottomSheetOpen = false
-            )
-        }
-    }
-
-    fun updateIsFastAddingFocused(focused: Boolean) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isFastAddingFocused = focused
-            )
-        }
-    }
-
-    fun updateFastAddingText(text: String) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                fastAddingText = text
             )
         }
     }
