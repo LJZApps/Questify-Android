@@ -26,8 +26,8 @@ import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive_settings.ExpressiveSettingsSection
-import de.ljz.questify.feature.first_setup.FirstSetupRoute
-import de.ljz.questify.feature.main.MainRoute
+import de.ljz.questify.feature.first_setup.presentation.FirstSetupRoute
+import de.ljz.questify.feature.main.presentation.MainRoute
 import de.ljz.questify.feature.settings.presentation.screens.feedback.SettingsFeedbackRoute
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 

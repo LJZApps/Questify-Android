@@ -1,4 +1,4 @@
-package de.ljz.questify.core.di
+package de.ljz.questify.feature.settings.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -9,8 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import de.ljz.questify.core.domain.datastore.SortingPreferences
-import de.ljz.questify.core.domain.datastore.SortingPreferencesSerializer
+import de.ljz.questify.feature.settings.domain.models.AppSettings
+import de.ljz.questify.feature.settings.domain.models.AppSettingsSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.File
@@ -18,16 +18,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatastoreModule {
+object AppSettingsModule {
 
     @Singleton
     @Provides
-    fun provideSoringPreferencesDatastore(@ApplicationContext context: Context): DataStore<SortingPreferences> =
+    fun provideAppSettingsDatastore(@ApplicationContext context: Context): DataStore<AppSettings> =
         DataStoreFactory.create(
-            serializer = SortingPreferencesSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { SortingPreferences() },
+            serializer = AppSettingsSerializer,
+            corruptionHandler = ReplaceFileCorruptionHandler { AppSettings() },
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
-            produceFile = { File(context.filesDir, "datastore/sorting_preferences.json") }
+            produceFile = { File(context.filesDir, "datastore/app_settings.json") }
         )
+
 }

@@ -32,8 +32,8 @@ import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
 import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.worker.QuestNotificationWorker
-import de.ljz.questify.feature.first_setup.FirstSetupRoute
-import de.ljz.questify.feature.main.MainRoute
+import de.ljz.questify.feature.first_setup.presentation.FirstSetupRoute
+import de.ljz.questify.feature.main.presentation.MainRoute
 import io.sentry.android.core.SentryAndroid
 import java.util.concurrent.TimeUnit
 
