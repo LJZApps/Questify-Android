@@ -3,13 +3,9 @@ package de.ljz.questify.ui.features.quests.quests_overview
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -52,16 +48,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import de.ljz.questify.R
 import de.ljz.questify.core.application.QuestSorting
 import de.ljz.questify.core.presentation.components.expressive_menu.ExpressiveMenuItem
@@ -70,11 +61,7 @@ import de.ljz.questify.ui.features.quests.create_quest.navigation.CreateQuest
 import de.ljz.questify.ui.features.quests.quest_detail.navigation.QuestDetail
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestDoneDialog
 import de.ljz.questify.ui.features.quests.quests_overview.components.QuestSortingBottomSheet
-import de.ljz.questify.ui.features.quests.quests_overview.navigation.QuestBottomRoutes
 import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.AllQuestsPage
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.DailiesQuestsPage
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.HabitsQuestsPage
-import de.ljz.questify.ui.features.quests.quests_overview.sub_pages.RoutinesQuestsPage
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -86,15 +73,11 @@ fun QuestOverviewScreen(
     drawerState: DrawerState,
     viewModel: QuestOverviewViewModel = hiltViewModel(),
     mainNavController: NavHostController,
-    homeNavHostController: NavHostController,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val questDoneDialogState = uiState.questDoneDialogState
     val allQuestPageState = uiState.allQuestPageState
 
-    val bottomNavController = rememberNavController()
-    val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -114,6 +97,7 @@ fun QuestOverviewScreen(
                 searchBarState = searchBarState,
                 textFieldState = textFieldState,
                 onSearch = {
+                    // TODO
                     Toast.makeText(context, "Suche: $it", Toast.LENGTH_SHORT).show()
                 },
                 placeholder = {
@@ -229,38 +213,17 @@ fun QuestOverviewScreen(
                     .padding(innerPadding)
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
-                NavHost(
-                    navController = bottomNavController,
-                    startDestination = QuestBottomRoutes.AllQuests,
-                    enterTransition = { EnterTransition.None },
-                    exitTransition = { ExitTransition.None }
-                ) {
-                    composable<QuestBottomRoutes.AllQuests> {
-                        AllQuestsPage(
-                            state = uiState.allQuestPageState,
-                            onQuestDone = {
-                                viewModel.setQuestDone(
-                                    it,
-                                    context
-                                )
-                            },
-                            onQuestDelete = viewModel::deleteQuest,
-                            navController = mainNavController
+                AllQuestsPage(
+                    state = uiState.allQuestPageState,
+                    onQuestDone = {
+                        viewModel.setQuestDone(
+                            it,
+                            context
                         )
-                    }
-
-                    composable<QuestBottomRoutes.Dailies> {
-                        DailiesQuestsPage()
-                    }
-
-                    composable<QuestBottomRoutes.Routines> {
-                        RoutinesQuestsPage()
-                    }
-
-                    composable<QuestBottomRoutes.Habits> {
-                        HabitsQuestsPage()
-                    }
-                }
+                    },
+                    onQuestDelete = viewModel::deleteQuest,
+                    navController = mainNavController
+                )
             }
 
             if (questDoneDialogState.visible) {
@@ -295,10 +258,4 @@ fun QuestOverviewScreen(
             )
         }
     )
-}
-
-@Composable
-fun isKeyboardVisible(): Boolean {
-    val imeInsets = WindowInsets.ime.getBottom(LocalDensity.current)
-    return imeInsets > 0
 }

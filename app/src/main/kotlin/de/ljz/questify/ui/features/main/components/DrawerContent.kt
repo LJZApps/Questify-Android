@@ -46,7 +46,7 @@ import coil3.compose.AsyncImage
 import de.ljz.questify.ui.features.dashboard.navigation.DashboardRoute
 import de.ljz.questify.ui.features.main.MainUiState
 import de.ljz.questify.ui.features.profile.view_profile.navigation.ProfileRoute
-import de.ljz.questify.ui.features.quests.quests_overview.navigation.Quests
+import de.ljz.questify.ui.features.quests.quests_overview.QuestsRoute
 import de.ljz.questify.ui.features.settings.main.navigation.SettingsMainRoute
 import de.ljz.questify.ui.features.trophies.navigation.TrophiesRoute
 import de.ljz.questify.util.getSerializedRouteName
@@ -78,7 +78,7 @@ fun DrawerContent(
                 NavigationItem(
                     title = "Quests",
                     icon = Icons.AutoMirrored.Filled.List,
-                    route = Quests
+                    route = QuestsRoute
                 ),
                 NavigationItem(
                     title = "Habits",
