@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
-import de.ljz.questify.domain.repositories.quests.QuestNotificationRepository
-import de.ljz.questify.domain.repositories.quests.QuestRepository
+import de.ljz.questify.core.domain.repositories.quests.QuestNotificationRepository
+import de.ljz.questify.core.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,8 +36,10 @@ class CompleteQuestReceiver : BroadcastReceiver() {
                 try {
                     questRepository.setQuestDone(questId, true)
 
-                    val notifications = questNotificationRepository.getNotificationsByQuestId(questId)
-                    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    val notifications =
+                        questNotificationRepository.getNotificationsByQuestId(questId)
+                    val alarmManager =
+                        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
                     notifications.forEach { notification ->
                         val intent = Intent(context, QuestNotificationReceiver::class.java)
@@ -56,7 +58,8 @@ class CompleteQuestReceiver : BroadcastReceiver() {
 
                     questNotificationRepository.removeNotifications(questId)
 
-                    val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    val notificationManager =
+                        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     notificationManager.cancel(notificationId)
                 } catch (e: Exception) {
                     Log.e("CompleteQuestReceiver", "Error completing quest", e)

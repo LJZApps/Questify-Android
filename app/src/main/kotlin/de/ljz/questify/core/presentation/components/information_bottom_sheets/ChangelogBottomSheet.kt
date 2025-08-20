@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
-import de.ljz.questify.util.changelog.ChangeLogVersion
+import de.ljz.questify.core.utils.changelog.ChangeLogVersion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)

@@ -5,8 +5,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import de.ljz.questify.ui.state.ThemeBehavior
-import de.ljz.questify.ui.state.ThemeColor
+import de.ljz.questify.core.state.ThemeBehavior
+import de.ljz.questify.core.state.ThemeColor
 
 // Utility functions for color adjustments
 fun Color.adjustBrightness(factor: Float): Color {

@@ -17,8 +17,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.materialkolor.rememberDynamicColorScheme
-import de.ljz.questify.ui.state.ThemeBehavior
-import de.ljz.questify.ui.state.ThemeColor
+import de.ljz.questify.core.state.ThemeBehavior
+import de.ljz.questify.core.state.ThemeColor
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

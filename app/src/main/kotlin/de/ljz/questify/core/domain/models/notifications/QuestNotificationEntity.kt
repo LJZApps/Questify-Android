@@ -1,0 +1,40 @@
+package de.ljz.questify.core.domain.models.notifications
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import de.ljz.questify.feature.quests.domain.models.QuestEntity
+import java.util.Date
+
+@Entity(
+    tableName = "quest_notifications",
+    foreignKeys = [
+        ForeignKey(
+            entity = QuestEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["quest_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index(value = ["quest_id"])
+    ]
+)
+data class QuestNotificationEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @ColumnInfo(name = "quest_id")
+    val questId: Int,
+
+    @ColumnInfo(name = "notified")
+    val notified: Boolean = false,
+
+    @ColumnInfo(name = "notify_at")
+    val notifyAt: Date,
+
+    @ColumnInfo(name = "trophy_id")
+    val trophyId: Int? = null
+)

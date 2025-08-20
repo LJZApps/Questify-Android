@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.R
-import de.ljz.questify.data.shared_preferences.SessionManager
-import de.ljz.questify.domain.repositories.app.AppSettingsRepository
-import de.ljz.questify.domain.repositories.app.AppUserRepository
+import de.ljz.questify.core.data.shared_preferences.SessionManager
+import de.ljz.questify.core.domain.repositories.app.AppSettingsRepository
+import de.ljz.questify.core.domain.repositories.app.AppUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,15 +74,20 @@ class AppViewModel @Inject constructor(
     fun createNotificationChannel(context: Context) {
         val groupId = "quest_group"
         val groupName = context.getString(R.string.notification_channel_quests_title)
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val questGroup = NotificationChannelGroup(groupId, groupName)
         notificationManager.createNotificationChannelGroup(questGroup)
 
-        val soundUri = Uri.parse("android.resource://" + context.packageName + "/" + R.raw.quest_notification)
+        val soundUri =
+            Uri.parse("android.resource://" + context.packageName + "/" + R.raw.quest_notification)
 
-        val channel = NotificationChannel("quests",
-            context.getString(R.string.notification_channel_reminder_title), NotificationManager.IMPORTANCE_DEFAULT).apply {
+        val channel = NotificationChannel(
+            "quests",
+            context.getString(R.string.notification_channel_reminder_title),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
             description = context.getString(R.string.notification_channel_reminders_description)
             importance = NotificationManager.IMPORTANCE_HIGH
             group = groupId
@@ -96,7 +101,8 @@ class AppViewModel @Inject constructor(
     fun checkPermissions(context: Context) {
         _uiState.update {
             it.copy(
-                isNotificationPermissionGranted = NotificationManagerCompat.from(context).areNotificationsEnabled(),
+                isNotificationPermissionGranted = NotificationManagerCompat.from(context)
+                    .areNotificationsEnabled(),
                 isAlarmPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()
                 } else {

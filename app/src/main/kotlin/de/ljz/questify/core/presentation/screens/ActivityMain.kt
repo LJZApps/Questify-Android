@@ -22,18 +22,18 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
+import de.ljz.questify.core.presentation.navigation.routes.dialogRoutes
+import de.ljz.questify.core.presentation.navigation.routes.mainRoutes
+import de.ljz.questify.core.presentation.navigation.routes.profileRoutes
+import de.ljz.questify.core.presentation.navigation.routes.questRoutes
+import de.ljz.questify.core.presentation.navigation.routes.settingRoutes
+import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
+import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.ui.features.first_setup.FirstSetupRoute
 import de.ljz.questify.ui.features.main.MainRoute
-import de.ljz.questify.ui.navigation.ScaleTransitionDirection
-import de.ljz.questify.ui.navigation.routes.dialogRoutes
-import de.ljz.questify.ui.navigation.routes.mainRoutes
-import de.ljz.questify.ui.navigation.routes.profileRoutes
-import de.ljz.questify.ui.navigation.routes.questRoutes
-import de.ljz.questify.ui.navigation.routes.settingRoutes
-import de.ljz.questify.ui.navigation.scaleIntoContainer
-import de.ljz.questify.ui.navigation.scaleOutOfContainer
 import io.sentry.android.core.SentryAndroid
 import java.util.concurrent.TimeUnit
 

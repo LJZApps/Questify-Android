@@ -10,10 +10,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
+import de.ljz.questify.core.domain.repositories.app.AppSettingsRepository
+import de.ljz.questify.core.domain.repositories.quests.QuestNotificationRepository
 import de.ljz.questify.core.presentation.screens.ActivityMain
-import de.ljz.questify.domain.repositories.app.AppSettingsRepository
-import de.ljz.questify.domain.repositories.quests.QuestNotificationRepository
-import de.ljz.questify.ui.features.remind_again.RemindAgainActivity
+import de.ljz.questify.feature.remind_again.RemindAgainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,8 +34,10 @@ class QuestNotificationReceiver : BroadcastReceiver() {
 
         val notificationId = intent.getIntExtra("notificationId", 0)
         val questId = intent.getIntExtra("questId", 0)
-        val title = intent.getStringExtra("title") ?: context.getString(R.string.quest_notification_title)
-        val description = intent.getStringExtra("description") ?: context.getString(R.string.quest_notification_description)
+        val title =
+            intent.getStringExtra("title") ?: context.getString(R.string.quest_notification_title)
+        val description = intent.getStringExtra("description")
+            ?: context.getString(R.string.quest_notification_description)
         var hasNotified: Boolean = false
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -46,7 +48,12 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             action = Intent.ACTION_VIEW
             data = "questify://quest_detail/${questId}".toUri()
         }
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         // Complete quest
         val completeQuestIntent = Intent(context, CompleteQuestReceiver::class.java).apply {
@@ -54,7 +61,10 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             putExtra("questId", questId)
         }
         val completeQuestPendingIntent = PendingIntent.getBroadcast(
-            context, notificationId, completeQuestIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            notificationId,
+            completeQuestIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val completeQuestAction = NotificationCompat.Action.Builder(
             null,
@@ -68,7 +78,10 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             putExtra("questId", questId)
         }
         val remindAgainPendingIntent = PendingIntent.getActivity(
-            context, notificationId, remindAgainIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            notificationId,
+            remindAgainIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val remindAgainAction = NotificationCompat.Action.Builder(
             null,
@@ -88,7 +101,8 @@ class QuestNotificationReceiver : BroadcastReceiver() {
             .addAction(completeQuestAction)
             .addAction(remindAgainAction)
             .build()
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (!hasNotified) {
             notificationManager.notify(notificationId, notification)
@@ -101,8 +115,10 @@ class QuestNotificationReceiver : BroadcastReceiver() {
 
     @SuppressLint("MutatingSharedPrefs")
     private fun saveNotification(context: Context, title: String, description: String) {
-        val sharedPreferences = context.getSharedPreferences("quest_notifications", Context.MODE_PRIVATE)
-        val notifications = sharedPreferences.getStringSet("notifications", mutableSetOf()) ?: mutableSetOf()
+        val sharedPreferences =
+            context.getSharedPreferences("quest_notifications", Context.MODE_PRIVATE)
+        val notifications =
+            sharedPreferences.getStringSet("notifications", mutableSetOf()) ?: mutableSetOf()
         notifications.add("$title: $description")
         sharedPreferences.edit().putStringSet("notifications", notifications).apply()
     }

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.ljz.questify.core.application.Difficulty
 import de.ljz.questify.core.compose.UIModePreviews
-import de.ljz.questify.domain.models.quests.QuestEntity
+import de.ljz.questify.feature.quests.domain.models.QuestEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -3,9 +3,9 @@ package de.ljz.questify.core.presentation.theme
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.PaletteStyle
 import com.materialkolor.ktx.toHex
-import de.ljz.questify.ui.state.ThemeBehavior
-import de.ljz.questify.ui.state.ThemeColor
-import de.ljz.questify.util.Standard
+import de.ljz.questify.core.state.ThemeBehavior
+import de.ljz.questify.core.state.ThemeColor
+import de.ljz.questify.core.utils.Standard
 
 data class ThemeUiState(
     val themeBehavior: ThemeBehavior = ThemeBehavior.SYSTEM_STANDARD,
