@@ -151,7 +151,6 @@ fun DrawerContent(
                 }
             }
 
-            // Divider after profile information
             HorizontalDivider(
                 modifier = Modifier.padding(bottom = 6.dp)
             )
