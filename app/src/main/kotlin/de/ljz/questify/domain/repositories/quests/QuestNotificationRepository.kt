@@ -1,8 +1,8 @@
-package de.ljz.questify.domain.repositories
+package de.ljz.questify.domain.repositories.quests
 
-import de.ljz.questify.domain.daos.QuestNotificationDao
+import de.ljz.questify.domain.daos.quest.QuestNotificationDao
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.domain.repositories.quests.QuestRepository
+import de.ljz.questify.domain.repositories.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

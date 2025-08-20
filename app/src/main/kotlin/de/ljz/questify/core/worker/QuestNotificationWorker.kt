@@ -14,7 +14,7 @@ import dagger.assisted.AssistedInject
 import de.ljz.questify.R
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.domain.repositories.quests.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.flow.collectLatest
 

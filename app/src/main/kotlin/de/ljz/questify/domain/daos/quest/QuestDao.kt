@@ -1,4 +1,4 @@
-package de.ljz.questify.domain.daos
+package de.ljz.questify.domain.daos.quest
 
 import androidx.room.Dao
 import androidx.room.Query

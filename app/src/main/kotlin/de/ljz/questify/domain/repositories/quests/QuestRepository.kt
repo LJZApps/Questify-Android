@@ -1,7 +1,7 @@
 package de.ljz.questify.domain.repositories.quests
 
 import de.ljz.questify.core.application.Difficulty
-import de.ljz.questify.domain.daos.QuestDao
+import de.ljz.questify.domain.daos.quest.QuestDao
 import de.ljz.questify.domain.models.quests.QuestEntity
 import de.ljz.questify.domain.repositories.BaseRepository
 import java.util.Date

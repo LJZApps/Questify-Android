@@ -1,11 +1,10 @@
-package de.ljz.questify.domain.daos
+package de.ljz.questify.domain.daos.quest
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Upsert
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
 import kotlinx.coroutines.flow.Flow
 

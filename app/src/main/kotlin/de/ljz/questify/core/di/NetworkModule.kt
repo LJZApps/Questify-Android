@@ -12,7 +12,6 @@ import dagger.hilt.components.SingletonComponent
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.data.api.core.ApiClient
 import de.ljz.questify.data.api.core.adapters.StringToDateAdapter
-import de.ljz.questify.data.api.core.interceptors.FailedRequestInterceptor
 import de.ljz.questify.data.shared_preferences.SessionManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -68,7 +67,6 @@ object NetworkModule {
       writeTimeout(Duration.ofMinutes(3))
 
 //      addInterceptor(AuthorizationInterceptor(sessionManager))
-      addInterceptor(FailedRequestInterceptor(moshi))
 
       if (BuildConfig.DEBUG) {
         addNetworkInterceptor(

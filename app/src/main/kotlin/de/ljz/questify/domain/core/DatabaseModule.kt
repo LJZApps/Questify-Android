@@ -36,8 +36,4 @@ object DaoModule {
   @Provides
   fun questNotificationDao(db: AppDatabase) = db.getQuestNotificationDao()
 
-  @Singleton
-  @Provides
-  fun trophyDao(db: AppDatabase) = db.getTrophyDao()
-
 }

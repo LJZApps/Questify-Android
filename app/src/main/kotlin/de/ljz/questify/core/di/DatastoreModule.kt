@@ -15,12 +15,8 @@ import de.ljz.questify.domain.datastore.AppUser
 import de.ljz.questify.domain.datastore.AppUserSerializer
 import de.ljz.questify.domain.datastore.FeatureSettings
 import de.ljz.questify.domain.datastore.FeatureSettingsSerializer
-import de.ljz.questify.domain.datastore.NewFeatureBadges
-import de.ljz.questify.domain.datastore.NewFeatureBadgesSerializer
-import de.ljz.questify.domain.datastore.QuestMasterSerializer
 import de.ljz.questify.domain.datastore.SortingPreferences
 import de.ljz.questify.domain.datastore.SortingPreferencesSerializer
-import de.ljz.questify.domain.datastore.Tutorials
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.File
@@ -50,28 +46,6 @@ object DatastoreModule {
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO),
             produceFile = { File(context.filesDir, "datastore/app_settings.json") }
-        )
-
-    @Singleton
-    @Provides
-    fun provideTutorialsDatastore(@ApplicationContext context: Context): DataStore<Tutorials> =
-        DataStoreFactory.create(
-            serializer = QuestMasterSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { Tutorials() },
-            migrations = listOf(),
-            scope = CoroutineScope(Dispatchers.IO),
-            produceFile = { File(context.filesDir, "datastore/tutorials.json") }
-        )
-
-    @Singleton
-    @Provides
-    fun provideNewFeatureBadgesDatastore(@ApplicationContext context: Context): DataStore<NewFeatureBadges> =
-        DataStoreFactory.create(
-            serializer = NewFeatureBadgesSerializer,
-            corruptionHandler = ReplaceFileCorruptionHandler { NewFeatureBadges() },
-            migrations = listOf(),
-            scope = CoroutineScope(Dispatchers.IO),
-            produceFile = { File(context.filesDir, "datastore/new_feature_badges.json") }
         )
 
     @Singleton

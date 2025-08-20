@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.domain.models.notifications.QuestNotificationEntity
-import de.ljz.questify.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.domain.repositories.quests.QuestNotificationRepository
 import de.ljz.questify.domain.repositories.quests.QuestRepository
 import kotlinx.coroutines.launch
 import java.util.Date
