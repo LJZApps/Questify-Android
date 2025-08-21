@@ -2,7 +2,6 @@ package de.ljz.questify.feature.settings.presentation.screens.help
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -24,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
@@ -55,7 +55,7 @@ fun SettingsHelpScreen(
                 is SettingsHelpUiEvent.SendFeedback -> {
                     val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                         // "mailto:" sorgt dafür, dass nur E-Mail-Apps geöffnet werden
-                        data = Uri.parse("mailto:")
+                        data = "mailto:".toUri()
                         putExtra(Intent.EXTRA_EMAIL, arrayOf("lnzpk.dev@gmail.com"))
                         putExtra(Intent.EXTRA_SUBJECT, "Feedback for Questify")
                         putExtra(
