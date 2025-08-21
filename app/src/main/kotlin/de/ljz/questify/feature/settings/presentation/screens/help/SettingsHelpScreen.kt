@@ -31,7 +31,6 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupRoute
-import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -39,6 +38,28 @@ import de.ljz.questify.feature.settings.presentation.screens.permissions.Setting
 fun SettingsHelpScreen(
     mainNavController: NavHostController,
     viewModel: SettingsHelpViewModel = hiltViewModel()
+) {
+    SettingsHelpScreenContent(
+        onUiEvent = { event ->
+            when (event) {
+                is SettingsHelpUiEvent.NavigateUp -> mainNavController.navigateUp()
+
+                is SettingsHelpUiEvent.ShowOnboarding -> {
+                    mainNavController.navigate(FirstSetupRoute)
+                }
+
+                is SettingsHelpUiEvent.Navigate -> {
+                    mainNavController.navigate(event.route)
+                }
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun SettingsHelpScreenContent(
+    onUiEvent: (SettingsHelpUiEvent) -> Unit
 ) {
     val context = LocalActivity.current as Activity
 
@@ -48,7 +69,9 @@ fun SettingsHelpScreen(
                 title = { Text(stringResource(R.string.settings_help_screen_help_title)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() },
+                        onClick = {
+                            onUiEvent.invoke(SettingsHelpUiEvent.NavigateUp)
+                        },
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
@@ -69,7 +92,7 @@ fun SettingsHelpScreen(
                     Icon(Icons.Outlined.VerifiedUser, contentDescription = null)
                 },
                 onClick = {
-                    mainNavController.navigate(SettingsPermissionRoute())
+                    onUiEvent.invoke(SettingsHelpUiEvent.Navigate(SettingsPermissionRoute()))
                 }
             )
 
@@ -104,13 +127,9 @@ fun SettingsHelpScreen(
                 title = stringResource(R.string.settings_help_screen_show_onboarding_title),
                 icon = { Icon(Icons.Outlined.Explore, contentDescription = null) },
                 onClick = {
-                    viewModel.resetOnboarding()
+                    onUiEvent.invoke(SettingsHelpUiEvent.ShowOnboarding)
 
-                    mainNavController.navigate(FirstSetupRoute) {
-                        popUpTo(MainRoute) {
-                            inclusive = true
-                        }
-                    }
+
                 }
             )
 
