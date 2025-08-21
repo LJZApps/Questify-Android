@@ -24,7 +24,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
@@ -36,9 +35,10 @@ import de.ljz.questify.feature.settings.presentation.screens.permissions.Setting
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsHelpScreen(
-    mainNavController: NavHostController,
-    viewModel: SettingsHelpViewModel = hiltViewModel()
+    mainNavController: NavHostController
 ) {
+    val context = LocalActivity.current as Activity
+
     SettingsHelpScreenContent(
         onUiEvent = { event ->
             when (event) {
@@ -51,6 +51,26 @@ fun SettingsHelpScreen(
                 is SettingsHelpUiEvent.Navigate -> {
                     mainNavController.navigate(event.route)
                 }
+
+                is SettingsHelpUiEvent.SendFeedback -> {
+                    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                        // "mailto:" sorgt dafür, dass nur E-Mail-Apps geöffnet werden
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf("lnzpk.dev@gmail.com"))
+                        putExtra(Intent.EXTRA_SUBJECT, "Feedback for Questify")
+                        putExtra(
+                            Intent.EXTRA_TEXT, "" +
+                                    "Version name: ${BuildConfig.VERSION_NAME}\n" +
+                                    "Version code: ${BuildConfig.VERSION_CODE}\n" +
+                                    "Type: ${BuildConfig.BUILD_TYPE}\n\n"
+                        )
+                    }
+
+                    // Prüfen, ob eine App den Intent verarbeiten kann
+                    if (emailIntent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(emailIntent)
+                    }
+                }
             }
         }
     )
@@ -61,8 +81,6 @@ fun SettingsHelpScreen(
 private fun SettingsHelpScreenContent(
     onUiEvent: (SettingsHelpUiEvent) -> Unit
 ) {
-    val context = LocalActivity.current as Activity
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -103,23 +121,7 @@ private fun SettingsHelpScreenContent(
                     Icon(Icons.Outlined.Feedback, contentDescription = null)
                 },
                 onClick = {
-                    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                        // "mailto:" sorgt dafür, dass nur E-Mail-Apps geöffnet werden
-                        data = Uri.parse("mailto:")
-                        putExtra(Intent.EXTRA_EMAIL, arrayOf("lnzpk.dev@gmail.com"))
-                        putExtra(Intent.EXTRA_SUBJECT, "Feedback for Questify")
-                        putExtra(
-                            Intent.EXTRA_TEXT, "" +
-                                    "Version name: ${BuildConfig.VERSION_NAME}\n" +
-                                    "Version code: ${BuildConfig.VERSION_CODE}\n" +
-                                    "Type: ${BuildConfig.BUILD_TYPE}\n\n"
-                        )
-                    }
-
-                    // Prüfen, ob eine App den Intent verarbeiten kann
-                    if (emailIntent.resolveActivity(context.packageManager) != null) {
-                        context.startActivity(emailIntent)
-                    }
+                    onUiEvent.invoke(SettingsHelpUiEvent.SendFeedback)
                 }
             )
 
@@ -128,8 +130,6 @@ private fun SettingsHelpScreenContent(
                 icon = { Icon(Icons.Outlined.Explore, contentDescription = null) },
                 onClick = {
                     onUiEvent.invoke(SettingsHelpUiEvent.ShowOnboarding)
-
-
                 }
             )
 
@@ -141,7 +141,6 @@ private fun SettingsHelpScreenContent(
                     BuildConfig.VERSION_CODE
                 ),
                 icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
-                onClick = {}
             )
         }
     }

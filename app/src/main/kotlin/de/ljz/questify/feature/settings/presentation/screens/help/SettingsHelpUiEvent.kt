@@ -6,4 +6,6 @@ sealed class SettingsHelpUiEvent {
     data class Navigate(val route: Any) : SettingsHelpUiEvent()
 
     data object ShowOnboarding : SettingsHelpUiEvent()
+
+    data object SendFeedback : SettingsHelpUiEvent()
 }
