@@ -4,36 +4,34 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
-    private val appSettingsRepository: AppSettingsRepository
+    appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(ThemeUiState())
-    val uiState: StateFlow<ThemeUiState> = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            appSettingsRepository.getAppSettings().collectLatest { settings ->
-                _uiState.update {
-                    it.copy(
-                        themeBehavior = settings.themeBehavior,
-                        themeColor = settings.themeColor,
-                        dynamicColorsEnabled = settings.dynamicThemeColors,
-                        themingEngine = settings.themingEngine,
-                        isAmoled = settings.isAmoled,
-                        themeStyle = settings.themeStyle,
-                        appColor = settings.appColor
-                    )
-                }
-            }
+    val uiState: StateFlow<ThemeUiState> = appSettingsRepository.getAppSettings()
+        .map { settings ->
+            // Wandelt das Einstellungs-Objekt direkt in den UI-State um
+            ThemeUiState(
+                themeBehavior = settings.themeBehavior,
+                themeColor = settings.themeColor,
+                dynamicColorsEnabled = settings.dynamicThemeColors,
+                themingEngine = settings.themingEngine,
+                isAmoled = settings.isAmoled,
+                themeStyle = settings.themeStyle,
+                appColor = settings.appColor
+            )
         }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            // Der Flow ist nur aktiv, wenn die UI ihn wirklich braucht
+            started = SharingStarted.WhileSubscribed(5000),
+            // Startwert, bevor der erste Wert vom Flow ankommt
+            initialValue = ThemeUiState()
+        )
 }

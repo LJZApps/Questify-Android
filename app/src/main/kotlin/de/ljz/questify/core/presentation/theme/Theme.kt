@@ -31,39 +31,24 @@ fun QuestifyTheme(
     val uiState by vm.uiState.collectAsState()
     val context = LocalContext.current
 
-    val themeBehavior = uiState.themeBehavior // Reactively track theme behavior
-    val themeColor = uiState.themeColor // Reactively track theme color
-    val dynamicColorsEnabled = uiState.dynamicColorsEnabled // Reactively track dynamic color setting
+    val useDarkTheme = when (uiState.themeBehavior) {
+        ThemeBehavior.DARK -> true
+        ThemeBehavior.LIGHT -> false
+        ThemeBehavior.SYSTEM_STANDARD -> darkTheme
+    }
 
-    var colorScheme = when (uiState.themingEngine) {
-        // FIXME V1 will no longer be updated and will be removed in a future update
-        ThemingEngine.V1 -> getColorScheme(themeBehavior, customThemeColor ?: themeColor, darkTheme)
-        ThemingEngine.V2 -> {
-            rememberDynamicColorScheme(
+    val colorScheme = if (uiState.dynamicColorsEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        when (uiState.themingEngine) {
+            ThemingEngine.V1 -> getColorScheme(uiState.themeBehavior, customThemeColor ?: uiState.themeColor, darkTheme)
+            ThemingEngine.V2 -> rememberDynamicColorScheme(
                 seedColor = Color(android.graphics.Color.parseColor(uiState.appColor)),
-                isDark = when (uiState.themeBehavior) {
-                    ThemeBehavior.DARK -> true
-                    ThemeBehavior.LIGHT -> false
-                    ThemeBehavior.SYSTEM_STANDARD -> isSystemInDarkTheme()
-                },
+                isDark = useDarkTheme,
                 isAmoled = uiState.isAmoled,
                 style = uiState.themeStyle,
                 contrastLevel = 0.0
             )
-        }
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && dynamicColorsEnabled) {
-        colorScheme = when (themeBehavior) {
-            ThemeBehavior.DARK -> dynamicDarkColorScheme(context)
-            ThemeBehavior.LIGHT -> dynamicLightColorScheme(context)
-            ThemeBehavior.SYSTEM_STANDARD -> {
-                if (darkTheme) {
-                    dynamicDarkColorScheme(context)
-                } else {
-                    dynamicLightColorScheme(context)
-                }
-            }
         }
     }
 
@@ -73,26 +58,9 @@ fun QuestifyTheme(
             val window = (view.context as Activity).window
             val windowInsetsController = WindowCompat.getInsetsController(window, view)
 
-            /*window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor = if (!transparentNavBarState) {
-                colorScheme.surfaceContainer.toArgb()
-            } else {
-                colorScheme.background.toArgb()
-            }*/
-
-            // Set system bar appearance
             windowInsetsController.apply {
-                isAppearanceLightStatusBars = when (themeBehavior) {
-                    ThemeBehavior.DARK -> false
-                    ThemeBehavior.LIGHT -> true
-                    ThemeBehavior.SYSTEM_STANDARD -> !darkTheme
-                }
-
-                isAppearanceLightNavigationBars = when (themeBehavior) {
-                    ThemeBehavior.DARK -> false
-                    ThemeBehavior.LIGHT -> true
-                    ThemeBehavior.SYSTEM_STANDARD -> !darkTheme
-                }
+                isAppearanceLightStatusBars = !useDarkTheme
+                isAppearanceLightNavigationBars = !useDarkTheme
             }
         }
     }
