@@ -8,8 +8,6 @@ import de.ljz.questify.feature.settings.presentation.screens.appearance.Settings
 import de.ljz.questify.feature.settings.presentation.screens.appearance.SettingsAppearanceScreen
 import de.ljz.questify.feature.settings.presentation.screens.features.SettingsFeaturesRoute
 import de.ljz.questify.feature.settings.presentation.screens.features.SettingsFeaturesScreen
-import de.ljz.questify.feature.settings.presentation.screens.feedback.SettingsFeedbackRoute
-import de.ljz.questify.feature.settings.presentation.screens.feedback.SettingsFeedbackScreen
 import de.ljz.questify.feature.settings.presentation.screens.help.SettingsHelpRoute
 import de.ljz.questify.feature.settings.presentation.screens.help.SettingsHelpScreen
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
@@ -22,10 +20,6 @@ fun NavGraphBuilder.settingRoutes(
 ) {
     composable<SettingsMainRoute> {
         SettingsMainScreen(mainNavController = navController)
-    }
-
-    composable<SettingsFeedbackRoute> {
-        SettingsFeedbackScreen(mainNavController = navController)
     }
 
     composable<SettingsPermissionRoute> { backStackEntry ->

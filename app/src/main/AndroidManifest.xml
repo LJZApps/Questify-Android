@@ -15,6 +15,13 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+
     <!-- FIXME DELETE android:usesCleartextTraffic="true" FOR RELEASE!!! VERY IMPORTANT!!! -->
     <application
         android:name=".App"
@@ -80,7 +87,7 @@
         </activity>
 
         <activity
-            android:name=".ui.features.remind_again.RemindAgainActivity"
+            android:name=".feature.remind_again.presentation.RemindAgainActivity"
             android:theme="@style/Theme.Questify.ReminderDialog" />
 
         <!-- Required: set your sentry.io project identifier (DSN) -->

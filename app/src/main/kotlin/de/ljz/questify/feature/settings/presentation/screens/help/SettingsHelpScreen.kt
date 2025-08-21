@@ -1,5 +1,9 @@
 package de.ljz.questify.feature.settings.presentation.screens.help
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -28,7 +32,6 @@ import de.ljz.questify.core.presentation.components.expressive.settings.Expressi
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
-import de.ljz.questify.feature.settings.presentation.screens.feedback.SettingsFeedbackRoute
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -37,6 +40,8 @@ fun SettingsHelpScreen(
     mainNavController: NavHostController,
     viewModel: SettingsHelpViewModel = hiltViewModel()
 ) {
+    val context = LocalActivity.current as Activity
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +80,23 @@ fun SettingsHelpScreen(
                     Icon(Icons.Outlined.Feedback, contentDescription = null)
                 },
                 onClick = {
-                    mainNavController.navigate(SettingsFeedbackRoute)
+                    val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                        // "mailto:" sorgt dafür, dass nur E-Mail-Apps geöffnet werden
+                        data = Uri.parse("mailto:")
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf("lnzpk.dev@gmail.com"))
+                        putExtra(Intent.EXTRA_SUBJECT, "Feedback for Questify")
+                        putExtra(
+                            Intent.EXTRA_TEXT, "" +
+                                    "Version name: ${BuildConfig.VERSION_NAME}\n" +
+                                    "Version code: ${BuildConfig.VERSION_CODE}\n" +
+                                    "Type: ${BuildConfig.BUILD_TYPE}\n\n"
+                        )
+                    }
+
+                    // Prüfen, ob eine App den Intent verarbeiten kann
+                    if (emailIntent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(emailIntent)
+                    }
                 }
             )
 
