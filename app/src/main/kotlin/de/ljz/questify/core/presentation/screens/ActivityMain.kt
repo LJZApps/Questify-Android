@@ -77,7 +77,7 @@ class ActivityMain : AppCompatActivity() {
 
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 uniqueWorkName = "QuestNotificationWorker",
-                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.REPLACE,
+                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
                 request = workRequest
             )
 

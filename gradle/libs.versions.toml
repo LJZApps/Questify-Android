@@ -15,6 +15,7 @@ gampose = "1.5.0"
 gson = "2.13.1"
 hiltAndroid = "2.57"
 hiltWork = "1.2.0"
+integrity = "1.4.0"
 jacksonDataformatYaml = "2.19.2"
 jacksonModuleKotlin = "2.19.2"
 konfettiCompose = "2.0.5"
@@ -100,6 +101,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+integrity = { module = "com.google.android.play:integrity", version.ref = "integrity" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonDataformatYaml" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jacksonModuleKotlin" }
 konfetti-compose = { module = "nl.dionsegijn:konfetti-compose", version.ref = "konfettiCompose" }
