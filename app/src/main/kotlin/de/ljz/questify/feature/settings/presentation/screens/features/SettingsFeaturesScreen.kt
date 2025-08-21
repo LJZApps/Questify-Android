@@ -32,13 +32,33 @@ fun SettingsFeaturesScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
+    SettingsFeaturesScreenContent(
+        uiState = uiState,
+        onUiEvent = { event ->
+            when (event) {
+                is SettingsFeaturesUiEvent.NavigateUp -> {
+                    mainNavController.navigateUp()
+                }
+
+                else -> viewModel.onUiEvent(event)
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun SettingsFeaturesScreenContent(
+    uiState: SettingsFeaturesUiState,
+    onUiEvent: (SettingsFeaturesUiEvent) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.settings_features_screen_title)) },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() },
+                        onClick = { onUiEvent.invoke(SettingsFeaturesUiEvent.NavigateUp) },
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
@@ -58,7 +78,9 @@ fun SettingsFeaturesScreen(
                 title = stringResource(R.string.settings_features_screen_fast_quest_creation_title),
                 subtitle = stringResource(R.string.settings_features_screen_fast_quest_creation_description),
                 icon = { Icon(Icons.Outlined.FlashOn, contentDescription = null) },
-                onCheckedChange = viewModel::updateFastAddingEnabled,
+                onCheckedChange = {
+                    onUiEvent.invoke(SettingsFeaturesUiEvent.UpdateFastAddingEnabled(it))
+                },
             )
         }
     }
