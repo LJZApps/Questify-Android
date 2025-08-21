@@ -92,6 +92,8 @@ billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 compose-placeholder-material3 = { module = "com.eygraber:compose-placeholder-material3", version.ref = "composePlaceholderMaterial3" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
+firebase-ai = { module = "com.google.firebase:firebase-ai" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 gampose = { module = "com.github.ezlifeSol:gampose", version.ref = "gampose" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }

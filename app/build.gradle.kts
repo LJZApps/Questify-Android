@@ -18,7 +18,7 @@ plugins {
 
     id("androidx.room")
 
-    id("io.sentry.android.gradle") version "4.14.1"
+    id("io.sentry.android.gradle") version "5.9.0"
 }
 
 room {
@@ -151,8 +151,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(project.dependencies.platform("androidx.compose:compose-bom-alpha:2025.08.00"))
-//    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation(project.dependencies.platform("com.google.firebase:firebase-bom:34.1.0"))
     implementation(libs.androidx.runtime)
+
+    implementation(libs.firebase.ai)
 
     implementation(platform(libs.sentry.bom))
 
@@ -178,7 +180,7 @@ dependencies {
     implementation(libs.composeSettings.ui)
     implementation(libs.composeSettings.ui.extended)
     implementation(libs.converter.moshi)
-//    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.analytics)
 //    implementation(libs.firebase.crashlytics)
     implementation(libs.gson)
     implementation(libs.kotlin.stdlib.jdk8)
