@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
@@ -56,12 +57,31 @@ fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
+
+    EditProfileScreenContent(
+        uiState = uiState,
+        onUiEvent = { event ->
+            when (event) {
+                is EditProfileUiEvent.NavigateUp -> navController.navigateUp()
+
+                else -> viewModel.onUiEvent(event)
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@Composable
+private fun EditProfileScreenContent(
+    uiState: EditProfileUiState,
+    onUiEvent: (EditProfileUiEvent) -> Unit
+) {
     val context = LocalContext.current
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        viewModel.updateProfilePicture(uri.toString())
+        onUiEvent.invoke(EditProfileUiEvent.UpdateProfilePicture(uri.toString()))
     }
 
     LaunchedEffect(Unit) {
@@ -79,7 +99,7 @@ fun EditProfileScreen(
                                 val profilePicture = uiState.profilePictureUrl.let {
                                     viewModel.saveImageToInternalStorage(
                                         context = context,
-                                        uri = Uri.parse(it)
+                                        uri = it.toUri()
                                     )
                                 }
                                 viewModel.saveProfile(profilePicture?: "")

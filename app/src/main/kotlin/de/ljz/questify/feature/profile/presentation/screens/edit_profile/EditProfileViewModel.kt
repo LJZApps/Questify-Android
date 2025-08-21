@@ -39,19 +39,35 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    fun saveProfile(profilePictureUrl: String) {
-        viewModelScope.launch {
-            appUserRepository.saveProfile(
-                displayName = _uiState.value.displayName,
-                aboutMe = _uiState.value.aboutMe,
-                imageUri = profilePictureUrl
-            )
-        }
-    }
+    fun onUiEvent(event: EditProfileUiEvent) {
+        when (event) {
+            is EditProfileUiEvent.SaveProfile -> {
+                viewModelScope.launch {
+                    appUserRepository.saveProfile(
+                        displayName = _uiState.value.displayName,
+                        aboutMe = _uiState.value.aboutMe,
+                        imageUri = event.profilePictureUrl
+                    )
+                }
+            }
 
-    fun updateProfilePicture(profilePictureUrl: String) {
-        _uiState.update {
-            it.copy(profilePictureUrl = profilePictureUrl, pickedProfilePicture = true)
+            is EditProfileUiEvent.UpdateProfilePicture -> {
+                _uiState.update {
+                    it.copy(profilePictureUrl = event.profilePictureUrl, pickedProfilePicture = true)
+                }
+            }
+
+            is EditProfileUiEvent.UpdateDisplayName -> {
+                _uiState.update {
+                    it.copy(displayName = event.displayName)
+                }
+            }
+
+            is EditProfileUiEvent.UpdateAboutMe -> {
+                _uiState.update {
+                    it.copy(aboutMe = event.aboutMe)
+                }
+            }
         }
     }
 
