@@ -10,8 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -65,7 +65,7 @@ fun DrawerContent(
             items = listOf(
                 NavigationItem(
                     title = "Your stats",
-                    icon = Icons.Filled.QueryStats,
+                    icon = Icons.Filled.TaskAlt,
                     route = DashboardRoute,
                     featureEnabled = false
                 ),

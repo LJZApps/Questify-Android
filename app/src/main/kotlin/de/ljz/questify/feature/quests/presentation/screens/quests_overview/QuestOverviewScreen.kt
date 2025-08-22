@@ -31,9 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -228,7 +228,7 @@ fun QuestOverviewScreen(
             Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
-                SecondaryScrollableTabRow(
+                PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
                     edgePadding = 0.dp,
                 ) {
@@ -254,7 +254,7 @@ fun QuestOverviewScreen(
                                     contentDescription = null
                                 )
                                 Text(
-                                    text = "Neue Kategorie",
+                                    text = "Neue Liste",
                                     modifier = Modifier.padding(start = 8.dp)
                                 )
                             }

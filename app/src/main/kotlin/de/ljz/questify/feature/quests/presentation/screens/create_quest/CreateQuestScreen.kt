@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.LabelOff
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.NotificationAdd
 import androidx.compose.material.icons.outlined.Notifications
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -84,6 +87,19 @@ fun CreateQuestScreen(
                             contentDescription = stringResource(R.string.back)
                         )
                     }
+                },
+                actions = {
+                    FilledTonalIconButton(
+                        onClick = {
+
+                        },
+                        shapes = IconButtonDefaults.shapes(),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null
+                        )
+                    }
                 }
             )
         },
@@ -144,11 +160,11 @@ fun CreateQuestScreen(
                 )
 
                 ExpressiveMenuCategory(
-                    title ="Kategorie",
+                    title ="Liste",
                     content = {
                         ExpressiveMenuItem(
-                            title = selectedCategory?.text ?: stringResource(R.string.detailed_information_page_due_date_empty),
-                            icon = { Icon(Icons.Outlined.Schedule, contentDescription = null) },
+                            title = selectedCategory?.text ?: "Keine Liste ausgewählt",
+                            icon = { Icon(Icons.AutoMirrored.Outlined.LabelOff, contentDescription = null) },
                             onClick = { viewModel.showSelectCategoryDialog() }
                         )
                     }
@@ -245,7 +261,8 @@ fun CreateQuestScreen(
                 SelectCategoryFullscreenDialog(
                     categories = categories,
                     onCategorySelect = { category ->
-
+                        viewModel.selectCategory(category)
+                        viewModel.hideSelectCategoryDialog()
                     },
                     onDismiss = {
                         viewModel.hideSelectCategoryDialog()

@@ -78,6 +78,10 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
+    fun selectCategory(category: QuestCategoryEntity) {
+        _selectedCategory.value = category
+    }
+
     fun removeReminder(index: Int) {
         val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
             removeAt(index)

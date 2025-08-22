@@ -10,7 +10,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -81,7 +83,7 @@ fun SelectCategoryFullscreenDialog(
                                     ),
                                     placeholder = {
                                         Text(
-                                            text = "Kategorie suchen",
+                                            text = "Liste suchen",
                                             fontStyle = FontStyle.Italic
                                         )
                                     },
@@ -110,21 +112,44 @@ fun SelectCategoryFullscreenDialog(
                 ExpressiveSettingsSection(
                     modifier = Modifier.padding(vertical = 16.dp)
                 ) {
-                    categories
+                    val filteredLists = categories
                         .filter {
                             it.text.contains(
                                 searchText,
                                 ignoreCase = true
                             )
                         }
-                        .forEach { category ->
-                            ExpressiveMenuItem(
-                                title = category.text,
-                                onClick = {
-                                    onCategorySelect(category)
-                                }
-                            )
-                        }
+
+                    if (filteredLists.count() > 0) {
+                        filteredLists
+                            .forEach { list ->
+                                ExpressiveMenuItem(
+                                    title = list.text,
+                                    onClick = {
+                                        onCategorySelect(list)
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Default.Label,
+                                            contentDescription = null
+                                        )
+                                    }
+                                )
+                            }
+                    } else {
+                        ExpressiveMenuItem(
+                            title = "Liste \"$searchText\" erstellen",
+                            onClick = {
+                                onCreateCategory(searchText)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.NewLabel,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
