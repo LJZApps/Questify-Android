@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -27,10 +28,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -54,9 +57,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
+import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
@@ -208,22 +211,61 @@ fun QuestOverviewScreen(
             }
         },
         content = { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+            Column(
+                modifier = Modifier.padding(innerPadding)
             ) {
-                AllQuestsPage(
-                    state = uiState.allQuestPageState,
-                    onQuestDone = {
-                        viewModel.setQuestDone(
-                            it,
-                            context
-                        )
-                    },
-                    onQuestDelete = viewModel::deleteQuest,
-                    navController = mainNavController
-                )
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = 0,
+                    edgePadding = 0.dp
+                ) {
+                    Tab(
+                        selected = true,
+                        text = { Text(text = "All") },
+                        onClick = {}
+                    )
+
+                    Tab(
+                        selected = true,
+                        text = { Text(text = "Important") },
+                        onClick = {}
+                    )
+
+                    Tab(
+                        selected = true,
+                        text = { Text(text = "Work") },
+                        onClick = {}
+                    )
+
+                    Tab(
+                        selected = true,
+                        text = { Text(text = "Home") },
+                        onClick = {}
+                    )
+
+                    Tab(
+                        selected = true,
+                        text = { Text(text = "School") },
+                        onClick = {}
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                ) {
+                    AllQuestsPage(
+                        state = uiState.allQuestPageState,
+                        onQuestDone = {
+                            viewModel.setQuestDone(
+                                it,
+                                context
+                            )
+                        },
+                        onQuestDelete = viewModel::deleteQuest,
+                        navController = mainNavController
+                    )
+                }
             }
 
             if (questDoneDialogState.visible) {
