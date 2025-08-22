@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -189,7 +188,6 @@ private fun EditProfileScreenContent(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text(stringResource(R.string.text_field_display_name)) },
-                    shape = RoundedCornerShape(10.dp),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Words,
                     )
@@ -205,7 +203,6 @@ private fun EditProfileScreenContent(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     label = { Text(stringResource(R.string.text_field_about_me)) },
-                    shape = RoundedCornerShape(10.dp),
                     minLines = 2,
                     maxLines = 4,
                     keyboardOptions = KeyboardOptions(

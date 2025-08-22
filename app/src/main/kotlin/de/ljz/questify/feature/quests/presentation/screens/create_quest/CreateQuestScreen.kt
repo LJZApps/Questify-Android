@@ -1,70 +1,64 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
-import androidx.compose.material.icons.automirrored.outlined.NavigateNext
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Block
+import androidx.compose.material.icons.outlined.NotificationAdd
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ShortNavigationBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuCategory
+import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
+import de.ljz.questify.feature.quests.presentation.components.EasyIcon
+import de.ljz.questify.feature.quests.presentation.components.EpicIcon
+import de.ljz.questify.feature.quests.presentation.components.HardIcon
+import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
-import de.ljz.questify.feature.quests.presentation.screens.create_quest.sub_pages.BaseInformationPage
-import de.ljz.questify.feature.quests.presentation.screens.create_quest.sub_pages.DetailedInformationPage
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -73,31 +67,45 @@ fun CreateQuestScreen(
     viewModel: CreateQuestViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-
-    rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
-    LocalContext.current
-    var currentStep by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
 
-    val steps = listOf(
-        NavigationItem(stringResource(R.string.create_quest_screen_general), Icons.Filled.Category),
-        NavigationItem(
-            stringResource(R.string.create_quest_screen_details),
-            Icons.Filled.Description
-        ),
-        /*NavigationItem(stringResource(R.string.create_quest_screen_trophies), Icons.Filled.EmojiEvents)*/
+    val difficultyOptions = listOf(
+        stringResource(R.string.difficulty_none),
+        stringResource(R.string.difficulty_easy),
+        stringResource(R.string.difficulty_medium),
+        stringResource(R.string.difficulty_hard),
+        stringResource(R.string.difficulty_epic)
     )
+
+    val difficultyDescriptions = listOf(
+        stringResource(R.string.difficulty_none_description, "No difficulty set"),
+        stringResource(
+            R.string.difficulty_easy_description,
+            "Simple tasks that don't require much effort"
+        ),
+        stringResource(
+            R.string.difficulty_medium_description,
+            "Tasks that require some effort and focus"
+        ),
+        stringResource(
+            R.string.difficulty_hard_description,
+            "Challenging tasks that require significant effort"
+        ),
+        stringResource(
+            R.string.difficulty_epic_description,
+            "Major tasks that require extensive effort and time"
+        )
+    )
+
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.create_quest_top_bar_title)
-                    )
-                },
+                title = { Text(text = stringResource(R.string.create_quest_top_bar_title)) },
                 subtitle = {
-                    if (!uiState.title.trim().isEmpty())
+                    if (uiState.title.isNotBlank())
                         Text(
                             text = uiState.title,
                             maxLines = 1,
@@ -109,10 +117,23 @@ fun CreateQuestScreen(
                         onClick = { mainNavController.navigateUp() },
                         shapes = IconButtonDefaults.shapes()
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    viewModel.createQuest(onSuccess = { mainNavController.navigateUp() })
+                }
+            ) {
+                Icon(Icons.Outlined.Save, contentDescription = stringResource(R.string.save))
+            }
         },
         content = { innerPadding ->
             Column(
@@ -120,131 +141,135 @@ fun CreateQuestScreen(
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
+                    .padding(bottom = 80.dp)
+                    .padding(horizontal = 16.dp), // Space for the FAB
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Enhanced stepper UI
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                // Title
+                OutlinedTextField(
+                    value = uiState.title,
+                    onValueChange = { viewModel.updateTitle(it) },
+                    label = { Text(stringResource(R.string.text_field_quest_title)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary
                     ),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        // Step indicators
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            steps.forEachIndexed { index, (title, icon) ->
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(56.dp)
-                                            .clip(CircleShape)
-                                            .background(
-                                                when {
-                                                    index < currentStep -> MaterialTheme.colorScheme.primary
-                                                    index == currentStep -> MaterialTheme.colorScheme.primaryContainer
-                                                    else -> MaterialTheme.colorScheme.surface
-                                                }
-                                            )
-                                            .border(
-                                                width = if (index == currentStep) 2.dp else 1.dp,
-                                                color = if (index == currentStep)
-                                                    MaterialTheme.colorScheme.primary
-                                                else if (index < currentStep)
-                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                                else
-                                                    MaterialTheme.colorScheme.outline,
-                                                shape = CircleShape
-                                            ),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            imageVector = icon,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(28.dp),
-                                            tint = when {
-                                                index < currentStep -> MaterialTheme.colorScheme.onPrimary
-                                                index == currentStep -> MaterialTheme.colorScheme.onPrimaryContainer
-                                                else -> MaterialTheme.colorScheme.onSurfaceVariant
-                                            }
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    Text(
-                                        text = title,
-                                        style = if (index == currentStep)
-                                            MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                                        else
-                                            MaterialTheme.typography.bodyMedium,
-                                        textAlign = TextAlign.Center,
-                                        color = if (index <= currentStep)
-                                            MaterialTheme.colorScheme.onSurface
-                                        else
-                                            MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+                )
 
-                                // Add connector lines between steps
-                                if (index < steps.size - 1) {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(0.2f)
-                                            .height(2.dp)
-                                            .background(
-                                                color = if (index < currentStep)
-                                                    MaterialTheme.colorScheme.primary
-                                                else
-                                                    MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                                            )
-                                    )
-                                }
+                // Notes
+                OutlinedTextField(
+                    value = uiState.description,
+                    onValueChange = { viewModel.updateDescription(it) },
+                    label = { Text(stringResource(R.string.text_field_quest_note)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 3,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        cursorColor = MaterialTheme.colorScheme.primary
+                    ),
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween)) {
+                    val modifiers = List(difficultyOptions.size) { Modifier.weight(1f) }
+                    difficultyOptions.forEachIndexed { index, _ ->
+                        ToggleButton(
+                            checked = uiState.difficulty == index,
+                            onCheckedChange = {
+                                haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                viewModel.updateDifficulty(index)
+                            },
+                            modifier = modifiers[index].semantics { role = Role.RadioButton },
+                            shapes = when (index) {
+                                0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                difficultyOptions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                            }
+                        ) {
+                            val tint =
+                                if (uiState.difficulty == index) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                            when (index) {
+                                0 -> Icon(
+                                    Icons.Outlined.Block,
+                                    contentDescription = null,
+                                    tint = tint
+                                )
+
+                                1 -> EasyIcon(tint = tint)
+                                2 -> MediumIcon(tint = tint)
+                                3 -> HardIcon(tint = tint)
+                                4 -> EpicIcon(tint = tint)
                             }
                         }
                     }
                 }
 
-                // Step content
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    when (currentStep) {
-                        0 -> BaseInformationPage(
-                            uiState = uiState,
-                            onTitleChange = { viewModel.updateTitle(it) },
-                            onDifficultyChange = { viewModel.updateDifficulty(it) }
+                ExpressiveMenuCategory(
+                    title = stringResource(R.string.detailed_information_page_due_date_title),
+                    content = {
+                        val date = Date(uiState.selectedDueDate)
+                        val formattedDate = dateFormat.format(date)
+                        ExpressiveMenuItem(
+                            title = if (uiState.selectedDueDate.toInt() == 0) stringResource(R.string.detailed_information_page_due_date_empty) else formattedDate,
+                            icon = { Icon(Icons.Outlined.Schedule, contentDescription = null) },
+                            onClick = { viewModel.showAddingDueDateDialog() }
                         )
-
-                        1 -> DetailedInformationPage(
-                            uiState = uiState,
-                            onNotesChange = { viewModel.updateDescription(it) },
-                            onShowDueDateInfoDialog = { viewModel.showDueDateInfoDialog() },
-                            onShowAddingDueDateDialog = { viewModel.showAddingDueDateDialog() },
-                            onRemoveDueDate = { viewModel.removeDueDate() },
-                            onShowCreateReminderDialog = { viewModel.showCreateReminderDialog() },
-                            onRemoveReminder = { viewModel.removeReminder(it) }
-                        )
-                        /*2 -> TrophiesPage(
-                            uiState = uiState,
-                            onShowCreateReminderDialog = { viewModel.showCreateReminderDialog() },
-                            onRemoveReminder = { viewModel.removeReminder(it) }
-                        )*/
                     }
-                }
+                )
+
+                ExpressiveMenuCategory(
+                    title = stringResource(R.string.quest_detail_screen_reminders_title),
+                    content = {
+                        if (uiState.notificationTriggerTimes.isNotEmpty()) {
+                            uiState.notificationTriggerTimes.sorted()
+                                .forEachIndexed { index, triggerTime ->
+                                    ExpressiveMenuItem(
+                                        title = dateFormat.format(Date(triggerTime)),
+                                        icon = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Notifications,
+                                                contentDescription = null
+                                            )
+                                        },
+                                        onClick = {
+                                            viewModel.removeReminder(index)
+                                        }
+                                    )
+                                }
+                        } else {
+                            ExpressiveMenuItem(
+                                title = "Keine Erinnerungen",
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.NotificationsOff,
+                                        contentDescription = null,
+                                    )
+                                }
+                            )
+                        }
+
+                    },
+                    actionIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.NotificationAdd,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    },
+                    onActionIconClick = {
+                        viewModel.showCreateReminderDialog()
+                    }
+                )
             }
 
+            // Dialogs
             if (uiState.isAddingReminder) {
                 CreateReminderDialog(
                     onDismiss = viewModel::hideCreateReminderDialog,
@@ -253,172 +278,23 @@ fun CreateQuestScreen(
                         viewModel.hideCreateReminderDialog()
                     },
                     addingDateTimeState = uiState.addingDateTimeState,
-                    onReminderStateChange = { addingReminderState ->
-                        viewModel.updateReminderState(addingReminderState)
-                    }
+                    onReminderStateChange = { viewModel.updateReminderState(it) }
                 )
             }
-
             if (uiState.isDueDateInfoDialogVisible) {
-                DueDateInfoDialog(
-                    onDismiss = {
-                        viewModel.hideDueDateInfoDialog()
-                    }
-                )
+                DueDateInfoDialog(onDismiss = { viewModel.hideDueDateInfoDialog() })
             }
-
             if (uiState.isAddingDueDate) {
                 SetDueDateDialog(
                     onConfirm = { dueDateTimestamp ->
                         viewModel.setDueDate(dueDateTimestamp)
                         viewModel.hideAddingDueDateDialog()
                     },
-                    onDismiss = {
-                        viewModel.hideAddingDueDateDialog()
-                    },
+                    onDismiss = { viewModel.hideAddingDueDateDialog() },
                     addingDateTimeState = uiState.addingDateTimeState,
-                    onDateTimeStateChange = { addingReminderState ->
-                        viewModel.updateReminderState(addingReminderState)
-                    }
+                    onDateTimeStateChange = { viewModel.updateReminderState(it) }
                 )
             }
-        },
-        bottomBar = {
-            ShortNavigationBar {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                ) {
-                    OutlinedButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            if (currentStep > 0) {
-                                currentStep--
-                            } else {
-                                mainNavController.navigateUp()
-                            }
-                        },
-                        shapes = ButtonDefaults.shapes()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                        ) {
-                            if (currentStep > 0) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Outlined.NavigateBefore,
-                                    contentDescription = null
-                                )
-
-                                Text(
-                                    text = stringResource(R.string.back)
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Outlined.Close,
-                                    contentDescription = null
-                                )
-
-                                Text(
-                                    text = stringResource(R.string.cancel)
-                                )
-                            }
-                        }
-                    }
-
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            if (currentStep < steps.size - 1) {
-                                currentStep++
-                            } else {
-                                viewModel.createQuest(
-                                    onSuccess = {
-                                        mainNavController.navigateUp()
-                                    }
-                                )
-                            }
-                        },
-                        shapes = ButtonDefaults.shapes()
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                        ) {
-                            if (currentStep < steps.size - 1) {
-                                Text(
-                                    text = stringResource(R.string.next)
-                                )
-
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Outlined.NavigateNext,
-                                    contentDescription = null
-                                )
-                            } else {
-                                Text(
-                                    text = stringResource(R.string.save)
-                                )
-
-                                Icon(
-                                    imageVector = Icons.Outlined.Save,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            /*
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                HorizontalFloatingToolbar(
-                    expanded = true,
-                    floatingActionButton = {
-                        FloatingToolbarDefaults.StandardFloatingActionButton(
-                            onClick = {
-                                if (currentStep < steps.size - 1) {
-                                    currentStep++
-                                } else {
-                                    viewModel.createQuest(
-                                        onSuccess = {
-                                            mainNavController.navigateUp()
-                                        }
-                                    )
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null,
-                            )
-                        }
-                    }
-                ) {
-                    IconButton(onClick = {
-                        if (currentStep > 0) {
-                            currentStep--
-                        } else {
-                            mainNavController.navigateUp()
-                        }
-                    }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Localized description")
-                    }
-                }
-            }
-             */
         }
     )
 }
