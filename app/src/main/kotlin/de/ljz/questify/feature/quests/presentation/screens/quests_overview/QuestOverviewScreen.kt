@@ -270,7 +270,6 @@ fun QuestOverviewScreen(
                         allTabs.getOrNull(pageIndex)?.id ?: "temp_page_$pageIndex"
                     }
                 ) { pageIndex ->
-
                     // HIER kommt die Logik:
                     if (pageIndex == 0) {
                         // Zeige die Seite für "Alle" Quests an
