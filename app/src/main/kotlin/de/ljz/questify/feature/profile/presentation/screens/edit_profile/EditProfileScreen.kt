@@ -1,6 +1,7 @@
 package de.ljz.questify.feature.profile.presentation.screens.edit_profile
 
 import android.net.Uri
+import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -49,6 +50,10 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.NavBarConfig
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -96,20 +101,28 @@ private fun EditProfileScreenContent(
                     TextButton(
                         onClick = {
                             if (uiState.pickedProfilePicture && uiState.profilePictureUrl != "null") {
-                                val profilePicture = uiState.profilePictureUrl.let {
-                                    viewModel.saveImageToInternalStorage(
-                                        context = context,
-                                        uri = it.toUri()
-                                    )
+                                val profilePicture: String? = uiState.profilePictureUrl.let {
+                                    val inputStream: InputStream? = context.contentResolver.openInputStream(it.toUri())
+                                    // Der use-Block gibt den Pfad oder null zurück, was dann vom let-Block zurückgegeben wird.
+                                    inputStream?.use { input ->
+                                        val fileName = "profile_${UUID.randomUUID()}.jpg"
+                                        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
+
+                                        FileOutputStream(file).use { output ->
+                                            input.copyTo(output)
+                                        }
+
+                                        file.absolutePath
+                                    }
                                 }
-                                viewModel.saveProfile(profilePicture?: "")
+                                onUiEvent.invoke(EditProfileUiEvent.SaveProfile(profilePicture?: ""))
                             } else if (uiState.profilePictureUrl.isNotEmpty() && uiState.profilePictureUrl != "null") {
-                                viewModel.saveProfile(uiState.profilePictureUrl)
+                                onUiEvent.invoke(EditProfileUiEvent.SaveProfile(uiState.profilePictureUrl))
                             } else {
-                                viewModel.saveProfile("")
+                                onUiEvent.invoke(EditProfileUiEvent.SaveProfile(""))
                             }
 
-                            navController.navigateUp()
+                            onUiEvent.invoke(EditProfileUiEvent.NavigateUp)
                         },
                         shapes = ButtonDefaults.shapes()
                     ) {
@@ -119,7 +132,7 @@ private fun EditProfileScreenContent(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigateUp()
+                            onUiEvent.invoke(EditProfileUiEvent.NavigateUp)
                         },
                         shapes = IconButtonDefaults.shapes()
                     ) {
@@ -169,7 +182,9 @@ private fun EditProfileScreenContent(
                 // Display name
                 OutlinedTextField(
                     value = uiState.displayName,
-                    onValueChange = viewModel::updateDisplayName,
+                    onValueChange = {
+                        onUiEvent.invoke(EditProfileUiEvent.UpdateDisplayName(it))
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
@@ -183,7 +198,9 @@ private fun EditProfileScreenContent(
                 // About me
                 OutlinedTextField(
                     value = uiState.aboutMe,
-                    onValueChange = viewModel::updateAboutMe,
+                    onValueChange = {
+                        onUiEvent.invoke(EditProfileUiEvent.UpdateAboutMe(it))
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
