@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,7 +50,6 @@ fun AllQuestsPage(
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
 ) {
-    rememberCoroutineScope()
 
     val quests = state.quests
         .filter { quest -> state.showCompleted || !quest.done }

@@ -9,10 +9,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object QuestNotificationModule {
+object QuestCategoryDaoModule {
 
     @Singleton
     @Provides
-    fun provideQuestNotificationDao(db: AppDatabase) = db.getQuestNotificationDao()
-
+    fun provideQuestCategoryDao(db: AppDatabase) = db.getQuestCategoryDao()
 }

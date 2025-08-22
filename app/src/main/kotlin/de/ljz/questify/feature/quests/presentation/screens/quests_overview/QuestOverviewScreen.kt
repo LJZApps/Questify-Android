@@ -5,9 +5,12 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
@@ -28,9 +31,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialShapes
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SecondaryScrollableTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -47,19 +50,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
@@ -80,6 +85,15 @@ fun QuestOverviewScreen(
     val uiState by viewModel.uiState.collectAsState()
     val questDoneDialogState = uiState.questDoneDialogState
     val allQuestPageState = uiState.allQuestPageState
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
+
+    val staticAllTab = QuestCategoryEntity(id = -1, text = "Alle")
+
+    val allTabs = remember(categories) {
+        listOf(staticAllTab) + categories
+    }
+
+    val pagerState = rememberPagerState(pageCount = { allTabs.size })
 
     val context = LocalContext.current
     LocalHapticFeedback.current
@@ -214,57 +228,82 @@ fun QuestOverviewScreen(
             Column(
                 modifier = Modifier.padding(innerPadding)
             ) {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = 0,
-                    edgePadding = 0.dp
+                SecondaryScrollableTabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    edgePadding = 0.dp,
                 ) {
-                    Tab(
-                        selected = true,
-                        text = { Text(text = "All") },
-                        onClick = {}
-                    )
+                    allTabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.currentPage == index,
+                            onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                            text = { Text(text = tab.text) }
+                        )
+                    }
 
                     Tab(
-                        selected = true,
-                        text = { Text(text = "Important") },
-                        onClick = {}
-                    )
-
-                    Tab(
-                        selected = true,
-                        text = { Text(text = "Work") },
-                        onClick = {}
-                    )
-
-                    Tab(
-                        selected = true,
-                        text = { Text(text = "Home") },
-                        onClick = {}
-                    )
-
-                    Tab(
-                        selected = true,
-                        text = { Text(text = "School") },
-                        onClick = {}
+                        selected = false,
+                        onClick = {
+                            viewModel.addDummyQuestCategory()
+                        },
+                        text = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = null
+                                )
+                                Text(
+                                    text = "Neue Kategorie",
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        }
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
-                ) {
-                    AllQuestsPage(
-                        state = uiState.allQuestPageState,
-                        onQuestDone = {
-                            viewModel.setQuestDone(
-                                it,
-                                context
-                            )
-                        },
-                        onQuestDelete = viewModel::deleteQuest,
-                        navController = mainNavController
-                    )
+                HorizontalPager(
+                    state = pagerState,
+                    key = { pageIndex ->
+                        // SICHERHEITSCHECK: Nur zugreifen, wenn der Index gültig ist.
+                        // Wenn nicht, nimm einen temporären Key.
+                        allTabs.getOrNull(pageIndex)?.id ?: "temp_page_$pageIndex"
+                    }
+                ) { pageIndex ->
+
+                    // HIER kommt die Logik:
+                    if (pageIndex == 0) {
+                        // Zeige die Seite für "Alle" Quests an
+                        AllQuestsPage(
+                            state = uiState.allQuestPageState,
+                            onQuestDone = {
+                                viewModel.setQuestDone(
+                                    it,
+                                    context
+                                )
+                            },
+                            onQuestDelete = viewModel::deleteQuest,
+                            navController = mainNavController,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } else {
+                        val category = categories[pageIndex - 1]
+
+                        AllQuestsPage(
+                            state = uiState.allQuestPageState,
+                            onQuestDone = {
+                                viewModel.setQuestDone(
+                                    it,
+                                    context
+                                )
+                            },
+                            onQuestDelete = viewModel::deleteQuest,
+                            navController = mainNavController,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        // Zeige die Seite für eine spezifische Kategorie an
+//                        QuestsForCategoryPage(categoryId = category.id)
+                    }
                 }
             }
 

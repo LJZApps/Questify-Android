@@ -7,13 +7,15 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.domain.repositories.app.SortingPreferencesRepository
+import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
-import de.ljz.questify.core.domain.repositories.app.SortingPreferencesRepository
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,10 +30,14 @@ class QuestOverviewViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
-    private val sortingPreferencesRepository: SortingPreferencesRepository
+    private val sortingPreferencesRepository: SortingPreferencesRepository,
+    private val questCategoryRepository: QuestCategoryRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
     val uiState: StateFlow<QuestOverviewUIState> = _uiState.asStateFlow()
+
+    private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
+    val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -53,6 +59,31 @@ class QuestOverviewViewModel @Inject constructor(
                             )
                         }
                     }
+            }
+        }
+
+        viewModelScope.launch {
+            loadCategories()
+        }
+    }
+
+    fun addQuestCategory(questCategory: QuestCategoryEntity) {
+        viewModelScope.launch {
+            questCategoryRepository.addQuestCategory(questCategory)
+        }
+    }
+
+    fun addDummyQuestCategory() {
+        viewModelScope.launch {
+            val questCategory = QuestCategoryEntity(text = "ChillyMilly")
+            questCategoryRepository.addQuestCategory(questCategory)
+        }
+    }
+
+    private fun loadCategories() {
+        viewModelScope.launch {
+            questCategoryRepository.getAllQuestCategories().collectLatest { questCategoryEntities ->
+                _categories.value = questCategoryEntities
             }
         }
     }
