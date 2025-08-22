@@ -46,6 +46,7 @@ class QuestOverviewViewModel @Inject constructor(
                     _uiState.update { it.copy(allQuestPageState = it.allQuestPageState.copy(quests = quests)) }
                 }
             }
+
             launch {
                 sortingPreferencesRepository.getQuestSortingPreferences()
                     .collectLatest { sortingPreferences ->
@@ -60,16 +61,13 @@ class QuestOverviewViewModel @Inject constructor(
                         }
                     }
             }
-        }
 
-        viewModelScope.launch {
-            loadCategories()
-        }
-    }
-
-    fun addQuestCategory(questCategory: QuestCategoryEntity) {
-        viewModelScope.launch {
-            questCategoryRepository.addQuestCategory(questCategory)
+            launch {
+                questCategoryRepository.getAllQuestCategories()
+                    .collectLatest { questCategoryEntities ->
+                        _categories.value = questCategoryEntities
+                    }
+            }
         }
     }
 
@@ -77,14 +75,6 @@ class QuestOverviewViewModel @Inject constructor(
         viewModelScope.launch {
             val questCategory = QuestCategoryEntity(text = "ChillyMilly")
             questCategoryRepository.addQuestCategory(questCategory)
-        }
-    }
-
-    private fun loadCategories() {
-        viewModelScope.launch {
-            questCategoryRepository.getAllQuestCategories().collectLatest { questCategoryEntities ->
-                _categories.value = questCategoryEntities
-            }
         }
     }
 

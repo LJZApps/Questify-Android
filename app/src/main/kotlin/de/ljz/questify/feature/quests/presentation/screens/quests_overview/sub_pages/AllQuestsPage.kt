@@ -50,7 +50,6 @@ fun AllQuestsPage(
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
 ) {
-
     val quests = state.quests
         .filter { quest -> state.showCompleted || !quest.done }
         .sortedWith(compareBy<QuestEntity> {

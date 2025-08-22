@@ -6,26 +6,43 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
-import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
-private const val REQUEST_NOTIFICATION_PERMISSION = 1001
-
 @HiltViewModel
 class CreateQuestViewModel @Inject constructor(
     private val questRepository: QuestRepository,
-    private val questNotificationRepository: QuestNotificationRepository
+    private val questNotificationRepository: QuestNotificationRepository,
+    private val questCategoryRepository: QuestCategoryRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CreateQuestUiState())
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
+
+    private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
+    val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
+
+    private val _selectedCategory = MutableStateFlow<QuestCategoryEntity?>(null)
+    val selectedCategory: StateFlow<QuestCategoryEntity?> = _selectedCategory.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            questCategoryRepository.getAllQuestCategories()
+                .collectLatest { questCategoryEntities ->
+                    _categories.value = questCategoryEntities
+                }
+        }
+    }
 
     @SuppressLint("NewApi")
     fun createQuest(
@@ -52,6 +69,12 @@ class CreateQuestViewModel @Inject constructor(
             }
 
             onSuccess.invoke()
+        }
+    }
+
+    fun addQuestCategory(text: String) {
+        viewModelScope.launch {
+            questCategoryRepository.addQuestCategory(QuestCategoryEntity(text = text))
         }
     }
 
@@ -123,6 +146,9 @@ class CreateQuestViewModel @Inject constructor(
     fun showAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = true) }
     fun hideAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = false) }
     fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
+    fun showSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = true) }
+    fun hideSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = false) }
+
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
     fun showAddingDueDateDialog() = updateUiState {
         copy(

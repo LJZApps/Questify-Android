@@ -14,7 +14,8 @@ data class CreateQuestUiState(
     val notificationTriggerTimes: List<Long> = listOf(),
     val addingDateTimeState: AddingDateTimeState = AddingDateTimeState.NONE,
     val isDueDateInfoDialogVisible: Boolean = false,
-    val isAddingDueDate: Boolean = false
+    val isAddingDueDate: Boolean = false,
+    val isSelectCategoryDialogVisible: Boolean = false
 )
 
 data class NavigationItem(
