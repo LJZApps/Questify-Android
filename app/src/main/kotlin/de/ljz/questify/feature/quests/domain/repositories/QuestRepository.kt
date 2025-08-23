@@ -1,7 +1,7 @@
 package de.ljz.questify.feature.quests.domain.repositories
 
-import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.domain.repositories.BaseRepository
+import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.daos.QuestDao
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import java.util.Date
@@ -37,6 +37,8 @@ class QuestRepository @Inject constructor(
     fun getQuests() = questDao.getAllQuests()
 
     fun getQuestById(id: Int) = questDao.getQuestById(id)
+
+    fun getQuestsForCategoryStream(categoryId: Int) = questDao.getQuestsForCategoryStream(categoryId)
 
     suspend fun suspendGetQuestById(id: Int) = questDao.suspendGetQuestById(id)
 

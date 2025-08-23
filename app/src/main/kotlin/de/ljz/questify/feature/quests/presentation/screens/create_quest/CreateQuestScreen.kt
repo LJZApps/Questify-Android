@@ -160,10 +160,10 @@ fun CreateQuestScreen(
                 )
 
                 ExpressiveMenuCategory(
-                    title = "Liste",
+                    title = stringResource(R.string.create_quest_screen_lists_title),
                     content = {
                         ExpressiveMenuItem(
-                            title = selectedCategory?.text ?: "Keine Liste ausgewählt",
+                            title = selectedCategory?.text ?: stringResource(R.string.create_quest_screen_lists_title_empty),
                             icon = {
                                 Icon(
                                     if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff,
@@ -209,7 +209,7 @@ fun CreateQuestScreen(
                                 }
                         } else {
                             ExpressiveMenuItem(
-                                title = "Keine Erinnerungen",
+                                title = stringResource(R.string.create_quest_screen_reminders_empty),
                                 icon = {
                                     Icon(
                                         imageVector = Icons.Outlined.NotificationsOff,

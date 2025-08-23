@@ -2,6 +2,8 @@ package de.ljz.questify.feature.quests.data.daos
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +18,13 @@ interface QuestCategoryDao {
 
     @Query("SELECT * FROM quest_category_entity")
     fun getAllQuestCategories(): Flow<List<QuestCategoryEntity>>
+
+    @Transaction
+    @Update
+    suspend fun updateCategories(categories: List<QuestCategoryEntity>)
+
+    @Query("SELECT COUNT(*) FROM quest_category_entity")
+    fun getCategoryCount(): Long
 
     @Query("UPDATE quest_category_entity SET text = :newText WHERE id = :questCategoryId")
     suspend fun updateQuestCategory(questCategoryId: Int, newText: String)

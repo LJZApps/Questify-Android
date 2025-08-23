@@ -20,9 +20,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +52,7 @@ import kotlinx.coroutines.flow.collectLatest
  * Diese Funktion ist zustandslos und wird vollständig vom [PermissionsViewModel] gesteuert.
  * Sie ist verantwortlich für die Darstellung der UI und das Starten der Berechtigungs-Launcher.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionsScreen(
     viewModel: PermissionsViewModel = hiltViewModel(),
@@ -98,7 +100,10 @@ fun PermissionsScreen(
                 navigationIcon = {
                     if (canNavigateBack) {
                         IconButton(onClick = { mainNavController.navigateUp() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
                         }
                     }
                 }
@@ -110,6 +115,7 @@ fun PermissionsScreen(
                 Button(
                     onClick = { restartApp(context) },
                     enabled = uiState.permissionItems.all { it.isGranted },
+                    shapes = ButtonDefaults.shapes(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
@@ -146,6 +152,7 @@ fun PermissionsScreen(
 /**
  * Eine wiederverwendbare Composable zur Darstellung einer einzelnen Berechtigungskarte.
  */
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun PermissionCard(permissionItem: PermissionItem) {
     Card(
@@ -185,7 +192,10 @@ private fun PermissionCard(permissionItem: PermissionItem) {
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
-                    Button(onClick = permissionItem.requestAction) {
+                    Button(
+                        onClick = permissionItem.requestAction,
+                        shapes = ButtonDefaults.shapes()
+                    ) {
                         Text(stringResource(R.string.permissions_screen_button_grant))
                     }
                 }

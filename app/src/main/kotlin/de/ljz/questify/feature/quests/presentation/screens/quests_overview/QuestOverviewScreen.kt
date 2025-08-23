@@ -1,6 +1,5 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -38,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -45,8 +45,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -73,7 +76,8 @@ import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.UpdateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.AllQuestsPage
+import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
+import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
 import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
 import de.ljz.questify.feature.quests.presentation.sheets.QuestSortingBottomSheet
 import kotlinx.coroutines.launch
@@ -100,7 +104,7 @@ fun QuestOverviewScreen(
         listOf(staticAllTab) + categories
     }
 
-    val pagerState = rememberPagerState(pageCount = { allTabs.size })
+    var desiredPageIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val context = LocalContext.current
     LocalHapticFeedback.current
@@ -122,7 +126,6 @@ fun QuestOverviewScreen(
                 textFieldState = textFieldState,
                 onSearch = {
                     // TODO
-                    Toast.makeText(context, "Suche: $it", Toast.LENGTH_SHORT).show()
                 },
                 placeholder = {
                     Text(
@@ -198,7 +201,7 @@ fun QuestOverviewScreen(
                         onDismissRequest = { dropdownExpanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Filter") },
+                            text = { Text(stringResource(R.string.quest_overview_screen_dropdown_sort_title)) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.FilterAlt,
@@ -211,7 +214,7 @@ fun QuestOverviewScreen(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Listen verwalten") },
+                            text = { Text(stringResource(R.string.quest_overview_screen_dropdown_manage_list_title)) },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Default.Label,
@@ -261,91 +264,103 @@ fun QuestOverviewScreen(
             }
         },
         content = { innerPadding ->
-            Column(
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    edgePadding = 0.dp,
-                    minTabWidth = 0.dp
+            key(allTabs.size) {
+                val initialPage = desiredPageIndex.coerceIn(0, (allTabs.size - 1).coerceAtLeast(0))
+
+                val pagerState = rememberPagerState(
+                    initialPage = initialPage,
+                    pageCount = { allTabs.size }
+                )
+
+                LaunchedEffect(pagerState.currentPage) {
+                    desiredPageIndex = pagerState.currentPage
+                }
+
+                val tabIndex = pagerState.currentPage
+
+                Column(
+                    modifier = Modifier.padding(innerPadding)
                 ) {
-                    allTabs.forEachIndexed { index, tab ->
+                    PrimaryScrollableTabRow(
+                        selectedTabIndex = tabIndex,
+                        edgePadding = 0.dp,
+                        minTabWidth = 0.dp
+                    ) {
+                        allTabs.forEachIndexed { index, tab ->
+                            Tab(
+                                selected = pagerState.currentPage == index,
+                                onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                                text = {
+                                    Text(
+                                        text = tab.text,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            )
+                        }
+
                         Tab(
-                            selected = pagerState.currentPage == index,
-                            onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
+                            selected = false,
+                            onClick = {
+                                viewModel.showCreateCategoryDialog()
+                            },
                             text = {
-                                Text(
-                                    text = tab.text,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.quest_overview_screen_new_list_tab_title),
+                                        modifier = Modifier.padding(start = 8.dp),
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             }
                         )
                     }
 
-                    Tab(
-                        selected = false,
-                        onClick = {
-                            viewModel.showCreateCategoryDialog()
-                        },
-                        text = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = "Neue Liste",
-                                    modifier = Modifier.padding(start = 8.dp),
-                                    color = MaterialTheme.colorScheme.onSurface
+                    HorizontalPager(
+                        state = pagerState,
+                        key = { pageIndex ->
+                            allTabs.getOrNull(pageIndex)?.id ?: "temp_page_$pageIndex"
+                        }
+                    ) { pageIndex ->
+                        if (pageIndex == 0) {
+                            AllQuestsPage(
+                                state = uiState.allQuestPageState,
+                                onQuestDone = {
+                                    viewModel.setQuestDone(
+                                        it,
+                                        context
+                                    )
+                                },
+                                onQuestDelete = viewModel::deleteQuest,
+                                navController = mainNavController,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else {
+                            val categoryIndex = pageIndex - 1
+                            if (categoryIndex < categories.size) {
+                                val category = categories[categoryIndex]
+
+                                QuestsForCategoryPage(
+                                    categoryId = category.id,
+                                    navController = mainNavController,
+                                    onQuestDone = {
+                                        viewModel.setQuestDone(
+                                            it,
+                                            context
+                                        )
+                                    },
+                                    onQuestDelete = viewModel::deleteQuest,
+                                    modifier = Modifier.fillMaxSize()
                                 )
                             }
                         }
-                    )
-                }
-
-                HorizontalPager(
-                    state = pagerState,
-                    key = { pageIndex ->
-                        // SICHERHEITSCHECK: Nur zugreifen, wenn der Index gültig ist.
-                        // Wenn nicht, nimm einen temporären Key.
-                        allTabs.getOrNull(pageIndex)?.id ?: "temp_page_$pageIndex"
-                    }
-                ) { pageIndex ->
-                    // HIER kommt die Logik:
-                    if (pageIndex == 0) {
-                        // Zeige die Seite für "Alle" Quests an
-                        AllQuestsPage(
-                            state = uiState.allQuestPageState,
-                            onQuestDone = {
-                                viewModel.setQuestDone(
-                                    it,
-                                    context
-                                )
-                            },
-                            onQuestDelete = viewModel::deleteQuest,
-                            navController = mainNavController,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    } else {
-                        val category = categories[pageIndex - 1]
-
-                        AllQuestsPage(
-                            state = uiState.allQuestPageState,
-                            onQuestDone = {
-                                viewModel.setQuestDone(
-                                    it,
-                                    context
-                                )
-                            },
-                            onQuestDelete = viewModel::deleteQuest,
-                            navController = mainNavController,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                        // Zeige die Seite für eine spezifische Kategorie an
-//                        QuestsForCategoryPage(categoryId = category.id)
                     }
                 }
             }
@@ -379,11 +394,17 @@ fun QuestOverviewScreen(
             if (uiState.isManageCategoriesBottomSheetOpen) {
                 ManageCategoryBottomSheet(
                     categories = categories,
-                    onCategorySelect = {
+                    onCategoryRenameRequest = {
                         viewModel.showUpdateCategoryDialog(it)
                     },
                     onCategoryRemove = {
                         viewModel.deleteQuestCategory(it)
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Liste gelöscht",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
                     },
                     onDismiss = {
                         viewModel.hideManageCategoriesBottomSheet()

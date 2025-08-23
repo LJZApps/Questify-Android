@@ -15,7 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import de.ljz.questify.R
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -30,7 +32,7 @@ fun UpdateCategoryDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text("Liste bearbeiten")
+            Text(stringResource(R.string.update_category_dialog_title))
         },
         text = {
             OutlinedTextField(
@@ -41,12 +43,13 @@ fun UpdateCategoryDialog(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        text = "Name der Liste"
+                        text = stringResource(R.string.text_field_name_of_list)
                     )
                 },
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences
-                )
+                ),
+                singleLine = true
             )
         },
         dismissButton = {
@@ -57,7 +60,7 @@ fun UpdateCategoryDialog(
                 shapes = ButtonDefaults.shapes()
             ) {
                 Text(
-                    text = "Abbrechen"
+                    text = stringResource(R.string.cancel)
                 )
             }
         },
@@ -69,7 +72,7 @@ fun UpdateCategoryDialog(
                 shapes = ButtonDefaults.shapes()
             ) {
                 Text(
-                    text = "Speichern"
+                    text = stringResource(R.string.save)
                 )
             }
         }

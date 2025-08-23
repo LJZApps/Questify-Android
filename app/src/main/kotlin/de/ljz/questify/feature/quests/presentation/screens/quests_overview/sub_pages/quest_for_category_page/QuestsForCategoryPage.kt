@@ -1,7 +1,8 @@
-package de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages
+package de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,24 +12,25 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.automirrored.outlined.LabelOff
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.Difficulty
-import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.EpicIcon
@@ -36,34 +38,58 @@ import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.components.QuestItem
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQuestPageState
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalMaterial3AdaptiveApi::class
-)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AllQuestsPage(
+fun QuestsForCategoryPage(
     modifier: Modifier = Modifier,
-    state: AllQuestPageState,
+    categoryId: Int,
+    viewModel: CategoryQuestViewModel = hiltViewModel(
+        key = "category_vm_$categoryId",
+        creationCallback = { factory: CategoryQuestViewModel.Factory ->
+            factory.create(categoryId)
+        }
+    ),
     navController: NavHostController,
     onQuestDone: (QuestEntity) -> Unit,
     onQuestDelete: (Int) -> Unit,
 ) {
-    val quests = state.quests
-        .filter { quest -> state.showCompleted || !quest.done }
-        .sortedWith(compareBy<QuestEntity> {
-            it.id
-        }
-            .let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val quests = uiState.quests
 
-    if (quests.isNotEmpty()) {
-        LazyColumn(
+    if (uiState.isLoading) {
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            LoadingIndicator()
+        }
+    } else if (uiState.quests.isEmpty()) {
+        Column(
             modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(
-                items = quests
-            ) { index, quest ->
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.LabelOff,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = MaterialShapes.Pill.toShape()
+                    )
+                    .padding(16.dp)
+                    .size(64.dp)
+            )
+            Text(
+                text = stringResource(R.string.quests_for_category_page_empty)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            itemsIndexed(uiState.quests) { index, quest ->
                 QuestItem(
                     quest = quest,
                     modifier = Modifier.padding(
@@ -95,30 +121,9 @@ fun AllQuestsPage(
                     },
                     onClick = {
                         navController.navigate(QuestDetailRoute(id = quest.id))
-                    })
+                    }
+                )
             }
-        }
-    } else {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = Icons.Outlined.TaskAlt,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = MaterialShapes.Pill.toShape()
-                    )
-                    .padding(16.dp)
-                    .size(64.dp)
-            )
-            Text(stringResource(R.string.all_quests_page_empty))
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

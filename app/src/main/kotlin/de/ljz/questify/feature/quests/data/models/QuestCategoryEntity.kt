@@ -11,5 +11,5 @@ data class QuestCategoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
 
     @ColumnInfo(name = "text")
-    val text: String
+    val text: String,
 )

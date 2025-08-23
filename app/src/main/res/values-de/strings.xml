@@ -227,4 +227,17 @@
     <string name="select_category_bottom_sheet_placeholder">Liste suchen oder erstellen</string>
     <string name="select_category_bottom_sheet_empty_list_hint">Starte die Suche, um eine neue Liste zu erstellen.</string>
     <string name="select_category_bottom_sheet_create_list">Liste \"%1$s\" erstellen</string>
+    <string name="quests_for_category_page_empty">Diese Liste ist noch leer.</string>
+    <string name="quest_overview_screen_dropdown_sort_title">Sortieren</string>
+    <string name="quest_overview_screen_dropdown_manage_list_title">Listen verwalten</string>
+    <string name="quest_overview_screen_new_list_tab_title">Neue Liste</string>
+    <string name="update_category_dialog_title">Liste bearbeiten</string>
+    <string name="text_field_name_of_list">Name der Liste</string>
+    <string name="manage_categories_bottom_sheet_empty">Du hast noch keine Listen erstellt.</string>
+    <string name="manage_categories_bottom_sheet_dropdown_rename_title">Umbenennen</string>
+    <string name="manage_categories_bottom_sheet_dropdown_delete_title">Löschen</string>
+    <string name="create_category_dialog_title">Liste erstellen</string>
+    <string name="create_quest_screen_lists_title_empty">Keine Liste ausgewählt</string>
+    <string name="create_quest_screen_reminders_empty">Keine Erinnerungen</string>
+    <string name="create_quest_screen_lists_title">Liste</string>
 </resources>

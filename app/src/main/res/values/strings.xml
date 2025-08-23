@@ -226,4 +226,17 @@
     <string name="select_category_bottom_sheet_placeholder">Search or create list</string>
     <string name="select_category_bottom_sheet_empty_list_hint">Start the search to create a new list.</string>
     <string name="select_category_bottom_sheet_create_list">Create list \"%1$s\"</string>
+    <string name="quests_for_category_page_empty">This list is still empty.</string>
+    <string name="quest_overview_screen_dropdown_sort_title">Sort</string>
+    <string name="quest_overview_screen_dropdown_manage_list_title">Manage lists</string>
+    <string name="quest_overview_screen_new_list_tab_title">New list</string>
+    <string name="update_category_dialog_title">Edit list</string>
+    <string name="text_field_name_of_list">Name of the list</string>
+    <string name="manage_categories_bottom_sheet_empty">You haven\'t created any lists yet.</string>
+    <string name="manage_categories_bottom_sheet_dropdown_rename_title">Rename</string>
+    <string name="manage_categories_bottom_sheet_dropdown_delete_title">Delete</string>
+    <string name="create_category_dialog_title">Create list</string>
+    <string name="create_quest_screen_lists_title_empty">No list selected</string>
+    <string name="create_quest_screen_reminders_empty">No reminders</string>
+    <string name="create_quest_screen_lists_title">List</string>
 </resources>

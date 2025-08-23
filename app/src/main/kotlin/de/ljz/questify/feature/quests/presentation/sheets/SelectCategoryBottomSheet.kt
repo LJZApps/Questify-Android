@@ -1,25 +1,28 @@
 package de.ljz.questify.feature.quests.presentation.sheets
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
@@ -30,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
@@ -44,7 +48,6 @@ fun SelectCategoryBottomSheet(
     onCreateCategory: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     var searchText by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false,
@@ -90,12 +93,32 @@ fun SelectCategoryBottomSheet(
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
-                SearchBar(
-                    state = searchBarState,
-                    inputField = inputField,
+                TextField(
+                    value = searchText,
+                    onValueChange = { searchText = it },
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    placeholder = {
+                        Text(text = stringResource(R.string.select_category_bottom_sheet_placeholder))
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                    ),
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
+                    shape = CircleShape,
                 )
             }
         ) { innerPadding ->
@@ -108,6 +131,29 @@ fun SelectCategoryBottomSheet(
                 ExpressiveSettingsSection(
                     modifier = Modifier.padding(vertical = 16.dp)
                 ) {
+                    if (
+                        searchText.trim().isNotEmpty() &&
+                        filteredLists.count {
+                            it.text.lowercase() == searchText.lowercase()
+                        } == 0
+                    ) {
+                        ExpressiveMenuItem(
+                            title = stringResource(
+                                R.string.select_category_bottom_sheet_create_list,
+                                searchText
+                            ),
+                            onClick = {
+                                onCreateCategory(searchText)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.NewLabel,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+
                     if (searchText.trim().isEmpty() && filteredLists.count() == 0) {
                         ExpressiveMenuItem(
                             title = stringResource(R.string.select_category_bottom_sheet_empty_list_hint),
@@ -136,21 +182,7 @@ fun SelectCategoryBottomSheet(
                                     )
                                 }
                         } else {
-                            ExpressiveMenuItem(
-                                title = stringResource(
-                                    R.string.select_category_bottom_sheet_create_list,
-                                    searchText
-                                ),
-                                onClick = {
-                                    onCreateCategory(searchText)
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.NewLabel,
-                                        contentDescription = null
-                                    )
-                                }
-                            )
+
                         }
                     }
                 }
