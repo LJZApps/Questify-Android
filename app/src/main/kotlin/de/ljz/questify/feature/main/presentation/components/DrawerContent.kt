@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -38,7 +37,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import de.ljz.questify.core.utils.getSerializedRouteName
-import de.ljz.questify.feature.dashboard.presentation.screens.dashboard.DashboardRoute
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
 import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
@@ -64,21 +62,14 @@ fun DrawerContent(
             showTitle = false,
             items = listOf(
                 NavigationItem(
-                    title = "Your stats",
-                    icon = Icons.Filled.TaskAlt,
-                    route = DashboardRoute,
-                    featureEnabled = false
-                ),
-                NavigationItem(
                     title = "Quests",
-                    icon = Icons.AutoMirrored.Filled.List,
+                    icon = Icons.Filled.TaskAlt,
                     route = QuestsRoute
                 ),
                 NavigationItem(
                     title = "Habits",
                     icon = Icons.Filled.Eco,
-                    route = HabitsRoute,
-                    featureEnabled = false
+                    route = HabitsRoute
                 ),
             )
         )

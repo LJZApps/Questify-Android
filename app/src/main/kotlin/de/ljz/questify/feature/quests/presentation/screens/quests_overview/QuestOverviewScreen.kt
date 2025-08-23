@@ -14,14 +14,18 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -38,7 +42,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
@@ -62,7 +65,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
-import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowFilledTonalIconButton
+import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowIconButton
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
@@ -98,10 +101,10 @@ fun QuestOverviewScreen(
     val context = LocalContext.current
     LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+    var dropdownExpanded by remember { mutableStateOf(false) }
 
     BackHandler(fabMenuExpanded) { fabMenuExpanded = false }
 
@@ -180,10 +183,36 @@ fun QuestOverviewScreen(
                     }
                 },
                 actions = {
-                    NarrowFilledTonalIconButton(
-                        onClick = viewModel::showSortingBottomSheet
+                    NarrowIconButton(
+                        onClick = { dropdownExpanded = true }
                     ) {
                         Icon(Icons.Default.MoreVert, contentDescription = null)
+                    }
+
+                    DropdownMenu(
+                        expanded = dropdownExpanded,
+                        onDismissRequest = { dropdownExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Filter") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.FilterAlt,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = { viewModel.showSortingBottomSheet() }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Listen verwalten") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Default.Label,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = { /* Do something... */ }
+                        )
                     }
                 }
             )
