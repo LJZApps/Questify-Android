@@ -9,12 +9,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.LabelOff
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -42,7 +46,6 @@ fun ManageCategoryBottomSheet(
     categories: List<QuestCategoryEntity>,
     onCategorySelect: (QuestCategoryEntity) -> Unit,
     onCategoryRemove: (QuestCategoryEntity) -> Unit,
-    onCreateCategory: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -133,21 +136,32 @@ fun ManageCategoryBottomSheet(
                                                 imageVector = Icons.AutoMirrored.Outlined.Label,
                                                 contentDescription = null
                                             )
+                                        },
+                                        trailingContent = {
+                                            FilledTonalIconButton(
+                                                onClick = {
+                                                    onCategoryRemove(list)
+                                                },
+                                                shapes = IconButtonDefaults.shapes(),
+                                                colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                                                    containerColor = MaterialTheme.colorScheme.errorContainer
+                                                ),
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Remove,
+                                                    contentDescription = null
+                                                )
+                                            }
                                         }
                                     )
                                 }
                         } else {
                             ExpressiveMenuItem(
-                                title = stringResource(
-                                    R.string.select_category_bottom_sheet_create_list,
-                                    searchText
-                                ),
-                                onClick = {
-                                    onCreateCategory(searchText)
-                                },
+                                title = "Diese Liste gibt es nicht.",
                                 icon = {
                                     Icon(
-                                        imageVector = Icons.Outlined.NewLabel,
+                                        imageVector = Icons.AutoMirrored.Outlined.LabelOff,
                                         contentDescription = null
                                     )
                                 }

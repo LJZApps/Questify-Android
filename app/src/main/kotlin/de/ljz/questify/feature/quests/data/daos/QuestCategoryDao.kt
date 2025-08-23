@@ -11,6 +11,9 @@ interface QuestCategoryDao {
     @Upsert
     suspend fun upsertQuestCategory(questCategory: QuestCategoryEntity)
 
+    @Query("DELETE FROM quest_category_entity WHERE id = :questCategoryId")
+    suspend fun deleteQuestCategory(questCategoryId: Int)
+
     @Query("SELECT * FROM quest_category_entity")
     fun getAllQuestCategories(): Flow<List<QuestCategoryEntity>>
 }

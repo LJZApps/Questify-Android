@@ -9,6 +9,7 @@ data class QuestOverviewUIState(
     val isSortingBottomSheetOpen: Boolean = false,
     val allQuestPageState: AllQuestPageState = AllQuestPageState(),
     val questDoneDialogState: QuestDoneDialogState = QuestDoneDialogState(),
+    val isManageCategoriesBottomSheetOpen: Boolean = false,
 )
 
 data class AllQuestPageState(

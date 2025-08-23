@@ -1,16 +1,13 @@
 package de.ljz.questify.core.presentation.components.expressive.menu
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -21,8 +18,32 @@ fun ExpressiveMenuItem(
     title: String,
     description: String? = null,
     icon: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
+    ListItem(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(4.dp))
+            .clickable(enabled = onClick != null) {
+                onClick?.invoke()
+            },
+        colors = ListItemDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+        ),
+        headlineContent = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+            )
+        },
+        leadingContent = {
+            if (icon != null) {
+                icon()
+            }
+        },
+        trailingContent = trailingContent
+    )/*
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -43,5 +64,5 @@ fun ExpressiveMenuItem(
             text = title,
             style = MaterialTheme.typography.titleMedium,
         )
-    }
+    }*/
 }

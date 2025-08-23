@@ -78,6 +78,12 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
+    fun deleteQuestCategory(questCategory: QuestCategoryEntity) {
+        viewModelScope.launch {
+            questCategoryRepository.deleteQuestCategory(questCategory)
+        }
+    }
+
     fun setQuestDone(quest: QuestEntity, context: Context) {
         viewModelScope.launch {
             launch {
@@ -176,6 +182,22 @@ class QuestOverviewViewModel @Inject constructor(
                     newLevel = 0,
                     questName = ""
                 )
+            )
+        }
+    }
+
+    fun showManageCategoriesBottomSheet() {
+        _uiState.update {
+            it.copy(
+                isManageCategoriesBottomSheetOpen = true
+            )
+        }
+    }
+
+    fun hideManageCategoriesBottomSheet() {
+        _uiState.update {
+            it.copy(
+                isManageCategoriesBottomSheetOpen = false
             )
         }
     }

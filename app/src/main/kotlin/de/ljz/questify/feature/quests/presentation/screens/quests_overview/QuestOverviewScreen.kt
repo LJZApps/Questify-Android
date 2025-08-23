@@ -72,6 +72,7 @@ import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.AllQuestsPage
+import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
 import de.ljz.questify.feature.quests.presentation.sheets.QuestSortingBottomSheet
 import kotlinx.coroutines.launch
 
@@ -201,7 +202,10 @@ fun QuestOverviewScreen(
                                     contentDescription = null
                                 )
                             },
-                            onClick = { viewModel.showSortingBottomSheet() }
+                            onClick = {
+                                dropdownExpanded = false
+                                viewModel.showSortingBottomSheet()
+                            }
                         )
                         DropdownMenuItem(
                             text = { Text("Listen verwalten") },
@@ -211,7 +215,10 @@ fun QuestOverviewScreen(
                                     contentDescription = null
                                 )
                             },
-                            onClick = { /* Do something... */ }
+                            onClick = {
+                                dropdownExpanded = false
+                                viewModel.showManageCategoriesBottomSheet()
+                            }
                         )
                     }
                 }
@@ -362,6 +369,21 @@ fun QuestOverviewScreen(
                         if (!showCompletedQuests && allQuestPageState.sortingBy == QuestSorting.DONE) {
                             viewModel.updateQuestSorting(QuestSorting.ID)
                         }
+                    }
+                )
+            }
+
+            if (uiState.isManageCategoriesBottomSheetOpen) {
+                ManageCategoryBottomSheet(
+                    categories = categories,
+                    onCategorySelect = {
+
+                    },
+                    onCategoryRemove = {
+                        viewModel.deleteQuestCategory(it)
+                    },
+                    onDismiss = {
+                        viewModel.hideManageCategoriesBottomSheet()
                     }
                 )
             }
