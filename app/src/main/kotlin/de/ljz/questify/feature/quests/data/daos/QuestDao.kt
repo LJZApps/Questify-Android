@@ -25,13 +25,14 @@ interface QuestDao {
     @Query("SELECT * FROM quest_entity WHERE category_id = :categoryId")
     fun getQuestsForCategoryStream(categoryId: Int): Flow<List<QuestEntity>>
 
-    @Query("UPDATE quest_entity SET title = :title, notes = :description, difficulty = :difficulty, due_date = :dueDate WHERE id = :id")
+    @Query("UPDATE quest_entity SET title = :title, notes = :description, difficulty = :difficulty, due_date = :dueDate, category_id = :categoryId WHERE id = :id")
     suspend fun updateQuestById(
         id: Int,
         title: String,
         description: String? = null,
         difficulty: Difficulty,
-        dueDate: Date? = null
+        dueDate: Date? = null,
+        categoryId: Int? = null
     )
 
     @Query("SELECT * FROM quest_entity WHERE id = :id")

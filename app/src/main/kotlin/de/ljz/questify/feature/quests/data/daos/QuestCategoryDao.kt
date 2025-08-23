@@ -19,6 +19,9 @@ interface QuestCategoryDao {
     @Query("SELECT * FROM quest_category_entity")
     fun getAllQuestCategories(): Flow<List<QuestCategoryEntity>>
 
+    @Query("SELECT * FROM quest_category_entity WHERE id = :id")
+    fun getQuestCategoryById(id: Int): Flow<QuestCategoryEntity?>
+
     @Transaction
     @Update
     suspend fun updateCategories(categories: List<QuestCategoryEntity>)

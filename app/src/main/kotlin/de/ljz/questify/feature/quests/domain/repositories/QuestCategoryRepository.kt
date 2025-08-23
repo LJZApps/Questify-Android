@@ -22,4 +22,6 @@ class QuestCategoryRepository @Inject constructor(
     }
 
     fun getAllQuestCategories() = questCategoryDao.getAllQuestCategories()
+
+    fun getQuestCategoryById(id: Int) = questCategoryDao.getQuestCategoryById(id)
 }

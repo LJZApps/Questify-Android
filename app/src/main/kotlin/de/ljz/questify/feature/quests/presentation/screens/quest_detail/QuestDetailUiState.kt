@@ -12,6 +12,7 @@ data class QuestDetailUiState(
     val isEditingQuest: Boolean = false,
     val isShowingReminderBottomSheet: Boolean = false,
     val isDueDateSelectionDialogVisible: Boolean = false,
+    val isSelectCategoryDialogVisible: Boolean = false,
 
     val questState: QuestState = QuestState(),
     val editQuestState: EditQuestState = EditQuestState()

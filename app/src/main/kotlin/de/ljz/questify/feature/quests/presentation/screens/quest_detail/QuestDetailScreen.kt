@@ -10,8 +10,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.automirrored.outlined.LabelOff
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.outlined.Block
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.NotificationAdd
@@ -26,7 +27,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -53,13 +53,10 @@ import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMe
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItemWithTextField
 import de.ljz.questify.core.utils.NavBarConfig
-import de.ljz.questify.feature.quests.presentation.components.EasyIcon
-import de.ljz.questify.feature.quests.presentation.components.EpicIcon
-import de.ljz.questify.feature.quests.presentation.components.HardIcon
-import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
+import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -72,6 +69,8 @@ fun QuestDetailScreen(
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
+    val categories = viewModel.categories.collectAsStateWithLifecycle().value
     val questState = uiState.questState
     val editQuestState = uiState.editQuestState
 
@@ -191,30 +190,46 @@ fun QuestDetailScreen(
                 )
 
                 ExpressiveMenuCategory(
-                    title = stringResource(R.string.quest_detail_screen_difficulty_title),
+                    title = stringResource(R.string.create_quest_screen_lists_title),
                     content = {
                         ExpressiveMenuItem(
-                            title = options[questState.difficulty],
+                            title = selectedCategory?.text ?: stringResource(R.string.create_quest_screen_lists_title_empty),
                             icon = {
-                                val tintColor = LocalContentColor.current
-                                when (questState.difficulty) {
-                                    0 -> {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Block,
-                                            contentDescription = null,
-                                            tint = tintColor
-                                        )
-                                    }
-
-                                    1 -> EasyIcon(tint = tintColor)
-                                    2 -> MediumIcon(tint = tintColor)
-                                    3 -> HardIcon(tint = tintColor)
-                                    4 -> EpicIcon(tint = tintColor)
-                                }
-                            }
+                                Icon(
+                                    if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = { viewModel.showSelectCategoryDialog() }
                         )
                     }
                 )
+
+//                ExpressiveMenuCategory(
+//                    title = stringResource(R.string.quest_detail_screen_difficulty_title),
+//                    content = {
+//                        ExpressiveMenuItem(
+//                            title = options[questState.difficulty],
+//                            icon = {
+//                                val tintColor = LocalContentColor.current
+//                                when (questState.difficulty) {
+//                                    0 -> {
+//                                        Icon(
+//                                            imageVector = Icons.Outlined.Block,
+//                                            contentDescription = null,
+//                                            tint = tintColor
+//                                        )
+//                                    }
+//
+//                                    1 -> EasyIcon(tint = tintColor)
+//                                    2 -> MediumIcon(tint = tintColor)
+//                                    3 -> HardIcon(tint = tintColor)
+//                                    4 -> EpicIcon(tint = tintColor)
+//                                }
+//                            }
+//                        )
+//                    }
+//                )
 
                 ExpressiveMenuCategory(
                     title = stringResource(R.string.quest_detail_screen_due_date_title),
@@ -404,6 +419,22 @@ fun QuestDetailScreen(
                     addingDateTimeState = uiState.addingDueDateTimeState,
                     onDateTimeStateChange = {
                         viewModel.updateDueDateState(it)
+                    }
+                )
+            }
+
+            if (uiState.isSelectCategoryDialogVisible) {
+                SelectCategoryBottomSheet(
+                    categories = categories,
+                    onCategorySelect = { category ->
+                        viewModel.selectCategory(category)
+                        viewModel.hideSelectCategoryDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideSelectCategoryDialog()
+                    },
+                    onCreateCategory = { text ->
+                        viewModel.addQuestCategory(text)
                     }
                 )
             }

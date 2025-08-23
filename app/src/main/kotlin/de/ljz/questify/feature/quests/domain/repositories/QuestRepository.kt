@@ -29,9 +29,17 @@ class QuestRepository @Inject constructor(
         title: String,
         description: String? = null,
         difficulty: Difficulty,
-        dueDate: Date? = null
+        dueDate: Date? = null,
+        categoryId: Int? = null
     ) {
-        questDao.updateQuestById(id, title, description, difficulty, dueDate)
+        questDao.updateQuestById(
+            id = id,
+            title = title,
+            description = description,
+            difficulty = difficulty,
+            dueDate = dueDate,
+            categoryId = categoryId
+        )
     }
 
     fun getQuests() = questDao.getAllQuests()

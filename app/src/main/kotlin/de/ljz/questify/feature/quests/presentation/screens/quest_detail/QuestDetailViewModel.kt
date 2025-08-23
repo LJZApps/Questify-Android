@@ -9,14 +9,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
-import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.trimToNull
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
+import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,6 +30,7 @@ import javax.inject.Inject
 class QuestDetailViewModel @Inject constructor(
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
+    private val questCategoryRepository: QuestCategoryRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestDetailUiState())
@@ -35,38 +39,57 @@ class QuestDetailViewModel @Inject constructor(
     private val questDetailRoute = savedStateHandle.toRoute<QuestDetailRoute>()
     val questId = questDetailRoute.id
 
+    private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
+    val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
+
+    private val _selectedCategory = MutableStateFlow<QuestCategoryEntity?>(null)
+    val selectedCategory: StateFlow<QuestCategoryEntity?> = _selectedCategory.asStateFlow()
+
     init {
         viewModelScope.launch {
-            val questFlow = questRepository.getQuestByIdFlow(questId)
+            launch {
+                val questFlow = questRepository.getQuestByIdFlow(questId)
 
-            questFlow.collectLatest { quest ->
-                // Do not remove "?" for null safety - YES it can be null
-                quest?.let {
-                    val notificationEntities =
-                        questNotificationRepository.getNotificationsByQuestId(it.id)
-                    val notifications = notificationEntities
-                        .filter { !it.notified }
-                        .map { it.notifyAt.time }
+                questFlow.collectLatest { quest ->
+                    // Do not remove "?" for null safety - YES it can be null
+                    quest?.let {
+                        val notificationEntities =
+                            questNotificationRepository.getNotificationsByQuestId(it.id)
+                        val notifications = notificationEntities
+                            .filter { !it.notified }
+                            .map { it.notifyAt.time }
 
-                    _uiState.value = _uiState.value.copy(
-                        editQuestState = _uiState.value.editQuestState.copy(
-                            title = it.title,
-                            description = it.notes ?: "",
-                            difficulty = it.difficulty.ordinal,
-                            notificationTriggerTimes = notifications,
-                            selectedDueDate = it.dueDate?.time ?: 0L
-                        ),
-                        questState = _uiState.value.questState.copy(
-                            questId = it.id,
-                            title = it.title,
-                            description = it.notes ?: "",
-                            notificationTriggerTimes = notifications,
-                            selectedDueDate = if (it.dueDate != null) it.dueDate.time else 0,
-                            difficulty = it.difficulty.ordinal,
-                            isQuestDone = it.done,
+                        questCategoryRepository.getQuestCategoryById(it.categoryId ?: 0).collect { questCategoryEntity ->
+                            _selectedCategory.value = questCategoryEntity
+                        }
+
+                        _uiState.value = _uiState.value.copy(
+                            editQuestState = _uiState.value.editQuestState.copy(
+                                title = it.title,
+                                description = it.notes ?: "",
+                                difficulty = it.difficulty.ordinal,
+                                notificationTriggerTimes = notifications,
+                                selectedDueDate = it.dueDate?.time ?: 0L
+                            ),
+                            questState = _uiState.value.questState.copy(
+                                questId = it.id,
+                                title = it.title,
+                                description = it.notes ?: "",
+                                notificationTriggerTimes = notifications,
+                                selectedDueDate = if (it.dueDate != null) it.dueDate.time else 0,
+                                difficulty = it.difficulty.ordinal,
+                                isQuestDone = it.done,
+                            )
                         )
-                    )
+                    }
                 }
+            }
+
+            launch {
+                questCategoryRepository.getAllQuestCategories()
+                    .collectLatest { questCategoryEntities ->
+                        _categories.value = questCategoryEntities
+                    }
             }
         }
     }
@@ -107,10 +130,21 @@ class QuestDetailViewModel @Inject constructor(
                 description = _uiState.value.editQuestState.description.trimToNull(),
                 difficulty = Difficulty.fromIndex(_uiState.value.editQuestState.difficulty),
                 dueDate = Date(_uiState.value.editQuestState.selectedDueDate),
+                categoryId = _selectedCategory.value?.id
             )
 
             onSuccess.invoke()
         }
+    }
+
+    fun addQuestCategory(text: String) {
+        viewModelScope.launch {
+            questCategoryRepository.addQuestCategory(QuestCategoryEntity(text = text))
+        }
+    }
+
+    fun selectCategory(category: QuestCategoryEntity) {
+        _selectedCategory.value = category
     }
 
     fun deleteQuest(questId: Int, context: Context, onSuccess: () -> Unit) {
@@ -224,6 +258,9 @@ class QuestDetailViewModel @Inject constructor(
 
     fun showRemindersBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = true) }
     fun hideReminderBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = false) }
+
+    fun showSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = true) }
+    fun hideSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = false) }
 
     fun showDueDateSelectionDialog() = updateUiState {
         copy(

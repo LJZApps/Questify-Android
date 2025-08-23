@@ -181,8 +181,6 @@ fun SelectCategoryBottomSheet(
                                         }
                                     )
                                 }
-                        } else {
-
                         }
                     }
                 }
