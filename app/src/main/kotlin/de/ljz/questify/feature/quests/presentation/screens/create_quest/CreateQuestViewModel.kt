@@ -53,7 +53,8 @@ class CreateQuestViewModel @Inject constructor(
             notes = _uiState.value.description.ifEmpty { null },
             difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
             createdAt = Date(),
-            dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate)
+            dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate),
+            categoryId = _selectedCategory.value?.id
         )
 
         viewModelScope.launch {

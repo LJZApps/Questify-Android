@@ -47,8 +47,8 @@ import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMe
 import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowFilledTonalIconButton
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.SelectCategoryFullscreenDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
+import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -160,11 +160,16 @@ fun CreateQuestScreen(
                 )
 
                 ExpressiveMenuCategory(
-                    title ="Liste",
+                    title = "Liste",
                     content = {
                         ExpressiveMenuItem(
                             title = selectedCategory?.text ?: "Keine Liste ausgewählt",
-                            icon = { Icon(if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff, contentDescription = null) },
+                            icon = {
+                                Icon(
+                                    if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff,
+                                    contentDescription = null
+                                )
+                            },
                             onClick = { viewModel.showSelectCategoryDialog() }
                         )
                     }
@@ -258,7 +263,7 @@ fun CreateQuestScreen(
             }
 
             if (uiState.isSelectCategoryDialogVisible) {
-                SelectCategoryFullscreenDialog(
+                SelectCategoryBottomSheet(
                     categories = categories,
                     onCategorySelect = { category ->
                         viewModel.selectCategory(category)

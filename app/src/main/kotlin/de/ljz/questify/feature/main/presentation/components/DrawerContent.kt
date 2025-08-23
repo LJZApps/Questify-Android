@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Eco
+import androidx.compose.material.icons.filled.EnergySavingsLeaf
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TaskAlt
@@ -31,11 +31,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
+import de.ljz.questify.R
 import de.ljz.questify.core.utils.getSerializedRouteName
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
@@ -58,18 +60,18 @@ fun DrawerContent(
 
     val features = listOf(
         NavigationCategory(
-            title = "",
-            showTitle = false,
+            title = stringResource(R.string.drawer_content_category_missions_title),
             items = listOf(
                 NavigationItem(
-                    title = "Quests",
+                    title = stringResource(R.string.drawer_content_quests_title),
                     icon = Icons.Filled.TaskAlt,
                     route = QuestsRoute
                 ),
                 NavigationItem(
-                    title = "Habits",
-                    icon = Icons.Filled.Eco,
-                    route = HabitsRoute
+                    title = stringResource(R.string.drawer_content_habits_title),
+                    icon = Icons.Filled.EnergySavingsLeaf,
+                    route = HabitsRoute,
+                    featureEnabled = false
                 ),
             )
         )
