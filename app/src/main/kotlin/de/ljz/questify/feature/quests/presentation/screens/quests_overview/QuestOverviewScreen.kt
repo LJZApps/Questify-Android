@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.input.clearText
@@ -63,6 +62,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
+import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowFilledTonalIconButton
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
@@ -180,12 +180,8 @@ fun QuestOverviewScreen(
                     }
                 },
                 actions = {
-                    FilledTonalIconButton(
-                        onClick = viewModel::showSortingBottomSheet,
-                        shapes = IconButtonDefaults.shapes(),
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(width = 24.dp, height = 40.dp)
+                    NarrowFilledTonalIconButton(
+                        onClick = viewModel::showSortingBottomSheet
                     ) {
                         Icon(Icons.Default.MoreVert, contentDescription = null)
                     }
@@ -258,11 +254,13 @@ fun QuestOverviewScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = "Neue Liste",
-                                    modifier = Modifier.padding(start = 8.dp)
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.LabelOff
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Description
@@ -20,7 +21,6 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Title
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,6 +44,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuCategory
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItemWithTextField
+import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowFilledTonalIconButton
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SelectCategoryFullscreenDialog
@@ -89,11 +90,10 @@ fun CreateQuestScreen(
                     }
                 },
                 actions = {
-                    FilledTonalIconButton(
+                    NarrowFilledTonalIconButton(
                         onClick = {
 
                         },
-                        shapes = IconButtonDefaults.shapes(),
                     ) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
@@ -123,7 +123,7 @@ fun CreateQuestScreen(
                     .fillMaxSize()
                     .padding(bottom = 80.dp)
                     .padding(horizontal = 16.dp), // Space for the FAB
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 ExpressiveMenuCategory(
                     title = stringResource(R.string.quest_detail_screen_section_informations),
@@ -164,7 +164,7 @@ fun CreateQuestScreen(
                     content = {
                         ExpressiveMenuItem(
                             title = selectedCategory?.text ?: "Keine Liste ausgewählt",
-                            icon = { Icon(Icons.AutoMirrored.Outlined.LabelOff, contentDescription = null) },
+                            icon = { Icon(if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff, contentDescription = null) },
                             onClick = { viewModel.showSelectCategoryDialog() }
                         )
                     }
