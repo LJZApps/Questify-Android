@@ -68,7 +68,9 @@ import de.ljz.questify.core.presentation.components.expressive.settings.Expressi
 import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowIconButton
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
+import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.UpdateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.AllQuestsPage
@@ -90,6 +92,7 @@ fun QuestOverviewScreen(
     val questDoneDialogState = uiState.questDoneDialogState
     val allQuestPageState = uiState.allQuestPageState
     val categories by viewModel.categories.collectAsStateWithLifecycle()
+    val selectedCategoryForUpdating by viewModel.selectedCategoryForUpdating.collectAsStateWithLifecycle()
 
     val staticAllTab = QuestCategoryEntity(id = -1, text = "Alle")
 
@@ -282,7 +285,7 @@ fun QuestOverviewScreen(
                     Tab(
                         selected = false,
                         onClick = {
-                            viewModel.addDummyQuestCategory()
+                            viewModel.showCreateCategoryDialog()
                         },
                         text = {
                             Row(
@@ -377,7 +380,7 @@ fun QuestOverviewScreen(
                 ManageCategoryBottomSheet(
                     categories = categories,
                     onCategorySelect = {
-
+                        viewModel.showUpdateCategoryDialog(it)
                     },
                     onCategoryRemove = {
                         viewModel.deleteQuestCategory(it)
@@ -386,6 +389,32 @@ fun QuestOverviewScreen(
                         viewModel.hideManageCategoriesBottomSheet()
                     }
                 )
+            }
+
+            if (uiState.isCreateCategoryDialogOpen) {
+                CreateCategoryDialog(
+                    onConfirm = { listText ->
+                        viewModel.addQuestCategory(listText)
+                        viewModel.hideCreateCategoryDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideCreateCategoryDialog()
+                    }
+                )
+            }
+
+            if (uiState.isUpdateCategoryDialogOpen) {
+                UpdateCategoryDialog(
+                    questCategory = selectedCategoryForUpdating,
+                    onConfirm = { listText ->
+                        viewModel.updateQuestCategory(listText)
+                        viewModel.hideUpdateCategoryDialog()
+                    },
+                    onDismiss = {
+                        viewModel.hideUpdateCategoryDialog()
+                    }
+                )
+
             }
         },
         snackbarHost = {

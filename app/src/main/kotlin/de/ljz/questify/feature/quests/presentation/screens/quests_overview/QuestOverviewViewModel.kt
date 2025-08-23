@@ -39,6 +39,9 @@ class QuestOverviewViewModel @Inject constructor(
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
 
+    private val _selectedCategoryForUpdating = MutableStateFlow<QuestCategoryEntity?>(null)
+    val selectedCategoryForUpdating: StateFlow<QuestCategoryEntity?> = _selectedCategoryForUpdating.asStateFlow()
+
     init {
         viewModelScope.launch {
             launch {
@@ -71,10 +74,18 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun addDummyQuestCategory() {
+    fun addQuestCategory(text: String) {
         viewModelScope.launch {
-            val questCategory = QuestCategoryEntity(text = "ChillyMilly")
+            val questCategory = QuestCategoryEntity(text = text)
             questCategoryRepository.addQuestCategory(questCategory)
+        }
+    }
+
+    fun updateQuestCategory(newText: String) {
+        viewModelScope.launch {
+            _selectedCategoryForUpdating.value?.let { selectedCategory ->
+                questCategoryRepository.updateQuestCategory(selectedCategory, newText)
+            }
         }
     }
 
@@ -201,4 +212,42 @@ class QuestOverviewViewModel @Inject constructor(
             )
         }
     }
+
+    fun showCreateCategoryDialog() {
+        _uiState.update {
+            it.copy(
+                isCreateCategoryDialogOpen = true
+            )
+        }
+    }
+
+    fun hideCreateCategoryDialog() {
+        _uiState.update {
+            it.copy(
+                isCreateCategoryDialogOpen = false
+            )
+        }
+    }
+
+    fun showUpdateCategoryDialog(questCategory: QuestCategoryEntity? = null) {
+        _selectedCategoryForUpdating.value = questCategory
+
+        _uiState.update {
+            it.copy(
+                isUpdateCategoryDialogOpen = true
+            )
+        }
+    }
+
+    fun hideUpdateCategoryDialog() {
+        _selectedCategoryForUpdating.value = null
+
+        _uiState.update {
+            it.copy(
+                isUpdateCategoryDialogOpen = false
+            )
+        }
+    }
+
+
 }

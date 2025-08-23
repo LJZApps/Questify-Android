@@ -15,7 +15,7 @@ import java.util.Date
             entity = QuestCategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["category_id"],
-            onDelete = ForeignKey.Companion.CASCADE
+            onDelete = ForeignKey.Companion.SET_NULL
         )
     ],
     indices = [

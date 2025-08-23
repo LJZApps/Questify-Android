@@ -10,6 +10,8 @@ data class QuestOverviewUIState(
     val allQuestPageState: AllQuestPageState = AllQuestPageState(),
     val questDoneDialogState: QuestDoneDialogState = QuestDoneDialogState(),
     val isManageCategoriesBottomSheetOpen: Boolean = false,
+    val isCreateCategoryDialogOpen: Boolean = false,
+    val isUpdateCategoryDialogOpen: Boolean = false,
 )
 
 data class AllQuestPageState(

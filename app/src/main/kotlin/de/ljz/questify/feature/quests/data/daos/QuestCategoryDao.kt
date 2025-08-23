@@ -16,4 +16,7 @@ interface QuestCategoryDao {
 
     @Query("SELECT * FROM quest_category_entity")
     fun getAllQuestCategories(): Flow<List<QuestCategoryEntity>>
+
+    @Query("UPDATE quest_category_entity SET text = :newText WHERE id = :questCategoryId")
+    suspend fun updateQuestCategory(questCategoryId: Int, newText: String)
 }

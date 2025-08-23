@@ -17,5 +17,9 @@ class QuestCategoryRepository @Inject constructor(
         questCategoryDao.deleteQuestCategory(questCategory.id)
     }
 
+    suspend fun updateQuestCategory(questCategory: QuestCategoryEntity, newText: String) {
+        questCategoryDao.updateQuestCategory(questCategory.id, newText)
+    }
+
     fun getAllQuestCategories() = questCategoryDao.getAllQuestCategories()
 }
