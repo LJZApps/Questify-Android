@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.input.clearText
@@ -17,8 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -30,7 +31,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialShapes
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
@@ -41,7 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.rememberSearchBarState
-import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -182,11 +182,12 @@ fun QuestOverviewScreen(
                 actions = {
                     FilledTonalIconButton(
                         onClick = viewModel::showSortingBottomSheet,
-                        shapes = IconButtonDefaults.shapes(
-                            shape = MaterialShapes.Pill.toShape()
-                        )
+                        shapes = IconButtonDefaults.shapes(),
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(width = 24.dp, height = 40.dp)
                     ) {
-                        Icon(Icons.Default.SwapVert, contentDescription = null)
+                        Icon(Icons.Default.MoreVert, contentDescription = null)
                     }
                 }
             )
@@ -231,12 +232,18 @@ fun QuestOverviewScreen(
                 PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
                     edgePadding = 0.dp,
+                    minTabWidth = 0.dp
                 ) {
                     allTabs.forEachIndexed { index, tab ->
                         Tab(
                             selected = pagerState.currentPage == index,
                             onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                            text = { Text(text = tab.text) }
+                            text = {
+                                Text(
+                                    text = tab.text,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
                         )
                     }
 
