@@ -52,8 +52,8 @@ android {
         applicationId = "de.ljz.questify"
         minSdk = 30
         targetSdk = 36
-        versionCode = 20
-        versionName = "0.10.0"
+        versionCode = 21
+        versionName = "0.11"
     }
 
     compileOptions {

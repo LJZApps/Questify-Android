@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,7 @@ fun MainScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     val allPermissionsGranted = remember {
         isNotificationPermissionGranted(context) &&
