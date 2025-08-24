@@ -134,7 +134,7 @@ fun SelectCategoryBottomSheet(
                     if (
                         searchText.trim().isNotEmpty() &&
                         filteredLists.count {
-                            it.text.lowercase() == searchText.lowercase()
+                            it.text.lowercase() == searchText.trim().lowercase()
                         } == 0
                     ) {
                         ExpressiveMenuItem(
