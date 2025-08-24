@@ -1,6 +1,5 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -58,7 +57,6 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    @SuppressLint("NewApi")
     fun createQuest(
         onSuccess: () -> Unit,
     ) {
