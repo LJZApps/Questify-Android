@@ -1,8 +1,10 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
 import android.annotation.SuppressLint
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
@@ -24,10 +26,14 @@ import javax.inject.Inject
 class CreateQuestViewModel @Inject constructor(
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
-    private val questCategoryRepository: QuestCategoryRepository
+    private val questCategoryRepository: QuestCategoryRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CreateQuestUiState())
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
+
+    private val createQuestRoute = savedStateHandle.toRoute<CreateQuestRoute>()
+    val selectedCategoryIndex = createQuestRoute.selectedCategoryIndex
 
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
@@ -37,10 +43,18 @@ class CreateQuestViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            questCategoryRepository.getAllQuestCategories()
-                .collectLatest { questCategoryEntities ->
-                    _categories.value = questCategoryEntities
-                }
+            launch {
+                questCategoryRepository.getAllQuestCategories()
+                    .collectLatest { questCategoryEntities ->
+                        _categories.value = questCategoryEntities
+
+                        selectedCategoryIndex?.let { index ->
+                            if (selectedCategory.value == null) {
+                                _selectedCategory.value = _categories.value[index]
+                            }
+                        }
+                    }
+            }
         }
     }
 

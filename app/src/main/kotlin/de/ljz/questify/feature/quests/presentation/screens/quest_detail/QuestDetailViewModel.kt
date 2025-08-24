@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -52,34 +53,25 @@ class QuestDetailViewModel @Inject constructor(
 
                 questFlow.collectLatest { quest ->
                     // Do not remove "?" for null safety - YES it can be null
-                    quest?.let {
+                    quest?.let { questEntity ->
                         val notificationEntities =
-                            questNotificationRepository.getNotificationsByQuestId(it.id)
+                            questNotificationRepository.getNotificationsByQuestId(questEntity.id)
                         val notifications = notificationEntities
                             .filter { !it.notified }
                             .map { it.notifyAt.time }
 
-                        questCategoryRepository.getQuestCategoryById(it.categoryId ?: 0).collect { questCategoryEntity ->
-                            _selectedCategory.value = questCategoryEntity
-                        }
+                        val questCategoryEntity = questCategoryRepository.getQuestCategoryById(questEntity.categoryId ?: 0).firstOrNull()
+                        _selectedCategory.value = questCategoryEntity
 
                         _uiState.value = _uiState.value.copy(
                             editQuestState = _uiState.value.editQuestState.copy(
-                                title = it.title,
-                                description = it.notes ?: "",
-                                difficulty = it.difficulty.ordinal,
+                                title = questEntity.title,
+                                description = questEntity.notes ?: "",
+                                difficulty = questEntity.difficulty.ordinal,
                                 notificationTriggerTimes = notifications,
-                                selectedDueDate = it.dueDate?.time ?: 0L
+                                selectedDueDate = questEntity.dueDate?.time ?: 0L
                             ),
-                            questState = _uiState.value.questState.copy(
-                                questId = it.id,
-                                title = it.title,
-                                description = it.notes ?: "",
-                                notificationTriggerTimes = notifications,
-                                selectedDueDate = if (it.dueDate != null) it.dueDate.time else 0,
-                                difficulty = it.difficulty.ordinal,
-                                isQuestDone = it.done,
-                            )
+                            questId = questId
                         )
                     }
                 }
@@ -125,11 +117,11 @@ class QuestDetailViewModel @Inject constructor(
             }
 
             questRepository.updateQuest(
-                id = _uiState.value.questState.questId,
+                id = questId,
                 title = _uiState.value.editQuestState.title,
                 description = _uiState.value.editQuestState.description.trimToNull(),
                 difficulty = Difficulty.fromIndex(_uiState.value.editQuestState.difficulty),
-                dueDate = Date(_uiState.value.editQuestState.selectedDueDate),
+                dueDate = if (_uiState.value.editQuestState.selectedDueDate.toInt() == 0) null else Date(_uiState.value.editQuestState.selectedDueDate),
                 categoryId = _selectedCategory.value?.id
             )
 
@@ -281,23 +273,6 @@ class QuestDetailViewModel @Inject constructor(
 
     fun updateDifficulty(difficulty: Int) =
         updateUiState { copy(editQuestState = editQuestState.copy(difficulty = difficulty)) }
-
-    fun startEditMode() = updateUiState {
-        copy(
-            isEditingQuest = true,
-            editQuestState = editQuestState.copy(
-                title = questState.title,
-                description = questState.description,
-                difficulty = questState.difficulty
-            )
-        )
-    }
-
-    fun stopEditMode() = updateUiState {
-        copy(
-            isEditingQuest = false
-        )
-    }
 
     fun showDeleteConfirmationDialog() =
         updateUiState { copy(isDeleteConfirmationDialogVisible = true) }

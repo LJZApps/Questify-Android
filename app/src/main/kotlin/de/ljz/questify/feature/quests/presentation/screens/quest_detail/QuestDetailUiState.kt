@@ -14,18 +14,9 @@ data class QuestDetailUiState(
     val isDueDateSelectionDialogVisible: Boolean = false,
     val isSelectCategoryDialogVisible: Boolean = false,
 
-    val questState: QuestState = QuestState(),
-    val editQuestState: EditQuestState = EditQuestState()
-)
-
-data class QuestState(
     val questId: Int = 0,
-    val title: String = "",
-    val description: String = "",
-    val difficulty: Int = 0,
-    val isQuestDone: Boolean = false,
-    val selectedDueDate: Long = 0,
-    val notificationTriggerTimes: List<Long> = listOf(),
+
+    val editQuestState: EditQuestState = EditQuestState()
 )
 
 data class EditQuestState(

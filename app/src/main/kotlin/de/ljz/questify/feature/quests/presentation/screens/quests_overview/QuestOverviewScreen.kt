@@ -254,7 +254,11 @@ fun QuestOverviewScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    mainNavController.navigate(CreateQuestRoute)
+                    mainNavController.navigate(
+                        route = CreateQuestRoute(
+                            selectedCategoryIndex = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
+                        )
+                    )
                 }
             ) {
                 Icon(

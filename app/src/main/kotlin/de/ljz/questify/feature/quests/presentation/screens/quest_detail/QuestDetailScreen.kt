@@ -71,7 +71,6 @@ fun QuestDetailScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
     val categories = viewModel.categories.collectAsStateWithLifecycle().value
-    val questState = uiState.questState
     val editQuestState = uiState.editQuestState
 
     val scope = rememberCoroutineScope()
@@ -381,8 +380,8 @@ fun QuestDetailScreen(
                 DeleteConfirmationDialog(
                     onConfirm = {
                         viewModel.deleteQuest(
-                            questState.questId,
-                            context,
+                            questId = uiState.questId,
+                            context = context,
                             onSuccess = {
                                 viewModel.hideDeleteConfirmationDialog()
                                 navController.navigateUp()
