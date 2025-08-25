@@ -240,4 +240,5 @@
     <string name="create_quest_screen_lists_title_empty">Keine Liste ausgewählt</string>
     <string name="create_quest_screen_reminders_empty">Keine Erinnerungen</string>
     <string name="create_quest_screen_lists_title">Liste</string>
+    <string name="quest_overview_screen_tab_default_text">Alle</string>
 </resources>

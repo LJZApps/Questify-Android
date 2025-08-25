@@ -98,7 +98,7 @@ fun QuestOverviewScreen(
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val selectedCategoryForUpdating by viewModel.selectedCategoryForUpdating.collectAsStateWithLifecycle()
 
-    val staticAllTab = QuestCategoryEntity(id = -1, text = "Alle")
+    val staticAllTab = QuestCategoryEntity(id = -1, text = stringResource(R.string.quest_overview_screen_tab_default_text))
 
     val allTabs = remember(categories) {
         listOf(staticAllTab) + categories
