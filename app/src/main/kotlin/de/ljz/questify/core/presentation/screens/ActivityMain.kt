@@ -23,6 +23,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
+import de.ljz.questify.core.presentation.navigation.routes.habitRoutes
 import de.ljz.questify.core.presentation.navigation.routes.mainRoutes
 import de.ljz.questify.core.presentation.navigation.routes.profileRoutes
 import de.ljz.questify.core.presentation.navigation.routes.questRoutes
@@ -121,6 +122,10 @@ class ActivityMain : AppCompatActivity() {
                             )
 
                             questRoutes(
+                                navController = navController
+                            )
+
+                            habitRoutes(
                                 navController = navController
                             )
                         }

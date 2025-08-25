@@ -39,6 +39,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.feature.habits.data.models.HabitType
 import de.ljz.questify.feature.habits.data.models.HabitsEntity
 import de.ljz.questify.feature.habits.presentation.components.HabitItem
+import de.ljz.questify.feature.habits.presentation.screens.create_habit.CreateHabitRoute
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -164,7 +165,7 @@ fun HabitsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-
+                    mainNavController.navigate(CreateHabitRoute)
                 }
             ) {
                 Icon(
