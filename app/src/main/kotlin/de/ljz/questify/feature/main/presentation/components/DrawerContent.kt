@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EnergySavingsLeaf
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.TaskAlt
+import androidx.compose.material.icons.outlined.Eco
+import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -64,14 +64,13 @@ fun DrawerContent(
             items = listOf(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_quests_title),
-                    icon = Icons.Filled.TaskAlt,
+                    icon = Icons.Outlined.TaskAlt,
                     route = QuestsRoute
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_habits_title),
-                    icon = Icons.Filled.EnergySavingsLeaf,
-                    route = HabitsRoute,
-                    featureEnabled = false
+                    icon = Icons.Outlined.Eco,
+                    route = HabitsRoute
                 ),
             )
         )

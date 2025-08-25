@@ -24,6 +24,7 @@ import de.ljz.questify.core.utils.isAlarmPermissionGranted
 import de.ljz.questify.core.utils.isNotificationPermissionGranted
 import de.ljz.questify.core.utils.isOverlayPermissionGranted
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
+import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsScreen
 import de.ljz.questify.feature.main.presentation.components.DrawerContent
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestOverviewScreen
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
@@ -89,7 +90,10 @@ fun MainScreen(
                     }
 
                     composable<HabitsRoute> {
-
+                        HabitsScreen(
+                            drawerState = drawerState,
+                            mainNavController = mainNavController
+                        )
                     }
                 }
             }
