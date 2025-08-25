@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -132,7 +131,6 @@ fun HabitsScreen(
                             items = habitItems
                         ) { index, habit ->
                             HabitItem(
-                                id = habit.id,
                                 title = habit.title,
                                 notes = habit.notes,
                                 types = habit.type,
@@ -143,15 +141,20 @@ fun HabitsScreen(
                                         bottom = 1.dp,
                                         start = 16.dp,
                                         end = 16.dp
-                                    )
-                                    .clip(
-                                        RoundedCornerShape(
-                                            topStart = if (index == 0) 16.dp else 4.dp,
-                                            topEnd = if (index == 0) 16.dp else 4.dp,
-                                            bottomStart = if (index == habitItems.lastIndex) 16.dp else 4.dp,
-                                            bottomEnd = if (index == habitItems.lastIndex) 16.dp else 4.dp
-                                        )
-                                    )
+                                    ),
+                                onClick = {
+
+                                },
+                                positiveCounter = 2,
+                                negativeCounter = 10,
+                                shape = RoundedCornerShape(
+                                    topStart = if (index == 0) 16.dp else 4.dp,
+                                    topEnd = if (index == 0) 16.dp else 4.dp,
+                                    bottomStart = if (index == habitItems.lastIndex) 16.dp else 4.dp,
+                                    bottomEnd = if (index == habitItems.lastIndex) 16.dp else 4.dp
+                                ),
+                                onIncrease = {},
+                                onDecrease = { }
                             )
                         }
                     }
