@@ -2,7 +2,6 @@ package de.ljz.questify.feature.habits.presentation.components
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,12 +59,12 @@ fun HabitItem(
 
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .fillMaxWidth(),
         shape = shape,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
-        )
+        ),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
