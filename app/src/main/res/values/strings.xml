@@ -240,4 +240,8 @@
     <string name="create_quest_screen_reminders_empty">No reminders</string>
     <string name="create_quest_screen_lists_title">List</string>
     <string name="quest_overview_screen_tab_default_text">All</string>
+    <string name="drawer_content_routines_title">Routines</string>
+    <string name="drawer_content_achievements_title">Achievements</string>
+    <string name="drawer_content_stats_title">Stats</string>
+    <string name="drawer_content_leaderboard_title">Leaderboard</string>
 </resources>

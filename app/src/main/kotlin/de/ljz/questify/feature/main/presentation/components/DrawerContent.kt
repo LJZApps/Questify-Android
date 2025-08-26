@@ -10,7 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Eco
+import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.Leaderboard
 import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.Update
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -44,6 +47,7 @@ import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
 import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
+import de.ljz.questify.feature.stats.presentation.screens.stats.StatsRoute
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -72,8 +76,30 @@ fun DrawerContent(
                     icon = Icons.Outlined.Eco,
                     route = HabitsRoute
                 ),
+                NavigationItem(
+                    title = stringResource(R.string.drawer_content_routines_title),
+                    icon = Icons.Outlined.Update,
+                    route = HabitsRoute,
+                    featureEnabled = false
+                ),
             )
-        )
+        ),
+        NavigationCategory(
+            title = stringResource(R.string.drawer_content_achievements_title),
+            items = listOf(
+                NavigationItem(
+                    title = stringResource(R.string.drawer_content_stats_title),
+                    icon = Icons.Outlined.Leaderboard,
+                    route = StatsRoute
+                ),
+                NavigationItem(
+                    title = stringResource(R.string.drawer_content_leaderboard_title),
+                    icon = Icons.Outlined.EmojiEvents,
+                    route = StatsRoute,
+                    featureEnabled = false
+                ),
+            )
+        ),
     )
 
     ModalDrawerSheet {

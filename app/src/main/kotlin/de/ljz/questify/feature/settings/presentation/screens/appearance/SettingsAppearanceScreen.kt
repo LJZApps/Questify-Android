@@ -28,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,7 +42,6 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
-import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.settings.data.models.ThemeBehavior
 import de.ljz.questify.feature.settings.presentation.dialogs.ColorPickerDialog
 import de.ljz.questify.feature.settings.presentation.dialogs.PaletteStyleDialog
@@ -56,10 +54,6 @@ fun SettingsAppearanceScreen(
     viewModel: SettingsAppearanceViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
-    }
 
     SettingsAppearanceScreenContent(
         uiState = uiState

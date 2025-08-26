@@ -29,6 +29,8 @@ import de.ljz.questify.feature.main.presentation.components.DrawerContent
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestOverviewScreen
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
+import de.ljz.questify.feature.stats.presentation.screens.stats.StatsRoute
+import de.ljz.questify.feature.stats.presentation.screens.stats.StatsScreen
 import io.sentry.compose.SentryTraced
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)
@@ -93,6 +95,13 @@ fun MainScreen(
                         HabitsScreen(
                             drawerState = drawerState,
                             mainNavController = mainNavController
+                        )
+                    }
+
+                    composable<StatsRoute> {
+                        StatsScreen(
+                            drawerState = drawerState,
+                            navController = mainNavController
                         )
                     }
                 }
