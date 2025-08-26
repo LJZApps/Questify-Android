@@ -58,7 +58,6 @@ fun ListReminderBottomSheet(
             }
         },
         sheetState = state,
-        dragHandle = {}
     ) {
         Column(
             modifier = Modifier

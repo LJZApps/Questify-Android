@@ -17,14 +17,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.bottom_sheets.AppModalBottomSheet
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
@@ -52,7 +50,6 @@ fun SelectCategoryBottomSheet(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false,
     )
-    val searchBarState = rememberSearchBarState()
 
     val filteredLists = categories
         .filter {
@@ -62,33 +59,10 @@ fun SelectCategoryBottomSheet(
             )
         }
 
-    val inputField =
-        @Composable {
-            SearchBarDefaults.InputField(
-                query = searchText,
-                onQueryChange = { searchText = it },
-                onSearch = {
-
-                },
-                expanded = false,
-                onExpandedChange = {},
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.select_category_bottom_sheet_placeholder)
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
-                    )
-                }
-            )
-        }
-
-    ModalBottomSheet(
+    AppModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismiss,
+        title = "Liste auswählen"
     ) {
         Scaffold(
             containerColor = Color.Transparent,

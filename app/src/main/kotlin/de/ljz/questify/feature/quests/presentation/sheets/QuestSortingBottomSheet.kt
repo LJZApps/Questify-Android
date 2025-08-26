@@ -13,7 +13,6 @@ import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -30,10 +29,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
-import de.ljz.questify.core.utils.QuestSorting
-import de.ljz.questify.core.utils.SortingDirections
+import de.ljz.questify.core.presentation.components.bottom_sheets.AppModalBottomSheet
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
+import de.ljz.questify.core.utils.QuestSorting
+import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.SortingDirectionItem
 import kotlinx.coroutines.launch
 
@@ -65,7 +65,7 @@ fun QuestSortingBottomSheet(
         )
     )
 
-    ModalBottomSheet(
+    AppModalBottomSheet(
         onDismissRequest = {
             scope.launch {
                 sheetState.hide()
@@ -73,6 +73,7 @@ fun QuestSortingBottomSheet(
             onDismiss()
         },
         sheetState = sheetState,
+        title = "Sortieren"
     ) {
         Column(
             modifier = Modifier

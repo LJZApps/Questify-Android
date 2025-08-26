@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -32,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.bottom_sheets.AppModalBottomSheet
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowIconButton
@@ -49,9 +49,10 @@ fun ManageCategoryBottomSheet(
         skipPartiallyExpanded = false,
     )
 
-    ModalBottomSheet(
+    AppModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismiss,
+        title = "Listen verwalten"
     ) {
         Scaffold(
             containerColor = Color.Transparent,
