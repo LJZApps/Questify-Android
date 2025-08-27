@@ -291,13 +291,14 @@ fun QuestOverviewScreen(
                         minTabWidth = 0.dp
                     ) {
                         allTabs.forEachIndexed { index, tab ->
+                            val isSelected = pagerState.currentPage == index
                             Tab(
-                                selected = pagerState.currentPage == index,
+                                selected = isSelected,
                                 onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
                                 text = {
                                     Text(
                                         text = tab.text,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        color = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             )
