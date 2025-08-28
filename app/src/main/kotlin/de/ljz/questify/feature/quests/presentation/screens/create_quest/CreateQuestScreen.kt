@@ -1,50 +1,57 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.automirrored.outlined.LabelOff
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.NotificationAdd
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.NotificationsOff
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.Title
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Title
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuCategory
-import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
-import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItemWithTextField
-import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowFilledTonalIconButton
+import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
@@ -63,6 +70,7 @@ fun CreateQuestScreen(
     val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
     val categories = viewModel.categories.collectAsStateWithLifecycle().value
     val haptic = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
 
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
@@ -90,104 +98,187 @@ fun CreateQuestScreen(
                     }
                 },
                 actions = {
-                    NarrowFilledTonalIconButton(
+                    TextButton(
                         onClick = {
-
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            viewModel.createQuest(onSuccess = { mainNavController.navigateUp() })
                         },
+                        shapes = ButtonDefaults.shapes()
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = null
+                        Text(
+                            text = "Erstellen"
                         )
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    viewModel.createQuest(onSuccess = { mainNavController.navigateUp() })
-                },
-                modifier = Modifier
-                    .imePadding()
-            ) {
-                Icon(Icons.Outlined.Save, contentDescription = stringResource(R.string.save))
-            }
         },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
-                    .fillMaxSize()
-                    .padding(bottom = 80.dp)
-                    .padding(horizontal = 16.dp), // Space for the FAB
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .imePadding()
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.quest_detail_screen_section_informations),
-                    content = {
-                        ExpressiveMenuItemWithTextField(
-                            text = uiState.title,
-                            placeholder = stringResource(R.string.quest_detail_screen_description),
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Title,
-                                    contentDescription = null
-                                )
-                            },
-                            onTextValueChange = {
-                                viewModel.updateTitle(it)
-                            }
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .widthIn(max = MaxWidth),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Title,
+                            contentDescription = null,
                         )
 
-                        ExpressiveMenuItemWithTextField(
-                            text = uiState.description,
-                            placeholder = stringResource(R.string.quest_detail_screen_placeholder_description),
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Description,
-                                    contentDescription = null
-                                )
+                        OutlinedTextField(
+                            value = uiState.title,
+                            onValueChange = {
+                                viewModel.updateTitle(it)
                             },
-                            onTextValueChange = {
+                            label = { Text("Titel") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences
+                            )
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.Notes,
+                            contentDescription = null,
+                        )
+
+                        OutlinedTextField(
+                            value = uiState.description,
+                            onValueChange = {
                                 viewModel.updateDescription(it)
                             },
-                            singleLine = false
+                            label = { Text("Notizen") },
+                            modifier = Modifier.fillMaxWidth(),
+                            minLines = 2,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences
+                            )
                         )
                     }
-                )
 
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.create_quest_screen_lists_title),
-                    content = {
-                        ExpressiveMenuItem(
-                            title = selectedCategory?.text ?: stringResource(R.string.create_quest_screen_lists_title_empty),
-                            icon = {
-                                Icon(
-                                    if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff,
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = { viewModel.showSelectCategoryDialog() }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Liste",
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    }
-                )
 
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.detailed_information_page_due_date_title),
-                    content = {
-                        val date = Date(uiState.selectedDueDate)
-                        val formattedDate = dateFormat.format(date)
-                        ExpressiveMenuItem(
-                            title = if (uiState.selectedDueDate.toInt() == 0) stringResource(R.string.detailed_information_page_due_date_empty) else formattedDate,
-                            icon = { Icon(Icons.Outlined.Schedule, contentDescription = null) },
-                            onClick = { viewModel.showAddingDueDateDialog() }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+
+                            LaunchedEffect(isFocused) {
+                                if (isFocused) {
+                                    viewModel.showSelectCategoryDialog()
+                                }
+                            }
+
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Label,
+                                contentDescription = null,
+                            )
+
+                            OutlinedTextField(
+                                value = selectedCategory?.text ?: "",
+                                onValueChange = {},
+                                label = { Text("Liste") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                readOnly = true,
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null
+                                    )
+                                },
+                                interactionSource = interactionSource
+                            )
+                        }
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Zeitplanung",
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    }
-                )
 
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+                            val date = Date(uiState.selectedDueDate)
+                            val formattedDate = dateFormat.format(date)
+
+                            LaunchedEffect(isFocused) {
+                                if (isFocused) {
+                                    viewModel.showAddingDueDateDialog()
+                                }
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.Schedule,
+                                contentDescription = null,
+                            )
+
+                            OutlinedTextField(
+                                value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedDate,
+                                onValueChange = {},
+                                label = { Text("Fälligkeit") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                readOnly = true,
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null
+                                    )
+                                },
+                                interactionSource = interactionSource
+                            )
+                        }
+                    }
+                }
+            }
+
+            /*
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .imePadding(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 ExpressiveMenuCategory(
                     title = stringResource(R.string.quest_detail_screen_reminders_title),
                     content = {
@@ -232,6 +323,7 @@ fun CreateQuestScreen(
                     }
                 )
             }
+            */
 
             // Dialogs
             if (uiState.isAddingReminder) {
@@ -255,8 +347,12 @@ fun CreateQuestScreen(
                     onConfirm = { dueDateTimestamp ->
                         viewModel.setDueDate(dueDateTimestamp)
                         viewModel.hideAddingDueDateDialog()
+                        focusManager.clearFocus()
                     },
-                    onDismiss = { viewModel.hideAddingDueDateDialog() },
+                    onDismiss = {
+                        viewModel.hideAddingDueDateDialog()
+                        focusManager.clearFocus()
+                    },
                     addingDateTimeState = uiState.addingDateTimeState,
                     onDateTimeStateChange = { viewModel.updateReminderState(it) }
                 )
@@ -268,6 +364,7 @@ fun CreateQuestScreen(
                     onCategorySelect = { category ->
                         viewModel.selectCategory(category)
                         viewModel.hideSelectCategoryDialog()
+                        focusManager.clearFocus()
                     },
                     onDismiss = {
                         viewModel.hideSelectCategoryDialog()

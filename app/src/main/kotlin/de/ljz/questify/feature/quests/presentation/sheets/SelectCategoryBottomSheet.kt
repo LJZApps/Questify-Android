@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,7 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.bottom_sheets.AppModalBottomSheet
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
@@ -59,10 +59,9 @@ fun SelectCategoryBottomSheet(
             )
         }
 
-    AppModalBottomSheet(
+    ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = onDismiss,
-        title = "Liste auswählen"
+        onDismissRequest = onDismiss
     ) {
         Scaffold(
             containerColor = Color.Transparent,

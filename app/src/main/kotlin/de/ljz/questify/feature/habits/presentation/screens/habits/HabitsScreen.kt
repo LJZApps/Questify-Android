@@ -65,6 +65,11 @@ fun HabitsScreen(
             type = listOf(HabitType.NEGATIVE)
         ),
         HabitsEntity(
+            title = "Nicht rauchen",
+            notes = "Nicht mehr rauchen, um Gesundheit zu verbessern und Geld zu sparen",
+            type = emptyList()
+        ),
+        HabitsEntity(
             title = "2L Wasser trinken",
             notes = "Mehr Wasser trinken, um Gesundheit zu verbessern",
             type = listOf(HabitType.POSITIVE)

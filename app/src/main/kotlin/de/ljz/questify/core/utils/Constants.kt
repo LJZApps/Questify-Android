@@ -1,11 +1,14 @@
 package de.ljz.questify.core.utils
 
+import androidx.compose.ui.unit.dp
 import kotlinx.serialization.Serializable
 
 /**
  * Logging tag: "Questify"
  */
 const val TAG = "Questify"
+
+val MaxWidth = 640.dp
 
 enum class Difficulty {
     NONE,

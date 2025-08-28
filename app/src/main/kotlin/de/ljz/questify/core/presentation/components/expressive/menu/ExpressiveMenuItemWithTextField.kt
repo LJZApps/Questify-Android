@@ -35,6 +35,8 @@ fun ExpressiveMenuItemWithTextField(
     placeholder: String? = null,
     onTextValueChange: (String) -> Unit,
     singleLine: Boolean = true,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     icon: @Composable (() -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
@@ -62,6 +64,8 @@ fun ExpressiveMenuItemWithTextField(
             modifier = Modifier.weight(1f),
             textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurface),
             singleLine = singleLine,
+            minLines = minLines,
+            maxLines = maxLines,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
