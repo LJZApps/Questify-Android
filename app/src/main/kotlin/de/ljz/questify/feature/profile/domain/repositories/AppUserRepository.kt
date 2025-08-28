@@ -1,8 +1,8 @@
 package de.ljz.questify.feature.profile.domain.repositories
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.domain.repositories.BaseRepository
+import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.profile.data.models.AppUser
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -48,18 +48,14 @@ class AppUserRepository @Inject constructor(
         earnedStats: (xp: Int, points: Int, level: Int?) -> Unit
     ) {
         val baseXP = when (difficulty) {
-            Difficulty.NONE -> 0
             Difficulty.EASY -> 10
             Difficulty.MEDIUM -> 20
-            Difficulty.HARD -> 25
-            Difficulty.EPIC -> 40
+            Difficulty.HARD -> 30
         }
         val basePoints = when (difficulty) {
-            Difficulty.NONE -> 0
             Difficulty.EASY -> 5
             Difficulty.MEDIUM -> 10
             Difficulty.HARD -> 15
-            Difficulty.EPIC -> 20
         }
         val xp = if (halfPoints) baseXP / 2 else baseXP
 

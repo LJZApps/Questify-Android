@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.AddingDateTimeState
 import java.util.Calendar
@@ -114,10 +113,6 @@ fun SetDueDateDialog(
             ) {
                 DatePickerDialog(
                     onDismissRequest = onDismiss,
-                    properties = DialogProperties(
-                        dismissOnBackPress = false,
-                        dismissOnClickOutside = false,
-                    ),
                     dismissButton = {
                         TextButton(
                             onClick = onDismiss,
@@ -145,11 +140,7 @@ fun SetDueDateDialog(
 
         AddingDateTimeState.TIME -> {
             Dialog(
-                onDismissRequest = onDismiss,
-                properties = DialogProperties(
-                    dismissOnBackPress = false,
-                    dismissOnClickOutside = false,
-                )
+                onDismissRequest = onDismiss
             ) {
                 Surface(
                     shape = MaterialTheme.shapes.extraLarge,

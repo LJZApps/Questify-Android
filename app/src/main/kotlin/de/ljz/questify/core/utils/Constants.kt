@@ -11,11 +11,9 @@ const val TAG = "Questify"
 val MaxWidth = 640.dp
 
 enum class Difficulty {
-    NONE,
     EASY,
     MEDIUM,
-    HARD,
-    EPIC;
+    HARD;
 
     companion object {
         fun fromIndex(index: Int): Difficulty {

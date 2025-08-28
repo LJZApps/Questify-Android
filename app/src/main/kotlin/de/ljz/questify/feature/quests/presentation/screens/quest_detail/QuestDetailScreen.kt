@@ -1,60 +1,87 @@
 package de.ljz.questify.feature.quests.presentation.screens.quest_detail
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.automirrored.outlined.LabelOff
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Title
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.NotificationAdd
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.NotificationsOff
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.Title
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuCategory
-import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
-import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItemWithTextField
+import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.core.utils.NavBarConfig
+import de.ljz.questify.feature.quests.presentation.components.EasyIcon
+import de.ljz.questify.feature.quests.presentation.components.EpicIcon
+import de.ljz.questify.feature.quests.presentation.components.HardIcon
+import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import kotlinx.coroutines.launch
@@ -72,16 +99,15 @@ fun QuestDetailScreen(
     val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
     val categories = viewModel.categories.collectAsStateWithLifecycle().value
     val editQuestState = uiState.editQuestState
+    val focusManager = LocalFocusManager.current
 
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
     val options = listOf(
-        stringResource(R.string.difficulty_none),
         stringResource(R.string.difficulty_easy),
         stringResource(R.string.difficulty_medium),
-        stringResource(R.string.difficulty_hard),
-        stringResource(R.string.difficulty_epic)
+        stringResource(R.string.difficulty_hard)
     )
 
     val context = LocalContext.current
@@ -101,12 +127,11 @@ fun QuestDetailScreen(
                         onClick = { navController.popBackStack() },
                         shapes = IconButtonDefaults.shapes()
                     ) {
-                        Icon(Icons.Default.Close, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {
-
-                    FilledTonalIconButton(
+                    TextButton(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             viewModel.updateQuest(
@@ -118,12 +143,11 @@ fun QuestDetailScreen(
                                 }
                             )
                         },
-                        shapes = IconButtonDefaults.shapes(
-                            shape = MaterialShapes.Sunny.toShape()
-                        )
-
+                        shapes = ButtonDefaults.shapes()
                     ) {
-                        Icon(Icons.Outlined.Save, contentDescription = null)
+                        Text(
+                            text = stringResource(R.string.save)
+                        )
                     }
 
                     FilledTonalIconButton(
@@ -147,263 +171,305 @@ fun QuestDetailScreen(
         content = { innerPadding ->
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .verticalScroll(rememberScrollState())
+                    .imePadding()
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.quest_detail_screen_section_informations),
-                    content = {
-                        ExpressiveMenuItemWithTextField(
-                            text = editQuestState.title,
-                            placeholder = stringResource(R.string.quest_detail_screen_description),
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Title,
-                                    contentDescription = null
-                                )
-                            },
-                            onTextValueChange = {
-                                viewModel.updateTitle(it)
-                            }
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .widthIn(max = MaxWidth),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Title,
+                            contentDescription = null,
                         )
 
-                        ExpressiveMenuItemWithTextField(
-                            text = editQuestState.description,
-                            placeholder = stringResource(R.string.quest_detail_screen_placeholder_description),
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Description,
-                                    contentDescription = null
-                                )
+                        OutlinedTextField(
+                            value = editQuestState.title,
+                            onValueChange = {
+                                viewModel.updateTitle(it)
                             },
-                            onTextValueChange = {
+                            label = { Text("Titel") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences
+                            )
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.Notes,
+                            contentDescription = null,
+                        )
+
+                        OutlinedTextField(
+                            value = editQuestState.description,
+                            onValueChange = {
                                 viewModel.updateDescription(it)
                             },
-                            singleLine = false
-                        )
-                    }
-                )
-
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.create_quest_screen_lists_title),
-                    content = {
-                        ExpressiveMenuItem(
-                            title = selectedCategory?.text ?: stringResource(R.string.create_quest_screen_lists_title_empty),
-                            icon = {
-                                Icon(
-                                    if (selectedCategory != null) Icons.AutoMirrored.Outlined.Label else Icons.AutoMirrored.Outlined.LabelOff,
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = { viewModel.showSelectCategoryDialog() }
-                        )
-                    }
-                )
-
-//                ExpressiveMenuCategory(
-//                    title = stringResource(R.string.quest_detail_screen_difficulty_title),
-//                    content = {
-//                        ExpressiveMenuItem(
-//                            title = options[questState.difficulty],
-//                            icon = {
-//                                val tintColor = LocalContentColor.current
-//                                when (questState.difficulty) {
-//                                    0 -> {
-//                                        Icon(
-//                                            imageVector = Icons.Outlined.Block,
-//                                            contentDescription = null,
-//                                            tint = tintColor
-//                                        )
-//                                    }
-//
-//                                    1 -> EasyIcon(tint = tintColor)
-//                                    2 -> MediumIcon(tint = tintColor)
-//                                    3 -> HardIcon(tint = tintColor)
-//                                    4 -> EpicIcon(tint = tintColor)
-//                                }
-//                            }
-//                        )
-//                    }
-//                )
-
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.quest_detail_screen_due_date_title),
-                    content = {
-                        val dueDateText = if (editQuestState.selectedDueDate == 0L) {
-                            stringResource(R.string.quest_detail_screen_due_date_empty)
-                        } else {
-                            dateFormat.format(Date(editQuestState.selectedDueDate))
-                        }
-
-                        ExpressiveMenuItem(
-                            title = dueDateText,
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.Schedule,
-                                    contentDescription = null,
-                                )
-                            },
-                            onClick = {
-                                viewModel.showDueDateSelectionDialog()
-                            }
-                        )
-                    }
-                )
-
-
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.quest_detail_screen_reminders_title),
-                    content = {
-                        if (editQuestState.notificationTriggerTimes.isNotEmpty()) {
-                            editQuestState.notificationTriggerTimes.sorted()
-                                .forEachIndexed { index, triggerTime ->
-                                    ExpressiveMenuItem(
-                                        title = dateFormat.format(Date(triggerTime)),
-                                        icon = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.Notifications,
-                                                contentDescription = null
-                                            )
-                                        },
-                                        onClick = {
-                                            viewModel.removeReminder(index)
-                                        }
-                                    )
-                                }
-                        } else {
-                            ExpressiveMenuItem(
-                                title = "Keine Erinnerungen",
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.NotificationsOff,
-                                        contentDescription = null,
-                                    )
-                                }
+                            label = { Text("Notizen") },
+                            modifier = Modifier.fillMaxWidth(),
+                            minLines = 2,
+                            keyboardOptions = KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences
                             )
-                        }
-
-                    },
-                    actionIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.NotificationAdd,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
                         )
-                    },
-                    onActionIconClick = {
-                        viewModel.showCreateReminderDialog()
                     }
-                )
-                /*
-                // Schwierigkeit
-                Column {
 
-                    AnimatedContent(targetState = !(uiState.isEditingQuest && questState.difficulty == 0)) { targetState ->
-                        if (targetState) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                val tintColor = MaterialTheme.colorScheme.primary
-                                when (questState.difficulty) {
-                                    0 -> {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Block,
-                                            contentDescription = null,
-                                            tint = tintColor
-                                        )
-                                    }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Schwierigkeit",
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                                    1 -> EasyIcon(tint = tintColor)
-                                    2 -> MediumIcon(tint = tintColor)
-                                    3 -> HardIcon(tint = tintColor)
-                                    4 -> EpicIcon(tint = tintColor)
-                                }
-                                Text(
-                                    text = options[questState.difficulty],
-                                    modifier = Modifier.padding(start = 8.dp),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        } else {
-                            Row(
-                                Modifier.padding(horizontal = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                            ) {
-                                // Beispiel: unterschiedliche Gewichte pro Button
-                                val modifiers = List(options.size) { Modifier.weight(1f) }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                        ) {
+                            // Beispiel: unterschiedliche Gewichte pro Button
+                            val modifiers = List(options.size) { Modifier.weight(1f) }
 
-                                options.forEachIndexed { index, label ->
-                                    ToggleButton(
-                                        checked = editQuestState.difficulty == index,
-                                        onCheckedChange = {
-                                            haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
-                                            viewModel.updateDifficulty(index)
-                                        },
-                                        modifier = modifiers[index].semantics {
-                                            role = Role.RadioButton
-                                        },
-                                        shapes = when (index) {
-                                            0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                            options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                            else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                                        },
+                            options.forEachIndexed { index, label ->
+                                ToggleButton(
+                                    checked = editQuestState.difficulty == index,
+                                    onCheckedChange = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                        viewModel.updateDifficulty(index)
+                                    },
+                                    modifier = modifiers[index].semantics {
+                                        role = Role.RadioButton
+                                    },
+                                    shapes = when (index) {
+                                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                    },
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
                                         val tint = if (editQuestState.difficulty == index)
                                             MaterialTheme.colorScheme.onPrimary
                                         else
-                                            MaterialTheme.colorScheme.primary
+                                            MaterialTheme.colorScheme.onSurfaceVariant
 
                                         when (index) {
-                                            0 -> Icon(
-                                                Icons.Outlined.Block,
-                                                contentDescription = null,
-                                                tint = tint
-                                            )
-
-                                            1 -> EasyIcon(tint = tint)
-                                            2 -> MediumIcon(tint = tint)
-                                            3 -> HardIcon(tint = tint)
-                                            4 -> EpicIcon(tint = tint)
+                                            0 -> EasyIcon(tint = tint)
+                                            1 -> MediumIcon(tint = tint)
+                                            2 -> HardIcon(tint = tint)
+                                            3 -> EpicIcon(tint = tint)
                                         }
+
+                                        Text(label)
                                     }
                                 }
                             }
                         }
                     }
-                }
-                 */
-            }
 
-            if (uiState.isDeleteConfirmationDialogVisible) {
-                DeleteConfirmationDialog(
-                    onConfirm = {
-                        viewModel.deleteQuest(
-                            questId = uiState.questId,
-                            context = context,
-                            onSuccess = {
-                                viewModel.hideDeleteConfirmationDialog()
-                                navController.navigateUp()
-                            }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Liste",
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    },
-                    onDismiss = { viewModel.hideDeleteConfirmationDialog() }
-                )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+
+                            LaunchedEffect(isFocused) {
+                                if (isFocused) {
+                                    viewModel.showSelectCategoryDialog()
+                                }
+                            }
+
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Outlined.Label,
+                                contentDescription = null,
+                            )
+
+                            OutlinedTextField(
+                                value = selectedCategory?.text ?: "",
+                                onValueChange = {},
+                                label = { Text("Liste") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                readOnly = true,
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null
+                                    )
+                                },
+                                interactionSource = interactionSource
+                            )
+                        }
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Zeitplanung",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+                            val date = Date(editQuestState.selectedDueDate)
+                            val formattedDate = dateFormat.format(date)
+
+                            LaunchedEffect(isFocused) {
+                                if (isFocused) {
+                                    viewModel.showDueDateSelectionDialog()
+                                }
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.Schedule,
+                                contentDescription = null,
+                            )
+
+                            OutlinedTextField(
+                                value = if (editQuestState.selectedDueDate.toInt() == 0) "" else formattedDate,
+                                onValueChange = {},
+                                label = { Text("Fälligkeit") },
+                                modifier = Modifier.weight(1f),
+                                singleLine = true,
+                                readOnly = true,
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        contentDescription = null
+                                    )
+                                },
+                                interactionSource = interactionSource
+                            )
+
+                            if (editQuestState.selectedDueDate.toInt() != 0) {
+                                FilledTonalIconButton(
+                                    onClick = {
+                                        viewModel.setDueDate(0)
+                                    },
+                                    shapes = IconButtonDefaults.shapes(),
+                                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Remove,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Erinnerungen",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+                                    .clickable {
+                                        viewModel.showCreateReminderDialog()
+                                    }
+                                    .padding(horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Erinnerung hinzufügen",
+                                    modifier = Modifier.size(18.dp)
+                                )
+
+                                Text("Hinzufügen")
+                            }
+
+                        }
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            editQuestState.notificationTriggerTimes.sorted()
+                                .forEachIndexed { index, triggerTime ->
+                                    FilterChip(
+                                        selected = false,
+                                        onClick = {
+                                            viewModel.removeReminder(index)
+                                        },
+                                        label = { Text(dateFormat.format(Date(triggerTime))) },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Filled.Notifications,
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .size(18.dp)
+                                            )
+                                        },
+                                        colors = FilterChipDefaults.elevatedFilterChipColors()
+                                    )
+                                }
+                        }
+                    }
+                }
             }
 
+            // Dialogs
             if (uiState.isAddingReminder) {
                 CreateReminderDialog(
-                    addingDateTimeState = uiState.addingReminderDateTimeState,
-                    onDismiss = { viewModel.hideCreateReminderDialog() },
-                    onConfirm = {
-                        viewModel.addReminder(it)
+                    onDismiss = viewModel::hideCreateReminderDialog,
+                    onConfirm = { timestamp ->
+                        viewModel.addReminder(timestamp)
                         viewModel.hideCreateReminderDialog()
                     },
-                    onReminderStateChange = {
-                        viewModel.updateReminderState(it)
-                    }
+                    addingDateTimeState = uiState.addingReminderDateTimeState,
+                    onReminderStateChange = { viewModel.updateReminderState(it) }
                 )
+            }
+
+            if (uiState.isDueDateInfoDialogVisible) {
+                DueDateInfoDialog(onDismiss = { viewModel.hideDueDateInfoDialog() })
             }
 
             if (uiState.isDueDateSelectionDialogVisible) {
@@ -411,14 +477,14 @@ fun QuestDetailScreen(
                     onConfirm = { dueDateTimestamp ->
                         viewModel.setDueDate(dueDateTimestamp)
                         viewModel.hideDueDateSelectionDialog()
+                        focusManager.clearFocus()
                     },
                     onDismiss = {
                         viewModel.hideDueDateSelectionDialog()
+                        focusManager.clearFocus()
                     },
                     addingDateTimeState = uiState.addingDueDateTimeState,
-                    onDateTimeStateChange = {
-                        viewModel.updateDueDateState(it)
-                    }
+                    onDateTimeStateChange = { viewModel.updateReminderState(it) }
                 )
             }
 
@@ -428,9 +494,11 @@ fun QuestDetailScreen(
                     onCategorySelect = { category ->
                         viewModel.selectCategory(category)
                         viewModel.hideSelectCategoryDialog()
+                        focusManager.clearFocus()
                     },
                     onDismiss = {
                         viewModel.hideSelectCategoryDialog()
+                        focusManager.clearFocus()
                     },
                     onCreateCategory = { text ->
                         viewModel.addQuestCategory(text)

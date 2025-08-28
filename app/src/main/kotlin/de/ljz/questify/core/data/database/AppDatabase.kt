@@ -30,7 +30,7 @@ import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
         // Habits
         HabitsEntity::class
     ],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = InitialMigrationSpec::class),
         AutoMigration(from = 2, to = 3, spec = MainQuestAutoMigration::class),

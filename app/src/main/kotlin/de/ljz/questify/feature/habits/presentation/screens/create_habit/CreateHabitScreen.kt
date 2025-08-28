@@ -98,8 +98,7 @@ private fun CreateHabitScreenContent(
     val difficultyOptions = listOf(
         stringResource(R.string.difficulty_easy),
         stringResource(R.string.difficulty_medium),
-        stringResource(R.string.difficulty_hard),
-        stringResource(R.string.difficulty_epic)
+        stringResource(R.string.difficulty_hard)
     )
 
     Scaffold(

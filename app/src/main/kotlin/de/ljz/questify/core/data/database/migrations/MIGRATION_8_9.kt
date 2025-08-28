@@ -1,0 +1,19 @@
+package de.ljz.questify.core.data.database.migrations
+
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+
+val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        // Logik für die Migration:
+        // Setze alle Quests, die vorher die Schwierigkeit 'NONE' hatten, auf 'EASY'.
+        database.execSQL(
+            "UPDATE quest_entity SET difficulty = 'EASY' WHERE difficulty = 'NONE'"
+        )
+
+        // Setze alle Quests, die vorher die Schwierigkeit 'EPIC' hatten, auf 'HARD'.
+        database.execSQL(
+            "UPDATE quest_entity SET difficulty = 'HARD' WHERE difficulty = 'EPIC'"
+        )
+    }
+}

@@ -31,7 +31,6 @@ import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
-import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.components.QuestItem
@@ -83,8 +82,6 @@ fun AllQuestsPage(
                             Difficulty.EASY -> EasyIcon()
                             Difficulty.MEDIUM -> MediumIcon()
                             Difficulty.HARD -> HardIcon()
-                            Difficulty.EPIC -> EpicIcon()
-                            Difficulty.NONE -> {}
                         }
                     },
                     onQuestChecked = {

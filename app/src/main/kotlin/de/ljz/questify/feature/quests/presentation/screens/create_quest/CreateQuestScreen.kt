@@ -1,29 +1,41 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -32,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,10 +53,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,6 +69,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.MaxWidth
+import de.ljz.questify.feature.quests.presentation.components.EasyIcon
+import de.ljz.questify.feature.quests.presentation.components.EpicIcon
+import de.ljz.questify.feature.quests.presentation.components.HardIcon
+import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
@@ -73,6 +94,11 @@ fun CreateQuestScreen(
     val focusManager = LocalFocusManager.current
 
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+    val difficultyOptions = listOf(
+        stringResource(R.string.difficulty_easy),
+        stringResource(R.string.difficulty_medium),
+        stringResource(R.string.difficulty_hard),
+    )
 
     Scaffold(
         topBar = {
@@ -179,6 +205,59 @@ fun CreateQuestScreen(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
+                            text = "Schwierigkeit",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                        ) {
+                            // Beispiel: unterschiedliche Gewichte pro Button
+                            val modifiers = List(difficultyOptions.size) { Modifier.weight(1f) }
+
+                            difficultyOptions.forEachIndexed { index, label ->
+                                ToggleButton(
+                                    checked = uiState.difficulty == index,
+                                    onCheckedChange = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                        viewModel.updateDifficulty(index)
+                                    },
+                                    modifier = modifiers[index].semantics {
+                                        role = Role.RadioButton
+                                    },
+                                    shapes = when (index) {
+                                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                        difficultyOptions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                    },
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        val tint = if (uiState.difficulty == index)
+                                            MaterialTheme.colorScheme.onPrimary
+                                        else
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+
+                                        when (index) {
+                                            0 -> EasyIcon(tint = tint)
+                                            1 -> MediumIcon(tint = tint)
+                                            2 -> HardIcon(tint = tint)
+                                            3 -> EpicIcon(tint = tint)
+                                        }
+
+                                        Text(label)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
                             text = "Liste",
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -253,7 +332,7 @@ fun CreateQuestScreen(
                                 value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedDate,
                                 onValueChange = {},
                                 label = { Text("Fälligkeit") },
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier.weight(1f),
                                 singleLine = true,
                                 readOnly = true,
                                 trailingIcon = {
@@ -264,66 +343,87 @@ fun CreateQuestScreen(
                                 },
                                 interactionSource = interactionSource
                             )
+
+                            if (uiState.selectedDueDate.toInt() != 0) {
+                                FilledTonalIconButton(
+                                    onClick = {
+                                        viewModel.removeDueDate()
+                                    },
+                                    shapes = IconButtonDefaults.shapes(),
+                                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                    )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Remove,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Erinnerungen",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+                                    .clickable {
+                                        viewModel.showCreateReminderDialog()
+                                    }
+                                    .padding(horizontal = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Erinnerung hinzufügen",
+                                    modifier = Modifier.size(18.dp)
+                                )
+
+                                Text("Hinzufügen")
+                            }
+
+                        }
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            uiState.notificationTriggerTimes.sorted()
+                                .forEachIndexed { index, triggerTime ->
+                                    FilterChip(
+                                        selected = false,
+                                        onClick = {
+                                            viewModel.removeReminder(index)
+                                        },
+                                        label = { Text(dateFormat.format(Date(triggerTime))) },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Filled.Notifications,
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .size(18.dp)
+                                            )
+                                        },
+                                        colors = FilterChipDefaults.elevatedFilterChipColors()
+                                    )
+                                }
                         }
                     }
                 }
             }
-
-            /*
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .imePadding(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                ExpressiveMenuCategory(
-                    title = stringResource(R.string.quest_detail_screen_reminders_title),
-                    content = {
-                        if (uiState.notificationTriggerTimes.isNotEmpty()) {
-                            uiState.notificationTriggerTimes.sorted()
-                                .forEachIndexed { index, triggerTime ->
-                                    ExpressiveMenuItem(
-                                        title = dateFormat.format(Date(triggerTime)),
-                                        icon = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.Notifications,
-                                                contentDescription = null
-                                            )
-                                        },
-                                        onClick = {
-                                            viewModel.removeReminder(index)
-                                        }
-                                    )
-                                }
-                        } else {
-                            ExpressiveMenuItem(
-                                title = stringResource(R.string.create_quest_screen_reminders_empty),
-                                icon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.NotificationsOff,
-                                        contentDescription = null,
-                                    )
-                                }
-                            )
-                        }
-
-                    },
-                    actionIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.NotificationAdd,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    },
-                    onActionIconClick = {
-                        viewModel.showCreateReminderDialog()
-                    }
-                )
-            }
-            */
 
             // Dialogs
             if (uiState.isAddingReminder) {
@@ -368,6 +468,7 @@ fun CreateQuestScreen(
                     },
                     onDismiss = {
                         viewModel.hideSelectCategoryDialog()
+                        focusManager.clearFocus()
                     },
                     onCreateCategory = { text ->
                         viewModel.addQuestCategory(text)

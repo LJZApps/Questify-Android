@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import de.ljz.questify.core.data.database.AppDatabase
+import de.ljz.questify.core.data.database.migrations.MIGRATION_8_9
 import javax.inject.Singleton
 
 @Module
@@ -21,7 +22,9 @@ object DatabaseModule {
             context = context,
             klass = AppDatabase::class.java,
             name = "questify_db"
-        ).build()
+        )
+            .addMigrations(MIGRATION_8_9)
+            .build()
     }
 
 }
