@@ -17,9 +17,6 @@ class MainViewModel @Inject constructor(
     val uiState: StateFlow<MainUiState> = appUserRepository.getAppUser()
         .map { appUser ->
             MainUiState(
-                userPoints = appUser.points,
-                userXP = appUser.xp,
-                userLevel = appUser.level,
                 userName = appUser.displayName,
                 userProfilePicture = appUser.profilePicture
             )

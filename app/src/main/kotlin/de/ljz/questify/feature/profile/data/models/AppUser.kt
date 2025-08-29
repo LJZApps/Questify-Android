@@ -27,16 +27,7 @@ data class AppUser(
     val email: String = "",
 
     @SerialName(value = "profile_picture")
-    val profilePicture: String = "",
-
-    @SerialName(value = "points")
-    val points: Int = 0,
-
-    @SerialName(value = "xp")
-    val xp: Int = 0,
-
-    @SerialName(value = "level")
-    val level: Int = 0,
+    val profilePicture: String = ""
 )
 
 object AppUserSerializer : Serializer<AppUser> {
