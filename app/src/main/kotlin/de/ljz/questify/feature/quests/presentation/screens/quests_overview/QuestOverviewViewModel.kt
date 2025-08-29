@@ -17,6 +17,7 @@ import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,8 @@ class QuestOverviewViewModel @Inject constructor(
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
     private val sortingPreferencesRepository: SortingPreferencesRepository,
-    private val questCategoryRepository: QuestCategoryRepository
+    private val questCategoryRepository: QuestCategoryRepository,
+    private val completeQuestUseCase: CompleteQuestUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
     val uiState: StateFlow<QuestOverviewUIState> = _uiState.asStateFlow()
@@ -98,7 +100,19 @@ class QuestOverviewViewModel @Inject constructor(
     fun setQuestDone(quest: QuestEntity, context: Context) {
         viewModelScope.launch {
             launch {
-                questRepository.setQuestDone(quest.id, true)
+                val result = completeQuestUseCase(quest)
+
+                _uiState.update {
+                    it.copy(
+                        questDoneDialogState = it.questDoneDialogState.copy(
+                            visible = true,
+                            xp = result.earnedXp,
+                            points = result.earnedPoints,
+                            newLevel = if (result.didLevelUp) result.newLevel else 0,
+                            questName = quest.title
+                        )
+                    )
+                }
             }
 
             launch {
@@ -121,27 +135,9 @@ class QuestOverviewViewModel @Inject constructor(
                 }
 
                 questNotificationRepository.removeNotifications(quest.id)
-
-                appUserRepository.addPointsAndXp(
-                    difficulty = quest.difficulty,
-                    earnedStats = { xp, points, level ->
-                        _uiState.update {
-                            it.copy(
-                                questDoneDialogState = it.questDoneDialogState.copy(
-                                    visible = true,
-                                    xp = xp,
-                                    points = points,
-                                    newLevel = level ?: 0,
-                                    questName = quest.title
-                                )
-                            )
-                        }
-                    }
-                )
             }
         }
     }
-
 
     fun deleteQuest(id: Int) {
         viewModelScope.launch {

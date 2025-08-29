@@ -24,6 +24,10 @@ class QuestRepository @Inject constructor(
         questDao.upsertQuests(quests)
     }
 
+    suspend fun updateQuest(quest: QuestEntity) {
+        questDao.updateQuest(quest)
+    }
+
     suspend fun updateQuest(
         id: Int,
         title: String,

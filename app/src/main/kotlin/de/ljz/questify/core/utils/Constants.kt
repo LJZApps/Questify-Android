@@ -10,18 +10,6 @@ const val TAG = "Questify"
 
 val MaxWidth = 640.dp
 
-enum class Difficulty {
-    EASY,
-    MEDIUM,
-    HARD;
-
-    companion object {
-        fun fromIndex(index: Int): Difficulty {
-            return entries[index]
-        }
-    }
-}
-
 enum class QuestSorting {
     ID,
     TITLE,

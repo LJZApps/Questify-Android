@@ -3,6 +3,7 @@ package de.ljz.questify.feature.quests.data.daos
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestEntity
@@ -18,6 +19,9 @@ interface QuestDao {
 
     @Query("SELECT * FROM quest_entity")
     fun getAllQuests(): Flow<List<QuestEntity>>
+
+    @Update
+    suspend fun updateQuest(quest: QuestEntity)
 
     @Query("SELECT * FROM quest_entity WHERE id = :id")
     fun getQuestById(id: Int): QuestEntity

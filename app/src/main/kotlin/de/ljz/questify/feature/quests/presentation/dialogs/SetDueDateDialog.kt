@@ -155,7 +155,8 @@ fun SetDueDateDialog(
                             modifier = Modifier
                                 .padding(bottom = 12.dp)
                                 .fillMaxWidth(),
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.titleLarge
                         )
                         if (showTimeInput.value) {
                             TimeInput(timePickerState)
@@ -193,7 +194,7 @@ fun SetDueDateDialog(
                                     onClick = { onConfirm(combinedDateTime.value) },
                                     shapes = ButtonDefaults.shapes()
                                 ) {
-                                    Text(stringResource(R.string.create_reminder_dialog_add_reminder))
+                                    Text(stringResource(R.string.save))
                                 }
                             }
                         }
