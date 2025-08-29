@@ -1,21 +1,16 @@
 package de.ljz.questify.core.presentation.screens
 
-import android.app.AlarmManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import androidx.core.app.NotificationManagerCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.R
 import de.ljz.questify.core.data.shared_preferences.SessionManager
-import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
 import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,8 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val appSettingsRepository: AppSettingsRepository,
-    private val appUserRepository: AppUserRepository
+    private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AppUiState())
@@ -38,15 +32,9 @@ class AppViewModel @Inject constructor(
     private val _isAppReady = MutableStateFlow(false)
     val isAppReady: StateFlow<Boolean> = _isAppReady.asStateFlow()
 
-    val areAllPermissionsGranted: Boolean
-        get() = _uiState.value.isNotificationPermissionGranted &&
-                _uiState.value.isAlarmPermissionGranted &&
-                _uiState.value.isOverlayPermissionGranted
-
     init {
         viewModelScope.launch {
             launch {
-                // Vorherige Abfrage der App-Einstellungen vor der UI-Update
                 val appSettings = appSettingsRepository.getAppSettings().firstOrNull()
 
                 _uiState.update {
@@ -58,16 +46,6 @@ class AppViewModel @Inject constructor(
 
                 _isAppReady.update { true }
             }
-
-            /*launch {
-                appSettingsRepository.setLas
-            }*/
-        }
-    }
-
-    fun resetAppUserStats() {
-        viewModelScope.launch {
-            appUserRepository.resetAppUserStats()
         }
     }
 
@@ -81,7 +59,7 @@ class AppViewModel @Inject constructor(
         notificationManager.createNotificationChannelGroup(questGroup)
 
         val soundUri =
-            Uri.parse("android.resource://" + context.packageName + "/" + R.raw.quest_notification)
+            ("android.resource://" + context.packageName + "/" + R.raw.quest_notification).toUri()
 
         val channel = NotificationChannel(
             "quests",
@@ -94,22 +72,6 @@ class AppViewModel @Inject constructor(
             setSound(soundUri, Notification.AUDIO_ATTRIBUTES_DEFAULT)
         }
 
-        // Registriere den Kanal beim NotificationManager
         notificationManager.createNotificationChannel(channel)
-    }
-
-    fun checkPermissions(context: Context) {
-        _uiState.update {
-            it.copy(
-                isNotificationPermissionGranted = NotificationManagerCompat.from(context)
-                    .areNotificationsEnabled(),
-                isAlarmPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    (context.getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()
-                } else {
-                    true
-                },
-                isOverlayPermissionGranted = Settings.canDrawOverlays(context)
-            )
-        }
     }
 }
