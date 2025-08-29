@@ -11,7 +11,6 @@ import de.ljz.questify.core.domain.repositories.app.SortingPreferencesRepository
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
-import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
@@ -28,7 +27,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestOverviewViewModel @Inject constructor(
-    private val appUserRepository: AppUserRepository,
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
     private val sortingPreferencesRepository: SortingPreferencesRepository,
