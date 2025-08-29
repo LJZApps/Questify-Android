@@ -3,7 +3,6 @@ package de.ljz.questify.feature.habits.presentation.screens.habits
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Eco
-import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,9 +25,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -115,25 +114,23 @@ fun HabitsScreen(
                 val options = listOf("Täglich", "Wöchentlich", "Monatlich")
                 var selectedIndex by remember { mutableIntStateOf(0) }
 
-                Row(
-                    Modifier.padding(bottom = 16.dp)
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                PrimaryTabRow(
+                    selectedTabIndex = selectedIndex
                 ) {
-                    options.forEachIndexed { index, label ->
-                        ToggleButton(
-                            checked = selectedIndex == index,
-                            onCheckedChange = { selectedIndex = index },
-                            modifier = Modifier.weight(1f),
-                            shapes =
-                                when (index) {
-                                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                    options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                                },
-                        ) {
-                            Text(label)
-                        }
+                    options.forEachIndexed { index, tab ->
+                        val isSelected = selectedIndex == index
+                        Tab(
+                            selected = isSelected,
+                            onClick = {
+                                selectedIndex = index
+                            },
+                            text = {
+                                Text(
+                                    text = tab,
+                                    color = if (selectedIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        )
                     }
                 }
 

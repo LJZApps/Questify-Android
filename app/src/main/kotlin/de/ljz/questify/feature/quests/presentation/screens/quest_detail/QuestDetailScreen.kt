@@ -81,6 +81,7 @@ import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
@@ -503,6 +504,22 @@ fun QuestDetailScreen(
                     onCreateCategory = { text ->
                         viewModel.addQuestCategory(text)
                     }
+                )
+            }
+
+            if (uiState.isDeleteConfirmationDialogVisible) {
+                DeleteConfirmationDialog(
+                    onConfirm = {
+                        viewModel.deleteQuest(
+                            uiState.questId,
+                            context,
+                            onSuccess = {
+                                viewModel.hideDeleteConfirmationDialog()
+                                navController.navigateUp()
+                            }
+                        )
+                    },
+                    onDismiss = { viewModel.hideDeleteConfirmationDialog() }
                 )
             }
         },

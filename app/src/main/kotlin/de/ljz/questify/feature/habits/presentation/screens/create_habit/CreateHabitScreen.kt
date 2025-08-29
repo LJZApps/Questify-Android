@@ -1,7 +1,5 @@
 package de.ljz.questify.feature.habits.presentation.screens.create_habit
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,10 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
@@ -40,7 +35,6 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -141,11 +135,9 @@ private fun CreateHabitScreenContent(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp) // Behalte horizontales Padding hier
-                    .widthIn(max = MaxWidth), // Setzt nur die maximale Breite
-                // .fillMaxWidth() -> ENTFERNEN!
+                    .padding(horizontal = 16.dp)
+                    .widthIn(max = MaxWidth),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
-                // horizontalAlignment -> wird nicht mehr benötigt, da die Kinder eh fillMaxWidth() haben
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -164,6 +156,7 @@ private fun CreateHabitScreenContent(
                         },
                         label = { Text("Titel") },
                         modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences
                         )
@@ -321,52 +314,6 @@ private fun CreateHabitScreenContent(
                                 Text(label)
                             }
                         }
-                    }
-                }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = "Zeitplanung",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        val interactionSource = remember { MutableInteractionSource() }
-                        val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
-
-                        LaunchedEffect(isFocused) {
-                            if (isFocused) {
-                                focusManager.clearFocus()
-                                // TODO: Open time picker
-                            }
-                        }
-
-                        Icon(
-                            imageVector = Icons.Default.Schedule,
-                            contentDescription = null,
-                        )
-
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            label = { Text("Reset-Zeit") },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
-                            readOnly = true,
-                            trailingIcon = {
-                                Icon(
-                                    imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                    contentDescription = null
-                                )
-                            },
-                            interactionSource = interactionSource
-                        )
                     }
                 }
             }

@@ -58,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
@@ -107,7 +108,7 @@ fun QuestOverviewScreen(
     var desiredPageIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val context = LocalContext.current
-    LocalHapticFeedback.current
+    val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
 
     var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
@@ -254,6 +255,7 @@ fun QuestOverviewScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     mainNavController.navigate(
                         route = CreateQuestRoute(
                             selectedCategoryIndex = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
