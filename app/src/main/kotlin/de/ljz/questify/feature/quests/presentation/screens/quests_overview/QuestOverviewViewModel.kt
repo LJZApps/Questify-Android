@@ -17,6 +17,7 @@ import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepositor
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,8 @@ class QuestOverviewViewModel @Inject constructor(
     private val questNotificationRepository: QuestNotificationRepository,
     private val sortingPreferencesRepository: SortingPreferencesRepository,
     private val questCategoryRepository: QuestCategoryRepository,
-    private val completeQuestUseCase: CompleteQuestUseCase
+    private val completeQuestUseCase: CompleteQuestUseCase,
+    private val deleteQuestUseCase: DeleteQuestUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestOverviewUIState())
     val uiState: StateFlow<QuestOverviewUIState> = _uiState.asStateFlow()
@@ -139,7 +141,7 @@ class QuestOverviewViewModel @Inject constructor(
 
     fun deleteQuest(id: Int) {
         viewModelScope.launch {
-            questRepository.deleteQuest(id)
+            deleteQuestUseCase.invoke(id)
         }
     }
 

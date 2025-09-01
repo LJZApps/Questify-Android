@@ -18,6 +18,7 @@ import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,10 +30,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
     private val questCategoryRepository: QuestCategoryRepository,
-    savedStateHandle: SavedStateHandle,
+    private val deleteQuestUseCase: DeleteQuestUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(QuestDetailUiState())
     val uiState = _uiState.asStateFlow()
@@ -159,7 +161,9 @@ class QuestDetailViewModel @Inject constructor(
                 }
             }
 
-            questRepository.deleteQuest(id = questId)
+            deleteQuestUseCase.invoke(
+                questId = questId
+            )
             questNotificationRepository.removeNotifications(questId)
 
             onSuccess.invoke()
