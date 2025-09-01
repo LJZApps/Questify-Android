@@ -28,6 +28,10 @@ class QuestRepository @Inject constructor(
         questDao.updateQuest(quest)
     }
 
+    fun getCompletedQuestsCount(): Int {
+        return questDao.getCompletedQuestsCount()
+    }
+
     suspend fun updateQuest(
         id: Int,
         title: String,

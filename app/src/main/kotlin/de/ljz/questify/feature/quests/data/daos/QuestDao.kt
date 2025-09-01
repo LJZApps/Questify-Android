@@ -49,6 +49,9 @@ interface QuestDao {
     @Query("UPDATE quest_entity SET done = :done WHERE id = :id")
     suspend fun setQuestDone(id: Int, done: Boolean)
 
+    @Query("SELECT COUNT(*) FROM quest_entity WHERE done = 1")
+    fun getCompletedQuestsCount(): Int
+
     @Upsert
     suspend fun upsertMainQuest(value: QuestEntity): Long
 

@@ -30,10 +30,10 @@ data class PlayerStats(
     val points: Int = 0,
 
     @SerialName("current_hp")
-    val currentHP: Int = 0,
+    val currentHP: Int = 100,
 
     @SerialName("max_hp")
-    val maxHP: Int = 0,
+    val maxHP: Int = 100,
 
     @SerialName("status")
     val status: PlayerStatus = PlayerStatus.NORMAL,
