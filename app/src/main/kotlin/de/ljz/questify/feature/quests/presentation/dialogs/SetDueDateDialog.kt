@@ -99,11 +99,6 @@ fun SetDueDateDialog(
 
     val showTimeInput = remember { mutableStateOf(false) }
 
-    val cal = Calendar.getInstance()
-    cal.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-    cal.set(Calendar.MINUTE, timePickerState.minute)
-    cal.set(Calendar.SECOND, 0)
-
     when (addingDateTimeState) {
         AddingDateTimeState.NONE -> null
         AddingDateTimeState.DATE -> {
