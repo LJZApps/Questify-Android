@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.core.graphics.toColorInt
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.materialkolor.rememberDynamicColorScheme
@@ -43,7 +44,7 @@ fun QuestifyTheme(
         when (uiState.themingEngine) {
             ThemingEngine.V1 -> getColorScheme(uiState.themeBehavior, customThemeColor ?: uiState.themeColor, darkTheme)
             ThemingEngine.V2 -> rememberDynamicColorScheme(
-                seedColor = Color(android.graphics.Color.parseColor(uiState.appColor)),
+                seedColor = Color(uiState.appColor.toColorInt()),
                 isDark = useDarkTheme,
                 isAmoled = uiState.isAmoled,
                 style = uiState.themeStyle,

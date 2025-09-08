@@ -104,8 +104,8 @@ private fun StatsScreenContent(
                         level = uiState.playerStats.level,
                         currentXp = uiState.playerStats.xp,
                         xpForNextLevel = uiState.xpForNextLevel,
-                        currentHp = uiState.playerStats.currentHp,
-                        maxHp = uiState.playerStats.maxHp
+                        currentHp = 0,
+                        maxHp = 100
                     )
 
                     StatGridCard(

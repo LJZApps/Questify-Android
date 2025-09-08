@@ -63,7 +63,7 @@ fun SetDueDateDialog(
         initialDisplayMode = DisplayMode.Picker,
         initialSelectedDateMillis = currentTime.timeInMillis,
         selectableDates = object : SelectableDates {
-            override fun isSelectableDate(dateMillis: Long): Boolean {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 val isSelectableTime = Calendar.getInstance()
 
                 // Setze Stunden, Minuten, Sekunden und Millisekunden auf 0, um nur das Datum zu vergleichen
@@ -71,7 +71,7 @@ fun SetDueDateDialog(
                 isSelectableTime.set(Calendar.MINUTE, 0)
                 isSelectableTime.set(Calendar.SECOND, 0)
                 isSelectableTime.set(Calendar.MILLISECOND, 0)
-                return dateMillis > isSelectableTime.timeInMillis
+                return utcTimeMillis > isSelectableTime.timeInMillis
             }
         }
     )
