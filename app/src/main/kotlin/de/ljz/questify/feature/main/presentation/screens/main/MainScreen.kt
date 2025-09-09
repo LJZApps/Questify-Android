@@ -73,8 +73,7 @@ fun MainScreen(
                         mainNavController = mainNavController,
                         drawerState = drawerState
                     )
-                },
-                gesturesEnabled = allPermissionsGranted
+                }
             ) {
                 NavHost(
                     navController = homeNavHostController,

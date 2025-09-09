@@ -102,7 +102,7 @@ fun DrawerContent(
         ),
     )
 
-    ModalDrawerSheet {
+    ModalDrawerSheet(drawerState) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
