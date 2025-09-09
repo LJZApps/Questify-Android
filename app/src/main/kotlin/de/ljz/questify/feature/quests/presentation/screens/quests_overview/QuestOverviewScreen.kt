@@ -60,6 +60,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
@@ -99,6 +100,8 @@ fun QuestOverviewScreen(
     val allQuestPageState = uiState.allQuestPageState
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val selectedCategoryForUpdating by viewModel.selectedCategoryForUpdating.collectAsStateWithLifecycle()
+
+    val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
     val staticAllTab = QuestCategoryEntity(id = -1, text = stringResource(R.string.quest_overview_screen_tab_default_text))
 
@@ -166,6 +169,7 @@ fun QuestOverviewScreen(
         }
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             AppBarWithSearch(
                 state = searchBarState,
@@ -229,7 +233,8 @@ fun QuestOverviewScreen(
                             }
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
             ExpandedFullScreenSearchBar(state = searchBarState, inputField = inputField) {
                 ExpressiveSettingsSection(

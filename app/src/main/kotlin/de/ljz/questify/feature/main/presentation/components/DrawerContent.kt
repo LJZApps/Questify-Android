@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -26,6 +28,7 @@ import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
@@ -102,10 +105,14 @@ fun DrawerContent(
         ),
     )
 
-    ModalDrawerSheet(drawerState) {
+    ModalDrawerSheet(
+        drawerState = drawerState,
+        modifier = Modifier
+            .statusBarsPadding()
+            .navigationBarsPadding()
+    ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 12.dp)
                 .fillMaxWidth()
         ) {
             Row(
@@ -113,6 +120,7 @@ fun DrawerContent(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
                     .padding(vertical = 6.dp)
             ) {
                 Row(
@@ -179,7 +187,8 @@ fun DrawerContent(
                         Text(
                             text = category.title,
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(vertical = 8.dp)
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                                .padding(vertical = 4.dp)
                         )
                     }
 
@@ -215,7 +224,8 @@ fun DrawerContent(
                                         }
                                     }
                                 },
-                                modifier = Modifier.padding(vertical = 4.dp)
+                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                                    .padding(vertical = 4.dp)
                             )
                         }
                     }
