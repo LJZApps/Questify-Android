@@ -15,7 +15,14 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val appUserRepository: AppUserRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(EditProfileUiState())
+    private val _uiState = MutableStateFlow(
+        value = EditProfileUiState(
+            profilePictureUrl = "",
+            displayName = "Adventurer",
+            aboutMe = "",
+            pickedProfilePicture = false
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {

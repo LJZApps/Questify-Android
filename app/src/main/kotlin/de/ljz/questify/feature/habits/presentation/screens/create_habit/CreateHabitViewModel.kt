@@ -12,7 +12,12 @@ import javax.inject.Inject
 class CreateHabitViewModel @Inject constructor(
 
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(CreateHabitUiState())
+    private val _uiState = MutableStateFlow(
+        value = CreateHabitUiState(
+            title = "",
+            notes = ""
+        )
+    )
     val uiState: StateFlow<CreateHabitUiState> = _uiState.asStateFlow()
 
     init {

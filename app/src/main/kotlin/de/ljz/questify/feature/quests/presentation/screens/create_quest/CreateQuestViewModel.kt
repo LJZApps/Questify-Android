@@ -28,7 +28,22 @@ class CreateQuestViewModel @Inject constructor(
     private val questCategoryRepository: QuestCategoryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(CreateQuestUiState())
+    private val _uiState = MutableStateFlow(
+        value = CreateQuestUiState(
+            title = "",
+            description = "",
+            difficulty = 0,
+            isAddingReminder = false,
+            selectedTime = 0,
+            selectedDueDate = 0,
+            isAlertManagerInfoVisible = false,
+            notificationTriggerTimes = emptyList(),
+            addingDateTimeState = AddingDateTimeState.NONE,
+            isDueDateInfoDialogVisible = false,
+            isSelectCategoryDialogVisible = false,
+            isAddingDueDate = false
+        )
+    )
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
 
     private val createQuestRoute = savedStateHandle.toRoute<CreateQuestRoute>()

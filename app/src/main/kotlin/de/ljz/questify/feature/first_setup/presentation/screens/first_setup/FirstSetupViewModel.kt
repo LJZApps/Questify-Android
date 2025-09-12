@@ -3,6 +3,7 @@ package de.ljz.questify.feature.first_setup.presentation.screens.first_setup
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,17 @@ class FirstSetupViewModel @Inject constructor(
     private val appSettingsRepository: AppSettingsRepository,
     private val appUserRepository: AppUserRepository
 ) : ViewModel() {
-    private var _uiState = MutableStateFlow(FirstSetupUiState())
+    private var _uiState = MutableStateFlow(
+        value = FirstSetupUiState(
+            userSetupPageUiState = UserSetupPageUiState(
+                displayName = "",
+                aboutMe = "",
+                imageUri = null,
+                pickedProfilePicture = false
+            ),
+            currentPage = 0
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -36,7 +47,7 @@ class FirstSetupViewModel @Inject constructor(
                             userSetupPageUiState = currentState.userSetupPageUiState.copy(
                                 displayName = appUser.displayName,
                                 aboutMe = appUser.aboutMe,
-                                imageUri = Uri.parse(appUser.profilePicture)
+                                imageUri = appUser.profilePicture.toUri()
                             ),
                         )
                     }

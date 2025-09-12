@@ -3,6 +3,7 @@ package de.ljz.questify.feature.player_stats.presentation.screens.stats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.feature.player_stats.data.models.PlayerStats
 import de.ljz.questify.feature.player_stats.domain.repositories.PlayerStatsRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,14 @@ class StatsViewModel @Inject constructor(
     private val playerStatsRepository: PlayerStatsRepository,
     private val questRepository: QuestRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(StatsUiState())
+    private val _uiState = MutableStateFlow(
+        value = StatsUiState(
+            isLoading = false,
+            playerStats = PlayerStats(),
+            questsCompleted = 0,
+            xpForNextLevel = 100
+        )
+    )
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
 
     init {
