@@ -66,8 +66,6 @@ object NetworkModule {
             readTimeout(Duration.ofMinutes(3))
             writeTimeout(Duration.ofMinutes(3))
 
-//      addInterceptor(AuthorizationInterceptor(sessionManager))
-
             if (BuildConfig.DEBUG) {
                 addNetworkInterceptor(
                     HttpLoggingInterceptor().apply {
