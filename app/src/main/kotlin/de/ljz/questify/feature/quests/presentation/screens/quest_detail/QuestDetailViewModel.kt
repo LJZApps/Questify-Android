@@ -36,7 +36,30 @@ class QuestDetailViewModel @Inject constructor(
     private val questCategoryRepository: QuestCategoryRepository,
     private val deleteQuestUseCase: DeleteQuestUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(QuestDetailUiState())
+    private val _uiState = MutableStateFlow(
+        value = QuestDetailUiState(
+            isAddingReminder = false,
+            trophiesExpanded = false,
+            addingDueDateTimeState = AddingDateTimeState.NONE,
+            addingReminderDateTimeState = AddingDateTimeState.NONE,
+            isDueDateInfoDialogVisible = false,
+            isDeleteConfirmationDialogVisible = false,
+            isEditingQuest = false,
+            isShowingReminderBottomSheet = false,
+            isDueDateSelectionDialogVisible = false,
+            isSelectCategoryDialogVisible = false,
+
+            questId = 0,
+
+            editQuestState = EditQuestState(
+                title = "",
+                description = "",
+                difficulty = 0,
+                notificationTriggerTimes = emptyList(),
+                selectedDueDate = 0
+            )
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private val questDetailRoute = savedStateHandle.toRoute<QuestDetailRoute>()
