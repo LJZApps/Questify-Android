@@ -38,16 +38,11 @@ class QuestDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = QuestDetailUiState(
-            isAddingReminder = false,
-            trophiesExpanded = false,
             addingDueDateTimeState = AddingDateTimeState.NONE,
             addingReminderDateTimeState = AddingDateTimeState.NONE,
-            isDueDateInfoDialogVisible = false,
-            isDeleteConfirmationDialogVisible = false,
             isEditingQuest = false,
-            isShowingReminderBottomSheet = false,
-            isDueDateSelectionDialogVisible = false,
-            isSelectCategoryDialogVisible = false,
+
+            dialogState = DialogState.None,
 
             questId = 0,
 
@@ -218,7 +213,7 @@ class QuestDetailViewModel @Inject constructor(
 
         updateUiState {
             copy(
-                isAddingReminder = true,
+                dialogState = DialogState.CreateReminder,
                 addingReminderDateTimeState = AddingDateTimeState.DATE
             )
         }
@@ -252,14 +247,14 @@ class QuestDetailViewModel @Inject constructor(
 
     fun showCreateReminderDialog() = updateUiState {
         copy(
-            isAddingReminder = true,
+            dialogState = DialogState.CreateReminder,
             addingReminderDateTimeState = AddingDateTimeState.DATE
         )
     }
 
     fun hideCreateReminderDialog() = updateUiState {
         copy(
-            isAddingReminder = false,
+            dialogState = DialogState.None,
             addingReminderDateTimeState = AddingDateTimeState.NONE
         )
     }
@@ -270,40 +265,29 @@ class QuestDetailViewModel @Inject constructor(
     fun updateDescription(description: String) =
         updateUiState { copy(editQuestState = editQuestState.copy(description = description)) }
 
-    fun expandTrophySection() = updateUiState { copy(trophiesExpanded = true) }
-    fun hideTrophySection() = updateUiState { copy(trophiesExpanded = false) }
-
-    fun toggleTrophySection() = updateUiState { copy(trophiesExpanded = !trophiesExpanded) }
-
-    fun showRemindersBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = true) }
-    fun hideReminderBottomSheet() = updateUiState { copy(isShowingReminderBottomSheet = false) }
-
-    fun showSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = true) }
-    fun hideSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = false) }
+    fun showSelectCategoryDialog() = updateUiState { copy(dialogState = DialogState.SelectCategory) }
+    fun hideSelectCategoryDialog() = updateUiState { copy(dialogState = DialogState.None) }
 
     fun showDueDateSelectionDialog() = updateUiState {
         copy(
-            isDueDateSelectionDialogVisible = true,
+            dialogState = DialogState.SetDueDate,
             addingDueDateTimeState = AddingDateTimeState.DATE
         )
     }
 
     fun hideDueDateSelectionDialog() = updateUiState {
         copy(
-            isDueDateSelectionDialogVisible = false,
+            DialogState.None,
             addingDueDateTimeState = AddingDateTimeState.NONE
         )
     }
-
-    fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
-    fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
 
     fun updateDifficulty(difficulty: Int) =
         updateUiState { copy(editQuestState = editQuestState.copy(difficulty = difficulty)) }
 
     fun showDeleteConfirmationDialog() =
-        updateUiState { copy(isDeleteConfirmationDialogVisible = true) }
+        updateUiState { copy(dialogState = DialogState.DeleteConfirmation) }
 
     fun hideDeleteConfirmationDialog() =
-        updateUiState { copy(isDeleteConfirmationDialogVisible = false) }
+        updateUiState { copy(dialogState = DialogState.None) }
 }

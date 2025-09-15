@@ -41,17 +41,15 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -82,7 +80,6 @@ import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import kotlinx.coroutines.launch
@@ -151,18 +148,15 @@ fun QuestDetailScreen(
                         )
                     }
 
-                    FilledTonalIconButton(
+                    IconButton(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.Reject)
                             viewModel.showDeleteConfirmationDialog()
                         },
-                        colors = IconButtonDefaults.filledTonalIconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error,
                         ),
-                        shapes = IconButtonDefaults.shapes(
-                            shape = MaterialShapes.Ghostish.toShape()
-                        )
+                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.Outlined.Delete, contentDescription = null)
                     }
@@ -194,7 +188,7 @@ fun QuestDetailScreen(
                             contentDescription = null,
                         )
 
-                        OutlinedTextField(
+                        TextField(
                             value = editQuestState.title,
                             onValueChange = {
                                 viewModel.updateTitle(it)
@@ -218,7 +212,7 @@ fun QuestDetailScreen(
                             contentDescription = null,
                         )
 
-                        OutlinedTextField(
+                        TextField(
                             value = editQuestState.description,
                             onValueChange = {
                                 viewModel.updateDescription(it)
@@ -312,7 +306,7 @@ fun QuestDetailScreen(
                                 contentDescription = null,
                             )
 
-                            OutlinedTextField(
+                            TextField(
                                 value = selectedCategory?.text ?: "",
                                 onValueChange = {},
                                 label = { Text("Liste") },
@@ -359,7 +353,7 @@ fun QuestDetailScreen(
                                 contentDescription = null,
                             )
 
-                            OutlinedTextField(
+                            TextField(
                                 value = if (editQuestState.selectedDueDate.toInt() == 0) "" else formattedDate,
                                 onValueChange = {},
                                 label = { Text("Fälligkeit") },
@@ -457,7 +451,7 @@ fun QuestDetailScreen(
             }
 
             // Dialogs
-            if (uiState.isAddingReminder) {
+            if (uiState.dialogState == DialogState.CreateReminder) {
                 CreateReminderDialog(
                     onDismiss = viewModel::hideCreateReminderDialog,
                     onConfirm = { timestamp ->
@@ -469,11 +463,7 @@ fun QuestDetailScreen(
                 )
             }
 
-            if (uiState.isDueDateInfoDialogVisible) {
-                DueDateInfoDialog(onDismiss = { viewModel.hideDueDateInfoDialog() })
-            }
-
-            if (uiState.isDueDateSelectionDialogVisible) {
+            if (uiState.dialogState == DialogState.SetDueDate) {
                 SetDueDateDialog(
                     onConfirm = { dueDateTimestamp ->
                         viewModel.setDueDate(dueDateTimestamp)
@@ -489,7 +479,7 @@ fun QuestDetailScreen(
                 )
             }
 
-            if (uiState.isSelectCategoryDialogVisible) {
+            if (uiState.dialogState == DialogState.SelectCategory) {
                 SelectCategoryBottomSheet(
                     categories = categories,
                     onCategorySelect = { category ->
@@ -507,7 +497,7 @@ fun QuestDetailScreen(
                 )
             }
 
-            if (uiState.isDeleteConfirmationDialogVisible) {
+            if (uiState.dialogState == DialogState.DeleteConfirmation) {
                 DeleteConfirmationDialog(
                     onConfirm = {
                         viewModel.deleteQuest(
