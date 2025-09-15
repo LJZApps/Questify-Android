@@ -33,3 +33,7 @@ data class SortingDirectionItem(
     val text: String = "",
     val sortingDirection: SortingDirections = SortingDirections.ASCENDING
 )
+
+sealed class DialogState {
+
+}
