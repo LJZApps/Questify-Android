@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -46,6 +47,9 @@ class CreateQuestViewModel @Inject constructor(
     )
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
 
+    private val _questCreationSucceeded = MutableStateFlow(false)
+    val questCreationSucceeded = _questCreationSucceeded.asStateFlow()
+
     private val createQuestRoute = savedStateHandle.toRoute<CreateQuestRoute>()
     val selectedCategoryIndex = createQuestRoute.selectedCategoryIndex
 
@@ -72,9 +76,7 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    fun createQuest(
-        onSuccess: () -> Unit,
-    ) {
+    fun createQuest() {
         val quest = QuestEntity(
             title = _uiState.value.title,
             notes = _uiState.value.description.ifEmpty { null },
@@ -96,7 +98,7 @@ class CreateQuestViewModel @Inject constructor(
                 questNotificationRepository.addQuestNotification(questNotification)
             }
 
-            onSuccess.invoke()
+            _questCreationSucceeded.update { true }
         }
     }
 

@@ -1,12 +1,10 @@
 package de.ljz.questify.core.presentation.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -17,16 +15,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.graphics.toColorInt
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 import de.ljz.questify.feature.settings.data.models.ThemeBehavior
-import de.ljz.questify.feature.settings.data.models.ThemeColor
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun QuestifyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     vm: ThemeViewModel = hiltViewModel(),
-    customThemeColor: ThemeColor? = null,
     content: @Composable () -> Unit
 ) {
     val uiState by vm.uiState.collectAsState()
@@ -38,20 +35,22 @@ fun QuestifyTheme(
         ThemeBehavior.SYSTEM_STANDARD -> darkTheme
     }
 
-    val colorScheme = if (uiState.dynamicColorsEnabled && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        when (uiState.themingEngine) {
-            ThemingEngine.V1 -> getColorScheme(uiState.themeBehavior, customThemeColor ?: uiState.themeColor, darkTheme)
-            ThemingEngine.V2 -> rememberDynamicColorScheme(
-                seedColor = Color(uiState.appColor.toColorInt()),
-                isDark = useDarkTheme,
-                isAmoled = uiState.isAmoled,
-                style = uiState.themeStyle,
-                contrastLevel = 0.0
+    val colorScheme = lightColorScheme(
+        primary = Color("#26828C".toColorInt()),
+        secondary = Color("#E0E6EF".toColorInt())
+    )
+
+    val colorScheme2 = rememberDynamicColorScheme(
+        primary = Color(0xFF26828C),
+        isDark = useDarkTheme,
+        isAmoled = uiState.isAmoled,
+        style = PaletteStyle.Neutral
+       /* modifyColorScheme = { colorScheme ->
+            colorScheme.copy(
+                surface = if (useDarkTheme) Color.Black else Color.White
             )
-        }
-    }
+        }*/
+    )
 
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -67,7 +66,7 @@ fun QuestifyTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme2,
         typography = Typography,
         content = content
     )

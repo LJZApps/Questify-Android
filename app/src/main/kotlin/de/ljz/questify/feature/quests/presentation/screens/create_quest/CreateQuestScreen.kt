@@ -1,46 +1,41 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Title
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,12 +43,10 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -68,6 +61,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppButton
+import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
+import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.EpicIcon
@@ -87,18 +83,26 @@ fun CreateQuestScreen(
     mainNavController: NavHostController,
     viewModel: CreateQuestViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsState().value
-    val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
-    val categories = viewModel.categories.collectAsStateWithLifecycle().value
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val questCreationSucceeded by viewModel.questCreationSucceeded.collectAsStateWithLifecycle()
+    val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
     val haptic = LocalHapticFeedback.current
     val focusManager = LocalFocusManager.current
 
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     val difficultyOptions = listOf(
         stringResource(R.string.difficulty_easy),
         stringResource(R.string.difficulty_medium),
         stringResource(R.string.difficulty_hard),
     )
+
+    LaunchedEffect(questCreationSucceeded) {
+        if (questCreationSucceeded) {
+            mainNavController.navigateUp()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -124,27 +128,49 @@ fun CreateQuestScreen(
                     }
                 },
                 actions = {
-                    TextButton(
+                    IconButton(
                         onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            viewModel.createQuest(onSuccess = { mainNavController.navigateUp() })
-                        },
-                        shapes = ButtonDefaults.shapes()
+
+                        }
                     ) {
-                        Text(
-                            text = "Erstellen"
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = null
                         )
                     }
                 }
             )
+        },
+        bottomBar = {
+            Column {
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                AppButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        viewModel.createQuest()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 4.dp, top = 4.dp)
+                        .imePadding()
+                        .navigationBarsPadding()
+                ) {
+                    Text(
+                        text = "Quest erstellen"
+                    )
+                }
+            }
         },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
-                    .imePadding()
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
@@ -153,52 +179,185 @@ fun CreateQuestScreen(
                         .widthIn(max = MaxWidth),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Title,
-                            contentDescription = null,
+                        Text(
+                            text = "Titel",
+                            style = MaterialTheme.typography.titleMedium
                         )
 
-                        OutlinedTextField(
+                        AppOutlinedTextField(
                             value = uiState.title,
                             onValueChange = {
                                 viewModel.updateTitle(it)
                             },
-                            label = { Text("Titel") },
                             modifier = Modifier.fillMaxWidth(),
+                            placeholder = {
+                                Text(
+                                    text = "Gib den Titel deiner Quest ein..."
+                                )
+                            },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
                                 capitalization = KeyboardCapitalization.Sentences
-                            )
+                            ),
                         )
                     }
 
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.Notes,
-                            contentDescription = null,
+                        Text(
+                            text = "Notizen",
+                            style = MaterialTheme.typography.titleMedium
                         )
 
-                        OutlinedTextField(
+                        AppOutlinedTextField(
                             value = uiState.description,
                             onValueChange = {
                                 viewModel.updateDescription(it)
                             },
-                            label = { Text("Notizen") },
+                            placeholder = { Text("Füge hier detaillierte Notizen hinzu...") },
                             modifier = Modifier.fillMaxWidth(),
-                            minLines = 2,
+                            minLines = 3,
                             keyboardOptions = KeyboardOptions(
                                 capitalization = KeyboardCapitalization.Sentences
-                            )
+                            ),
                         )
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Fälligkeitsdatum & Zeit",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val interactionSource = remember { MutableInteractionSource() }
+                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+                            val date = Date(uiState.selectedDueDate)
+                            val formattedDate = dateFormat.format(date)
+                            val formattedTime = timeFormat.format(date)
+
+                            LaunchedEffect(isFocused) {
+                                if (isFocused) {
+                                    viewModel.showAddingDueDateDialog()
+                                }
+                            }
+
+                            AppOutlinedTextField(
+                                value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedDate,
+                                onValueChange = {},
+                                modifier = Modifier.weight(2f),
+                                placeholder = {
+                                    Text(text = "Datum")
+                                },
+                                singleLine = true,
+                                readOnly = true,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.CalendarToday,
+                                        contentDescription = null
+                                    )
+                                },
+                                interactionSource = interactionSource
+                            )
+
+                            AppOutlinedTextField(
+                                value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedTime,
+                                onValueChange = {},
+                                modifier = Modifier.weight(1f),
+                                placeholder = {
+                                    Text(text = "Zeit")
+                                },
+                                singleLine = true,
+                                readOnly = true,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Schedule,
+                                        contentDescription = null
+                                    )
+                                },
+                                interactionSource = interactionSource
+                            )
+
+                            /*if (uiState.selectedDueDate.toInt() != 0) {
+                                IconButton(
+                                    onClick = {
+                                        viewModel.removeDueDate()
+                                    },
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        contentColor = MaterialTheme.colorScheme.error
+                                    )
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Close,
+                                        contentDescription = null
+                                    )
+                                }
+                            }*/
+                        }
+                    }
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Erinnerungen",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            uiState.notificationTriggerTimes.sorted()
+                                .forEachIndexed { index, triggerTime ->
+                                    FilterChip(
+                                        selected = false,
+                                        onClick = {
+                                            viewModel.removeReminder(index)
+                                        },
+                                        label = { Text(dateFormat.format(Date(triggerTime))) },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Filled.Notifications,
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .size(18.dp)
+                                            )
+                                        },
+                                        colors = FilterChipDefaults.elevatedFilterChipColors()
+                                    )
+                                }
+                        }
+
+                        AppOutlinedButton(
+                            onClick = {
+                                viewModel.showCreateReminderDialog()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null
+                                )
+
+                                Text("Erinnerung hinzufügen")
+                            }
+                        }
                     }
 
                     Column(
@@ -258,6 +417,144 @@ fun CreateQuestScreen(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
+                            text = "Unteraufgaben",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            OutlinedCard(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    )
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Unteraufgaben hinzufügen"
+                                    )
+
+                                    IconButton(
+                                        onClick = {
+
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.DeleteOutline,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }
+
+                            OutlinedCard(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    )
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Unteraufgaben hinzufügen"
+                                    )
+
+                                    IconButton(
+                                        onClick = {
+
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.DeleteOutline,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }
+
+                            OutlinedCard(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    )
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Unteraufgaben hinzufügen"
+                                    )
+
+                                    IconButton(
+                                        onClick = {
+
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.DeleteOutline,
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        TextButton(
+                            onClick = {
+                                viewModel.showCreateReminderDialog()
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(6.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null
+                                )
+
+                                Text("Unteraufgabe hinzufügen")
+                            }
+                        }
+                    }
+
+                    /*Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
                             text = "Liste",
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -294,134 +591,11 @@ fun CreateQuestScreen(
                                         contentDescription = null
                                     )
                                 },
+                                shape = RoundedCornerShape(6.dp),
                                 interactionSource = interactionSource
                             )
                         }
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "Zeitplanung",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val interactionSource = remember { MutableInteractionSource() }
-                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
-                            val date = Date(uiState.selectedDueDate)
-                            val formattedDate = dateFormat.format(date)
-
-                            LaunchedEffect(isFocused) {
-                                if (isFocused) {
-                                    viewModel.showAddingDueDateDialog()
-                                }
-                            }
-
-                            Icon(
-                                imageVector = Icons.Default.Schedule,
-                                contentDescription = null,
-                            )
-
-                            OutlinedTextField(
-                                value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedDate,
-                                onValueChange = {},
-                                label = { Text("Fälligkeit") },
-                                modifier = Modifier.weight(1f),
-                                singleLine = true,
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(
-                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                        contentDescription = null
-                                    )
-                                },
-                                interactionSource = interactionSource
-                            )
-
-                            if (uiState.selectedDueDate.toInt() != 0) {
-                                FilledTonalIconButton(
-                                    onClick = {
-                                        viewModel.removeDueDate()
-                                    },
-                                    shapes = IconButtonDefaults.shapes(),
-                                    colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                                    )
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Remove,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Erinnerungen",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
-                            Row(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                                    .clickable {
-                                        viewModel.showCreateReminderDialog()
-                                    }
-                                    .padding(horizontal = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "Erinnerung hinzufügen",
-                                    modifier = Modifier.size(18.dp)
-                                )
-
-                                Text("Hinzufügen")
-                            }
-
-                        }
-
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            uiState.notificationTriggerTimes.sorted()
-                                .forEachIndexed { index, triggerTime ->
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = {
-                                            viewModel.removeReminder(index)
-                                        },
-                                        label = { Text(dateFormat.format(Date(triggerTime))) },
-                                        leadingIcon = {
-                                            Icon(
-                                                imageVector = Icons.Filled.Notifications,
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .size(18.dp)
-                                            )
-                                        },
-                                        colors = FilterChipDefaults.elevatedFilterChipColors()
-                                    )
-                                }
-                        }
-                    }
+                    }*/
                 }
             }
 

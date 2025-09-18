@@ -1,24 +1,15 @@
 package de.ljz.questify.feature.settings.presentation.screens.appearance
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -30,14 +21,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.materialkolor.PaletteStyle
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
@@ -105,7 +91,7 @@ private fun SettingsAppearanceScreenContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            ExpressiveSettingsSwitch(
+            /*ExpressiveSettingsSwitch(
                 state = uiState.dynamicColorsEnabled,
                 title = stringResource(R.string.settings_screen_dynamic_colors_title),
                 subtitle = stringResource(R.string.settings_screen_dynamic_colors_subtitle),
@@ -117,7 +103,7 @@ private fun SettingsAppearanceScreenContent(
                         )
                     )
                 }
-            )
+            )*/
 
             ExpressiveSettingsMenuLink(
                 title = stringResource(R.string.settings_screen_app_theme_title),
@@ -142,19 +128,21 @@ private fun SettingsAppearanceScreenContent(
                 }
             )
 
-            AnimatedVisibility(!uiState.dynamicColorsEnabled) {
+            ExpressiveSettingsSwitch(
+                state = uiState.isAmoled,
+                title = stringResource(R.string.settings_appearance_screen_amoled_title),
+                subtitle = stringResource(R.string.settings_appearance_screen_amoled_description),
+                icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
+                onCheckedChange = { enabled ->
+                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateIsAmoledEnabled(enabled))
+                },
+            )
+
+            /*AnimatedVisibility(!uiState.dynamicColorsEnabled) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    ExpressiveSettingsSwitch(
-                        state = uiState.isAmoled,
-                        title = stringResource(R.string.settings_appearance_screen_amoled_title),
-                        subtitle = stringResource(R.string.settings_appearance_screen_amoled_description),
-                        icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
-                        onCheckedChange = { enabled ->
-                            onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateIsAmoledEnabled(enabled))
-                        },
-                    )
+
 
                     ExpressiveSettingsMenuLink(
                         title = stringResource(R.string.settings_appearance_screen_theme_style_title),
@@ -184,7 +172,7 @@ private fun SettingsAppearanceScreenContent(
                         )
                     }
                 }
-            }
+            }*/
         }
 
         if (uiState.darkModeDialogVisible) {

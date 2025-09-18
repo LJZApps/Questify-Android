@@ -64,4 +64,4 @@ fun String?.trimToNull(): String? {
 }
 
 val Color.Companion.Standard: Color
-    get() = Color(0xFFB71C1C)
+    get() = Color(0xFF26828C)

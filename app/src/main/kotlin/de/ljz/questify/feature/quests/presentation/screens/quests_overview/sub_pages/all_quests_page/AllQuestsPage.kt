@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,25 +57,15 @@ fun AllQuestsPage(
 
     if (quests.isNotEmpty()) {
         LazyColumn(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             itemsIndexed(
                 items = quests
             ) { index, quest ->
                 QuestItem(
                     quest = quest,
-                    modifier = Modifier.padding(
-                        top = if (index == 0) 8.dp else 1.dp,
-                        bottom = 1.dp,
-                        start = 16.dp,
-                        end = 16.dp
-                    ),
-                    shape = RoundedCornerShape(
-                        topStart = if (index == 0) 16.dp else 4.dp,
-                        topEnd = if (index == 0) 16.dp else 4.dp,
-                        bottomStart = if (index == quests.lastIndex) 16.dp else 4.dp,
-                        bottomEnd = if (index == quests.lastIndex) 16.dp else 4.dp
-                    ),
                     difficultyIcon = {
                         when (quest.difficulty) {
                             Difficulty.EASY -> EasyIcon()

@@ -267,7 +267,9 @@ fun QuestOverviewScreen(
                             selectedCategoryIndex = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
                         )
                     )
-                }
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
