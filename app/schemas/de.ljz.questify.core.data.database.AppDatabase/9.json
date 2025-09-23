@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "b01f0a0db4361cc0b5e52c1460a10228",
+    "identityHash": "fdf86535badd9ca38f50592ca090aaa4",
     "entities": [
       {
         "tableName": "quest_entity",
@@ -186,6 +186,66 @@
         }
       },
       {
+        "tableName": "sub_quest_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `text` TEXT NOT NULL, `is_done` INTEGER NOT NULL, `quest_id` INTEGER NOT NULL, FOREIGN KEY(`quest_id`) REFERENCES `quest_entity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDone",
+            "columnName": "is_done",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questId",
+            "columnName": "quest_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_sub_quest_entity_quest_id",
+            "unique": false,
+            "columnNames": [
+              "quest_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sub_quest_entity_quest_id` ON `${TABLE_NAME}` (`quest_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "quest_entity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "quest_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
         "tableName": "habit_entity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `notes` TEXT, `type` TEXT NOT NULL)",
         "fields": [
@@ -223,7 +283,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b01f0a0db4361cc0b5e52c1460a10228')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fdf86535badd9ca38f50592ca090aaa4')"
     ]
   }
 }

@@ -19,6 +19,7 @@ import de.ljz.questify.feature.quests.data.daos.QuestNotificationDao
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 
 @Database(
     entities = [
@@ -26,6 +27,9 @@ import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
         QuestEntity::class,
         QuestNotificationEntity::class,
         QuestCategoryEntity::class,
+
+        // SubQuests
+        SubQuestEntity::class,
 
         // Habits
         HabitsEntity::class

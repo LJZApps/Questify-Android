@@ -30,21 +30,19 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
+import de.ljz.questify.core.data.models.descriptors.SortingDirectionItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
 import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.SortingDirectionItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun QuestSortingBottomSheet(
     onDismiss: () -> Unit,
-    questSorting: QuestSorting,
     sortingDirection: SortingDirections,
     showCompletedQuests: Boolean,
-    onSortingChanged: (QuestSorting) -> Unit,
     onSortingDirectionChanged: (SortingDirections) -> Unit,
     onShowCompletedQuestsChanged: (Boolean) -> Unit,
 ) {

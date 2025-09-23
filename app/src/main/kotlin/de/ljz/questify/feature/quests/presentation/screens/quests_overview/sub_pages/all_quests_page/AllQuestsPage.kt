@@ -24,16 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestEntity
-import de.ljz.questify.feature.quests.presentation.components.EasyIcon
-import de.ljz.questify.feature.quests.presentation.components.HardIcon
-import de.ljz.questify.feature.quests.presentation.components.MediumIcon
+import de.ljz.questify.feature.quests.data.relations.QuestWithSubQuests
 import de.ljz.questify.feature.quests.presentation.components.QuestItem
-import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQuestPageState
 
 @OptIn(
@@ -44,14 +39,13 @@ import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQu
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
     state: AllQuestPageState,
-    navController: NavHostController,
-    onQuestDone: (QuestEntity) -> Unit,
-    onQuestDelete: (Int) -> Unit,
+    onNavigateToQuestDetailScreen: (Int) -> Unit,
+    onQuestChecked: (QuestEntity) -> Unit,
 ) {
     val quests = state.quests
-        .filter { quest -> state.showCompleted || !quest.done }
-        .sortedWith(compareBy<QuestEntity> {
-            it.id
+        .filter { quest -> state.showCompleted || !quest.quest.done }
+        .sortedWith(compareBy<QuestWithSubQuests> {
+            it.quest.id
         }
             .let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
 
@@ -65,22 +59,15 @@ fun AllQuestsPage(
                 items = quests
             ) { index, quest ->
                 QuestItem(
-                    quest = quest,
-                    difficultyIcon = {
-                        when (quest.difficulty) {
-                            Difficulty.EASY -> EasyIcon()
-                            Difficulty.MEDIUM -> MediumIcon()
-                            Difficulty.HARD -> HardIcon()
-                        }
+                    questWithSubQuests = quest,
+                    onCheckButtonClicked = {
+                        onQuestChecked(quest.quest)
                     },
-                    onQuestChecked = {
-                        onQuestDone(quest)
-                    },
-                    onQuestDelete = {
-                        onQuestDelete(it)
+                    onEditButtonClicked = {
+                        onNavigateToQuestDetailScreen(quest.quest.id)
                     },
                     onClick = {
-                        navController.navigate(QuestDetailRoute(id = quest.id))
+
                     }
                 )
             }

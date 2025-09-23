@@ -9,8 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import de.ljz.questify.core.data.models.SortingPreferences
-import de.ljz.questify.core.data.models.SortingPreferencesSerializer
+import de.ljz.questify.core.data.models.descriptors.SortingPreferences
+import de.ljz.questify.core.data.models.descriptors.SortingPreferencesSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import java.io.File

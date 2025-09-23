@@ -104,6 +104,9 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // KvColorPalette
+    implementation(libs.kvcolorpalette.android)
+
     // Play Integrity
     implementation(libs.integrity)
 

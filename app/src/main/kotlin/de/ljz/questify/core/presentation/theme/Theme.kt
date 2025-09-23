@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -12,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.graphics.toColorInt
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.materialkolor.PaletteStyle
@@ -35,12 +33,7 @@ fun QuestifyTheme(
         ThemeBehavior.SYSTEM_STANDARD -> darkTheme
     }
 
-    val colorScheme = lightColorScheme(
-        primary = Color("#26828C".toColorInt()),
-        secondary = Color("#E0E6EF".toColorInt())
-    )
-
-    val colorScheme2 = rememberDynamicColorScheme(
+    val colorSchemeV2 = rememberDynamicColorScheme(
         primary = Color(0xFF26828C),
         isDark = useDarkTheme,
         isAmoled = uiState.isAmoled,
@@ -66,7 +59,7 @@ fun QuestifyTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme2,
+        colorScheme = colorSchemeV2,
         typography = Typography,
         content = content
     )

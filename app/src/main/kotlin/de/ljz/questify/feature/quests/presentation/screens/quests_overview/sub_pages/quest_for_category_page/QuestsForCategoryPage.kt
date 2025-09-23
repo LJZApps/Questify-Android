@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.LabelOff
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -26,17 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestEntity
-import de.ljz.questify.feature.quests.presentation.components.EasyIcon
-import de.ljz.questify.feature.quests.presentation.components.HardIcon
-import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.components.QuestItem
-import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -49,12 +42,10 @@ fun QuestsForCategoryPage(
             factory.create(categoryId)
         }
     ),
-    navController: NavHostController,
+    onNavigateToQuestDetailScreen: (Int) -> Unit,
     onQuestDone: (QuestEntity) -> Unit,
-    onQuestDelete: (Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val quests = uiState.quests
 
     if (uiState.isLoading) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -88,36 +79,26 @@ fun QuestsForCategoryPage(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
-            itemsIndexed(uiState.quests) { index, quest ->
+            itemsIndexed(
+                items = uiState.quests,
+                key = { _, questWithSubQuests -> questWithSubQuests.quest.id }
+            ) { index, questWithSubQuests ->
                 QuestItem(
-                    quest = quest,
+                    questWithSubQuests = questWithSubQuests,
                     modifier = Modifier.padding(
                         top = if (index == 0) 8.dp else 1.dp,
                         bottom = 1.dp,
                         start = 16.dp,
                         end = 16.dp
                     ),
-                    shape = RoundedCornerShape(
-                        topStart = if (index == 0) 16.dp else 4.dp,
-                        topEnd = if (index == 0) 16.dp else 4.dp,
-                        bottomStart = if (index == quests.lastIndex) 16.dp else 4.dp,
-                        bottomEnd = if (index == quests.lastIndex) 16.dp else 4.dp
-                    ),
-                    difficultyIcon = {
-                        when (quest.difficulty) {
-                            Difficulty.EASY -> EasyIcon()
-                            Difficulty.MEDIUM -> MediumIcon()
-                            Difficulty.HARD -> HardIcon()
-                        }
+                    onCheckButtonClicked = {
+                        onQuestDone(questWithSubQuests.quest)
                     },
-                    onQuestChecked = {
-                        onQuestDone(quest)
-                    },
-                    onQuestDelete = {
-                        onQuestDelete(it)
+                    onEditButtonClicked = {
+
                     },
                     onClick = {
-                        navController.navigate(QuestDetailRoute(id = quest.id))
+                        onNavigateToQuestDetailScreen(questWithSubQuests.quest.id)
                     }
                 )
             }

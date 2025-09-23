@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.domain.repositories.app.SortingPreferencesRepository
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
-import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
@@ -18,10 +17,12 @@ import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepos
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,7 +36,22 @@ class QuestOverviewViewModel @Inject constructor(
     private val completeQuestUseCase: CompleteQuestUseCase,
     private val deleteQuestUseCase: DeleteQuestUseCase
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(QuestOverviewUIState())
+    private val _uiState = MutableStateFlow(
+        value = QuestOverviewUIState(
+            dialogState = DialogState.None,
+            allQuestPageState = AllQuestPageState(
+                quests = emptyList(),
+                sortingDirections = SortingDirections.ASCENDING,
+                showCompleted = false
+            ),
+            questDoneDialogState = QuestDoneDialogState(
+                questName = "",
+                xp = 0,
+                points = 0,
+                newLevel = 0
+            )
+        )
+    )
     val uiState: StateFlow<QuestOverviewUIState> = _uiState.asStateFlow()
 
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
@@ -43,6 +59,9 @@ class QuestOverviewViewModel @Inject constructor(
 
     private val _selectedCategoryForUpdating = MutableStateFlow<QuestCategoryEntity?>(null)
     val selectedCategoryForUpdating: StateFlow<QuestCategoryEntity?> = _selectedCategoryForUpdating.asStateFlow()
+
+    private val _effect = Channel<QuestOverviewUiEffect>()
+    val effect = _effect.receiveAsFlow()
 
     init {
         viewModelScope.launch {
@@ -58,7 +77,6 @@ class QuestOverviewViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 allQuestPageState = it.allQuestPageState.copy(
-                                    sortingBy = sortingPreferences.questSorting,
                                     sortingDirections = sortingPreferences.questSortingDirection,
                                     showCompleted = sortingPreferences.showCompletedQuests
                                 )
@@ -76,10 +94,61 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun addQuestCategory(text: String) {
+    fun onUiEvent(event: QuestOverviewUiEvent) {
+        when (event) {
+            is QuestOverviewUiEvent.OnQuestDelete -> {
+                viewModelScope.launch {
+                    deleteQuestUseCase.invoke(event.id)
+                }
+            }
+
+            is QuestOverviewUiEvent.OnQuestChecked -> {
+
+            }
+
+            is QuestOverviewUiEvent.ShowDialog -> {
+                _uiState.update {
+                    it.copy(dialogState = event.dialogState)
+                }
+            }
+
+            is QuestOverviewUiEvent.CloseDialog -> {
+                _uiState.update {
+                    it.copy(dialogState = DialogState.None)
+                }
+            }
+
+            is QuestOverviewUiEvent.ShowUpdateCategoryDialog -> {
+                _uiState.update {
+                    it.copy(dialogState = DialogState.UpdateCategory)
+                }
+
+                _selectedCategoryForUpdating.update {
+                    event.questCategoryEntity
+                }
+            }
+
+            is QuestOverviewUiEvent.AddQuestCategory -> {
+                viewModelScope.launch {
+                    val questCategory = QuestCategoryEntity(text = event.value)
+                    questCategoryRepository.addQuestCategory(questCategory)
+                }
+            }
+
+            is QuestOverviewUiEvent.DeleteQuestCategory -> {
+                viewModelScope.launch {
+                    questCategoryRepository.deleteQuestCategory(event.questCategoryEntity)
+                    sendEffect(QuestOverviewUiEffect.ShowSnackbar("Liste gelöscht"))
+                }
+            }
+
+            else -> Unit
+        }
+    }
+
+    private fun sendEffect(effect: QuestOverviewUiEffect) {
         viewModelScope.launch {
-            val questCategory = QuestCategoryEntity(text = text)
-            questCategoryRepository.addQuestCategory(questCategory)
+            _effect.send(effect)
         }
     }
 
@@ -87,13 +156,8 @@ class QuestOverviewViewModel @Inject constructor(
         viewModelScope.launch {
             _selectedCategoryForUpdating.value?.let { selectedCategory ->
                 questCategoryRepository.updateQuestCategory(selectedCategory, newText)
-            }
-        }
-    }
 
-    fun deleteQuestCategory(questCategory: QuestCategoryEntity) {
-        viewModelScope.launch {
-            questCategoryRepository.deleteQuestCategory(questCategory)
+            }
         }
     }
 
@@ -104,8 +168,8 @@ class QuestOverviewViewModel @Inject constructor(
 
                 _uiState.update {
                     it.copy(
+                        dialogState = DialogState.QuestDone,
                         questDoneDialogState = it.questDoneDialogState.copy(
-                            visible = true,
                             xp = result.earnedXp,
                             points = result.earnedPoints,
                             newLevel = if (result.didLevelUp) result.newLevel else 0,
@@ -139,18 +203,6 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun deleteQuest(id: Int) {
-        viewModelScope.launch {
-            deleteQuestUseCase.invoke(id)
-        }
-    }
-
-    fun updateQuestSorting(questSorting: QuestSorting) {
-        viewModelScope.launch {
-            sortingPreferencesRepository.saveQuestSorting(questSorting)
-        }
-    }
-
     fun updateQuestSortingDirection(sortingDirection: SortingDirections) {
         viewModelScope.launch {
             sortingPreferencesRepository.saveQuestSortingDirection(sortingDirection)
@@ -163,27 +215,11 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun showSortingBottomSheet() {
-        _uiState.update {
-            it.copy(
-                isSortingBottomSheetOpen = true
-            )
-        }
-    }
-
-    fun hideSortingBottomSheet() {
-        _uiState.update {
-            it.copy(
-                isSortingBottomSheetOpen = false
-            )
-        }
-    }
-
     fun hideQuestDoneDialog() {
         _uiState.update { currentState ->
             currentState.copy(
+                dialogState = DialogState.None,
                 questDoneDialogState = currentState.questDoneDialogState.copy(
-                    visible = false,
                     xp = 0,
                     points = 0,
                     newLevel = 0,
@@ -193,44 +229,13 @@ class QuestOverviewViewModel @Inject constructor(
         }
     }
 
-    fun showManageCategoriesBottomSheet() {
-        _uiState.update {
-            it.copy(
-                isManageCategoriesBottomSheetOpen = true
-            )
-        }
-    }
-
-    fun hideManageCategoriesBottomSheet() {
-        _uiState.update {
-            it.copy(
-                isManageCategoriesBottomSheetOpen = false
-            )
-        }
-    }
-
-    fun showCreateCategoryDialog() {
-        _uiState.update {
-            it.copy(
-                isCreateCategoryDialogOpen = true
-            )
-        }
-    }
-
-    fun hideCreateCategoryDialog() {
-        _uiState.update {
-            it.copy(
-                isCreateCategoryDialogOpen = false
-            )
-        }
-    }
 
     fun showUpdateCategoryDialog(questCategory: QuestCategoryEntity? = null) {
         _selectedCategoryForUpdating.value = questCategory
 
         _uiState.update {
             it.copy(
-                isUpdateCategoryDialogOpen = true
+                dialogState = DialogState.UpdateCategory,
             )
         }
     }
@@ -240,7 +245,7 @@ class QuestOverviewViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                isUpdateCategoryDialogOpen = false
+                dialogState = DialogState.None,
             )
         }
     }

@@ -1,8 +1,7 @@
-package de.ljz.questify.core.data.models
+package de.ljz.questify.core.data.models.descriptors
 
 import android.util.Log
 import androidx.datastore.core.Serializer
-import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.core.utils.TAG
 import kotlinx.serialization.SerialName
@@ -13,9 +12,6 @@ import java.io.OutputStream
 
 @Serializable
 data class SortingPreferences(
-    @SerialName("quest_sorting")
-    val questSorting: QuestSorting = QuestSorting.ID,
-
     @SerialName("quest_sorting_direction")
     val questSortingDirection: SortingDirections = SortingDirections.DESCENDING,
 

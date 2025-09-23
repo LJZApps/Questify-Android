@@ -12,9 +12,9 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import de.ljz.questify.R
+import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.collectLatest
 
@@ -31,8 +31,8 @@ class QuestNotificationWorker @AssistedInject constructor(
 
         notifications.collectLatest { notificationsList ->
             notificationsList.forEach { notification ->
-                val quest = questRepository.getQuestById(notification.questId)
-                if (!notification.notified && !quest.done) scheduleNotification(
+                val questWithSubQuests = questRepository.getQuestById(notification.questId)
+                if (!notification.notified && !questWithSubQuests.quest.done) scheduleNotification(
                     context,
                     notification
                 )
@@ -48,8 +48,8 @@ class QuestNotificationWorker @AssistedInject constructor(
 
         val intent = Intent(context, QuestNotificationReceiver::class.java).apply {
             putExtra("notificationId", notification.id)
-            putExtra("questId", quest.id)
-            putExtra("title", quest.title)
+            putExtra("questId", quest.quest.id)
+            putExtra("title", quest.quest.title)
             putExtra("description", context.getString(R.string.quest_notification_title))
         }
 

@@ -1,10 +1,9 @@
 package de.ljz.questify.core.domain.repositories.app
 
 import androidx.datastore.core.DataStore
-import de.ljz.questify.core.utils.QuestSorting
-import de.ljz.questify.core.utils.SortingDirections
-import de.ljz.questify.core.data.models.SortingPreferences
+import de.ljz.questify.core.data.models.descriptors.SortingPreferences
 import de.ljz.questify.core.domain.repositories.BaseRepository
+import de.ljz.questify.core.utils.SortingDirections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,16 +17,9 @@ class SortingPreferencesRepository @Inject constructor(
     fun getQuestSortingPreferences(): Flow<QuestSortingData> {
         return sortingDataStore.data.map {
             QuestSortingData(
-                questSorting = it.questSorting,
                 questSortingDirection = it.questSortingDirection,
                 showCompletedQuests = it.showCompletedQuests
             )
-        }
-    }
-
-    suspend fun saveQuestSorting(questSorting: QuestSorting) {
-        sortingDataStore.updateData {
-            it.copy(questSorting = questSorting)
         }
     }
 

@@ -28,6 +28,8 @@ import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsScreen
 import de.ljz.questify.feature.main.presentation.components.DrawerContent
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsRoute
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsScreen
+import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
+import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestOverviewScreen
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
@@ -86,7 +88,16 @@ fun MainScreen(
                     composable<QuestsRoute> {
                         QuestOverviewScreen(
                             drawerState = drawerState,
-                            mainNavController = mainNavController,
+                            onNavigateToQuestDetailScreen = {
+                                mainNavController.navigate(QuestDetailRoute(id = it))
+                            },
+                            onNavigateToCreateQuestScreen = {
+                                mainNavController.navigate(
+                                    CreateQuestRoute(
+                                        selectedCategoryIndex = it
+                                    )
+                                )
+                            }
                         )
                     }
 

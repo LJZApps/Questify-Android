@@ -75,21 +75,21 @@ class QuestDetailViewModel @Inject constructor(
                     // Do not remove "?" for null safety - YES it can be null
                     quest?.let { questEntity ->
                         val notificationEntities =
-                            questNotificationRepository.getNotificationsByQuestId(questEntity.id)
+                            questNotificationRepository.getNotificationsByQuestId(questEntity.quest.id)
                         val notifications = notificationEntities
                             .filter { !it.notified }
                             .map { it.notifyAt.time }
 
-                        val questCategoryEntity = questCategoryRepository.getQuestCategoryById(questEntity.categoryId ?: 0).firstOrNull()
+                        val questCategoryEntity = questCategoryRepository.getQuestCategoryById(questEntity.quest.categoryId ?: 0).firstOrNull()
                         _selectedCategory.value = questCategoryEntity
 
                         _uiState.value = _uiState.value.copy(
                             editQuestState = _uiState.value.editQuestState.copy(
-                                title = questEntity.title,
-                                description = questEntity.notes ?: "",
-                                difficulty = questEntity.difficulty.ordinal,
+                                title = questEntity.quest.title,
+                                description = questEntity.quest.notes ?: "",
+                                difficulty = questEntity.quest.difficulty.ordinal,
                                 notificationTriggerTimes = notifications,
-                                selectedDueDate = questEntity.dueDate?.time ?: 0L
+                                selectedDueDate = questEntity.quest.dueDate?.time ?: 0L
                             ),
                             questId = questId
                         )

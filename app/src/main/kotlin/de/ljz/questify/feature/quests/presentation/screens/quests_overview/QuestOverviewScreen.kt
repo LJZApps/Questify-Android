@@ -37,7 +37,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -47,7 +46,6 @@ import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -65,24 +63,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
+import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
 import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowIconButton
-import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.UpdateCategoryDialog
-import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
-import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
 import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
 import de.ljz.questify.feature.quests.presentation.sheets.QuestSortingBottomSheet
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -93,13 +91,64 @@ import kotlinx.coroutines.launch
 fun QuestOverviewScreen(
     drawerState: DrawerState,
     viewModel: QuestOverviewViewModel = hiltViewModel(),
-    mainNavController: NavHostController,
+    onNavigateToQuestDetailScreen: (Int) -> Unit,
+    onNavigateToCreateQuestScreen: (Int?) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val questDoneDialogState = uiState.questDoneDialogState
-    val allQuestPageState = uiState.allQuestPageState
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val selectedCategoryForUpdating by viewModel.selectedCategoryForUpdating.collectAsStateWithLifecycle()
+    val effectFlow = viewModel.effect
+
+    val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
+
+    QuestOverviewContent(
+        uiState = uiState,
+        categories = categories,
+        selectedCategoryForUpdating = selectedCategoryForUpdating,
+        effectFlow = effectFlow,
+        onUiEvent = { event ->
+            when (event) {
+
+                is QuestOverviewUiEvent.ToggleDrawer -> {
+                    scope.launch {
+                        drawerState.apply {
+                            if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                        }
+                    }
+                }
+
+                is QuestOverviewUiEvent.OnNavigateToQuestDetailScreen -> {
+                    onNavigateToQuestDetailScreen(event.entryId)
+                }
+
+                is QuestOverviewUiEvent.OnNavigateToCreateQuestScreen -> {
+                    onNavigateToCreateQuestScreen(event.categoryId)
+                }
+
+                is QuestOverviewUiEvent.PerformHapticFeedback -> {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+
+                else -> {
+                    viewModel.onUiEvent(event = event)
+                }
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun QuestOverviewContent(
+    uiState: QuestOverviewUIState,
+    categories: List<QuestCategoryEntity>,
+    selectedCategoryForUpdating: QuestCategoryEntity? = null,
+    effectFlow: Flow<QuestOverviewUiEffect>,
+    onUiEvent: (QuestOverviewUiEvent) -> Unit
+) {
+    val questDoneDialogState = uiState.questDoneDialogState
+    val allQuestPageState = uiState.allQuestPageState
 
     val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
@@ -123,6 +172,20 @@ fun QuestOverviewScreen(
 
     val textFieldState = rememberTextFieldState()
     val searchBarState = rememberSearchBarState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(Unit, lifecycleOwner.lifecycle) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            effectFlow.collect { effect ->
+                when (effect) {
+                    is QuestOverviewUiEffect.ShowSnackbar -> {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
+                }
+            }
+        }
+    }
 
     val inputField =
         @Composable {
@@ -181,11 +244,7 @@ fun QuestOverviewScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            scope.launch {
-                                drawerState.apply {
-                                    if (drawerState.currentValue == DrawerValue.Closed) open() else close()
-                                }
-                            }
+                            onUiEvent(QuestOverviewUiEvent.ToggleDrawer)
                         },
                         shapes = IconButtonDefaults.shapes()
                     ) {
@@ -216,7 +275,7 @@ fun QuestOverviewScreen(
                             },
                             onClick = {
                                 dropdownExpanded = false
-                                viewModel.showSortingBottomSheet()
+                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
                             }
                         )
                         DropdownMenuItem(
@@ -229,7 +288,7 @@ fun QuestOverviewScreen(
                             },
                             onClick = {
                                 dropdownExpanded = false
-                                viewModel.showManageCategoriesBottomSheet()
+                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.ManageCategoriesBottomSheet))
                             }
                         )
                     }
@@ -242,16 +301,16 @@ fun QuestOverviewScreen(
                 ) {
                     uiState.allQuestPageState.quests
                         .filter {
-                            it.title.contains(
+                            it.quest.title.contains(
                                 textFieldState.text,
                                 ignoreCase = true
-                            ) || it.notes?.contains(textFieldState.text, ignoreCase = true) == true
+                            ) || it.quest.notes?.contains(textFieldState.text, ignoreCase = true) == true
                         }
                         .forEach { questEntity ->
                             ExpressiveMenuItem(
-                                title = questEntity.title,
+                                title = questEntity.quest.title,
                                 onClick = {
-                                    mainNavController.navigate(QuestDetailRoute(id = questEntity.id))
+                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(entryId = questEntity.quest.id))
                                 }
                             )
                         }
@@ -261,10 +320,9 @@ fun QuestOverviewScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    mainNavController.navigate(
-                        route = CreateQuestRoute(
-                            selectedCategoryIndex = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
+                    onUiEvent(
+                        QuestOverviewUiEvent.OnNavigateToCreateQuestScreen(
+                            categoryId = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
                         )
                     )
                 },
@@ -278,7 +336,7 @@ fun QuestOverviewScreen(
             }
         },
         content = { innerPadding ->
-            key(allTabs.size) {
+            key(allTabs.map { it.id }) {
                 val initialPage = desiredPageIndex.coerceIn(0, (allTabs.size - 1).coerceAtLeast(0))
 
                 val pagerState = rememberPagerState(
@@ -317,7 +375,7 @@ fun QuestOverviewScreen(
                         Tab(
                             selected = false,
                             onClick = {
-                                viewModel.showCreateCategoryDialog()
+                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
                             },
                             text = {
                                 Row(
@@ -347,14 +405,16 @@ fun QuestOverviewScreen(
                         if (pageIndex == 0) {
                             AllQuestsPage(
                                 state = uiState.allQuestPageState,
-                                onQuestDone = {
-                                    viewModel.setQuestDone(
-                                        it,
-                                        context
+                                onNavigateToQuestDetailScreen = {
+                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(it))
+                                },
+                                onQuestChecked = { quest ->
+                                    onUiEvent(
+                                        QuestOverviewUiEvent.OnQuestChecked(
+                                            id = quest.id
+                                        )
                                     )
                                 },
-                                onQuestDelete = viewModel::deleteQuest,
-                                navController = mainNavController,
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else {
@@ -364,14 +424,12 @@ fun QuestOverviewScreen(
 
                                 QuestsForCategoryPage(
                                     categoryId = category.id,
-                                    navController = mainNavController,
-                                    onQuestDone = {
-                                        viewModel.setQuestDone(
-                                            it,
-                                            context
-                                        )
+                                    onNavigateToQuestDetailScreen = {
+
                                     },
-                                    onQuestDelete = viewModel::deleteQuest,
+                                    onQuestDone = {
+                                        onUiEvent(QuestOverviewUiEvent.OnQuestChecked(it.id))
+                                    },
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }
@@ -380,74 +438,68 @@ fun QuestOverviewScreen(
                 }
             }
 
-            if (questDoneDialogState.visible) {
+            if (uiState.dialogState == DialogState.QuestDone) {
                 QuestDoneDialog(
                     state = questDoneDialogState,
                     onDismiss = {
-                        viewModel.hideQuestDoneDialog()
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     }
                 )
             }
 
-            if (uiState.isSortingBottomSheetOpen) {
+            if (uiState.dialogState == DialogState.SortingBottomSheet) {
                 QuestSortingBottomSheet(
-                    onDismiss = viewModel::hideSortingBottomSheet,
-                    questSorting = allQuestPageState.sortingBy,
+                    onDismiss = {
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    },
                     sortingDirection = allQuestPageState.sortingDirections,
                     showCompletedQuests = allQuestPageState.showCompleted,
-                    onSortingChanged = viewModel::updateQuestSorting,
-                    onSortingDirectionChanged = viewModel::updateQuestSortingDirection,
+                    onSortingDirectionChanged = { /*viewModel::updateQuestSortingDirection*/ },
                     onShowCompletedQuestsChanged = { showCompletedQuests ->
-                        viewModel.updateShowCompletedQuests(showCompletedQuests)
+                        /*viewModel.updateShowCompletedQuests(showCompletedQuests)
                         if (!showCompletedQuests && allQuestPageState.sortingBy == QuestSorting.DONE) {
                             viewModel.updateQuestSorting(QuestSorting.ID)
-                        }
+                        }*/
                     }
                 )
             }
 
-            if (uiState.isManageCategoriesBottomSheetOpen) {
+            if (uiState.dialogState == DialogState.ManageCategoriesBottomSheet) {
                 ManageCategoryBottomSheet(
                     categories = categories,
                     onCategoryRenameRequest = {
-                        viewModel.showUpdateCategoryDialog(it)
+                        onUiEvent(QuestOverviewUiEvent.ShowUpdateCategoryDialog(it))
                     },
                     onCategoryRemove = {
-                        viewModel.deleteQuestCategory(it)
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Liste gelöscht",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
+                        onUiEvent.invoke(QuestOverviewUiEvent.DeleteQuestCategory(it))
                     },
                     onDismiss = {
-                        viewModel.hideManageCategoriesBottomSheet()
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     }
                 )
             }
 
-            if (uiState.isCreateCategoryDialogOpen) {
+            if (uiState.dialogState == DialogState.CreateCategory) {
                 CreateCategoryDialog(
                     onConfirm = { listText ->
-                        viewModel.addQuestCategory(listText)
-                        viewModel.hideCreateCategoryDialog()
+                        onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = listText))
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     onDismiss = {
-                        viewModel.hideCreateCategoryDialog()
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     }
                 )
             }
 
-            if (uiState.isUpdateCategoryDialogOpen) {
+            if (uiState.dialogState == DialogState.UpdateCategory) {
                 UpdateCategoryDialog(
                     questCategory = selectedCategoryForUpdating,
                     onConfirm = { listText ->
-                        viewModel.updateQuestCategory(listText)
-                        viewModel.hideUpdateCategoryDialog()
+//                        viewModel.updateQuestCategory(listText)
+//                        viewModel.hideUpdateCategoryDialog()
                     },
                     onDismiss = {
-                        viewModel.hideUpdateCategoryDialog()
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     }
                 )
 

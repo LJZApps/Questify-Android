@@ -1,6 +1,5 @@
 package de.ljz.questify.core.domain.repositories
 
-import de.ljz.questify.core.utils.QuestSorting
 import de.ljz.questify.core.utils.SortingDirections
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -53,7 +52,6 @@ open class BaseRepository {
     }
 
     data class QuestSortingData(
-        val questSorting: QuestSorting,
         val questSortingDirection: SortingDirections,
         val showCompletedQuests: Boolean = false
     )
