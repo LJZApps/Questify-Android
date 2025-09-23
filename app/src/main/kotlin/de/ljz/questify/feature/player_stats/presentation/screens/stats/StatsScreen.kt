@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,7 +28,6 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -64,6 +64,7 @@ fun StatsScreen(
                     }
                 }
             }
+
             else -> viewModel.onUiEvent(event)
         }
     }
@@ -77,8 +78,13 @@ private fun StatsScreenContent(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Charakter") }, // Coolerer Name ;)
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Statistiken",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { onUiEvent.invoke(StatsUiEvent.ToggleDrawer) }) {
                         Icon(
@@ -135,7 +141,10 @@ fun CharacterHeaderCard(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -207,14 +216,22 @@ fun StatBar(
     color: Color
 ) {
     val progress = (currentValue.toFloat() / maxValue.toFloat()).coerceIn(0f, 1f)
-    val animatedProgress by animateFloatAsState(targetValue = progress, animationSpec = tween(500), label = "")
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(500),
+        label = ""
+    )
 
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = label, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
             Text(
                 text = "$currentValue / $maxValue",
                 style = MaterialTheme.typography.bodyMedium,

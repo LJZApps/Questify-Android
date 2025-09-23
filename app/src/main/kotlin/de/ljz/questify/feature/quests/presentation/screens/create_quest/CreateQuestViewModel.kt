@@ -13,6 +13,7 @@ import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +28,9 @@ class CreateQuestViewModel @Inject constructor(
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
     private val questCategoryRepository: QuestCategoryRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+
+    private val addQuestCategoryUseCase: AddQuestCategoryUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = CreateQuestUiState(
@@ -104,7 +107,11 @@ class CreateQuestViewModel @Inject constructor(
 
     fun addQuestCategory(text: String) {
         viewModelScope.launch {
-            questCategoryRepository.addQuestCategory(QuestCategoryEntity(text = text))
+            addQuestCategoryUseCase.invoke(
+                questCategoryEntity = QuestCategoryEntity(
+                    text = text
+                )
+            )
         }
     }
 

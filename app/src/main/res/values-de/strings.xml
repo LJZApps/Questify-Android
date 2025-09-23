@@ -3,7 +3,7 @@
     <string name="app_name">Questify</string>
     <string name="top_bar_menu_connect_account">Konto verbinden</string>
     <string name="top_bar_menu_settings">Einstellungen</string>
-    <string name="create_quest_top_bar_title">Quest erstellen</string>
+    <string name="create_quest_top_bar_title">Neue Quest erstellen</string>
     <string name="create_quest_save_button">Quest speichern</string>
     <string name="text_field_quest_title">Titel</string>
     <string name="text_field_quest_note">Notizen</string>

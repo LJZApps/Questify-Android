@@ -32,8 +32,11 @@ import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQu
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestOverviewScreen
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
+import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewRoute
+import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewScreen
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 import io.sentry.compose.SentryTraced
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -87,7 +90,6 @@ fun MainScreen(
                 ) {
                     composable<QuestsRoute> {
                         QuestOverviewScreen(
-                            drawerState = drawerState,
                             onNavigateToQuestDetailScreen = {
                                 mainNavController.navigate(QuestDetailRoute(id = it))
                             },
@@ -97,6 +99,13 @@ fun MainScreen(
                                         selectedCategoryIndex = it
                                     )
                                 )
+                            },
+                            onToggleDrawer = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                    }
+                                }
                             }
                         )
                     }
@@ -105,6 +114,18 @@ fun MainScreen(
                         HabitsScreen(
                             drawerState = drawerState,
                             mainNavController = mainNavController
+                        )
+                    }
+
+                    composable<RoutinesOverviewRoute> {
+                        RoutinesOverviewScreen(
+                            onToggleDrawer = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                    }
+                                }
+                            }
                         )
                     }
 

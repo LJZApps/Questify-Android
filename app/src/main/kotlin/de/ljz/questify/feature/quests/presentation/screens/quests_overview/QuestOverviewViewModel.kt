@@ -15,7 +15,9 @@ import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,8 +35,12 @@ class QuestOverviewViewModel @Inject constructor(
     private val questNotificationRepository: QuestNotificationRepository,
     private val sortingPreferencesRepository: SortingPreferencesRepository,
     private val questCategoryRepository: QuestCategoryRepository,
+
     private val completeQuestUseCase: CompleteQuestUseCase,
-    private val deleteQuestUseCase: DeleteQuestUseCase
+    private val deleteQuestUseCase: DeleteQuestUseCase,
+
+    private val deleteQuestCategoryUseCase: DeleteQuestCategoryUseCase,
+    private val addQuestCategoryUseCase: AddQuestCategoryUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = QuestOverviewUIState(
@@ -131,13 +137,13 @@ class QuestOverviewViewModel @Inject constructor(
             is QuestOverviewUiEvent.AddQuestCategory -> {
                 viewModelScope.launch {
                     val questCategory = QuestCategoryEntity(text = event.value)
-                    questCategoryRepository.addQuestCategory(questCategory)
+                    addQuestCategoryUseCase.invoke(questCategory)
                 }
             }
 
             is QuestOverviewUiEvent.DeleteQuestCategory -> {
                 viewModelScope.launch {
-                    questCategoryRepository.deleteQuestCategory(event.questCategoryEntity)
+                    deleteQuestCategoryUseCase.invoke(event.questCategoryEntity.id)
                     sendEffect(QuestOverviewUiEffect.ShowSnackbar("Liste gelöscht"))
                 }
             }
@@ -155,7 +161,7 @@ class QuestOverviewViewModel @Inject constructor(
     fun updateQuestCategory(newText: String) {
         viewModelScope.launch {
             _selectedCategoryForUpdating.value?.let { selectedCategory ->
-                questCategoryRepository.updateQuestCategory(selectedCategory, newText)
+                questCategoryRepository.updateQuestCategory(selectedCategory.id, newText)
 
             }
         }

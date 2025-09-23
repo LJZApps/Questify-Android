@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -27,6 +29,9 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
@@ -41,7 +46,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +54,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -59,9 +64,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -93,6 +98,9 @@ fun CreateQuestScreen(
     val questCreationSucceeded by viewModel.questCreationSucceeded.collectAsStateWithLifecycle()
     val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
+
+    var dropdownExpanded by remember { mutableStateOf(false) }
+
     val haptic = LocalHapticFeedback.current
     val focusManager = LocalFocusManager.current
 
@@ -112,15 +120,14 @@ fun CreateQuestScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.create_quest_top_bar_title)) },
-                subtitle = {
-                    if (uiState.title.isNotBlank())
-                        Text(
-                            text = uiState.title,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(
+                            R.string.create_quest_top_bar_title,
+                        ),
+                        fontWeight = FontWeight.Bold
+                    )
                 },
                 navigationIcon = {
                     IconButton(
@@ -136,12 +143,36 @@ fun CreateQuestScreen(
                 actions = {
                     IconButton(
                         onClick = {
-
+                            dropdownExpanded = true
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = null
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = dropdownExpanded,
+                        onDismissRequest = { dropdownExpanded = false },
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Liste") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.Label,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                /*dropdownExpanded = false
+                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))*/
+                            },
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .clip(RoundedCornerShape(10.dp))
                         )
                     }
                 }
@@ -158,7 +189,8 @@ fun CreateQuestScreen(
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         viewModel.createQuest()
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 8.dp)
                         .padding(bottom = 4.dp, top = 4.dp)
                         .imePadding()
@@ -442,10 +474,11 @@ fun CreateQuestScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    )
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
                                         .fillMaxWidth()
                                 ) {
                                     Text(
@@ -477,10 +510,11 @@ fun CreateQuestScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    )
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
                                         .fillMaxWidth()
                                 ) {
                                     Text(
@@ -512,10 +546,11 @@ fun CreateQuestScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    )
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
                                         .fillMaxWidth()
                                 ) {
                                     val interactionSource = remember { MutableInteractionSource() }

@@ -29,6 +29,6 @@ interface QuestCategoryDao {
     @Query("SELECT COUNT(*) FROM quest_category_entity")
     fun getCategoryCount(): Long
 
-    @Query("UPDATE quest_category_entity SET text = :newText WHERE id = :questCategoryId")
-    suspend fun updateQuestCategory(questCategoryId: Int, newText: String)
+    @Query("UPDATE quest_category_entity SET text = :text WHERE id = :questCategoryId")
+    suspend fun updateQuestCategory(questCategoryId: Int, text: String)
 }

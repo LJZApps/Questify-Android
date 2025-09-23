@@ -22,13 +22,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,6 +46,7 @@ import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsRoute
 import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
+import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewRoute
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
 import kotlinx.coroutines.launch
 
@@ -80,8 +79,7 @@ fun DrawerContent(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_routines_title),
                     icon = Icons.Outlined.Update,
-                    route = HabitsRoute,
-                    featureEnabled = false
+                    route = RoutinesOverviewRoute,
                 ),
             )
         ),
@@ -128,10 +126,7 @@ fun DrawerContent(
                                 drawerState.close()
                             }
                             mainNavController.navigate(ViewProfileRoute)
-                        },
-                        shapes = IconButtonDefaults.shapes(
-                            shape = MaterialShapes.Cookie9Sided.toShape()
-                        )
+                        }
                     ) {
                         if (uiState.userProfilePicture.isNotEmpty()) {
                             AsyncImage(

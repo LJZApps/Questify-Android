@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -31,7 +32,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -94,18 +95,27 @@ private fun EditProfileScreenContent(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.edit_profile_screen_title)) },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.edit_profile_screen_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 actions = {
                     TextButton(
                         onClick = {
                             if (uiState.pickedProfilePicture && uiState.profilePictureUrl != "null") {
                                 val profilePicture: String? = uiState.profilePictureUrl.let {
-                                    val inputStream: InputStream? = context.contentResolver.openInputStream(it.toUri())
+                                    val inputStream: InputStream? =
+                                        context.contentResolver.openInputStream(it.toUri())
                                     // Der use-Block gibt den Pfad oder null zurück, was dann vom let-Block zurückgegeben wird.
                                     inputStream?.use { input ->
                                         val fileName = "profile_${UUID.randomUUID()}.jpg"
-                                        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
+                                        val file = File(
+                                            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                                            fileName
+                                        )
 
                                         FileOutputStream(file).use { output ->
                                             input.copyTo(output)
@@ -114,7 +124,11 @@ private fun EditProfileScreenContent(
                                         file.absolutePath
                                     }
                                 }
-                                onUiEvent.invoke(EditProfileUiEvent.SaveProfile(profilePicture?: ""))
+                                onUiEvent.invoke(
+                                    EditProfileUiEvent.SaveProfile(
+                                        profilePicture ?: ""
+                                    )
+                                )
                             } else if (uiState.profilePictureUrl.isNotEmpty() && uiState.profilePictureUrl != "null") {
                                 onUiEvent.invoke(EditProfileUiEvent.SaveProfile(uiState.profilePictureUrl))
                             } else {

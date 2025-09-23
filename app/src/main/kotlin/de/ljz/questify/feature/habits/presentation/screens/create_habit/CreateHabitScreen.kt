@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -15,25 +16,21 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Notes
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Title
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,10 +47,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppButton
+import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.habits.data.models.HabitType
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
@@ -97,9 +97,12 @@ private fun CreateHabitScreenContent(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Text("Gewohnheit erstellen")
+                    Text(
+                        text = "Gewohnheit erstellen",
+                        fontWeight = FontWeight.Bold
+                    )
                 },
                 navigationIcon = {
                     IconButton(
@@ -111,19 +114,33 @@ private fun CreateHabitScreenContent(
                             contentDescription = null
                         )
                     }
-                },
-                actions = {
-                    TextButton(
-                        onClick = {
-
-                        },
-                        shapes = ButtonDefaults.shapes()
-                    ) {
-                        Text("Erstellen")
-                    }
                 }
             )
-        }
+        },
+        bottomBar = {
+            Column {
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                AppButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+//                        viewModel.createQuest()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 4.dp, top = 4.dp)
+                        .imePadding()
+                        .navigationBarsPadding()
+                ) {
+                    Text(
+                        text = "Gewohnheit erstellen"
+                    )
+                }
+            }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -139,22 +156,25 @@ private fun CreateHabitScreenContent(
                     .widthIn(max = MaxWidth),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Title,
-                        contentDescription = null,
+                    Text(
+                        text = "Titel",
+                        style = MaterialTheme.typography.titleMedium
                     )
 
-                    OutlinedTextField(
+                    AppOutlinedTextField(
                         value = uiState.title,
                         onValueChange = {
                             onUiEvent.invoke(CreateHabitUiEvent.OnTitleChange(it))
                         },
-                        label = { Text("Titel") },
+                        placeholder = {
+                            Text(
+                                text = "Gib den Titel deiner Gewohnheit ein..."
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
@@ -163,25 +183,23 @@ private fun CreateHabitScreenContent(
                     )
                 }
 
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.Notes,
-                        contentDescription = null,
+                    Text(
+                        text = "Notizen",
+                        style = MaterialTheme.typography.titleMedium
                     )
 
-                    OutlinedTextField(
+                    AppOutlinedTextField(
                         value = uiState.notes,
                         onValueChange = {
                             onUiEvent.invoke(CreateHabitUiEvent.OnNotesChange(it))
                         },
-                        label = { Text("Notizen") },
+                        placeholder = { Text("Füge hier detaillierte Notizen hinzu...") },
                         modifier = Modifier.fillMaxWidth(),
-                        minLines = 2,
+                        minLines = 3,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences
                         )
@@ -221,7 +239,7 @@ private fun CreateHabitScreenContent(
                                     },
                             ) {
                                 Icon(
-                                    imageVector = if(habitType == HabitType.POSITIVE) Icons.Default.Add else Icons.Default.Remove,
+                                    imageVector = if (habitType == HabitType.POSITIVE) Icons.Default.Add else Icons.Default.Remove,
                                     contentDescription = null,
                                 )
                                 Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
