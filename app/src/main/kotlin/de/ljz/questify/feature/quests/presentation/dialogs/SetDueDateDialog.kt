@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.utils.AddingDateTimeState
 import java.util.Calendar
 
@@ -50,6 +51,7 @@ import java.util.Calendar
 fun SetDueDateDialog(
     onConfirm: (Long) -> Unit,
     onDismiss: () -> Unit,
+    onRemoveDueDate: () -> Unit,
     addingDateTimeState: AddingDateTimeState = AddingDateTimeState.NONE,
     onDateTimeStateChange: (AddingDateTimeState) -> Unit
 ) {
@@ -108,22 +110,37 @@ fun SetDueDateDialog(
             ) {
                 DatePickerDialog(
                     onDismissRequest = onDismiss,
-                    dismissButton = {
-                        TextButton(
-                            onClick = onDismiss,
-                            shapes = ButtonDefaults.shapes()
-                        ) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    },
                     confirmButton = {
-                        TextButton(
-                            onClick = { onDateTimeStateChange(AddingDateTimeState.TIME) },
-                            shapes = ButtonDefaults.shapes()
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(start = 4.dp)
                         ) {
-                            Text(stringResource(R.string.next))
+                            AppTextButton(
+                                onClick = onRemoveDueDate,
+                            ) {
+                                Text(
+                                    text = "Fälligkeit entfernen"
+                                )
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                AppTextButton(
+                                    onClick = onDismiss,
+                                ) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+
+                                AppTextButton(
+                                    onClick = { onDateTimeStateChange(AddingDateTimeState.TIME) },
+                                ) {
+                                    Text(stringResource(R.string.next))
+                                }
+                            }
                         }
-                    },
+                    }
                 ) {
                     DatePicker(
                         state = datePickerState,

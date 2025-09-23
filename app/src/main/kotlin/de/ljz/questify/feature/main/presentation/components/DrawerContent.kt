@@ -11,9 +11,9 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.EmojiEvents
+import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Leaderboard
 import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material.icons.outlined.Update
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -78,7 +78,7 @@ fun DrawerContent(
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_routines_title),
-                    icon = Icons.Outlined.Update,
+                    icon = Icons.Outlined.EventRepeat,
                     route = RoutinesOverviewRoute,
                 ),
             )

@@ -13,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.KeyboardHide
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
@@ -26,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
@@ -43,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.utils.AddingDateTimeState
 import java.util.Calendar
 
@@ -118,20 +117,35 @@ fun CreateReminderDialog(
                         dismissOnBackPress = false,
                         dismissOnClickOutside = false,
                     ),
-                    dismissButton = {
-                        TextButton(
-                            onClick = onDismiss,
-                            shapes = ButtonDefaults.shapes()
-                        ) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    },
                     confirmButton = {
-                        TextButton(
-                            onClick = { onReminderStateChange(AddingDateTimeState.TIME) },
-                            shapes = ButtonDefaults.shapes()
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(start = 4.dp)
                         ) {
-                            Text(stringResource(R.string.next))
+                            AppTextButton(
+                                onClick = onDismiss,
+                            ) {
+                                Text(
+                                    text = "Fälligkeit entfernen"
+                                )
+                            }
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                AppTextButton(
+                                    onClick = onDismiss,
+                                ) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+
+                                AppTextButton(
+                                    onClick = { onReminderStateChange(AddingDateTimeState.TIME) },
+                                ) {
+                                    Text(stringResource(R.string.next))
+                                }
+                            }
                         }
                     },
                 ) {
@@ -191,16 +205,16 @@ fun CreateReminderDialog(
                             }
 
                             Row {
-                                TextButton(
+                                AppTextButton(
                                     onClick = { onReminderStateChange(AddingDateTimeState.DATE) },
-                                    shapes = ButtonDefaults.shapes()
                                 ) {
                                     Text(stringResource(R.string.back))
                                 }
+
                                 Spacer(modifier = Modifier.width(2.dp))
-                                TextButton(
+
+                                AppTextButton(
                                     onClick = { onConfirm(combinedDateTime.value) },
-                                    shapes = ButtonDefaults.shapes()
                                 ) {
                                     Text(stringResource(R.string.create_reminder_dialog_add_reminder))
                                 }

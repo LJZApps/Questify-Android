@@ -475,7 +475,10 @@ fun QuestDetailScreen(
                         focusManager.clearFocus()
                     },
                     addingDateTimeState = uiState.addingDueDateTimeState,
-                    onDateTimeStateChange = { viewModel.updateDueDateState(it) }
+                    onDateTimeStateChange = { viewModel.updateDueDateState(it) },
+                    onRemoveDueDate = {
+                        viewModel.setDueDate(0)
+                    }
                 )
             }
 

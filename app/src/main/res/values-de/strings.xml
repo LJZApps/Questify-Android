@@ -243,6 +243,6 @@
     <string name="quest_overview_screen_tab_default_text">Alle</string>
     <string name="drawer_content_routines_title">Routinen</string>
     <string name="drawer_content_achievements_title">Erfolge</string>
-    <string name="drawer_content_stats_title">Werte</string>
+    <string name="drawer_content_stats_title">Statistiken</string>
     <string name="drawer_content_leaderboard_title">Bestenliste</string>
 </resources>

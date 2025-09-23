@@ -701,7 +701,12 @@ fun CreateQuestScreen(
                         focusManager.clearFocus()
                     },
                     addingDateTimeState = uiState.addingDateTimeState,
-                    onDateTimeStateChange = { viewModel.updateReminderState(it) }
+                    onDateTimeStateChange = { viewModel.updateReminderState(it) },
+                    onRemoveDueDate = {
+                        viewModel.removeDueDate()
+                        viewModel.hideAddingDueDateDialog()
+                        focusManager.clearFocus()
+                    }
                 )
             }
 
