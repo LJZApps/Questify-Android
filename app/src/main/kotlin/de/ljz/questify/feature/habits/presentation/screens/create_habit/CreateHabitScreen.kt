@@ -25,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,7 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
+import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.habits.data.models.HabitType
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
@@ -105,14 +105,17 @@ private fun CreateHabitScreenContent(
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { },
-                        shapes = IconButtonDefaults.shapes()
+                    BasicPlainTooltip(
+                        text = "Zurück"
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
-                        )
+                        IconButton(
+                            onClick = { },
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             )
@@ -146,8 +149,8 @@ private fun CreateHabitScreenContent(
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .imePadding()
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
@@ -214,23 +217,19 @@ private fun CreateHabitScreenContent(
                         style = MaterialTheme.typography.titleMedium
                     )
 
-                    val selectedTypes = remember { mutableStateListOf<HabitType>() }
+                    var selectedType by remember { mutableStateOf(HabitType.POSITIVE) }
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                     ) {
-                        val modifiers = listOf(Modifier.weight(1f), Modifier.weight(1f))
                         habitTypeOptions.forEachIndexed { index, habitType ->
                             ToggleButton(
-                                checked = selectedTypes.contains(habitType),
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        selectedTypes.add(habitType)
-                                    } else {
-                                        selectedTypes.remove(habitType)
-                                    }
+                                checked = selectedType == habitType,
+                                onCheckedChange = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                    selectedType = habitType
                                 },
-                                modifier = modifiers[index],
+                                modifier = Modifier.weight(1f),
                                 shapes =
                                     when (index) {
                                         0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
@@ -259,22 +258,24 @@ private fun CreateHabitScreenContent(
                         style = MaterialTheme.typography.titleMedium
                     )
 
+                    var selectedDifficulty by remember { mutableIntStateOf(0) }
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                     ) {
-                        // Beispiel: unterschiedliche Gewichte pro Button
-                        val modifiers = List(difficultyOptions.size) { Modifier.weight(1f) }
-
                         difficultyOptions.forEachIndexed { index, label ->
                             ToggleButton(
-                                checked = 0 == index,
+                                checked = selectedDifficulty == index,
                                 onCheckedChange = {
                                     haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                    selectedDifficulty = index
 //                                viewModel.updateDifficulty(index)
                                 },
-                                modifier = modifiers[index].semantics {
-                                    role = Role.RadioButton
-                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .semantics {
+                                        role = Role.RadioButton
+                                    },
                                 shapes = when (index) {
                                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
                                     difficultyOptions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
@@ -285,7 +286,7 @@ private fun CreateHabitScreenContent(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    val tint = if (0 == index)
+                                    val tint = if (selectedDifficulty == index)
                                         MaterialTheme.colorScheme.onPrimary
                                     else
                                         MaterialTheme.colorScheme.onSurfaceVariant
@@ -320,7 +321,10 @@ private fun CreateHabitScreenContent(
                         counterResetOptions.forEachIndexed { index, label ->
                             ToggleButton(
                                 checked = selectedIndex == index,
-                                onCheckedChange = { selectedIndex = index },
+                                onCheckedChange = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+                                    selectedIndex = index
+                                },
                                 modifier = Modifier.weight(1f),
                                 shapes =
                                     when (index) {

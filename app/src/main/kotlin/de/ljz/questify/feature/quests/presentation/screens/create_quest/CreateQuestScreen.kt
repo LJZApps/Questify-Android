@@ -39,13 +39,13 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,6 +75,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
+import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.EpicIcon
@@ -130,26 +131,34 @@ fun CreateQuestScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { mainNavController.navigateUp() },
-                        shapes = IconButtonDefaults.shapes()
+                    BasicPlainTooltip(
+                        text = "Zurück",
                     ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
+                        IconButton(
+                            onClick = { mainNavController.navigateUp() },
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            dropdownExpanded = true
-                        }
+                    BasicPlainTooltip(
+                        text = "Mehr",
+                        position = TooltipAnchorPosition.Below
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = null
-                        )
+                        IconButton(
+                            onClick = {
+                                dropdownExpanded = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = null
+                            )
+                        }
                     }
 
                     DropdownMenu(
@@ -327,22 +336,6 @@ fun CreateQuestScreen(
                                 },
                                 interactionSource = interactionSource
                             )
-
-                            /*if (uiState.selectedDueDate.toInt() != 0) {
-                                IconButton(
-                                    onClick = {
-                                        viewModel.removeDueDate()
-                                    },
-                                    colors = IconButtonDefaults.iconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.error
-                                    )
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Close,
-                                        contentDescription = null
-                                    )
-                                }
-                            }*/
                         }
                     }
 

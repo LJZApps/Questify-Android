@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 import de.ljz.questify.feature.settings.data.models.ThemeBehavior
@@ -38,11 +38,6 @@ fun QuestifyTheme(
         isDark = useDarkTheme,
         isAmoled = uiState.isAmoled,
         style = PaletteStyle.Neutral
-       /* modifyColorScheme = { colorScheme ->
-            colorScheme.copy(
-                surface = if (useDarkTheme) Color.Black else Color.White
-            )
-        }*/
     )
 
     val view = LocalView.current

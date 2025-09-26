@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -28,6 +27,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -36,12 +36,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import de.ljz.questify.R
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestDoneDialogState
 import kotlinx.coroutines.launch
@@ -55,6 +59,7 @@ fun QuestDoneDialog(
     val scope = rememberCoroutineScope()
     val scaleAnim = remember { Animatable(0.3f) }
     val fadeIn = remember { Animatable(0f) }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.completed))
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -90,13 +95,22 @@ fun QuestDoneDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.CheckCircle,
-                    contentDescription = "Check circle icon",
-                    tint = MaterialTheme.colorScheme.primary,
+                LottieAnimation(
+                    composition = composition,
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(80.dp),
+                    clipToCompositionBounds = false,
+                    clipTextToBoundingBox = false,
+                    contentScale = ContentScale.FillBounds
                 )
+
+//                Icon(
+//                    imageVector = Icons.Filled.CheckCircle,
+//                    contentDescription = "Check circle icon",
+//                    tint = MaterialTheme.colorScheme.primary,
+//                    modifier = Modifier
+//                        .size(80.dp)
+//                )
 
                 Text(
                     text = stringResource(R.string.quest_done_dialog_title),

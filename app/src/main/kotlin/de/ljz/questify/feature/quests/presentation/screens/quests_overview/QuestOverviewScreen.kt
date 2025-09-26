@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -42,6 +41,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -71,6 +71,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
@@ -314,45 +315,48 @@ private fun QuestOverviewContent(
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onUiEvent(QuestOverviewUiEvent.ToggleDrawer)
-                        },
-                        shapes = IconButtonDefaults.shapes()
+                    BasicPlainTooltip(
+                        text = "Navigationsleiste öffnen",
+                        position = TooltipAnchorPosition.Below
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Localized description"
-                        )
+                        IconButton(
+                            onClick = {
+                                onUiEvent(QuestOverviewUiEvent.ToggleDrawer)
+                            },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = "Localized description"
+                            )
+                        }
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-
-                        }
+                    BasicPlainTooltip(
+                        text = "Suche",
+                        position = TooltipAnchorPosition.Below
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Search,
-                            contentDescription = null
-                        )
+                        IconButton(
+                            onClick = {
+
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Search,
+                                contentDescription = null
+                            )
+                        }
                     }
 
-                    IconButton(
-                        onClick = {
-
+                    BasicPlainTooltip(
+                        text = "Mehr",
+                        position = TooltipAnchorPosition.Below
+                    ) {
+                        IconButton(
+                            onClick = { dropdownExpanded = true }
+                        ) {
+                            Icon(Icons.Default.MoreVert, contentDescription = null)
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Notifications,
-                            contentDescription = null
-                        )
-                    }
-
-                    IconButton(
-                        onClick = { dropdownExpanded = true }
-                    ) {
-                        Icon(Icons.Default.MoreVert, contentDescription = null)
                     }
 
                     DropdownMenu(
@@ -405,21 +409,26 @@ private fun QuestOverviewContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    onUiEvent(
-                        QuestOverviewUiEvent.OnNavigateToCreateQuestScreen(
-                            categoryId = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
-                        )
-                    )
-                },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+            BasicPlainTooltip(
+                text = "Neue Quest erstellen",
+                position = TooltipAnchorPosition.Above
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = null,
-                )
+                FloatingActionButton(
+                    onClick = {
+                        onUiEvent(
+                            QuestOverviewUiEvent.OnNavigateToCreateQuestScreen(
+                                categoryId = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
+                            )
+                        )
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = null,
+                    )
+                }
             }
         },
         content = { innerPadding ->
@@ -525,7 +534,8 @@ private fun QuestOverviewContent(
                 }
             }
 
-            if (uiState.dialogState == DialogState.QuestDone) {
+//            if (uiState.dialogState == DialogState.QuestDone) {
+            if (true) {
                 QuestDoneDialog(
                     state = questDoneDialogState,
                     onDismiss = {

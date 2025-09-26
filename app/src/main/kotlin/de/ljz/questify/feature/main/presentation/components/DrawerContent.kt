@@ -3,30 +3,32 @@ package de.ljz.questify.feature.main.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.EmojiEvents
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Leaderboard
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
-import androidx.compose.material3.Badge
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -40,6 +42,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.getSerializedRouteName
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
@@ -50,7 +53,7 @@ import de.ljz.questify.feature.routines.presentation.screens.routines_overview.R
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerContent(
     uiState: MainUiState,
@@ -69,7 +72,7 @@ fun DrawerContent(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_quests_title),
                     icon = Icons.Outlined.TaskAlt,
-                    route = QuestsRoute
+                    route = QuestsRoute,
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_habits_title),
@@ -120,31 +123,36 @@ fun DrawerContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    FilledTonalIconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                            mainNavController.navigate(ViewProfileRoute)
-                        }
+                    BasicPlainTooltip(
+                        text = "Mein Profil",
+                        position = TooltipAnchorPosition.Below
                     ) {
-                        if (uiState.userProfilePicture.isNotEmpty()) {
-                            AsyncImage(
-                                model = uiState.userProfilePicture,
-                                contentDescription = "Profilbild",
-                                modifier = Modifier
-                                    .size(40.dp),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Profilbild",
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .padding(5.dp),
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
+                        FilledTonalIconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                mainNavController.navigate(ViewProfileRoute)
+                            }
+                        ) {
+                            if (uiState.userProfilePicture.isNotEmpty()) {
+                                AsyncImage(
+                                    model = uiState.userProfilePicture,
+                                    contentDescription = "Profilbild",
+                                    modifier = Modifier
+                                        .size(40.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Profilbild",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .padding(5.dp),
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
                         }
                     }
 
@@ -154,16 +162,20 @@ fun DrawerContent(
                     )
                 }
 
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                            drawerState.close()
-                        }
-                        mainNavController.navigate(SettingsMainRoute)
-                    },
-                    shapes = IconButtonDefaults.shapes()
+                BasicPlainTooltip(
+                    text = "Einstellungen",
+                    position = TooltipAnchorPosition.Below
                 ) {
-                    Icon(Icons.Default.Settings, contentDescription = null)
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            mainNavController.navigate(SettingsMainRoute)
+                        },
+                    ) {
+                        Icon(Icons.Outlined.Settings, contentDescription = null)
+                    }
                 }
             }
 
@@ -177,7 +189,8 @@ fun DrawerContent(
                         Text(
                             text = category.title,
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                            modifier = Modifier
+                                .padding(NavigationDrawerItemDefaults.ItemPadding)
                                 .padding(vertical = 4.dp)
                         )
                     }
@@ -209,18 +222,49 @@ fun DrawerContent(
                                 },
                                 badge = {
                                     item.badge?.let { badge ->
-                                        Badge {
-                                            Text(badge)
-                                        }
+                                        Text(badge)
                                     }
                                 },
-                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                                modifier = Modifier
+                                    .padding(NavigationDrawerItemDefaults.ItemPadding)
                                     .padding(vertical = 4.dp)
                             )
                         }
                     }
                 }
             }
+
+            Spacer(
+                modifier = Modifier.fillMaxHeight()
+            )
+
+            NavigationDrawerItem(
+                label = { Text(text = "Einstellungen") },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = null
+                    )
+                },
+                selected = currentDestination?.route == getSerializedRouteName(SettingsMainRoute),
+                onClick = {
+                    scope.launch {
+                        drawerState.close()
+                    }
+                    if (currentDestination?.route != getSerializedRouteName(SettingsMainRoute)) navController.navigate(
+                        SettingsMainRoute
+                    ) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                modifier = Modifier
+                    .padding(NavigationDrawerItemDefaults.ItemPadding)
+                    .padding(vertical = 4.dp)
+            )
         }
     }
 }

@@ -30,6 +30,7 @@ lifecycleRuntimeCompose = "2.9.4"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 lifecycleViewmodelCompose = "2.9.4"
+lottie = "6.6.9"
 material = "1.13.0"
 material3 = "1.5.0-alpha04"
 materialKolor = "3.0.1"
@@ -110,6 +111,7 @@ kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collec
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kvcolorpalette-android = { module = "com.github.KvColorPalette:KvColorPalette-Android", version.ref = "kvcolorpaletteAndroid" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttpVersion" }
+lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
