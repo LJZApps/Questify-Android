@@ -11,12 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +27,7 @@ import androidx.compose.ui.window.Dialog
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -73,18 +72,16 @@ fun ColorPickerDialog(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(
+                    AppTextButton(
                         onClick = onDismiss,
-                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    TextButton(
+                    AppTextButton(
                         onClick = {
                             onConfirm(selectedColor.value)
-                        },
-                        shapes = ButtonDefaults.shapes()
+                        }
                     ) {
                         Text(stringResource(R.string.save))
                     }

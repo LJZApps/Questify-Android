@@ -32,7 +32,6 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
@@ -214,7 +213,6 @@ private fun QuestOverviewContent(
                                     textFieldState.clearText()
                                 }
                             },
-                            shapes = IconButtonDefaults.shapes()
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
@@ -241,7 +239,7 @@ private fun QuestOverviewContent(
                         onClick = {
                             onUiEvent(QuestOverviewUiEvent.ToggleDrawer)
                         },
-                        shapes = IconButtonDefaults.shapes()
+                        )
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
@@ -534,8 +532,7 @@ private fun QuestOverviewContent(
                 }
             }
 
-//            if (uiState.dialogState == DialogState.QuestDone) {
-            if (true) {
+            if (uiState.dialogState == DialogState.QuestDone) {
                 QuestDoneDialog(
                     state = questDoneDialogState,
                     onDismiss = {

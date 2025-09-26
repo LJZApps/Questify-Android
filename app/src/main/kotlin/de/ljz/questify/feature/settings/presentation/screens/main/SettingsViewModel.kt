@@ -3,8 +3,7 @@ package de.ljz.questify.feature.settings.presentation.screens.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.feature.settings.data.models.ThemeBehavior
-import de.ljz.questify.feature.settings.data.models.ThemeColor
+import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
 import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,63 +14,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val appSettingsRepository: AppSettingsRepository
+    private val appSettingsRepository: AppSettingsRepository,
+    private val appUserRepository: AppUserRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(SettingsUIState())
+    private val _uiState = MutableStateFlow(
+        value = SettingsUIState(
+            userName = "",
+            userProfilePicture = "",
+            aboutMe = ""
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            appSettingsRepository.getAppSettings().collectLatest { settings ->
+            appUserRepository.getAppUser().collectLatest { appUser ->
                 _uiState.update {
                     it.copy(
-                        isAmoled = settings.isAmoled,
-                        appColor = settings.appColor,
-                        themeBehavior = settings.themeBehavior,
-                        themeColor = settings.themeColor,
-                        dynamicColorsEnabled = settings.dynamicThemeColors
+                        userName = appUser.displayName,
+                        userProfilePicture = appUser.profilePicture,
+                        aboutMe = appUser.aboutMe
                     )
                 }
             }
-        }
-    }
-
-    private fun updateUiState(update: SettingsUIState.() -> SettingsUIState) {
-        _uiState.value = _uiState.value.update()
-    }
-
-    fun showCustomColorDialog() = updateUiState { copy(customColorDialogVisible = true) }
-    fun hideCustomColorDialog() = updateUiState { copy(customColorDialogVisible = false) }
-    fun showDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = true) }
-    fun hideDarkModeDialog() = updateUiState { copy(darkModeDialogVisible = false) }
-
-    fun updateDynamicColorsEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            appSettingsRepository.setDynamicColorsEnabled(enabled)
-        }
-    }
-
-    fun setAppColor(color: String) {
-        viewModelScope.launch {
-            appSettingsRepository.setAppColor(color)
-        }
-    }
-
-    fun updateIsAmoledEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            appSettingsRepository.isAmoledEnabled(enabled)
-        }
-    }
-
-    fun updateCustomColor(color: ThemeColor) {
-        viewModelScope.launch {
-            appSettingsRepository.setCustomColor(color)
-        }
-    }
-
-    fun updateThemeBehavior(themeBehavior: ThemeBehavior) {
-        viewModelScope.launch {
-            appSettingsRepository.setDarkModeBehavior(themeBehavior)
         }
     }
 }

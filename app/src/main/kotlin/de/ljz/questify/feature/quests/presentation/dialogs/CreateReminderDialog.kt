@@ -20,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
@@ -195,7 +194,6 @@ fun CreateReminderDialog(
                                     onClick = {
                                         showTimeInput.value = !showTimeInput.value
                                     },
-                                    shapes = IconButtonDefaults.shapes()
                                 ) {
                                     Icon(
                                         if (showTimeInput.value) Icons.Outlined.KeyboardHide else Icons.Outlined.Keyboard,

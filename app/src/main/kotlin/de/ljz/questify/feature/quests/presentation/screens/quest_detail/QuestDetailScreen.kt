@@ -31,7 +31,6 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -46,7 +45,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TopAppBar
@@ -72,6 +70,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
@@ -122,14 +121,13 @@ fun QuestDetailScreen(
                 title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() },
-                        shapes = IconButtonDefaults.shapes()
+                        onClick = { navController.popBackStack() }
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {
-                    TextButton(
+                    AppTextButton(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             viewModel.updateQuest(
@@ -140,8 +138,7 @@ fun QuestDetailScreen(
                                     }
                                 }
                             )
-                        },
-                        shapes = ButtonDefaults.shapes()
+                        }
                     ) {
                         Text(
                             text = stringResource(R.string.save)
@@ -155,8 +152,7 @@ fun QuestDetailScreen(
                         },
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.error,
-                        ),
-                        shapes = IconButtonDefaults.shapes()
+                        )
                     ) {
                         Icon(Icons.Outlined.Delete, contentDescription = null)
                     }
@@ -374,7 +370,6 @@ fun QuestDetailScreen(
                                     onClick = {
                                         viewModel.setDueDate(0)
                                     },
-                                    shapes = IconButtonDefaults.shapes(),
                                     colors = IconButtonDefaults.filledTonalIconButtonColors(
                                         containerColor = MaterialTheme.colorScheme.errorContainer,
                                         contentColor = MaterialTheme.colorScheme.onErrorContainer

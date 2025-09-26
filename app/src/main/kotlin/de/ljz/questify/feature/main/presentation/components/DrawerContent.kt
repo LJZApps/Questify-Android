@@ -1,6 +1,8 @@
 package de.ljz.questify.feature.main.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.EmojiEvents
@@ -16,38 +20,39 @@ import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Leaderboard
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.getSerializedRouteName
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsRoute
-import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewRoute
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
@@ -119,62 +124,73 @@ fun DrawerContent(
                     .padding(NavigationDrawerItemDefaults.ItemPadding)
                     .padding(vertical = 6.dp)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                        }
+                        mainNavController.navigate(SettingsMainRoute)
+                    }
                 ) {
-                    BasicPlainTooltip(
-                        text = "Mein Profil",
-                        position = TooltipAnchorPosition.Below
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+//                        modifier = Modifier.padding(vertical = 4.dp)
                     ) {
-                        FilledTonalIconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                                mainNavController.navigate(ViewProfileRoute)
-                            }
-                        ) {
-                            if (uiState.userProfilePicture.isNotEmpty()) {
-                                AsyncImage(
-                                    model = uiState.userProfilePicture,
-                                    contentDescription = "Profilbild",
-                                    modifier = Modifier
-                                        .size(40.dp),
-                                    contentScale = ContentScale.Crop
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = uiState.userName,
+                                    style = MaterialTheme.typography.titleLarge
+                                        .copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
                                 )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Profilbild",
+                            },
+                            overlineContent = {
+                                Text(
+                                    text = "Questify"
+                                )
+                            },
+                            leadingContent = {
+                                Box(
                                     modifier = Modifier
                                         .size(40.dp)
-                                        .padding(5.dp),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.primaryContainer),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    if (uiState.userProfilePicture.isNotEmpty()) {
+                                        AsyncImage(
+                                            model = uiState.userProfilePicture,
+                                            contentDescription = "Profilbild",
+                                            modifier = Modifier
+                                                .size(40.dp),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+                                        Icon(
+                                            imageVector = Icons.Default.Person,
+                                            contentDescription = "Profilbild",
+                                            modifier = Modifier
+                                                .size(40.dp)
+                                                .padding(5.dp),
+                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        )
+                                    }
+                                }
+                            },
+                            trailingContent = {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                                    contentDescription = null
                                 )
-                            }
-                        }
-                    }
-
-                    Text(
-                        text = uiState.userName,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-
-                BasicPlainTooltip(
-                    text = "Einstellungen",
-                    position = TooltipAnchorPosition.Below
-                ) {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.close()
-                            }
-                            mainNavController.navigate(SettingsMainRoute)
-                        },
-                    ) {
-                        Icon(Icons.Outlined.Settings, contentDescription = null)
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = Color.Transparent
+                            )
+                        )
                     }
                 }
             }

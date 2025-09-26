@@ -13,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.KeyboardHide
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
@@ -21,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
@@ -185,7 +183,6 @@ fun SetDueDateDialog(
                                     onClick = {
                                         showTimeInput.value = !showTimeInput.value
                                     },
-                                    shapes = IconButtonDefaults.shapes()
                                 ) {
                                     Icon(
                                         if (showTimeInput.value) Icons.Outlined.KeyboardHide else Icons.Outlined.Keyboard,
@@ -196,15 +193,13 @@ fun SetDueDateDialog(
 
                             Row {
                                 TextButton(
-                                    onClick = { onDateTimeStateChange(AddingDateTimeState.DATE) },
-                                    shapes = ButtonDefaults.shapes()
+                                    onClick = { onDateTimeStateChange(AddingDateTimeState.DATE) }
                                 ) {
                                     Text(stringResource(R.string.back))
                                 }
                                 Spacer(modifier = Modifier.width(2.dp))
                                 TextButton(
-                                    onClick = { onConfirm(combinedDateTime.value) },
-                                    shapes = ButtonDefaults.shapes()
+                                    onClick = { onConfirm(combinedDateTime.value) }
                                 ) {
                                     Text(stringResource(R.string.save))
                                 }

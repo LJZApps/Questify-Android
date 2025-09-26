@@ -28,7 +28,7 @@ fun ExpressiveSettingsMenuLink(
                 onClick?.invoke()
             },
         colors = ListItemDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         headlineContent = {
             Text(

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -20,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.utils.trimToNull
 
 @Composable
@@ -92,13 +91,12 @@ fun UserSetupPage(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Name Input
-            OutlinedTextField(
+            AppOutlinedTextField(
                 value = displayName,
                 onValueChange = { onDisplayNameChange(it) },
                 label = { Text(stringResource(R.string.text_field_display_name)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
                     capitalization = KeyboardCapitalization.Words,
@@ -109,13 +107,12 @@ fun UserSetupPage(
             )
 
             // Bio Input
-            OutlinedTextField(
+            AppOutlinedTextField(
                 value = aboutMe,
                 onValueChange = { onAboutMeChange(it) },
                 label = { Text(stringResource(R.string.text_field_about_me)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
-                shape = RoundedCornerShape(12.dp),
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences,
                 )

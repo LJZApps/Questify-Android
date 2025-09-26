@@ -38,7 +38,7 @@ fun ExpressiveMenuCategory(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(4.dp))
-                .background(MaterialTheme.colorScheme.secondaryContainer)
+                .background(MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -48,7 +48,7 @@ fun ExpressiveMenuCategory(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondaryContainer)
+                    style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                 )
 
                 if (actionIcon != null) {

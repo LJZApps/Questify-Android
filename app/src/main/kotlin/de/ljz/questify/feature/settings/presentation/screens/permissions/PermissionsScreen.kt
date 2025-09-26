@@ -19,8 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppButton
 import kotlinx.coroutines.flow.collectLatest
 
 /**
@@ -112,10 +111,9 @@ fun PermissionsScreen(
         bottomBar = {
             // Button zum Neustarten der App nur anzeigen, wenn man nicht zurück navigieren kann (z.B. beim First-Setup)
             if (!canNavigateBack) {
-                Button(
+                AppButton(
                     onClick = { restartApp(context) },
                     enabled = uiState.permissionItems.all { it.isGranted },
-                    shapes = ButtonDefaults.shapes(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
@@ -192,9 +190,8 @@ private fun PermissionCard(permissionItem: PermissionItem) {
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
-                    Button(
+                    AppButton(
                         onClick = permissionItem.requestAction,
-                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.permissions_screen_button_grant))
                     }

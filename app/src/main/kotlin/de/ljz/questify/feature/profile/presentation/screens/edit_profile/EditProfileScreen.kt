@@ -20,15 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.utils.NavBarConfig
 import java.io.File
 import java.io.FileOutputStream
@@ -137,7 +135,6 @@ private fun EditProfileScreenContent(
 
                             onUiEvent.invoke(EditProfileUiEvent.NavigateUp)
                         },
-                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.save))
                     }
@@ -147,7 +144,6 @@ private fun EditProfileScreenContent(
                         onClick = {
                             onUiEvent.invoke(EditProfileUiEvent.NavigateUp)
                         },
-                        shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
@@ -193,7 +189,7 @@ private fun EditProfileScreenContent(
                 }
 
                 // Display name
-                OutlinedTextField(
+                AppOutlinedTextField(
                     value = uiState.displayName,
                     onValueChange = {
                         onUiEvent.invoke(EditProfileUiEvent.UpdateDisplayName(it))
@@ -208,7 +204,7 @@ private fun EditProfileScreenContent(
                 )
 
                 // About me
-                OutlinedTextField(
+                AppOutlinedTextField(
                     value = uiState.aboutMe,
                     onValueChange = {
                         onUiEvent.invoke(EditProfileUiEvent.UpdateAboutMe(it))

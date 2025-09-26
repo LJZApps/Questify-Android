@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.AlarmAdd
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +18,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -33,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -142,12 +141,11 @@ fun ListReminderBottomSheet(
                 }
             }
 
-            OutlinedButton(
+            AppOutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onAddReminder()
-                },
-                shapes = ButtonDefaults.shapes()
+                }
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

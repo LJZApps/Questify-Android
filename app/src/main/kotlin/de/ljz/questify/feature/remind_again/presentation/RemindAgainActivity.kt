@@ -17,14 +17,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,8 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
+import de.ljz.questify.core.presentation.components.buttons.AppButton
+import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
+import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import okhttp3.internal.toLongOrDefault
 import javax.inject.Inject
@@ -198,7 +197,7 @@ fun RemindAgainPopUp(
 
                     if (isCustomTimeSelected) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        OutlinedTextField(
+                        AppOutlinedTextField(
                             value = customTime,
                             onValueChange = { customTime = it },
                             label = { Text(stringResource(R.string.text_field_custom_minutes)) },
@@ -213,7 +212,7 @@ fun RemindAgainPopUp(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Button(
+                    AppButton(
                         onClick = {
                             val timeInMillis = if (isCustomTimeSelected) {
                                 customTime.toLongOrDefault(0).times(60 * 1000)
@@ -225,7 +224,6 @@ fun RemindAgainPopUp(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !(isCustomTimeSelected && customTime.toLongOrDefault(0).toInt() == 0),
-                        shapes = ButtonDefaults.shapes()
                     ) {
                         Text(stringResource(R.string.remind_again_activity_set_reminder_button))
                     }

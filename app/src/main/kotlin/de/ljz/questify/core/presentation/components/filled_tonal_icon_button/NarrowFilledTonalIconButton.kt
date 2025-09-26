@@ -6,7 +6,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.IconButtonShapes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,12 +17,10 @@ fun NarrowFilledTonalIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     colors: IconButtonColors = IconButtonDefaults.filledTonalIconButtonColors(),
-    shapes: IconButtonShapes = IconButtonDefaults.shapes(),
     content: @Composable () -> Unit
 ) {
     FilledTonalIconButton(
         onClick = onClick,
-        shapes = shapes,
         colors = colors,
         enabled = enabled,
         modifier = modifier

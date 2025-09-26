@@ -37,7 +37,6 @@ fun DeleteConfirmationDialog(
                     haptic.performHapticFeedback(HapticFeedbackType.Confirm)
                     onConfirm()
                 },
-                shapes = ButtonDefaults.shapes(),
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,
                 )
@@ -50,8 +49,7 @@ fun DeleteConfirmationDialog(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onDismiss()
-                },
-                shapes = ButtonDefaults.shapes()
+                }
             ) {
                 Text(stringResource(R.string.cancel))
             }

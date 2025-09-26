@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -144,8 +143,7 @@ fun QuestDoneDialog(
 
                 Button(
                     onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth(),
-                    shapes = ButtonDefaults.shapes()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = if (state.xp > 0 || state.points > 0)
