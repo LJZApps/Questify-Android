@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,22 +54,12 @@ fun QuestDoneDialog(
     state: QuestDoneDialogState,
     onDismiss: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    val scaleAnim = remember { Animatable(0.3f) }
     val fadeIn = remember { Animatable(0f) }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.completed))
 
     LaunchedEffect(Unit) {
-        scope.launch {
-            fadeIn.animateTo(1f, animationSpec = tween(500))
-            scaleAnim.animateTo(1f, animationSpec = tween(500, delayMillis = 100))
-        }
-
         launch {
-            scaleAnim.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-            )
+            fadeIn.animateTo(1f, animationSpec = tween(500))
         }
     }
 
@@ -83,7 +72,7 @@ fun QuestDoneDialog(
         )
     ) {
         Surface(
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(6.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier.padding(16.dp)
         ) {
@@ -102,14 +91,6 @@ fun QuestDoneDialog(
                     clipTextToBoundingBox = false,
                     contentScale = ContentScale.FillBounds
                 )
-
-//                Icon(
-//                    imageVector = Icons.Filled.CheckCircle,
-//                    contentDescription = "Check circle icon",
-//                    tint = MaterialTheme.colorScheme.primary,
-//                    modifier = Modifier
-//                        .size(80.dp)
-//                )
 
                 Text(
                     text = stringResource(R.string.quest_done_dialog_title),

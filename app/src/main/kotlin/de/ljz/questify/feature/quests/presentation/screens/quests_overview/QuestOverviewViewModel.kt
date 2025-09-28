@@ -1,27 +1,20 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.domain.use_cases.GetSortingPreferencesUseCase
 import de.ljz.questify.core.domain.use_cases.SaveQuestSortingDirectionUseCase
 import de.ljz.questify.core.domain.use_cases.UpdateShowCompletedQuestsUseCase
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
-import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestsUseCase
-import de.ljz.questify.feature.quests.domain.use_cases.GetNotificationsByQuestIdUseCase
-import de.ljz.questify.feature.quests.domain.use_cases.RemoveNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.UpdateQuestCategoryUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,8 +37,7 @@ class QuestOverviewViewModel @Inject constructor(
     private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
     private val updateQuestCategoryUseCase: UpdateQuestCategoryUseCase,
 
-    private val getNotificationsByQuestIdUseCase: GetNotificationsByQuestIdUseCase,
-    private val removeNotificationsUseCase: RemoveNotificationsUseCase,
+    private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 
     private val getQuestSortingPreferencesUseCase: GetSortingPreferencesUseCase,
     private val saveQuestSortingDirectionUseCase: SaveQuestSortingDirectionUseCase,
@@ -118,7 +110,27 @@ class QuestOverviewViewModel @Inject constructor(
             }
 
             is QuestOverviewUiEvent.OnQuestChecked -> {
+                viewModelScope.launch {
+                    launch {
+                        val result = completeQuestUseCase.invoke(event.questEntity)
 
+                        _uiState.update {
+                            it.copy(
+                                dialogState = DialogState.QuestDone,
+                                questDoneDialogState = it.questDoneDialogState.copy(
+                                    xp = result.earnedXp,
+                                    points = result.earnedPoints,
+                                    newLevel = if (result.didLevelUp) result.newLevel else 0,
+                                    questName = event.questEntity.title
+                                )
+                            )
+                        }
+                    }
+
+                    launch {
+                        cancelQuestNotificationsUseCase.invoke(event.questEntity.id)
+                    }
+                }
             }
 
             is QuestOverviewUiEvent.ShowDialog -> {
@@ -130,6 +142,20 @@ class QuestOverviewViewModel @Inject constructor(
             is QuestOverviewUiEvent.CloseDialog -> {
                 _uiState.update {
                     it.copy(dialogState = DialogState.None)
+                }
+            }
+
+            is QuestOverviewUiEvent.CloseQuestDoneDialog -> {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        dialogState = DialogState.None,
+                        questDoneDialogState = currentState.questDoneDialogState.copy(
+                            xp = 0,
+                            points = 0,
+                            newLevel = 0,
+                            questName = ""
+                        )
+                    )
                 }
             }
 
@@ -157,6 +183,29 @@ class QuestOverviewViewModel @Inject constructor(
                 }
             }
 
+            is QuestOverviewUiEvent.UpdateQuestCategory -> {
+                viewModelScope.launch {
+                    _selectedCategoryForUpdating.value?.let { selectedCategory ->
+                        updateQuestCategoryUseCase.invoke(
+                            id = selectedCategory.id,
+                            value = event.value
+                        )
+                    }
+                }
+            }
+
+            is QuestOverviewUiEvent.UpdateQuestSortingDirection -> {
+                viewModelScope.launch {
+                    saveQuestSortingDirectionUseCase.invoke(event.sortingDirections)
+                }
+            }
+
+            is QuestOverviewUiEvent.UpdateShowCompletedQuests -> {
+                viewModelScope.launch {
+                    updateShowCompletedQuestsUseCase.invoke(value = event.value)
+                }
+            }
+
             else -> Unit
         }
     }
@@ -166,106 +215,4 @@ class QuestOverviewViewModel @Inject constructor(
             _effect.send(effect)
         }
     }
-
-    fun updateQuestCategory(newText: String) {
-        viewModelScope.launch {
-            _selectedCategoryForUpdating.value?.let { selectedCategory ->
-                updateQuestCategoryUseCase.invoke(
-                    id = selectedCategory.id,
-                    value = newText
-                )
-            }
-        }
-    }
-
-    fun setQuestDone(quest: QuestEntity, context: Context) {
-        viewModelScope.launch {
-            launch {
-                val result = completeQuestUseCase(quest)
-
-                _uiState.update {
-                    it.copy(
-                        dialogState = DialogState.QuestDone,
-                        questDoneDialogState = it.questDoneDialogState.copy(
-                            xp = result.earnedXp,
-                            points = result.earnedPoints,
-                            newLevel = if (result.didLevelUp) result.newLevel else 0,
-                            questName = quest.title
-                        )
-                    )
-                }
-            }
-
-            launch {
-                val notifications = getNotificationsByQuestIdUseCase.invoke(quest.id)
-                val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-                notifications.forEach { notification ->
-                    val intent = Intent(context, QuestNotificationReceiver::class.java)
-
-                    val pendingIntent = PendingIntent.getBroadcast(
-                        context,
-                        notification.id,
-                        intent,
-                        PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-
-                    if (pendingIntent != null) {
-                        alarmManager.cancel(pendingIntent)
-                    }
-                }
-
-                removeNotificationsUseCase.invoke(id = quest.id)
-            }
-        }
-    }
-
-    fun updateQuestSortingDirection(sortingDirection: SortingDirections) {
-        viewModelScope.launch {
-            saveQuestSortingDirectionUseCase.invoke(sortingDirections = sortingDirection)
-        }
-    }
-
-    fun updateShowCompletedQuests(showCompletedQuests: Boolean) {
-        viewModelScope.launch {
-            updateShowCompletedQuestsUseCase.invoke(value = showCompletedQuests)
-        }
-    }
-
-    fun hideQuestDoneDialog() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                dialogState = DialogState.None,
-                questDoneDialogState = currentState.questDoneDialogState.copy(
-                    xp = 0,
-                    points = 0,
-                    newLevel = 0,
-                    questName = ""
-                )
-            )
-        }
-    }
-
-
-    fun showUpdateCategoryDialog(questCategory: QuestCategoryEntity? = null) {
-        _selectedCategoryForUpdating.value = questCategory
-
-        _uiState.update {
-            it.copy(
-                dialogState = DialogState.UpdateCategory,
-            )
-        }
-    }
-
-    fun hideUpdateCategoryDialog() {
-        _selectedCategoryForUpdating.value = null
-
-        _uiState.update {
-            it.copy(
-                dialogState = DialogState.None,
-            )
-        }
-    }
-
-
 }

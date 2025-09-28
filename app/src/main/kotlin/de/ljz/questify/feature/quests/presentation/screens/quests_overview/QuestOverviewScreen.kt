@@ -1,34 +1,22 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.clearText
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,7 +30,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,7 +43,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -158,14 +144,8 @@ private fun QuestOverviewContent(
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
 
-    var fabMenuExpanded by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     var dropdownExpanded by remember { mutableStateOf(false) }
-
-    BackHandler(fabMenuExpanded) { fabMenuExpanded = false }
-
-    val textFieldState = rememberTextFieldState()
-    val searchBarState = rememberSearchBarState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -180,49 +160,6 @@ private fun QuestOverviewContent(
             }
         }
     }
-
-    val inputField =
-        @Composable {
-            SearchBarDefaults.InputField(
-                searchBarState = searchBarState,
-                textFieldState = textFieldState,
-                onSearch = {
-                    // TODO
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.search_quests_title)
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
-                    )
-                },
-                trailingIcon = {
-                    AnimatedVisibility(
-                        visible = searchBarState.progress >= 0.5f,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        FilledTonalIconButton(
-                            onClick = {
-                                scope.launch {
-                                    searchBarState.animateToCollapsed()
-                                    textFieldState.clearText()
-                                }
-                            },
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-            )
-        }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -246,7 +183,7 @@ private fun QuestOverviewContent(
                     }
                 },
                 actions = {
-                    BasicPlainTooltip(
+                    /*BasicPlainTooltip(
                         text = "Suche",
                         position = TooltipAnchorPosition.Below
                     ) {
@@ -260,7 +197,7 @@ private fun QuestOverviewContent(
                                 contentDescription = null
                             )
                         }
-                    }
+                    }*/
 
                     BasicPlainTooltip(
                         text = "Weitere Optionen",
@@ -275,8 +212,7 @@ private fun QuestOverviewContent(
 
                     DropdownMenu(
                         expanded = dropdownExpanded,
-                        onDismissRequest = { dropdownExpanded = false },
-                        shape = RoundedCornerShape(10.dp)
+                        onDismissRequest = { dropdownExpanded = false }
                     ) {
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.quest_overview_screen_dropdown_sort_title)) },
@@ -289,11 +225,7 @@ private fun QuestOverviewContent(
                             onClick = {
                                 dropdownExpanded = false
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
-                            },
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .clip(RoundedCornerShape(10.dp))
+                            }
                         )
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.quest_overview_screen_dropdown_manage_list_title)) },
@@ -306,11 +238,7 @@ private fun QuestOverviewContent(
                             onClick = {
                                 dropdownExpanded = false
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.ManageCategoriesBottomSheet))
-                            },
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .clip(RoundedCornerShape(10.dp))
+                            }
                         )
                     }
                 },
@@ -421,7 +349,7 @@ private fun QuestOverviewContent(
                                 onQuestChecked = { quest ->
                                     onUiEvent(
                                         QuestOverviewUiEvent.OnQuestChecked(
-                                            id = quest.id
+                                            questEntity = quest
                                         )
                                     )
                                 },
@@ -435,10 +363,10 @@ private fun QuestOverviewContent(
                                 QuestsForCategoryPage(
                                     categoryId = category.id,
                                     onNavigateToQuestDetailScreen = {
-
+                                        onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(it))
                                     },
                                     onQuestDone = {
-                                        onUiEvent(QuestOverviewUiEvent.OnQuestChecked(it.id))
+                                        onUiEvent(QuestOverviewUiEvent.OnQuestChecked(it))
                                     },
                                     modifier = Modifier.fillMaxSize()
                                 )
@@ -464,12 +392,11 @@ private fun QuestOverviewContent(
                     },
                     sortingDirection = allQuestPageState.sortingDirections,
                     showCompletedQuests = allQuestPageState.showCompleted,
-                    onSortingDirectionChanged = { /*viewModel::updateQuestSortingDirection*/ },
+                    onSortingDirectionChanged = { sortingDirection ->
+                        onUiEvent(QuestOverviewUiEvent.UpdateQuestSortingDirection(sortingDirection))
+                    },
                     onShowCompletedQuestsChanged = { showCompletedQuests ->
-                        /*viewModel.updateShowCompletedQuests(showCompletedQuests)
-                        if (!showCompletedQuests && allQuestPageState.sortingBy == QuestSorting.DONE) {
-                            viewModel.updateQuestSorting(QuestSorting.ID)
-                        }*/
+                        onUiEvent(QuestOverviewUiEvent.UpdateShowCompletedQuests(value = showCompletedQuests))
                     }
                 )
             }
@@ -505,8 +432,8 @@ private fun QuestOverviewContent(
                 UpdateCategoryDialog(
                     questCategory = selectedCategoryForUpdating,
                     onConfirm = { listText ->
-//                        viewModel.updateQuestCategory(listText)
-//                        viewModel.hideUpdateCategoryDialog()
+                        onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = listText))
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     onDismiss = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
