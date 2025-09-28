@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -28,7 +29,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -82,7 +83,6 @@ fun PermissionsScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.loadPermissionData(context)
 
-        // Auf Events vom ViewModel hören (z.B. um einen Launcher zu starten)
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is PermissionEvent.LaunchIntent -> intentLauncher.launch(event.intent)
@@ -94,8 +94,13 @@ fun PermissionsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.permission_screen_title)) },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.permission_screen_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     if (canNavigateBack) {
                         IconButton(onClick = { mainNavController.navigateUp() }) {
@@ -109,7 +114,6 @@ fun PermissionsScreen(
             )
         },
         bottomBar = {
-            // Button zum Neustarten der App nur anzeigen, wenn man nicht zurück navigieren kann (z.B. beim First-Setup)
             if (!canNavigateBack) {
                 AppButton(
                     onClick = { restartApp(context) },

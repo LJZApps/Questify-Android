@@ -5,6 +5,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
@@ -18,6 +19,7 @@ fun BasicRichTooltip(
     dismissText: String,
     initialIsVisible: Boolean = false,
     isPersistent: Boolean = false,
+    positioning: TooltipAnchorPosition = TooltipAnchorPosition.Above,
     content: @Composable () -> Unit
 ) {
     val tooltipState = rememberTooltipState(
@@ -27,7 +29,9 @@ fun BasicRichTooltip(
 
     TooltipBox(
         state = tooltipState,
-        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+            positioning = positioning
+        ),
         tooltip = {
             RichTooltip(
                 title = { Text(title) },

@@ -226,90 +226,6 @@ private fun QuestOverviewContent(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        /*topBar = {
-            AppBarWithSearch(
-                state = searchBarState,
-                inputField = inputField,
-                colors =
-                    SearchBarDefaults.appBarWithSearchColors(
-                        appBarContainerColor = Color.Transparent
-                    ),
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onUiEvent(QuestOverviewUiEvent.ToggleDrawer)
-                        },
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-                actions = {
-                    NarrowIconButton(
-                        onClick = { dropdownExpanded = true }
-                    ) {
-                        Icon(Icons.Default.MoreVert, contentDescription = null)
-                    }
-
-                    DropdownMenu(
-                        expanded = dropdownExpanded,
-                        onDismissRequest = { dropdownExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.quest_overview_screen_dropdown_sort_title)) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.FilterAlt,
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = {
-                                dropdownExpanded = false
-                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.quest_overview_screen_dropdown_manage_list_title)) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Default.Label,
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = {
-                                dropdownExpanded = false
-                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.ManageCategoriesBottomSheet))
-                            }
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
-            )
-            ExpandedFullScreenSearchBar(state = searchBarState, inputField = inputField) {
-                ExpressiveSettingsSection(
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    uiState.allQuestPageState.quests
-                        .filter {
-                            it.quest.title.contains(
-                                textFieldState.text,
-                                ignoreCase = true
-                            ) || it.quest.notes?.contains(textFieldState.text, ignoreCase = true) == true
-                        }
-                        .forEach { questEntity ->
-                            ExpressiveMenuItem(
-                                title = questEntity.quest.title,
-                                onClick = {
-                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(entryId = questEntity.quest.id))
-                                }
-                            )
-                        }
-                }
-            }
-        },*/
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
@@ -347,7 +263,7 @@ private fun QuestOverviewContent(
                     }
 
                     BasicPlainTooltip(
-                        text = "Mehr",
+                        text = "Weitere Optionen",
                         position = TooltipAnchorPosition.Below
                     ) {
                         IconButton(
