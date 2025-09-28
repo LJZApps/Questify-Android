@@ -7,18 +7,22 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.domain.repositories.app.SortingPreferencesRepository
+import de.ljz.questify.core.domain.use_cases.GetSortingPreferencesUseCase
+import de.ljz.questify.core.domain.use_cases.SaveQuestSortingDirectionUseCase
+import de.ljz.questify.core.domain.use_cases.UpdateShowCompletedQuestsUseCase
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
-import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestsUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetNotificationsByQuestIdUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.RemoveNotificationsUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.UpdateQuestCategoryUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,16 +35,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestOverviewViewModel @Inject constructor(
-    private val questRepository: QuestRepository,
-    private val questNotificationRepository: QuestNotificationRepository,
-    private val sortingPreferencesRepository: SortingPreferencesRepository,
-    private val questCategoryRepository: QuestCategoryRepository,
-
+    private val getAllQuestsUseCase: GetAllQuestsUseCase,
     private val completeQuestUseCase: CompleteQuestUseCase,
     private val deleteQuestUseCase: DeleteQuestUseCase,
 
+    private val getAllQuestCategoriesUseCase: GetAllQuestCategoriesUseCase,
     private val deleteQuestCategoryUseCase: DeleteQuestCategoryUseCase,
-    private val addQuestCategoryUseCase: AddQuestCategoryUseCase
+    private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
+    private val updateQuestCategoryUseCase: UpdateQuestCategoryUseCase,
+
+    private val getNotificationsByQuestIdUseCase: GetNotificationsByQuestIdUseCase,
+    private val removeNotificationsUseCase: RemoveNotificationsUseCase,
+
+    private val getQuestSortingPreferencesUseCase: GetSortingPreferencesUseCase,
+    private val saveQuestSortingDirectionUseCase: SaveQuestSortingDirectionUseCase,
+    private val updateShowCompletedQuestsUseCase: UpdateShowCompletedQuestsUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = QuestOverviewUIState(
@@ -64,7 +73,8 @@ class QuestOverviewViewModel @Inject constructor(
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
 
     private val _selectedCategoryForUpdating = MutableStateFlow<QuestCategoryEntity?>(null)
-    val selectedCategoryForUpdating: StateFlow<QuestCategoryEntity?> = _selectedCategoryForUpdating.asStateFlow()
+    val selectedCategoryForUpdating: StateFlow<QuestCategoryEntity?> =
+        _selectedCategoryForUpdating.asStateFlow()
 
     private val _effect = Channel<QuestOverviewUiEffect>()
     val effect = _effect.receiveAsFlow()
@@ -72,13 +82,13 @@ class QuestOverviewViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                questRepository.getQuests().collectLatest { quests ->
+                getAllQuestsUseCase().collectLatest { quests ->
                     _uiState.update { it.copy(allQuestPageState = it.allQuestPageState.copy(quests = quests)) }
                 }
             }
 
             launch {
-                sortingPreferencesRepository.getQuestSortingPreferences()
+                getQuestSortingPreferencesUseCase()
                     .collectLatest { sortingPreferences ->
                         _uiState.update {
                             it.copy(
@@ -92,10 +102,9 @@ class QuestOverviewViewModel @Inject constructor(
             }
 
             launch {
-                questCategoryRepository.getAllQuestCategories()
-                    .collectLatest { questCategoryEntities ->
-                        _categories.value = questCategoryEntities
-                    }
+                getAllQuestCategoriesUseCase().collectLatest { questCategoryEntities ->
+                    _categories.value = questCategoryEntities
+                }
             }
         }
     }
@@ -161,8 +170,10 @@ class QuestOverviewViewModel @Inject constructor(
     fun updateQuestCategory(newText: String) {
         viewModelScope.launch {
             _selectedCategoryForUpdating.value?.let { selectedCategory ->
-                questCategoryRepository.updateQuestCategory(selectedCategory.id, newText)
-
+                updateQuestCategoryUseCase.invoke(
+                    id = selectedCategory.id,
+                    value = newText
+                )
             }
         }
     }
@@ -186,7 +197,7 @@ class QuestOverviewViewModel @Inject constructor(
             }
 
             launch {
-                val notifications = questNotificationRepository.getNotificationsByQuestId(quest.id)
+                val notifications = getNotificationsByQuestIdUseCase.invoke(quest.id)
                 val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
                 notifications.forEach { notification ->
@@ -204,20 +215,20 @@ class QuestOverviewViewModel @Inject constructor(
                     }
                 }
 
-                questNotificationRepository.removeNotifications(quest.id)
+                removeNotificationsUseCase.invoke(id = quest.id)
             }
         }
     }
 
     fun updateQuestSortingDirection(sortingDirection: SortingDirections) {
         viewModelScope.launch {
-            sortingPreferencesRepository.saveQuestSortingDirection(sortingDirection)
+            saveQuestSortingDirectionUseCase.invoke(sortingDirections = sortingDirection)
         }
     }
 
     fun updateShowCompletedQuests(showCompletedQuests: Boolean) {
         viewModelScope.launch {
-            sortingPreferencesRepository.saveShowCompletedQuests(showCompletedQuests)
+            updateShowCompletedQuestsUseCase.invoke(value = showCompletedQuests)
         }
     }
 
