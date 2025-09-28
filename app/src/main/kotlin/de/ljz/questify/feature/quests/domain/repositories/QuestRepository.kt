@@ -1,36 +1,17 @@
 package de.ljz.questify.feature.quests.domain.repositories
 
-import de.ljz.questify.core.domain.repositories.BaseRepository
 import de.ljz.questify.core.utils.Difficulty
-import de.ljz.questify.feature.quests.data.daos.QuestDao
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.relations.QuestWithSubQuests
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class QuestRepository @Inject constructor(
-    private val questDao: QuestDao
-) : BaseRepository() {
-    suspend fun addMainQuest(quest: QuestEntity): Long {
-        return questDao.upsertMainQuest(quest)
-    }
+interface QuestRepository {
+    suspend fun addMainQuest(quest: QuestEntity): Long
 
-    suspend fun setQuestDone(id: Int, done: Boolean) {
-        questDao.setQuestDone(id, done)
-    }
+    suspend fun setQuestDone(id: Int, done: Boolean)
 
-    suspend fun upsertQuests(quests: List<QuestEntity>) {
-        questDao.upsertQuests(quests)
-    }
-
-    suspend fun updateQuest(quest: QuestEntity) {
-        questDao.updateQuest(quest)
-    }
-
-    fun getCompletedQuestsCount(): Int {
-        return questDao.getCompletedQuestsCount()
-    }
+    suspend fun updateQuest(quest: QuestEntity)
 
     suspend fun updateQuest(
         id: Int,
@@ -39,26 +20,15 @@ class QuestRepository @Inject constructor(
         difficulty: Difficulty,
         dueDate: Date? = null,
         categoryId: Int? = null
-    ) {
-        questDao.updateQuestById(
-            id = id,
-            title = title,
-            description = description,
-            difficulty = difficulty,
-            dueDate = dueDate,
-            categoryId = categoryId
-        )
-    }
+    )
 
-    fun getQuests() = questDao.getAllQuests()
+    fun getQuests(): Flow<List<QuestWithSubQuests>>
 
-    fun getQuestById(id: Int) = questDao.getQuestById(id)
+    fun getQuestById(id: Int): QuestWithSubQuests
 
-    fun getQuestsForCategoryStream(categoryId: Int) = questDao.getQuestsForCategoryStream(categoryId)
+    fun getQuestsForCategoryStream(categoryId: Int): Flow<List<QuestWithSubQuests>>
 
-    suspend fun suspendGetQuestById(id: Int) = questDao.suspendGetQuestById(id)
+    fun getQuestByIdFlow(id: Int): Flow<QuestWithSubQuests?>
 
-    fun getQuestByIdFlow(id: Int) = questDao.getQuestByIdFlow(id)
-
-    suspend fun deleteQuest(id: Int) = questDao.deleteQuest(id)
+    suspend fun deleteQuest(id: Int)
 }

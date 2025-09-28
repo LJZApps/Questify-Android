@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object QuestCategoryDaoModule {
+object QuestCategoryModule {
 
     @Singleton
     @Provides
