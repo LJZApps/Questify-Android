@@ -6,7 +6,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestsForCategoryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = CategoryQuestViewModel.Factory::class)
 class CategoryQuestViewModel @AssistedInject constructor(
     @Assisted private val categoryId: Int,
-    private val questRepository: QuestRepository
+    private val getAllQuestsForCategoryUseCase: GetAllQuestsForCategoryUseCase
 ) : ViewModel() {
 
     @AssistedFactory
@@ -28,14 +28,10 @@ class CategoryQuestViewModel @AssistedInject constructor(
     val uiState: StateFlow<CategoryQuestsUiState> = _uiState.asStateFlow()
 
     init {
-        loadQuestsForCategory()
-    }
-
-    private fun loadQuestsForCategory() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            questRepository.getQuestsForCategoryStream(categoryId).collect { quests ->
+            getAllQuestsForCategoryUseCase.invoke(categoryId).collect { quests ->
                 _uiState.update {
                     it.copy(quests = quests, isLoading = false)
                 }

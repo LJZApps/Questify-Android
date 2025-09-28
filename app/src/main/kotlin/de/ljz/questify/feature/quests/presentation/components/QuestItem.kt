@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -100,20 +101,20 @@ fun QuestItem(
                 }
 
                 questWithSubQuests.subTasks.let { subTasks ->
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Checklist,
-                            contentDescription = null
-                        )
-
-                        Text(
-                            text = "${subTasks.count()} Unteraufgaben"
-                        )
-                    }
                     if (subTasks.isNotEmpty()) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Checklist,
+                                contentDescription = null
+                            )
+
+                            Text(
+                                text = "${subTasks.count()} Unteraufgaben"
+                            )
+                        }
                     }
                 }
 
@@ -168,34 +169,48 @@ fun QuestItem(
                 }
             }
 
-
-            BasicPlainTooltip(
-                text = "Bearbeiten",
-                position = TooltipAnchorPosition.Above
-            ) {
-                IconButton(
-                    onClick = onEditButtonClicked
+            if (!questWithSubQuests.quest.done) {
+                BasicPlainTooltip(
+                    text = "Bearbeiten",
+                    position = TooltipAnchorPosition.Above
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = null
-                    )
+                    IconButton(
+                        onClick = onEditButtonClicked
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
 
-            BasicPlainTooltip(
-                text = "Fertigstellen",
-                position = TooltipAnchorPosition.Above
-            ) {
-                FilledIconButton(
-                    onClick = onCheckButtonClicked
+            if (questWithSubQuests.quest.done) {
+                IconButton(
+                    onClick = {},
+                    enabled = false
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.CheckCircle,
+                        imageVector = Icons.Filled.CheckCircle,
                         contentDescription = null,
                     )
                 }
+            } else {
+                BasicPlainTooltip(
+                    text = "Fertigstellen",
+                    position = TooltipAnchorPosition.Above
+                ) {
+                    FilledIconButton(
+                        onClick = onCheckButtonClicked
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.CheckCircle,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
+
         }
     }
 }
