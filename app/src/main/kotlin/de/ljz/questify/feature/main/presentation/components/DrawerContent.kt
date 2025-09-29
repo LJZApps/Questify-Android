@@ -14,12 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Eco
-import androidx.compose.material.icons.outlined.EmojiEvents
-import androidx.compose.material.icons.outlined.EventRepeat
-import androidx.compose.material.icons.outlined.Leaderboard
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -76,17 +72,17 @@ fun DrawerContent(
             items = listOf(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_quests_title),
-                    icon = Icons.Outlined.TaskAlt,
+                    icon = painterResource(R.drawable.task_alt_24px),
                     route = QuestsRoute,
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_habits_title),
-                    icon = Icons.Outlined.Eco,
+                    icon = painterResource(R.drawable.eco_24px),
                     route = HabitsRoute
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_routines_title),
-                    icon = Icons.Outlined.EventRepeat,
+                    icon = painterResource(R.drawable.event_repeat_24px),
                     route = RoutinesOverviewRoute,
                 ),
             )
@@ -96,15 +92,15 @@ fun DrawerContent(
             items = listOf(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_stats_title),
-                    icon = Icons.Outlined.Leaderboard,
+                    icon = painterResource(R.drawable.leaderboard_24px),
                     route = StatsRoute
                 ),
-                NavigationItem(
+                /*NavigationItem(
                     title = stringResource(R.string.drawer_content_leaderboard_title),
                     icon = Icons.Outlined.EmojiEvents,
                     route = StatsRoute,
                     featureEnabled = false
-                ),
+                ),*/
             )
         ),
     )
@@ -217,7 +213,7 @@ fun DrawerContent(
                                 label = { Text(text = item.title) },
                                 icon = {
                                     Icon(
-                                        imageVector = item.icon,
+                                        painter = item.icon,
                                         contentDescription = item.title
                                     )
                                 },

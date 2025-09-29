@@ -1,10 +1,10 @@
 package de.ljz.questify.feature.main.presentation.components
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 
 data class NavigationItem<T : Any>(
     val title: String,
-    val icon: ImageVector,
+    val icon: Painter,
     /**
      * Disable/Enable only this feature
      */
