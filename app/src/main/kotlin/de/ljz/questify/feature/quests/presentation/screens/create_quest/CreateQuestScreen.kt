@@ -17,15 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Label
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -58,6 +49,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -136,7 +128,7 @@ fun CreateQuestScreen(
                             onClick = { mainNavController.navigateUp() },
                         ) {
                             Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
+                                painter = painterResource(R.drawable.ic_arrow_back),
                                 contentDescription = stringResource(R.string.back)
                             )
                         }
@@ -153,7 +145,7 @@ fun CreateQuestScreen(
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Default.MoreVert,
+                                painter = painterResource(R.drawable.ic_more_vert),
                                 contentDescription = null
                             )
                         }
@@ -167,7 +159,7 @@ fun CreateQuestScreen(
                             text = { Text("Liste") },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.Label,
+                                    painter = painterResource(R.drawable.ic_label_filled),
                                     contentDescription = null
                                 )
                             },
@@ -306,7 +298,7 @@ fun CreateQuestScreen(
                                 readOnly = true,
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Default.CalendarToday,
+                                        painter = painterResource(R.drawable.ic_calendar_today_filled),
                                         contentDescription = null
                                     )
                                 },
@@ -324,7 +316,7 @@ fun CreateQuestScreen(
                                 readOnly = true,
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = Icons.Default.Schedule,
+                                        painter = painterResource(R.drawable.ic_schedule_outlined),
                                         contentDescription = null
                                     )
                                 },
@@ -354,7 +346,7 @@ fun CreateQuestScreen(
                                         label = { Text(dateFormat.format(Date(triggerTime))) },
                                         leadingIcon = {
                                             Icon(
-                                                imageVector = Icons.Filled.Notifications,
+                                                painter = painterResource(R.drawable.ic_notifications_outlined),
                                                 contentDescription = null,
                                                 modifier = Modifier
                                                     .size(18.dp)
@@ -376,7 +368,7 @@ fun CreateQuestScreen(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Outlined.Add,
+                                    painter = painterResource(R.drawable.ic_add),
                                     contentDescription = null
                                 )
 
@@ -478,7 +470,7 @@ fun CreateQuestScreen(
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.DeleteOutline,
+                                            painter = painterResource(R.drawable.ic_delete_outlined),
                                             contentDescription = null
                                         )
                                     }
@@ -514,7 +506,7 @@ fun CreateQuestScreen(
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.DeleteOutline,
+                                            painter = painterResource(R.drawable.ic_delete_outlined),
                                             contentDescription = null
                                         )
                                     }
@@ -583,7 +575,7 @@ fun CreateQuestScreen(
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.DeleteOutline,
+                                            painter = painterResource(R.drawable.ic_delete_outlined),
                                             contentDescription = null
                                         )
                                     }
@@ -602,7 +594,7 @@ fun CreateQuestScreen(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Outlined.Add,
+                                    painter = painterResource(R.drawable.ic_add),
                                     contentDescription = null
                                 )
 

@@ -6,11 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Label
-import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -179,14 +174,14 @@ private fun QuestOverviewScreen(
                             },
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Menu,
+                                painter = painterResource(R.drawable.ic_menu),
                                 contentDescription = "Localized description"
                             )
                         }
                     }
                 },
                 actions = {
-                    /*BasicPlainTooltip(
+                    BasicPlainTooltip(
                         text = "Suche",
                         position = TooltipAnchorPosition.Below
                     ) {
@@ -196,11 +191,11 @@ private fun QuestOverviewScreen(
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.Search,
+                                painter = painterResource(R.drawable.ic_search),
                                 contentDescription = null
                             )
                         }
-                    }*/
+                    }
 
                     BasicPlainTooltip(
                         text = "Weitere Optionen",
@@ -209,7 +204,10 @@ private fun QuestOverviewScreen(
                         IconButton(
                             onClick = { dropdownExpanded = true }
                         ) {
-                            Icon(Icons.Default.MoreVert, contentDescription = null)
+                            Icon(
+                                painter = painterResource(R.drawable.ic_more_vert),
+                                contentDescription = null
+                            )
                         }
                     }
 
@@ -221,7 +219,7 @@ private fun QuestOverviewScreen(
                             text = { Text(stringResource(R.string.quest_overview_screen_dropdown_sort_title)) },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.Default.FilterAlt,
+                                    painter = painterResource(R.drawable.ic_filter_alt_filled),
                                     contentDescription = null
                                 )
                             },
@@ -230,11 +228,12 @@ private fun QuestOverviewScreen(
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
                             }
                         )
+
                         DropdownMenuItem(
                             text = { Text(stringResource(R.string.quest_overview_screen_dropdown_manage_list_title)) },
                             leadingIcon = {
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Default.Label,
+                                    painter = painterResource(R.drawable.ic_label_filled),
                                     contentDescription = null
                                 )
                             },
@@ -270,7 +269,7 @@ private fun QuestOverviewScreen(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.add_24px),
+                        painter = painterResource(R.drawable.ic_add),
                         contentDescription = null,
                     )
                 }
@@ -323,7 +322,7 @@ private fun QuestOverviewScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.add_24px),
+                                        painter = painterResource(R.drawable.ic_add),
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onSurface
                                     )

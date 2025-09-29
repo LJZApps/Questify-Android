@@ -80,7 +80,7 @@ fun AllQuestsPage(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Icon(
-                painter = painterResource(R.drawable.task_alt_24px),
+                painter = painterResource(R.drawable.ic_task_alt_outlined),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier
