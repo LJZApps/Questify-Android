@@ -40,7 +40,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.QuickSettingPage
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.UserSetupPage
@@ -71,10 +70,6 @@ fun FirstSetupScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         viewModel.updateImageUri(uri)
-    }
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
     }
 
     BackHandler {

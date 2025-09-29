@@ -30,7 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +46,6 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
-import de.ljz.questify.core.utils.NavBarConfig
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -61,7 +59,7 @@ fun EditProfileScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
-    EditProfileScreenContent(
+    EditProfileScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
@@ -75,7 +73,7 @@ fun EditProfileScreen(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun EditProfileScreenContent(
+private fun EditProfileScreen(
     uiState: EditProfileUiState,
     onUiEvent: (EditProfileUiEvent) -> Unit
 ) {
@@ -85,10 +83,6 @@ private fun EditProfileScreenContent(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         onUiEvent.invoke(EditProfileUiEvent.UpdateProfilePicture(uri.toString()))
-    }
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
     }
 
     Scaffold(

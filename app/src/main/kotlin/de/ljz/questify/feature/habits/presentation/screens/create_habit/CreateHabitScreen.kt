@@ -68,7 +68,7 @@ fun CreateHabitScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
-    CreateHabitScreenContent(
+    CreateHabitScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
@@ -80,7 +80,7 @@ fun CreateHabitScreen(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateHabitScreenContent(
+private fun CreateHabitScreen(
     uiState: CreateHabitUiState,
     onUiEvent: (CreateHabitUiEvent) -> Unit
 ) {

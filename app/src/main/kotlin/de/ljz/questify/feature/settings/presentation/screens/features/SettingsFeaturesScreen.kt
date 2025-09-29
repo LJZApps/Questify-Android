@@ -31,7 +31,7 @@ fun SettingsFeaturesScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
-    SettingsFeaturesScreenContent(
+    SettingsFeaturesScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
@@ -47,7 +47,7 @@ fun SettingsFeaturesScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun SettingsFeaturesScreenContent(
+private fun SettingsFeaturesScreen(
     uiState: SettingsFeaturesUiState,
     onUiEvent: (SettingsFeaturesUiEvent) -> Unit
 ) {

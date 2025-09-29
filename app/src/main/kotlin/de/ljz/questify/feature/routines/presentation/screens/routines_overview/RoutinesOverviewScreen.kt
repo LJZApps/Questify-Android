@@ -41,7 +41,7 @@ fun RoutinesOverviewScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    RoutinesOverviewContent(
+    RoutinesOverviewScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
@@ -54,7 +54,7 @@ fun RoutinesOverviewScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun RoutinesOverviewContent(
+private fun RoutinesOverviewScreen(
     uiState: RoutinesOverviewUiState,
     onUiEvent: (RoutinesOverviewUiEvent) -> Unit
 ) {

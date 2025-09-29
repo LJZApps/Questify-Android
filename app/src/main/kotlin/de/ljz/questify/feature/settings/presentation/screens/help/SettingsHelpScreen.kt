@@ -39,7 +39,7 @@ fun SettingsHelpScreen(
 ) {
     val context = LocalActivity.current as Activity
 
-    SettingsHelpScreenContent(
+    SettingsHelpScreen(
         onUiEvent = { event ->
             when (event) {
                 is SettingsHelpUiEvent.NavigateUp -> mainNavController.navigateUp()
@@ -78,7 +78,7 @@ fun SettingsHelpScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun SettingsHelpScreenContent(
+private fun SettingsHelpScreen(
     onUiEvent: (SettingsHelpUiEvent) -> Unit
 ) {
     Scaffold(

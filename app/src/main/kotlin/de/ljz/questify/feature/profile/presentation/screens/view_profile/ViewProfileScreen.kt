@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.profile.presentation.screens.edit_profile.EditProfileRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -50,10 +48,6 @@ fun ViewProfileScreen(
     viewModel: ViewProfileViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
-    }
 
     Scaffold(
         topBar = {

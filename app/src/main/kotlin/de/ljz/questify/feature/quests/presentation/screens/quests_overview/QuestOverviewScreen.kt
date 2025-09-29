@@ -86,7 +86,7 @@ fun QuestOverviewScreen(
     val scope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
 
-    QuestOverviewContent(
+    QuestOverviewScreen(
         uiState = uiState,
         categories = categories,
         selectedCategoryForUpdating = selectedCategoryForUpdating,
@@ -119,7 +119,7 @@ fun QuestOverviewScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun QuestOverviewContent(
+private fun QuestOverviewScreen(
     uiState: QuestOverviewUIState,
     categories: List<QuestCategoryEntity>,
     selectedCategoryForUpdating: QuestCategoryEntity? = null,

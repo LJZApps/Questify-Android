@@ -52,7 +52,7 @@ fun StatsScreen(
 
     val scope = rememberCoroutineScope()
 
-    StatsScreenContent(
+    StatsScreen(
         uiState = uiState
     ) { event ->
         when (event) {
@@ -72,7 +72,7 @@ fun StatsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun StatsScreenContent(
+private fun StatsScreen(
     uiState: StatsUiState,
     onUiEvent: (StatsUiEvent) -> Unit
 ) {

@@ -72,7 +72,6 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.utils.MaxWidth
-import de.ljz.questify.core.utils.NavBarConfig
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
@@ -110,10 +109,6 @@ fun QuestDetailScreen(
     val context = LocalContext.current
     val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        NavBarConfig.transparentNavBar = true
-    }
 
     Scaffold(
         topBar = {
