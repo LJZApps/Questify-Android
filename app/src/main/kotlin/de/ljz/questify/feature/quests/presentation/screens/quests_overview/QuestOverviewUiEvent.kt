@@ -19,6 +19,7 @@ sealed interface QuestOverviewUiEvent {
 
     data class OnNavigateToQuestDetailScreen(val entryId: Int) : QuestOverviewUiEvent
     data class OnNavigateToCreateQuestScreen(val categoryId: Int? = null) : QuestOverviewUiEvent
+    data class OnNavigateToEditQuestScreen(val id: Int) : QuestOverviewUiEvent
 
     data class AddQuestCategory(val value: String): QuestOverviewUiEvent
     data class DeleteQuestCategory(val questCategoryEntity: QuestCategoryEntity) : QuestOverviewUiEvent

@@ -18,13 +18,7 @@ class ThemeViewModel @Inject constructor(
         .map { settings ->
             // Wandelt das Einstellungs-Objekt direkt in den UI-State um
             ThemeUiState(
-                themeBehavior = settings.themeBehavior,
-                themeColor = settings.themeColor,
-                dynamicColorsEnabled = settings.dynamicThemeColors,
-                themingEngine = settings.themingEngine,
-                isAmoled = settings.isAmoled,
-                themeStyle = settings.themeStyle,
-                appColor = settings.appColor
+                themeBehavior = settings.themeBehavior
             )
         }
         .stateIn(

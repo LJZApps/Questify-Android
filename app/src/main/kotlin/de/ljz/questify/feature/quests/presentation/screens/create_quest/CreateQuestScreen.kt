@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -54,7 +53,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -164,7 +162,6 @@ fun CreateQuestScreen(
                     DropdownMenu(
                         expanded = dropdownExpanded,
                         onDismissRequest = { dropdownExpanded = false },
-                        shape = RoundedCornerShape(10.dp)
                     ) {
                         DropdownMenuItem(
                             text = { Text("Liste") },
@@ -175,13 +172,10 @@ fun CreateQuestScreen(
                                 )
                             },
                             onClick = {
-                                /*dropdownExpanded = false
-                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))*/
-                            },
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .clip(RoundedCornerShape(10.dp))
+                                dropdownExpanded = false
+                                viewModel.showSelectCategoryDialog()
+//                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
+                            }
                         )
                     }
                 }

@@ -15,7 +15,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
+import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdUseCase
 import kotlinx.coroutines.flow.collectLatest
 
 @HiltWorker
@@ -23,7 +23,7 @@ class QuestNotificationWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val questNotificationRepository: QuestNotificationRepository,
-    private val questRepository: QuestRepository
+    private val getQuestByIdUseCase: GetQuestByIdUseCase
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -31,20 +31,21 @@ class QuestNotificationWorker @AssistedInject constructor(
 
         notifications.collectLatest { notificationsList ->
             notificationsList.forEach { notification ->
-                val questWithSubQuests = questRepository.getQuestById(notification.questId)
-                if (!notification.notified && !questWithSubQuests.quest.done) scheduleNotification(
-                    context,
-                    notification
-                )
+                val questWithSubQuests = getQuestByIdUseCase.invoke(notification.questId)
+                if (!notification.notified && !questWithSubQuests.quest.done)
+                    scheduleNotification(
+                        context = context,
+                        notification = notification
+                    )
             }
         }
 
         return Result.success()
     }
 
-    private fun scheduleNotification(context: Context, notification: QuestNotificationEntity) {
+    private suspend fun scheduleNotification(context: Context, notification: QuestNotificationEntity) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val quest = questRepository.getQuestById(notification.questId)
+        val quest = getQuestByIdUseCase.invoke(notification.questId)
 
         val intent = Intent(context, QuestNotificationReceiver::class.java).apply {
             putExtra("notificationId", notification.id)

@@ -7,7 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -27,10 +26,7 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
-import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSwitch
 import de.ljz.questify.feature.settings.data.models.ThemeBehavior
-import de.ljz.questify.feature.settings.presentation.dialogs.ColorPickerDialog
-import de.ljz.questify.feature.settings.presentation.dialogs.PaletteStyleDialog
 import de.ljz.questify.feature.settings.presentation.dialogs.ThemeBehaviorDialog
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -129,52 +125,6 @@ private fun SettingsAppearanceScreen(
                     onUiEvent.invoke(SettingsAppearanceUiEvent.ShowDarkModeDialog)
                 }
             )
-
-            ExpressiveSettingsSwitch(
-                state = uiState.isAmoled,
-                title = stringResource(R.string.settings_appearance_screen_amoled_title),
-                subtitle = stringResource(R.string.settings_appearance_screen_amoled_description),
-                icon = { Icon(Icons.Outlined.Contrast, contentDescription = null) },
-                onCheckedChange = { enabled ->
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateIsAmoledEnabled(enabled))
-                },
-            )
-
-            /*AnimatedVisibility(!uiState.dynamicColorsEnabled) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-
-
-                    ExpressiveSettingsMenuLink(
-                        title = stringResource(R.string.settings_appearance_screen_theme_style_title),
-                        subtitle = PaletteStyle.entries.first { it.ordinal == uiState.paletteStyle.ordinal }.name,
-                        icon = { Icon(Icons.Outlined.Style, contentDescription = null) },
-                        onClick = {
-                            onUiEvent.invoke(SettingsAppearanceUiEvent.ShowPaletteStyleDialog)
-                        }
-                    )
-
-                    if (uiState.paletteStyle != PaletteStyle.Monochrome) {
-                        ExpressiveSettingsMenuLink(
-                            title = stringResource(R.string.settings_appearance_screen_app_tint_title),
-                            subtitle = stringResource(R.string.settings_appearance_screen_app_tint_description),
-                            icon = {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(vertical = 8.dp)
-                                        .size(24.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(uiState.appColor.toColorInt()))
-                                )
-                            },
-                            onClick = {
-                                onUiEvent.invoke(SettingsAppearanceUiEvent.ShowColorPickerDialog)
-                            }
-                        )
-                    }
-                }
-            }*/
         }
 
         if (uiState.darkModeDialogVisible) {
@@ -186,32 +136,6 @@ private fun SettingsAppearanceScreen(
                 },
                 onDismiss = {
                     onUiEvent.invoke(SettingsAppearanceUiEvent.HideDarkModeDialog)
-                }
-            )
-        }
-
-        if (uiState.paletteStyleDialogVisible) {
-            PaletteStyleDialog(
-                paletteStyle = uiState.paletteStyle,
-                onConfirm = { style ->
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdatePaletteStyle(style))
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.HidePaletteStyleDialog)
-                },
-                onDismiss = {
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.HidePaletteStyleDialog)
-                }
-            )
-        }
-
-        if (uiState.colorPickerDialogVisible) {
-            ColorPickerDialog(
-                appColor = uiState.appColor,
-                onConfirm = { color ->
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.UpdateAppColor(color))
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.HideColorPickerDialog)
-                },
-                onDismiss = {
-                    onUiEvent.invoke(SettingsAppearanceUiEvent.HideColorPickerDialog)
                 }
             )
         }

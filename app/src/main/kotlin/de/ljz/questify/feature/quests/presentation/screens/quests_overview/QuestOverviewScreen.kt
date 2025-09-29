@@ -76,6 +76,7 @@ fun QuestOverviewScreen(
     viewModel: QuestOverviewViewModel = hiltViewModel(),
     onNavigateToQuestDetailScreen: (Int) -> Unit,
     onNavigateToCreateQuestScreen: (Int?) -> Unit,
+    onNavigateToEditQuestScreen: (Int) -> Unit,
     onToggleDrawer: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -103,6 +104,10 @@ fun QuestOverviewScreen(
 
                 is QuestOverviewUiEvent.OnNavigateToCreateQuestScreen -> {
                     onNavigateToCreateQuestScreen(event.categoryId)
+                }
+
+                is QuestOverviewUiEvent.OnNavigateToEditQuestScreen -> {
+                    onNavigateToEditQuestScreen(event.id)
                 }
 
                 is QuestOverviewUiEvent.PerformHapticFeedback -> {
@@ -341,14 +346,19 @@ private fun QuestOverviewScreen(
                         if (pageIndex == 0) {
                             AllQuestsPage(
                                 state = uiState.allQuestPageState,
-                                onNavigateToQuestDetailScreen = {
-                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(it))
+                                onEditQuest = {
+                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToEditQuestScreen(it))
                                 },
                                 onQuestChecked = { quest ->
                                     onUiEvent(
                                         QuestOverviewUiEvent.OnQuestChecked(
                                             questEntity = quest
                                         )
+                                    )
+                                },
+                                onQuestClicked = { id ->
+                                    onUiEvent(
+                                        QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(entryId = id)
                                     )
                                 },
                                 modifier = Modifier.fillMaxSize()

@@ -24,12 +24,7 @@ class SettingsAppearanceViewModel @Inject constructor(
             appSettingsRepository.getAppSettings().collectLatest { settings ->
                 _uiState.update {
                     it.copy(
-                        isAmoled = settings.isAmoled,
-                        appColor = settings.appColor,
-                        themeBehavior = settings.themeBehavior,
-                        themeColor = settings.themeColor,
-                        dynamicColorsEnabled = settings.dynamicThemeColors,
-                        paletteStyle = settings.themeStyle
+                        themeBehavior = settings.themeBehavior
                     )
                 }
             }
@@ -38,11 +33,6 @@ class SettingsAppearanceViewModel @Inject constructor(
 
     fun onUiEvent(event: SettingsAppearanceUiEvent) {
         when(event) {
-            is SettingsAppearanceUiEvent.UpdateDynamicColorsEnabled -> {
-                viewModelScope.launch {
-                    appSettingsRepository.setDynamicColorsEnabled(event.enabled)
-                }
-            }
 
             is SettingsAppearanceUiEvent.ShowDarkModeDialog -> {
                 _uiState.update {
@@ -60,59 +50,9 @@ class SettingsAppearanceViewModel @Inject constructor(
                 }
             }
 
-            is SettingsAppearanceUiEvent.UpdateIsAmoledEnabled -> {
-                viewModelScope.launch {
-                    appSettingsRepository.isAmoledEnabled(event.enabled)
-                }
-            }
-
-            is SettingsAppearanceUiEvent.ShowPaletteStyleDialog -> {
-                _uiState.update {
-                    it.copy(
-                        paletteStyleDialogVisible = true
-                    )
-                }
-            }
-
-            is SettingsAppearanceUiEvent.HidePaletteStyleDialog -> {
-                _uiState.update {
-                    it.copy(
-                        paletteStyleDialogVisible = false
-                    )
-                }
-            }
-
-            is SettingsAppearanceUiEvent.ShowColorPickerDialog -> {
-                _uiState.update {
-                    it.copy(
-                        colorPickerDialogVisible = true
-                    )
-                }
-            }
-
-            is SettingsAppearanceUiEvent.HideColorPickerDialog -> {
-                _uiState.update {
-                    it.copy(
-                        colorPickerDialogVisible = false
-                    )
-                }
-            }
-
             is SettingsAppearanceUiEvent.UpdateThemeBehavior -> {
                 viewModelScope.launch {
                     appSettingsRepository.setDarkModeBehavior(event.behavior)
-                }
-            }
-
-            is SettingsAppearanceUiEvent.UpdatePaletteStyle -> {
-                viewModelScope.launch {
-                    appSettingsRepository.setThemeStyle(event.style)
-                }
-            }
-
-            is SettingsAppearanceUiEvent.UpdateAppColor -> {
-                viewModelScope.launch {
-                    appSettingsRepository.setAppColor(event.color)
                 }
             }
 

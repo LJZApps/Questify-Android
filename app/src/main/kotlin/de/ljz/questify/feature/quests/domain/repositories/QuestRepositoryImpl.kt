@@ -41,11 +41,11 @@ class QuestRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getQuests(): Flow<List<QuestWithSubQuests>> {
+    override suspend fun getQuests(): Flow<List<QuestWithSubQuests>> {
         return questDao.getAllQuests()
     }
 
-    override fun getQuestById(id: Int): QuestWithSubQuests {
+    override suspend fun getQuestById(id: Int): QuestWithSubQuests {
         return questDao.getQuestById(id)
     }
 

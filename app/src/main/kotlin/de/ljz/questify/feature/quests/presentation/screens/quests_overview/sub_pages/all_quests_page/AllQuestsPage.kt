@@ -39,8 +39,9 @@ import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQu
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
     state: AllQuestPageState,
-    onNavigateToQuestDetailScreen: (Int) -> Unit,
+    onEditQuest: (Int) -> Unit,
     onQuestChecked: (QuestEntity) -> Unit,
+    onQuestClicked: (Int) -> Unit,
 ) {
     val quests = state.quests
         .filter { quest -> state.showCompleted || !quest.quest.done }
@@ -64,10 +65,10 @@ fun AllQuestsPage(
                         onQuestChecked(quest.quest)
                     },
                     onEditButtonClicked = {
-                        onNavigateToQuestDetailScreen(quest.quest.id)
+                        onEditQuest(quest.quest.id)
                     },
                     onClick = {
-
+                        onQuestClicked(quest.quest.id)
                     }
                 )
             }

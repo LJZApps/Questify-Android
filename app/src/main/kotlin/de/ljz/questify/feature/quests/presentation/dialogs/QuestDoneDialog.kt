@@ -72,7 +72,7 @@ fun QuestDoneDialog(
         )
     ) {
         Surface(
-            shape = RoundedCornerShape(6.dp),
+            shape = RoundedCornerShape(28.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier.padding(16.dp)
         ) {

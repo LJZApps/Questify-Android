@@ -25,7 +25,7 @@ interface QuestDao {
     suspend fun updateQuest(quest: QuestEntity)
 
     @Query("SELECT * FROM quest_entity WHERE id = :id")
-    fun getQuestById(id: Int): QuestWithSubQuests
+    suspend fun getQuestById(id: Int): QuestWithSubQuests
 
     @Query("SELECT * FROM quest_entity WHERE category_id = :categoryId")
     fun getQuestsForCategoryStream(categoryId: Int): Flow<List<QuestWithSubQuests>>
