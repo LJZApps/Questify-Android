@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Keyboard
-import androidx.compose.material.icons.outlined.KeyboardHide
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
@@ -34,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -196,7 +194,11 @@ fun CreateReminderDialog(
                                     },
                                 ) {
                                     Icon(
-                                        if (showTimeInput.value) Icons.Outlined.KeyboardHide else Icons.Outlined.Keyboard,
+                                        if (showTimeInput.value)
+                                            painterResource(R.drawable.ic_keyboard_hide_outlined)
+                                        else
+                                            painterResource(R.drawable.ic_keyboard_outlined)
+                                        ,
                                         contentDescription = null
                                     )
                                 }

@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -24,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -107,10 +104,10 @@ fun QuestSortingBottomSheet(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = if (item.sortingDirection == SortingDirections.ASCENDING)
-                                    Icons.Default.ArrowUpward
+                                painter = if (item.sortingDirection == SortingDirections.ASCENDING)
+                                    painterResource(R.drawable.ic_arrow_upward)
                                 else
-                                    Icons.Default.ArrowDownward,
+                                    painterResource(R.drawable.ic_arrow_downward),
                                 contentDescription = null
                             )
 
@@ -126,7 +123,7 @@ fun QuestSortingBottomSheet(
                     onCheckedChange = onShowCompletedQuestsChanged,
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.CheckCircle,
+                            painter = painterResource(R.drawable.ic_check_circle_filled),
                             contentDescription = null
                         )
                     },

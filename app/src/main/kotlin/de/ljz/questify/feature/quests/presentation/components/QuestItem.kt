@@ -7,14 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Alarm
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Checklist
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Badge
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,9 +20,11 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.relations.QuestWithSubQuests
@@ -88,7 +82,7 @@ fun QuestItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.CalendarMonth,
+                            painter = painterResource(R.drawable.ic_calendar_month_outlined),
                             contentDescription = null
                         )
 
@@ -108,7 +102,7 @@ fun QuestItem(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.Checklist,
+                                painter = painterResource(R.drawable.ic_checklist),
                                 contentDescription = null
                             )
 
@@ -124,7 +118,7 @@ fun QuestItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Alarm,
+                        painter = painterResource(R.drawable.ic_alarm_outlined),
                         contentDescription = null
                     )
 
@@ -138,7 +132,7 @@ fun QuestItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Timer,
+                        painter = painterResource(R.drawable.ic_timer_outlined),
                         contentDescription = null
                     )
 
@@ -179,7 +173,7 @@ fun QuestItem(
                         onClick = onEditButtonClicked
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Edit,
+                            painter = painterResource(R.drawable.ic_edit_outlined),
                             contentDescription = null
                         )
                     }
@@ -197,7 +191,7 @@ fun QuestItem(
                         modifier = Modifier.padding(4.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Check,
+                            painter = painterResource(R.drawable.ic_check),
                             contentDescription = null,
                             modifier = Modifier.size(16.dp)
                         )
@@ -216,7 +210,7 @@ fun QuestItem(
                         onClick = onCheckButtonClicked
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.CheckCircle,
+                            painter = painterResource(R.drawable.ic_check_circle_outlined),
                             contentDescription = null,
                         )
                     }

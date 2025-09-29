@@ -58,7 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
@@ -602,52 +602,6 @@ fun CreateQuestScreen(
                             }
                         }
                     }
-
-                    /*Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "Liste",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val interactionSource = remember { MutableInteractionSource() }
-                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
-
-                            LaunchedEffect(isFocused) {
-                                if (isFocused) {
-                                    viewModel.showSelectCategoryDialog()
-                                }
-                            }
-
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.Label,
-                                contentDescription = null,
-                            )
-
-                            OutlinedTextField(
-                                value = selectedCategory?.text ?: "",
-                                onValueChange = {},
-                                label = { Text("Liste") },
-                                modifier = Modifier.fillMaxWidth(),
-                                singleLine = true,
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(
-                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                        contentDescription = null
-                                    )
-                                },
-                                shape = RoundedCornerShape(6.dp),
-                                interactionSource = interactionSource
-                            )
-                        }
-                    }*/
                 }
             }
 

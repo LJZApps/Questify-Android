@@ -5,17 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -28,12 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.menu.ExpressiveMenuItem
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
-import de.ljz.questify.core.presentation.components.filled_tonal_icon_button.NarrowIconButton
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -69,7 +64,7 @@ fun ManageCategoryBottomSheet(
                             title = stringResource(R.string.manage_categories_bottom_sheet_empty),
                             icon = {
                                 Icon(
-                                    imageVector = Icons.Default.Info,
+                                    painter = painterResource(R.drawable.ic_info_filled),
                                     contentDescription = null
                                 )
                             }
@@ -83,18 +78,18 @@ fun ManageCategoryBottomSheet(
                                     title = listItem.text,
                                     icon = {
                                         Icon(
-                                            imageVector = Icons.AutoMirrored.Outlined.Label,
+                                            painter = painterResource(R.drawable.ic_label_outlined),
                                             contentDescription = null
                                         )
                                     },
                                     trailingContent = {
-                                        NarrowIconButton(
+                                        IconButton(
                                             onClick = {
                                                 dropdownExpanded = true
                                             },
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.MoreVert,
+                                                painter = painterResource(R.drawable.ic_more_vert),
                                                 contentDescription = null
                                             )
                                         }
@@ -107,7 +102,7 @@ fun ManageCategoryBottomSheet(
                                                 text = { Text(stringResource(R.string.manage_categories_bottom_sheet_dropdown_rename_title)) },
                                                 leadingIcon = {
                                                     Icon(
-                                                        imageVector = Icons.Default.Edit,
+                                                        painter = painterResource(R.drawable.ic_edit_filled),
                                                         contentDescription = null
                                                     )
                                                 },
@@ -125,7 +120,7 @@ fun ManageCategoryBottomSheet(
                                                 },
                                                 leadingIcon = {
                                                     Icon(
-                                                        imageVector = Icons.Default.Delete,
+                                                        painter = painterResource(R.drawable.ic_delete_filled),
                                                         contentDescription = null,
                                                         tint = MaterialTheme.colorScheme.error
                                                     )

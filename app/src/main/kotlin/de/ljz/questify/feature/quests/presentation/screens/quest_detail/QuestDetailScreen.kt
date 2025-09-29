@@ -19,18 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Title
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -60,6 +48,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -118,7 +107,10 @@ fun QuestDetailScreen(
                     IconButton(
                         onClick = { navController.popBackStack() }
                     ) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_back),
+                            contentDescription = null
+                        )
                     }
                 },
                 actions = {
@@ -149,7 +141,10 @@ fun QuestDetailScreen(
                             contentColor = MaterialTheme.colorScheme.error,
                         )
                     ) {
-                        Icon(Icons.Outlined.Delete, contentDescription = null)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_delete_outlined),
+                            contentDescription = null
+                        )
                     }
                 }
             )
@@ -175,7 +170,7 @@ fun QuestDetailScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Title,
+                            painter = painterResource(R.drawable.ic_title),
                             contentDescription = null,
                         )
 
@@ -199,7 +194,7 @@ fun QuestDetailScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Default.Notes,
+                            painter = painterResource(R.drawable.ic_notes),
                             contentDescription = null,
                         )
 
@@ -293,7 +288,7 @@ fun QuestDetailScreen(
                             }
 
                             Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.Label,
+                                painter = painterResource(R.drawable.ic_label_outlined),
                                 contentDescription = null,
                             )
 
@@ -306,7 +301,10 @@ fun QuestDetailScreen(
                                 readOnly = true,
                                 trailingIcon = {
                                     Icon(
-                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        painter = if (isFocused)
+                                            painterResource(R.drawable.ic_keyboard_arrow_up)
+                                        else
+                                            painterResource(R.drawable.ic_keyboard_arrow_down),
                                         contentDescription = null
                                     )
                                 },
@@ -340,7 +338,7 @@ fun QuestDetailScreen(
                             }
 
                             Icon(
-                                imageVector = Icons.Default.Schedule,
+                                painter = painterResource(R.drawable.ic_schedule_outlined),
                                 contentDescription = null,
                             )
 
@@ -353,7 +351,10 @@ fun QuestDetailScreen(
                                 readOnly = true,
                                 trailingIcon = {
                                     Icon(
-                                        imageVector = if (isFocused) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        painter = if (isFocused)
+                                            painterResource(R.drawable.ic_keyboard_arrow_up)
+                                        else
+                                            painterResource(R.drawable.ic_keyboard_arrow_down),
                                         contentDescription = null
                                     )
                                 },
@@ -371,7 +372,7 @@ fun QuestDetailScreen(
                                     )
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Remove,
+                                        painter = painterResource(R.drawable.ic_remove),
                                         contentDescription = null
                                     )
                                 }
@@ -403,7 +404,7 @@ fun QuestDetailScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Add,
+                                    painter = painterResource(R.drawable.ic_add),
                                     contentDescription = "Erinnerung hinzufügen",
                                     modifier = Modifier.size(18.dp)
                                 )
@@ -426,7 +427,7 @@ fun QuestDetailScreen(
                                         label = { Text(dateFormat.format(Date(triggerTime))) },
                                         leadingIcon = {
                                             Icon(
-                                                imageVector = Icons.Filled.Notifications,
+                                                painter = painterResource(R.drawable.ic_notifications_filled),
                                                 contentDescription = null,
                                                 modifier = Modifier
                                                     .size(18.dp)
