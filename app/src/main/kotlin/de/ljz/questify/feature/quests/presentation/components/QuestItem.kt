@@ -113,21 +113,25 @@ fun QuestItem(
                     }
                 }
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_alarm_outlined),
-                        contentDescription = null
-                    )
+                questWithSubQuests.notifications.filter { !it.notified }.let { notificationEntities ->
+                    if (notificationEntities.isNotEmpty()) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_alarm_outlined),
+                                contentDescription = null
+                            )
 
-                    Text(
-                        text = "2 Erinnerungen"
-                    )
+                            Text(
+                                text = "${notificationEntities.count()} Erinnerungen"
+                            )
+                        }
+                    }
                 }
 
-                Row(
+                /*Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -139,7 +143,7 @@ fun QuestItem(
                     Text(
                         text = "2h 30m"
                     )
-                }
+                }*/
 
                 Badge(
                     containerColor = when (questWithSubQuests.quest.difficulty) {
