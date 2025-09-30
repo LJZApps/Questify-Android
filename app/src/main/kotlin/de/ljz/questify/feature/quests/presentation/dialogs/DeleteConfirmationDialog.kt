@@ -1,6 +1,7 @@
 package de.ljz.questify.feature.quests.presentation.dialogs
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -30,17 +31,19 @@ fun DeleteConfirmationDialog(
         icon = {
             Icon(
                 painterResource(R.drawable.ic_delete_filled),
-                contentDescription = null
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error
             )
         },
         confirmButton = {
-            TextButton(
+            Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.Confirm)
                     onConfirm()
                 },
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error,
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = MaterialTheme.colorScheme.onError,
+                    containerColor = MaterialTheme.colorScheme.error
                 )
             ) {
                 Text(stringResource(R.string.delete))
