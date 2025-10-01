@@ -1,17 +1,15 @@
 package de.ljz.questify.feature.player_stats.presentation.screens.stats
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
@@ -24,22 +22,23 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import de.ljz.questify.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -96,33 +95,81 @@ private fun StatsScreen(
             )
         },
         content = { innerPadding ->
-            if (uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    LoadingIndicator(
-                        modifier = Modifier.size(160.dp)
-                    )
-                }
-            } else {
-                Column(
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Box(
                     modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    CharacterHeaderCard(
-                        name = "Dein Name", // TODO: Aus AppUser holen
-                        level = uiState.playerStats.level,
-                        currentXp = uiState.playerStats.xp,
-                        xpForNextLevel = uiState.xpForNextLevel,
-                        currentHp = 0,
-                        maxHp = 100
-                    )
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_bold_outlined),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
 
-                    StatGridCard(
-                        points = uiState.playerStats.points,
-                        questsCompleted = uiState.questsCompleted
-                    )
+                            Text(
+                                text = "Dein Level",
+                                style = MaterialTheme.typography.titleLarge
+                                    .copy(
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                            )
+                        }
+
+                        Text(
+                            text = uiState.playerStats.level.toString(),
+                            style = MaterialTheme.typography.displayLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = "XP Fortschritt: ${uiState.playerStats.xp} / ${uiState.xpForNextLevel}",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+
+                            LinearProgressIndicator(
+                                progress = { (uiState.playerStats.xp.toFloat() / uiState.xpForNextLevel.toFloat()).coerceIn(0f, 1f) },
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .fillMaxWidth()
+                                    .height(10.dp),
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                                strokeCap = StrokeCap.Butt,
+                                drawStopIndicator = {},
+                                gapSize = 0.dp,
+                            )
+                        }
+                    }
                 }
+
+                Text(
+                    text = "Spielerstatistik",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "Tägliche Fortschritte",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     )
@@ -162,14 +209,14 @@ fun CharacterHeaderCard(
                 label = "HP",
                 currentValue = currentHp,
                 maxValue = maxHp,
-                color = Color(0xFFD32F2F)
+                color = MaterialTheme.colorScheme.primary
             )
 
             StatBar(
                 label = "XP",
                 currentValue = currentXp,
                 maxValue = xpForNextLevel,
-                color = Color(0xFF7B1FA2)
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -216,11 +263,6 @@ fun StatBar(
     color: Color
 ) {
     val progress = (currentValue.toFloat() / maxValue.toFloat()).coerceIn(0f, 1f)
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress,
-        animationSpec = tween(500),
-        label = ""
-    )
 
     Column {
         Row(
@@ -240,13 +282,16 @@ fun StatBar(
         }
         Spacer(Modifier.height(4.dp))
         LinearProgressIndicator(
-            progress = { animatedProgress },
+            progress = { progress },
             modifier = Modifier
+                .clip(RoundedCornerShape(6.dp))
                 .fillMaxWidth()
                 .height(10.dp),
             color = color,
             trackColor = color.copy(alpha = 0.2f),
-            strokeCap = StrokeCap.Round
+            strokeCap = StrokeCap.Butt,
+            drawStopIndicator = {},
+            gapSize = 0.dp,
         )
     }
 }

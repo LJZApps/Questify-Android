@@ -1,5 +1,6 @@
 package de.ljz.questify.feature.quests.domain.use_cases
 
+import de.ljz.questify.core.utils.calculateXpForNextLevel
 import de.ljz.questify.feature.player_stats.domain.repositories.PlayerStatsRepository
 import de.ljz.questify.feature.quests.data.models.QuestCompletionResult
 import de.ljz.questify.feature.quests.data.models.QuestEntity
@@ -7,16 +8,11 @@ import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.first
 import java.util.Date
 import javax.inject.Inject
-import kotlin.math.pow
 
 class CompleteQuestUseCase @Inject constructor(
     private val questRepository: QuestRepository,
     private val playerStatsRepository: PlayerStatsRepository
 ) {
-    companion object {
-        const val BASE_XP = 100.0
-        const val LEVEL_FACTOR = 1.15
-    }
 
     suspend operator fun invoke(quest: QuestEntity): QuestCompletionResult {
         val completionDate = Date()
@@ -61,7 +57,4 @@ class CompleteQuestUseCase @Inject constructor(
         )
     }
 
-    private fun calculateXpForNextLevel(level: Int): Int {
-        return (BASE_XP * LEVEL_FACTOR.pow(level - 1)).toInt()
-    }
 }

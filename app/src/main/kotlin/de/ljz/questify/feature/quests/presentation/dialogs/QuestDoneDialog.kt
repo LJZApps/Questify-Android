@@ -71,16 +71,16 @@ fun QuestDoneDialog(
         )
     ) {
         Surface(
-            shape = RoundedCornerShape(28.dp),
+            shape = RoundedCornerShape(16.dp),
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier.padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(24.dp)
+                    .padding(16.dp)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 LottieAnimation(
                     composition = composition,
@@ -123,7 +123,8 @@ fun QuestDoneDialog(
 
                 Button(
                     onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
                         text = if (state.xp > 0 || state.points > 0)

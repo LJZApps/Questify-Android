@@ -63,7 +63,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
-import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
+import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
@@ -357,7 +357,7 @@ fun CreateQuestScreen(
                                 }
                         }
 
-                        AppOutlinedButton(
+                        AppTextButton(
                             onClick = {
                                 viewModel.showCreateReminderDialog()
                             },
@@ -583,7 +583,7 @@ fun CreateQuestScreen(
                             }
                         }
 
-                        AppOutlinedButton(
+                        AppTextButton(
                             onClick = {
                                 viewModel.showCreateReminderDialog()
                             },

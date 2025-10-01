@@ -4,14 +4,11 @@ import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.ime
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalDensity
 import androidx.core.app.NotificationManagerCompat
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
+import kotlin.math.pow
 
 fun isNotificationPermissionGranted(context: Context): Boolean {
     return NotificationManagerCompat.from(context).areNotificationsEnabled()
@@ -34,8 +31,9 @@ fun <T: Any> getSerializedRouteName(route: T): String {
     return route::class.serializer().descriptor.serialName
 }
 
-@Composable
-fun isKeyboardVisible(): Boolean {
-    val imeInsets = WindowInsets.ime.getBottom(LocalDensity.current)
-    return imeInsets > 0
+const val BASE_XP = 100.0
+const val LEVEL_FACTOR = 1.15
+
+fun calculateXpForNextLevel(level: Int): Int {
+    return (BASE_XP * LEVEL_FACTOR.pow(level - 1)).toInt()
 }

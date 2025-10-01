@@ -3,14 +3,15 @@ package de.ljz.questify.feature.player_stats.presentation.screens.stats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.utils.calculateXpForNextLevel
 import de.ljz.questify.feature.player_stats.data.models.PlayerStats
 import de.ljz.questify.feature.player_stats.domain.repositories.PlayerStatsRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,10 +22,9 @@ class StatsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = StatsUiState(
-            isLoading = false,
             playerStats = PlayerStats(),
             questsCompleted = 0,
-            xpForNextLevel = 100
+            xpForNextLevel = 0
         )
     )
     val uiState: StateFlow<StatsUiState> = _uiState.asStateFlow()
@@ -32,11 +32,14 @@ class StatsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                playerStatsRepository.getPlayerStats()
-                    .onEach { playerStats ->
-                        _uiState.value = _uiState.value.copy(playerStats = playerStats)
+                playerStatsRepository.getPlayerStats().collectLatest { playerStats ->
+                    _uiState.update {
+                        it.copy(
+                            playerStats = playerStats,
+                            xpForNextLevel = calculateXpForNextLevel(playerStats.level)
+                        )
                     }
-                    .launchIn(viewModelScope)
+                }
             }
         }
     }
