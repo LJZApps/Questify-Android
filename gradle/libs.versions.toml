@@ -38,6 +38,7 @@ moshiAdapters = "1.15.2"
 moshiKotlin = "1.15.2"
 navigationCompose = "2.9.4"
 okHttpVersion = "5.1.0"
+posthogAndroid = "3.23.0"
 retrofit = "3.0.0"
 roomCompiler = "2.8.0"
 runtime = "1.9.1"
@@ -118,6 +119,7 @@ material3 = { module = "androidx.compose.material3:material3", version.ref = "ma
 moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshiAdapters" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okHttpVersion" }
+posthog-android = { module = "com.posthog:posthog-android", version.ref = "posthogAndroid" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 sandwich = { module = "com.github.skydoves:sandwich", version.ref = "sandwich" }
 sandwich-ktor = { module = "com.github.skydoves:sandwich-ktor", version.ref = "sandwich" }

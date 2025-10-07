@@ -6,6 +6,8 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.kavi.droid.color.palette.KvColorPalette
+import com.posthog.android.PostHogAndroid
+import com.posthog.android.PostHogAndroidConfig
 import dagger.hilt.android.HiltAndroidApp
 import de.ljz.questify.core.utils.Standard
 import javax.inject.Inject
@@ -26,5 +28,12 @@ class App : Application() {
             .build()
 
         WorkManager.Companion.initialize(this, config)
+
+        val postHogConfig = PostHogAndroidConfig(
+            apiKey = BuildConfig.POSTHOG_API_KEY,
+            host = BuildConfig.POSTHOG_HOST
+        )
+
+        PostHogAndroid.setup(this, postHogConfig)
     }
 }

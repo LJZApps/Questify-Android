@@ -1,5 +1,6 @@
 package de.ljz.questify.feature.main.presentation.screens.main
 
+import android.widget.Toast
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -16,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.posthog.PostHog
 import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
 import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
 import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
@@ -53,6 +55,10 @@ fun MainScreen(
         isNotificationPermissionGranted(context) &&
                 isOverlayPermissionGranted(context) &&
                 isAlarmPermissionGranted(context)
+    }
+
+    if (PostHog.isFeatureEnabled("new_rpg_system")) {
+        Toast.makeText(context, "Neues RPG-System ist aktiviert. Viel spaß!", Toast.LENGTH_LONG).show()
     }
 
     LaunchedEffect(allPermissionsGranted) {

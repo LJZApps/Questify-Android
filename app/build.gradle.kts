@@ -84,6 +84,18 @@ android {
                 "BASE_URL",
                 "\"${localProperties.getProperty("DEBUG_BASE_URL")}\""
             )
+
+            buildConfigField(
+                type = "String",
+                name = "POSTHOG_API_KEY",
+                value = "\"${localProperties.getProperty("POSTHOG_API_KEY")}\""
+            )
+
+            buildConfigField(
+                type = "String",
+                name = "POSTHOG_HOST",
+                value = "\"${localProperties.getProperty("POSTHOG_HOST")}\""
+            )
         }
 
         named("release") {
@@ -99,6 +111,18 @@ android {
                 "BASE_URL",
                 "\"${localProperties.getProperty("RELEASE_BASE_URL")}\""
             )
+
+            buildConfigField(
+                type = "String",
+                name = "POSTHOG_API_KEY",
+                value = "\"${localProperties.getProperty("POSTHOG_API_KEY")}\""
+            )
+
+            buildConfigField(
+                type = "String",
+                name = "POSTHOG_HOST",
+                value = "\"${localProperties.getProperty("POSTHOG_HOST")}\""
+            )
         }
     }
 }
@@ -107,6 +131,9 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
+    // Post Hog
+    implementation(libs.posthog.android)
+
     // Lottie
     implementation(libs.lottie)
 
