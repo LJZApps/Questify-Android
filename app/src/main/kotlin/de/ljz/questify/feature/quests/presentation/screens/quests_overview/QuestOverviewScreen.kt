@@ -1,16 +1,22 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -277,6 +283,7 @@ private fun QuestOverviewScreen(
         },
         content = { innerPadding ->
             key(allTabs.map { it.id }) {
+                val scrollState = rememberScrollState()
                 val initialPage = desiredPageIndex.coerceIn(0, (allTabs.size - 1).coerceAtLeast(0))
 
                 val pagerState = rememberPagerState(
@@ -288,50 +295,46 @@ private fun QuestOverviewScreen(
                     desiredPageIndex = pagerState.currentPage
                 }
 
-                val tabIndex = pagerState.currentPage
-
                 Column(
                     modifier = Modifier.padding(innerPadding)
                 ) {
-                    PrimaryScrollableTabRow(
-                        selectedTabIndex = tabIndex,
-                        edgePadding = 0.dp,
-                        minTabWidth = 0.dp
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .horizontalScroll(scrollState)
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         allTabs.forEachIndexed { index, tab ->
-                            val isSelected = pagerState.currentPage == index
-                            Tab(
-                                selected = isSelected,
-                                onClick = { scope.launch { pagerState.animateScrollToPage(index) } },
-                                text = {
+                            FilterChip(
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    scope.launch {
+                                        scrollState.animateScrollTo(index)
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                label = {
                                     Text(
-                                        text = tab.text,
-                                        color = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                        text = tab.text
                                     )
                                 }
                             )
                         }
 
-                        Tab(
-                            selected = false,
+                        AssistChip(
                             onClick = {
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
                             },
-                            text = {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_add),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.quest_overview_screen_new_list_tab_title),
-                                        modifier = Modifier.padding(start = 8.dp),
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
+                            label = {
+                                Text(
+                                    text = stringResource(R.string.quest_overview_screen_new_list_tab_title)
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_add),
+                                    contentDescription = null,
+                                )
                             }
                         )
                     }

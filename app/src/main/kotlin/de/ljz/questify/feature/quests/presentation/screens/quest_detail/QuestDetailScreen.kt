@@ -25,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -54,11 +55,13 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
@@ -148,6 +151,35 @@ fun QuestDetailScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            Column {
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                AppButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+//                        viewModel.createQuest()
+                    },
+                    enabled = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 4.dp, top = 4.dp)
+                        .imePadding()
+                        .navigationBarsPadding()
+                ) {
+                    Text(
+                        text = "Quest abschließen"
+                    )
+                    /*Text(
+                        text = "Erledige zuerst die Unteraufgaben, bevor du die Quest abschließen kannst",
+                        textAlign = TextAlign.Center
+                    )*/
+                }
+            }
         },
         content = { innerPadding ->
             Column(
