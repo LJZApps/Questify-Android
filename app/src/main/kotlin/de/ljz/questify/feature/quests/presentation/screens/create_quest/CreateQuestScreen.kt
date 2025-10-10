@@ -63,7 +63,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
-import de.ljz.questify.core.presentation.components.buttons.AppTextButton
+import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
@@ -357,7 +357,7 @@ fun CreateQuestScreen(
                                 }
                         }
 
-                        AppTextButton(
+                        AppOutlinedButton(
                             onClick = {
                                 viewModel.showCreateReminderDialog()
                             },
@@ -441,132 +441,97 @@ fun CreateQuestScreen(
                         Column(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            OutlinedCard(
-                                onClick = {
+                            uiState.subTasks.forEachIndexed { index, subTask ->
+                                OutlinedCard(
+                                    /*onClick = {
 
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                        .fillMaxWidth()
-                                ) {
-                                    Text(
-                                        text = "Unteraufgaben hinzufügen"
+                                    },*/
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.outlinedCardColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                     )
-
-                                    IconButton(
-                                        onClick = {
-
-                                        }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_delete_outlined),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
-
-                            OutlinedCard(
-                                onClick = {
-
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                        .fillMaxWidth()
                                 ) {
-                                    Text(
-                                        text = "Unteraufgaben hinzufügen"
-                                    )
-
-                                    IconButton(
-                                        onClick = {
-
-                                        }
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier
+                                            .padding(
+                                                horizontal = 16.dp,
+                                                vertical = 8.dp
+                                            )
+                                            .fillMaxWidth()
                                     ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_delete_outlined),
-                                            contentDescription = null
+                                        val interactionSource = remember { MutableInteractionSource() }
+
+                                        BasicTextField(
+                                            value = subTask.text,
+                                            onValueChange = {
+                                                viewModel.updateSubtask(index, it)
+                                            },
+                                            modifier = Modifier.weight(1f),
+                                            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                                            cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
+                                            decorationBox = @Composable { innerTextField ->
+                                                TextFieldDefaults.DecorationBox(
+                                                    value = subTask.text,
+                                                    enabled = true,
+                                                    innerTextField = innerTextField,
+                                                    singleLine = true,
+                                                    visualTransformation = VisualTransformation.None,
+                                                    colors = TextFieldDefaults.colors(
+                                                        focusedIndicatorColor = Color.Transparent,
+                                                        unfocusedIndicatorColor = Color.Transparent,
+                                                        disabledIndicatorColor = Color.Transparent,
+                                                        focusedContainerColor = Color.Transparent,
+                                                        unfocusedContainerColor = Color.Transparent,
+                                                        disabledContainerColor = Color.Transparent,
+                                                    ),
+                                                    interactionSource = interactionSource,
+                                                    placeholder = {
+                                                        Text(
+                                                            text = "Text hier eingeben"
+                                                        )
+                                                    },
+                                                    contentPadding = PaddingValues(0.dp),
+                                                )
+                                            }
                                         )
-                                    }
-                                }
-                            }
 
-                            OutlinedCard(
-                                onClick = {
+                                        IconButton(
+                                            onClick = {
 
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                        .fillMaxWidth()
-                                ) {
-                                    val interactionSource = remember { MutableInteractionSource() }
-                                    var subTaskText by remember { mutableStateOf("") }
-
-                                    BasicTextField(
-                                        value = subTaskText,
-                                        onValueChange = {
-                                            subTaskText = it
-                                        },
-                                        modifier = Modifier.weight(1f),
-                                        textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
-                                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
-                                        decorationBox = @Composable { innerTextField ->
-                                            TextFieldDefaults.DecorationBox(
-                                                value = subTaskText,
-                                                enabled = true,
-                                                innerTextField = innerTextField,
-                                                singleLine = true,
-                                                visualTransformation = VisualTransformation.None,
-                                                colors = TextFieldDefaults.colors(
-                                                    focusedIndicatorColor = Color.Transparent,
-                                                    unfocusedIndicatorColor = Color.Transparent,
-                                                    disabledIndicatorColor = Color.Transparent,
-                                                    focusedContainerColor = Color.Transparent,
-                                                    unfocusedContainerColor = Color.Transparent,
-                                                    disabledContainerColor = Color.Transparent,
-                                                ),
-                                                interactionSource = interactionSource,
-                                                placeholder = {
-                                                    Text(
-                                                        text = "Text hier eingeben"
-                                                    )
-                                                },
-                                                contentPadding = PaddingValues(0.dp),
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.ic_delete_outlined),
+                                                contentDescription = null
                                             )
                                         }
+                                    }
+                                }
+                            }
+
+                            /*OutlinedCard(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Unteraufgaben hinzufügen"
                                     )
 
                                     IconButton(
@@ -581,11 +546,47 @@ fun CreateQuestScreen(
                                     }
                                 }
                             }
+
+                            OutlinedCard(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Unteraufgaben hinzufügen"
+                                    )
+
+                                    IconButton(
+                                        onClick = {
+
+                                        }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_delete_outlined),
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }*/
                         }
 
-                        AppTextButton(
+                        AppOutlinedButton(
                             onClick = {
-                                viewModel.showCreateReminderDialog()
+                                viewModel.addSubTask()
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {

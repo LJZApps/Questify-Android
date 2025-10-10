@@ -16,6 +16,7 @@ import de.ljz.questify.feature.habits.data.models.HabitsEntity
 import de.ljz.questify.feature.quests.data.daos.QuestCategoryDao
 import de.ljz.questify.feature.quests.data.daos.QuestDao
 import de.ljz.questify.feature.quests.data.daos.QuestNotificationDao
+import de.ljz.questify.feature.quests.data.daos.SubQuestDao
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
@@ -57,6 +58,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getQuestNotificationDao(): QuestNotificationDao
 
     abstract fun getQuestCategoryDao(): QuestCategoryDao
+    abstract fun getSubQuestDao(): SubQuestDao
 
     abstract fun getHabitDao(): HabitDao
 }
