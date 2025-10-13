@@ -13,6 +13,11 @@ interface QuestRepository {
 
     suspend fun updateQuest(quest: QuestEntity)
 
+    /*@Deprecated(
+        message = "Please use updateQuest(quest: QuestEntity)",
+        replaceWith = ReplaceWith("updateQuest(quest: QuestEntity)"),
+        level = DeprecationLevel.ERROR
+    )*/
     suspend fun updateQuest(
         id: Int,
         title: String,

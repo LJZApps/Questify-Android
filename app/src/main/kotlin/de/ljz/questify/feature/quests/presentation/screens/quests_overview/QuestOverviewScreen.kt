@@ -55,9 +55,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.bottom_sheets.InputBottomSheet
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
-import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.UpdateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
@@ -428,15 +428,29 @@ private fun QuestOverviewScreen(
             }
 
             if (uiState.dialogState == DialogState.CreateCategory) {
-                CreateCategoryDialog(
+                InputBottomSheet(
+                    onDismissRequest = {
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    },
+                    onConfirm = { value ->
+                        onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = value))
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    },
+                    title = stringResource(R.string.create_category_dialog_title),
+//                    text = "Hier kannst du eine neue Liste für deine Quests erstellen",
+                    confirmationButtonText = stringResource(R.string.save),
+                    dismissButtonText = stringResource(R.string.cancel),
+                    dismissable = true
+                )
+                /*CreateCategoryDialog(
                     onConfirm = { listText ->
                         onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = listText))
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     onDismiss = {
-                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+
                     }
-                )
+                )*/
             }
 
             if (uiState.dialogState == DialogState.UpdateCategory) {

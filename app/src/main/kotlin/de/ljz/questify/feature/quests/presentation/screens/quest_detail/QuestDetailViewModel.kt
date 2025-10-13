@@ -77,6 +77,11 @@ class QuestDetailViewModel @Inject constructor(
                 questFlow.collectLatest { quest ->
                     // Do not remove "?" for null safety - YES it can be null
                     quest?.let { questEntity ->
+                        questEntity.copy(
+                            quest = questEntity.quest.copy(
+                                done = true
+                            )
+                        )
                         val notificationEntities =
                             questNotificationRepository.getNotificationsByQuestId(questEntity.quest.id)
                         val notifications = notificationEntities

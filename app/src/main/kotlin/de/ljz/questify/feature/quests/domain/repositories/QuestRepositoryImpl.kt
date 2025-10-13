@@ -12,7 +12,7 @@ class QuestRepositoryImpl @Inject constructor(
   private val questDao: QuestDao
 ): QuestRepository {
     override suspend fun addMainQuest(quest: QuestEntity): Long {
-        return questDao.upsertMainQuest(quest)
+        return questDao.upsert(quest)
     }
 
     override suspend fun setQuestDone(id: Int, done: Boolean) {
@@ -20,9 +20,14 @@ class QuestRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateQuest(quest: QuestEntity) {
-        questDao.updateQuest(quest)
+        questDao.upsert(quest)
     }
 
+    /*@Deprecated(
+        "Please use updateQuest(quest: QuestEntity)",
+        replaceWith = ReplaceWith("updateQuest(quest: QuestEntity)"),
+        level = DeprecationLevel.ERROR
+    )*/
     override suspend fun updateQuest(
         id: Int,
         title: String,

@@ -53,12 +53,9 @@ import de.ljz.questify.feature.quests.data.models.SubQuestEntity
     ]
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun getQuestDao(): QuestDao
-
-    abstract fun getQuestNotificationDao(): QuestNotificationDao
-
-    abstract fun getQuestCategoryDao(): QuestCategoryDao
-    abstract fun getSubQuestDao(): SubQuestDao
-
-    abstract fun getHabitDao(): HabitDao
+    abstract val questDao: QuestDao
+    abstract val questNotificationDao: QuestNotificationDao
+    abstract val questCategoryDao: QuestCategoryDao
+    abstract val subQuestDao: SubQuestDao
+    abstract val habitDao: HabitDao
 }

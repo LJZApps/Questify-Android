@@ -16,7 +16,7 @@ object SubQuestModule {
 
     @Singleton
     @Provides
-    fun provideSubQuestDao(db: AppDatabase) = db.getSubQuestDao()
+    fun provideSubQuestDao(db: AppDatabase) = db.subQuestDao
 
     @Provides
     @Singleton
