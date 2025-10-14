@@ -453,6 +453,7 @@ private fun QuestOverviewScreen(
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     title = stringResource(R.string.update_category_dialog_title),
+                    icon = painterResource(R.drawable.ic_edit_outlined),
                     dismissButtonText = stringResource(R.string.cancel),
                     confirmationButtonText = stringResource(R.string.save),
                     initialInputFocussed = true,
