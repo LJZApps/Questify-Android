@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ButtonColors
@@ -16,24 +17,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
-import de.ljz.questify.core.presentation.components.buttons.AppTextButton
+import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import kotlinx.coroutines.launch
 
@@ -50,11 +56,14 @@ fun InputBottomSheet(
     containerColor: Color = BottomSheetDefaults.ContainerColor,
     contentColor: Color = contentColorFor(containerColor),
     initialValue: String = "",
+    initialInputFocussed: Boolean = false,
     title: String,
     text: String? = null,
     icon: Painter? = null,
     confirmationButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    dismissButtonColors: ButtonColors = ButtonDefaults.textButtonColors(),
+    dismissButtonColors: ButtonColors = ButtonDefaults.outlinedButtonColors(
+        contentColor = MaterialTheme.colorScheme.primary
+    ),
     confirmationButtonText: String,
     dismissButtonText: String? = null
 ) {
@@ -66,17 +75,24 @@ fun InputBottomSheet(
     val sheetState = rememberModalBottomSheetState()
 
     var value by remember { mutableStateOf(initialValue) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(sheetState.currentValue) {
+        if (initialInputFocussed && sheetState.currentValue == SheetValue.Expanded) {
+            focusRequester.requestFocus()
+        }
+    }
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         shape = RoundedCornerShape(topEnd = 10.dp, topStart = 10.dp),
-//        modifier = modifier.padding(8.dp).navigationBarsPadding(),
         sheetState = sheetState,
         dragHandle = null,
         sheetGesturesEnabled = dismissable,
         containerColor = containerColor,
         contentColor = contentColor,
-        properties = properties
+        properties = properties,
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
@@ -111,16 +127,26 @@ fun InputBottomSheet(
                 onValueChange = {
                     value = it
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                ,
                 placeholder = {
                     Text(
                         text = stringResource(R.string.text_field_name_of_list)
                     )
                 },
                 keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done
                 ),
-                singleLine = true
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onConfirm(value)
+                    }
+                ),
+                singleLine = true,
+                maxLines = 1
             )
 
             Row(
@@ -128,7 +154,7 @@ fun InputBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 dismissButtonText?.let { dismissText ->
-                    AppTextButton(
+                    AppOutlinedButton(
                         onClick = {
                             scope.launch {
                                 sheetState.hide()

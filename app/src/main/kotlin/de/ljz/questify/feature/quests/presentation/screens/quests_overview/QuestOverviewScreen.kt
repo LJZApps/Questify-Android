@@ -59,7 +59,6 @@ import de.ljz.questify.core.presentation.components.bottom_sheets.InputBottomShe
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.UpdateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
 import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
@@ -437,32 +436,27 @@ private fun QuestOverviewScreen(
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     title = stringResource(R.string.create_category_dialog_title),
-//                    text = "Hier kannst du eine neue Liste für deine Quests erstellen",
                     confirmationButtonText = stringResource(R.string.save),
                     dismissButtonText = stringResource(R.string.cancel),
-                    dismissable = true
+                    dismissable = true,
+                    initialInputFocussed = true
                 )
-                /*CreateCategoryDialog(
-                    onConfirm = { listText ->
-                        onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = listText))
-                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
-                    },
-                    onDismiss = {
-
-                    }
-                )*/
             }
 
             if (uiState.dialogState == DialogState.UpdateCategory) {
-                UpdateCategoryDialog(
-                    questCategory = selectedCategoryForUpdating,
-                    onConfirm = { listText ->
-                        onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = listText))
+                InputBottomSheet(
+                    onDismissRequest = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
-                    onDismiss = {
+                    onConfirm = { value ->
+                        onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = value))
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
-                    }
+                    },
+                    title = stringResource(R.string.update_category_dialog_title),
+                    dismissButtonText = stringResource(R.string.cancel),
+                    confirmationButtonText = stringResource(R.string.save),
+                    initialInputFocussed = true,
+                    initialValue = selectedCategoryForUpdating?.text?: ""
                 )
 
             }

@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import de.ljz.questify.core.presentation.components.buttons.AppButton
-import de.ljz.questify.core.presentation.components.buttons.AppTextButton
+import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import kotlinx.coroutines.launch
 
 /**
@@ -47,7 +47,9 @@ fun ConfirmationBottomSheet(
     text: String,
     icon: Painter? = null,
     confirmationButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    dismissButtonColors: ButtonColors = ButtonDefaults.textButtonColors(),
+    dismissButtonColors: ButtonColors = ButtonDefaults.outlinedButtonColors(
+        contentColor = MaterialTheme.colorScheme.primary
+    ),
     confirmationButtonText: String,
     dismissButtonText: String? = null
 ) {
@@ -103,7 +105,7 @@ fun ConfirmationBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 dismissButtonText?.let { dismissText ->
-                    AppTextButton(
+                    AppOutlinedButton(
                         onClick = {
                             scope.launch {
                                 sheetState.hide()

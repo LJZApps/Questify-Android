@@ -20,6 +20,7 @@ fun AppTextButton(
         onClick = onClick,
         shape = RoundedCornerShape(6.dp),
         modifier = modifier,
+        colors = colors,
         content = content
     )
 }
