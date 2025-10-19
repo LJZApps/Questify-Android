@@ -16,7 +16,7 @@ object QuestCategoryModule {
 
     @Singleton
     @Provides
-    fun provideQuestCategoryDao(db: AppDatabase) = db.getQuestCategoryDao()
+    fun provideQuestCategoryDao(db: AppDatabase) = db.questCategoryDao
 
     @Provides
     @Singleton

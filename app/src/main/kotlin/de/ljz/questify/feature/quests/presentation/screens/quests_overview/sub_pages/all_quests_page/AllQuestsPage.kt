@@ -3,8 +3,11 @@ package de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,12 +54,12 @@ fun AllQuestsPage(
 
     if (quests.isNotEmpty()) {
         LazyColumn(
-            modifier = modifier
-                .padding(16.dp),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             itemsIndexed(
-                items = quests
+                items = quests,
+                key = { _, questWithSubQuests -> questWithSubQuests.quest.id }
             ) { index, quest ->
                 QuestItem(
                     questWithSubQuests = quest,
@@ -69,6 +72,13 @@ fun AllQuestsPage(
                     onClick = {
                         onQuestClicked(quest.quest.id)
                     }
+                )
+            }
+
+            item {
+                Spacer(
+                    modifier = Modifier.navigationBarsPadding()
+                        .height(0.dp)
                 )
             }
         }

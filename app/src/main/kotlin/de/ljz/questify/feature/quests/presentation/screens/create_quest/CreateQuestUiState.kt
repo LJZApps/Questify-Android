@@ -1,6 +1,7 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
 import de.ljz.questify.core.utils.AddingDateTimeState
+import de.ljz.questify.feature.quests.data.models.descriptors.SubQuestModel
 
 data class CreateQuestUiState(
     val title: String,
@@ -14,5 +15,6 @@ data class CreateQuestUiState(
     val addingDateTimeState: AddingDateTimeState,
     val isDueDateInfoDialogVisible: Boolean,
     val isAddingDueDate: Boolean,
-    val isSelectCategoryDialogVisible: Boolean
+    val isSelectCategoryDialogVisible: Boolean,
+    val subTasks: List<SubQuestModel>
 )

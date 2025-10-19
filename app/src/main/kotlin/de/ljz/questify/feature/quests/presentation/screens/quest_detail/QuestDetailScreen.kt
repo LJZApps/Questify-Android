@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -55,12 +56,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.bottom_sheets.ConfirmationBottomSheet
 import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.utils.MaxWidth
@@ -69,7 +70,6 @@ import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import kotlinx.coroutines.launch
@@ -524,7 +524,10 @@ fun QuestDetailScreen(
             }
 
             if (uiState.dialogState == DialogState.DeleteConfirmation) {
-                DeleteConfirmationDialog(
+                ConfirmationBottomSheet(
+                    onDismissRequest = {
+                        viewModel.hideDeleteConfirmationDialog()
+                    },
                     onConfirm = {
                         viewModel.deleteQuest(
                             uiState.questId,
@@ -535,7 +538,14 @@ fun QuestDetailScreen(
                             }
                         )
                     },
-                    onDismiss = { viewModel.hideDeleteConfirmationDialog() }
+                    title = "Quest löschen?",
+                    confirmationButtonText = stringResource(R.string.delete),
+                    confirmationButtonColors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                    ),
+                    dismissButtonText = stringResource(R.string.cancel),
+                    text = stringResource(R.string.delete_confirmation_dialog_description),
                 )
             }
         },

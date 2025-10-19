@@ -13,6 +13,23 @@ import java.util.Date
 
 @Dao
 interface QuestDao {
+    @Query("SELECT * FROM quest_entity")
+    fun getAll(): Flow<List<QuestEntity>>
+
+    @Query("SELECT * FROM quest_entity WHERE id = :id")
+    suspend fun getById(id: Int): QuestEntity?
+
+    @Query("DELETE FROM quest_entity")
+    suspend fun deleteAll()
+
+    @Query("DELETE FROM quest_entity WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
+    @Upsert
+    suspend fun upsert(quest: QuestEntity): Long
+
+    @Upsert
+    suspend fun upsertAll(quests: List<QuestEntity>)
 
     @Transaction
     @Query("SELECT * FROM quest_entity WHERE title LIKE '%' || :query || '%' OR notes LIKE '%' || :query || '%' ORDER BY title, notes DESC")

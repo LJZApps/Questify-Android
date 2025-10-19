@@ -10,10 +10,13 @@ import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.feature.quests.data.models.SubQuestEntity
+import de.ljz.questify.feature.quests.data.models.descriptors.SubQuestModel
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.AddSubQuestsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +33,9 @@ class CreateQuestViewModel @Inject constructor(
     private val questCategoryRepository: QuestCategoryRepository,
     savedStateHandle: SavedStateHandle,
 
-    private val addQuestCategoryUseCase: AddQuestCategoryUseCase
+    private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
+
+    private val addSubQuestsUseCase: AddSubQuestsUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = CreateQuestUiState(
@@ -45,7 +50,8 @@ class CreateQuestViewModel @Inject constructor(
             addingDateTimeState = AddingDateTimeState.NONE,
             isDueDateInfoDialogVisible = false,
             isSelectCategoryDialogVisible = false,
-            isAddingDueDate = false
+            isAddingDueDate = false,
+            subTasks = emptyList()
         )
     )
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
@@ -101,6 +107,15 @@ class CreateQuestViewModel @Inject constructor(
                 questNotificationRepository.addQuestNotification(questNotification)
             }
 
+            val subQuestEntities = _uiState.value.subTasks.map { subTask ->
+                SubQuestEntity(
+                    text = subTask.text,
+                    questId = questId
+                )
+            }
+
+            addSubQuestsUseCase.invoke(subQuestEntities = subQuestEntities)
+
             _questCreationSucceeded.update { true }
         }
     }
@@ -136,6 +151,24 @@ class CreateQuestViewModel @Inject constructor(
             copy(
                 isAddingReminder = true,
                 addingDateTimeState = AddingDateTimeState.DATE
+            )
+        }
+    }
+
+    fun addSubTask() {
+        _uiState.update {
+            it.copy(
+                subTasks = _uiState.value.subTasks + SubQuestModel(text = "")
+            )
+        }
+    }
+
+    fun updateSubtask(index: Int, text: String) {
+        _uiState.update { state ->
+            state.copy(
+                subTasks = state.subTasks.mapIndexed { i, subTask ->
+                    if (i == index) subTask.copy(text = text) else subTask
+                }
             )
         }
     }

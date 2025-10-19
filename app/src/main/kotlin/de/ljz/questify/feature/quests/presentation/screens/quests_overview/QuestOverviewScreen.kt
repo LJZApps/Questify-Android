@@ -4,8 +4,10 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -21,12 +23,10 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -41,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -56,11 +55,10 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.bottom_sheets.InputBottomSheet
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
-import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.UpdateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
 import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
@@ -167,6 +165,7 @@ private fun QuestOverviewScreen(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
@@ -272,7 +271,8 @@ private fun QuestOverviewScreen(
                         )
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.navigationBarsPadding()
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_add),
@@ -427,27 +427,36 @@ private fun QuestOverviewScreen(
             }
 
             if (uiState.dialogState == DialogState.CreateCategory) {
-                CreateCategoryDialog(
-                    onConfirm = { listText ->
-                        onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = listText))
+                InputBottomSheet(
+                    onDismissRequest = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
-                    onDismiss = {
+                    onConfirm = { value ->
+                        onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = value))
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
-                    }
+                    },
+                    title = stringResource(R.string.create_category_dialog_title),
+                    confirmationButtonText = stringResource(R.string.save),
+                    dismissButtonText = stringResource(R.string.cancel),
+                    initialInputFocussed = true
                 )
             }
 
             if (uiState.dialogState == DialogState.UpdateCategory) {
-                UpdateCategoryDialog(
-                    questCategory = selectedCategoryForUpdating,
-                    onConfirm = { listText ->
-                        onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = listText))
+                InputBottomSheet(
+                    onDismissRequest = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
-                    onDismiss = {
+                    onConfirm = { value ->
+                        onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = value))
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
-                    }
+                    },
+                    title = stringResource(R.string.update_category_dialog_title),
+                    icon = painterResource(R.drawable.ic_edit_outlined),
+                    dismissButtonText = stringResource(R.string.cancel),
+                    confirmationButtonText = stringResource(R.string.save),
+                    initialInputFocussed = true,
+                    initialValue = selectedCategoryForUpdating?.text?: ""
                 )
 
             }

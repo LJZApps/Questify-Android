@@ -16,7 +16,7 @@ object QuestNotificationModule {
 
     @Singleton
     @Provides
-    fun provideQuestNotificationDao(db: AppDatabase) = db.getQuestNotificationDao()
+    fun provideQuestNotificationDao(db: AppDatabase) = db.questNotificationDao
 
     @Provides
     @Singleton
