@@ -112,7 +112,6 @@ class ActivityMain : AppCompatActivity() {
                                 navController = navController
                             )
 
-
                             settingRoutes(
                                 navController = navController
                             )
