@@ -438,7 +438,6 @@ private fun QuestOverviewScreen(
                     title = stringResource(R.string.create_category_dialog_title),
                     confirmationButtonText = stringResource(R.string.save),
                     dismissButtonText = stringResource(R.string.cancel),
-                    dismissable = true,
                     initialInputFocussed = true
                 )
             }
