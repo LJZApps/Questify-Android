@@ -533,6 +533,11 @@ fun CreateQuestScreen(
                                         IconButton(
                                             onClick = {
                                                 viewModel.removeSubtask(index)
+                                                if (uiState.subTasks.count() > 0) {
+                                                    subTaskFocusManager.moveFocus(FocusDirection.Previous)
+                                                } else {
+                                                    subTaskFocusManager.clearFocus()
+                                                }
                                             }
                                         ) {
                                             Icon(
