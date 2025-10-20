@@ -173,6 +173,14 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
+    fun removeSubtask(index: Int) {
+        _uiState.update { state ->
+            state.copy(
+                subTasks = state.subTasks.filterIndexed { i, _ -> i != index }
+            )
+        }
+    }
+
 
     fun setDueDate(timestamp: Long) {
         updateUiState {

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonGroupDefaults
@@ -44,6 +45,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -55,6 +59,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -68,7 +73,6 @@ import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextF
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
-import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
@@ -94,6 +98,7 @@ fun CreateQuestScreen(
 
     val haptic = LocalHapticFeedback.current
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
 
     val dateFormat = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -107,6 +112,10 @@ fun CreateQuestScreen(
         if (questCreationSucceeded) {
             mainNavController.navigateUp()
         }
+    }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 
     Scaffold(
@@ -189,7 +198,8 @@ fun CreateQuestScreen(
                         .padding(horizontal = 8.dp)
                         .padding(bottom = 4.dp, top = 4.dp)
                         .imePadding()
-                        .navigationBarsPadding()
+                        .navigationBarsPadding(),
+                    enabled = uiState.title.trim().isNotEmpty()
                 ) {
                     Text(
                         text = "Quest erstellen"
@@ -226,7 +236,9 @@ fun CreateQuestScreen(
                             onValueChange = {
                                 viewModel.updateTitle(it)
                             },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focusRequester),
                             placeholder = {
                                 Text(
                                     text = "Gib den Titel deiner Quest ein..."
@@ -234,8 +246,12 @@ fun CreateQuestScreen(
                             },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
-                                capitalization = KeyboardCapitalization.Sentences
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.Next
                             ),
+                            keyboardActions = KeyboardActions {
+                                focusManager.moveFocus(FocusDirection.Next)
+                            }
                         )
                     }
 
@@ -257,8 +273,12 @@ fun CreateQuestScreen(
                             modifier = Modifier.fillMaxWidth(),
                             minLines = 3,
                             keyboardOptions = KeyboardOptions(
-                                capitalization = KeyboardCapitalization.Sentences
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.Next
                             ),
+                            keyboardActions = KeyboardActions {
+                                focusManager.clearFocus()
+                            }
                         )
                     }
 
@@ -306,7 +326,7 @@ fun CreateQuestScreen(
                             )
 
                             AppOutlinedTextField(
-                                value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedTime,
+                                value = if (uiState.selectedDueDate == 0L) "" else formattedTime,
                                 onValueChange = {},
                                 modifier = Modifier.weight(1f),
                                 placeholder = {
@@ -388,7 +408,6 @@ fun CreateQuestScreen(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                         ) {
-                            // Beispiel: unterschiedliche Gewichte pro Button
                             val modifiers = List(difficultyOptions.size) { Modifier.weight(1f) }
 
                             difficultyOptions.forEachIndexed { index, label ->
@@ -420,7 +439,6 @@ fun CreateQuestScreen(
                                             0 -> EasyIcon(tint = tint)
                                             1 -> MediumIcon(tint = tint)
                                             2 -> HardIcon(tint = tint)
-                                            3 -> EpicIcon(tint = tint)
                                         }
 
                                         Text(label)
@@ -442,10 +460,14 @@ fun CreateQuestScreen(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             uiState.subTasks.forEachIndexed { index, subTask ->
-                                OutlinedCard(
-                                    /*onClick = {
+                                val subTaskFocusManager = LocalFocusManager.current
+                                val subTaskFocusRequester = remember { FocusRequester() }
 
-                                    },*/
+                                LaunchedEffect(index) {
+                                    subTaskFocusRequester.requestFocus()
+                                }
+
+                                OutlinedCard(
                                     modifier = Modifier.fillMaxWidth(),
                                     colors = CardDefaults.outlinedCardColors(
                                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -468,9 +490,20 @@ fun CreateQuestScreen(
                                             onValueChange = {
                                                 viewModel.updateSubtask(index, it)
                                             },
-                                            modifier = Modifier.weight(1f),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .focusRequester(subTaskFocusRequester),
                                             textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                                             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
+                                            singleLine = true,
+                                            maxLines = 1,
+                                            keyboardOptions = KeyboardOptions(
+                                                imeAction = ImeAction.Next,
+                                                capitalization = KeyboardCapitalization.Sentences
+                                            ),
+                                            keyboardActions = KeyboardActions {
+                                                viewModel.addSubTask()
+                                            },
                                             decorationBox = @Composable { innerTextField ->
                                                 TextFieldDefaults.DecorationBox(
                                                     value = subTask.text,
@@ -492,14 +525,14 @@ fun CreateQuestScreen(
                                                             text = "Text hier eingeben"
                                                         )
                                                     },
-                                                    contentPadding = PaddingValues(0.dp),
+                                                    contentPadding = PaddingValues(0.dp)
                                                 )
                                             }
                                         )
 
                                         IconButton(
                                             onClick = {
-
+                                                viewModel.removeSubtask(index)
                                             }
                                         ) {
                                             Icon(
@@ -510,78 +543,6 @@ fun CreateQuestScreen(
                                     }
                                 }
                             }
-
-                            /*OutlinedCard(
-                                onClick = {
-
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                        .fillMaxWidth()
-                                ) {
-                                    Text(
-                                        text = "Unteraufgaben hinzufügen"
-                                    )
-
-                                    IconButton(
-                                        onClick = {
-
-                                        }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_delete_outlined),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
-
-                            OutlinedCard(
-                                onClick = {
-
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.outlinedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                )
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
-                                        )
-                                        .fillMaxWidth()
-                                ) {
-                                    Text(
-                                        text = "Unteraufgaben hinzufügen"
-                                    )
-
-                                    IconButton(
-                                        onClick = {
-
-                                        }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_delete_outlined),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }*/
                         }
 
                         AppOutlinedButton(

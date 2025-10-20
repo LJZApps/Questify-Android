@@ -39,7 +39,7 @@ fun HabitItem(
     modifier: Modifier = Modifier,
     title: String,
     notes: String? = null,
-    types: List<HabitType>,
+    type: HabitType,
     positiveCounter: Int,
     negativeCounter: Int,
     shape: Shape = RoundedCornerShape(4.dp),
@@ -92,39 +92,41 @@ fun HabitItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                if (types.contains(HabitType.NEGATIVE)) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        FilledIconButton(
-                            onClick = onDecrease,
-                            shape = CircleShape,
-                            colors = IconButtonDefaults.filledIconButtonColors(
+                when (type) {
+                    HabitType.NEGATIVE -> {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            FilledIconButton(
+                                onClick = onDecrease,
+                                shape = CircleShape,
+                                colors = IconButtonDefaults.filledIconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            ) {
+                                Icon(Icons.Default.Remove, contentDescription = "Negative Aktion")
+                            }
+                            Spacer(Modifier.height(4.dp))
+                            Badge(
                                 containerColor = MaterialTheme.colorScheme.errorContainer,
                                 contentColor = MaterialTheme.colorScheme.onErrorContainer
-                            )
-                        ) {
-                            Icon(Icons.Default.Remove, contentDescription = "Negative Aktion")
+                            ) { Text(animatedNegativeCounter.toString()) }
                         }
-                        Spacer(Modifier.height(4.dp))
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
-                        ) { Text(animatedNegativeCounter.toString()) }
                     }
-                }
 
-                if (types.contains(HabitType.POSITIVE)) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        FilledIconButton(
-                            onClick = onIncrease,
-                            shape = CircleShape
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = "Positive Aktion")
+                    HabitType.POSITIVE -> {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            FilledIconButton(
+                                onClick = onIncrease,
+                                shape = CircleShape
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = "Positive Aktion")
+                            }
+                            Spacer(Modifier.height(4.dp))
+                            Badge(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ) { Text(animatedPositiveCounter.toString()) }
                         }
-                        Spacer(Modifier.height(4.dp))
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ) { Text(animatedPositiveCounter.toString()) }
                     }
                 }
             }
@@ -134,7 +136,6 @@ fun HabitItem(
 
 
 // --- PREVIEW FUNKTIONEN ---
-
 @Preview(showBackground = true, name = "Positive Habit")
 @Composable
 private fun HabitItemPositivePreview() {
@@ -142,7 +143,7 @@ private fun HabitItemPositivePreview() {
         HabitItem(
             title = "Täglich Sport machen",
             notes = "Mindestens 30 Minuten",
-            types = listOf(HabitType.POSITIVE),
+            type = HabitType.POSITIVE,
             positiveCounter = 5,
             negativeCounter = 0,
             onIncrease = {},
@@ -158,26 +159,9 @@ private fun HabitItemNegativePreview() {
     MaterialTheme {
         HabitItem(
             title = "Nicht Rauchen",
-            types = listOf(HabitType.NEGATIVE),
+            type = HabitType.NEGATIVE,
             positiveCounter = 0,
             negativeCounter = 2,
-            onIncrease = {},
-            onDecrease = {},
-            onClick = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Both Types Habit")
-@Composable
-private fun HabitItemBothPreview() {
-    MaterialTheme {
-        HabitItem(
-            title = "Zuckerkonsum",
-            notes = "Belohnung für 'nein', Strafe für 'ja'",
-            types = listOf(HabitType.POSITIVE, HabitType.NEGATIVE),
-            positiveCounter = 3,
-            negativeCounter = 1,
             onIncrease = {},
             onDecrease = {},
             onClick = {}

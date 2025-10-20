@@ -17,5 +17,5 @@ data class HabitsEntity(
     val notes: String? = null,
 
     @ColumnInfo(name = "type")
-    val type: List<HabitType> = emptyList()
+    val type: HabitType
 )

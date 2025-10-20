@@ -23,6 +23,7 @@ import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.utils.isAlarmPermissionGranted
 import de.ljz.questify.core.utils.isNotificationPermissionGranted
 import de.ljz.questify.core.utils.isOverlayPermissionGranted
+import de.ljz.questify.feature.habits.presentation.screens.create_habit.CreateHabitRoute
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsScreen
 import de.ljz.questify.feature.main.presentation.components.DrawerContent
@@ -120,8 +121,16 @@ fun MainScreen(
 
                     composable<HabitsRoute> {
                         HabitsScreen(
-                            drawerState = drawerState,
-                            mainNavController = mainNavController
+                            onNavigateToCreateHabitScreen = {
+                                mainNavController.navigate(CreateHabitRoute)
+                            },
+                            onToggleDrawer = {
+                                scope.launch {
+                                    drawerState.apply {
+                                        if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                    }
+                                }
+                            }
                         )
                     }
 
