@@ -227,18 +227,27 @@ class CreateQuestViewModel @Inject constructor(
         )
     }
 
+    // Title
     fun updateTitle(title: String) = updateUiState { copy(title = title) }
+
+    // Description / Notes
     fun updateDescription(description: String) = updateUiState { copy(description = description) }
+
+    // Difficulty
     fun updateDifficulty(difficulty: Int) = updateUiState { copy(difficulty = difficulty) }
-    fun showAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = true) }
-    fun hideAlertManagerInfo() = updateUiState { copy(isAlertManagerInfoVisible = false) }
-    fun showDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = true) }
+
+    // Category dialog
     fun showSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = true) }
     fun hideSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = false) }
 
+    // Due date info dialog
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
+
+    // Due date picker dialog
     fun showDatePickerDialog() = updateUiState { copy(isDatePickerDialogVisible = true) }
     fun hideDatePickerDialog() = updateUiState { copy(isDatePickerDialogVisible = false) }
+
+    // Due time picker dialog
     fun showTimePickerDialog() = updateUiState { copy(isTimePickerDialogVisible = true) }
     fun hideTimePickerDialog() = updateUiState { copy(isTimePickerDialogVisible = false) }
 

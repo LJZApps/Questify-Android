@@ -265,15 +265,24 @@ private fun EditQuestScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        val interactionSource = remember { MutableInteractionSource() }
-                        val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+                        val dateInteractionSource = remember { MutableInteractionSource() }
+                        val isDateFocused: Boolean by dateInteractionSource.collectIsFocusedAsState()
+                        val timeInteractionSource = remember { MutableInteractionSource() }
+                        val isTimeFocused : Boolean by timeInteractionSource.collectIsFocusedAsState()
+
                         val date = Date(uiState.dueDate)
                         val formattedDate = dateFormat.format(date)
                         val formattedTime = timeFormat.format(date)
 
-                        LaunchedEffect(isFocused) {
-                            if (isFocused) {
-                                onUiEvent(EditQuestUiEvent.ShowAddingDueDateDialog)
+                        LaunchedEffect(isDateFocused) {
+                            if (isDateFocused) {
+//                                viewModel.showDatePickerDialog()
+                            }
+                        }
+
+                        LaunchedEffect(isTimeFocused) {
+                            if (isTimeFocused) {
+//                                viewModel.showTimePickerDialog()
                             }
                         }
 
@@ -292,7 +301,7 @@ private fun EditQuestScreen(
                                     contentDescription = null
                                 )
                             },
-                            interactionSource = interactionSource
+                            interactionSource = dateInteractionSource
                         )
 
                         AppOutlinedTextField(
@@ -310,10 +319,12 @@ private fun EditQuestScreen(
                                     contentDescription = null
                                 )
                             },
-                            interactionSource = interactionSource
+                            interactionSource = timeInteractionSource
                         )
                     }
                 }
+
+
             }
         }
     }

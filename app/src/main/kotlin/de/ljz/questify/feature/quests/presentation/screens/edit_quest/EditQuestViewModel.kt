@@ -79,7 +79,7 @@ class EditQuestViewModel @Inject constructor(
                 }
             }
 
-            is EditQuestUiEvent.ShowAddingDueDateDialog -> {
+            is EditQuestUiEvent.ShowDatePickerDialog -> {
 
             }
 
