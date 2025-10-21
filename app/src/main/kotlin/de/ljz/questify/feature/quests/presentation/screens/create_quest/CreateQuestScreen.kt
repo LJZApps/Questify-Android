@@ -78,6 +78,7 @@ import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DueDateInfoDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.SetDueTimeDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -102,6 +103,7 @@ fun CreateQuestScreen(
 
     val dateFormat = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val dateTimeFormat = SimpleDateFormat("dd. MMM yyy HH:mm", Locale.getDefault())
     val difficultyOptions = listOf(
         stringResource(R.string.difficulty_easy),
         stringResource(R.string.difficulty_medium),
@@ -165,7 +167,11 @@ fun CreateQuestScreen(
                         onDismissRequest = { dropdownExpanded = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Liste") },
+                            text = {
+                                Text(
+                                    text = selectedCategory?.text ?: "Liste"
+                                )
+                            },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_label_filled),
@@ -272,13 +278,10 @@ fun CreateQuestScreen(
                             placeholder = { Text("Füge hier detaillierte Notizen hinzu...") },
                             modifier = Modifier.fillMaxWidth(),
                             minLines = 3,
+                            maxLines = 3,
                             keyboardOptions = KeyboardOptions(
                                 capitalization = KeyboardCapitalization.Sentences,
-                                imeAction = ImeAction.Next
-                            ),
-                            keyboardActions = KeyboardActions {
-                                focusManager.clearFocus()
-                            }
+                            )
                         )
                     }
 
@@ -295,15 +298,24 @@ fun CreateQuestScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            val interactionSource = remember { MutableInteractionSource() }
-                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+                            val dateInteractionSource = remember { MutableInteractionSource() }
+                            val isDateFocused: Boolean by dateInteractionSource.collectIsFocusedAsState()
+                            val timeInteractionSource = remember { MutableInteractionSource() }
+                            val isTimeFocused : Boolean by timeInteractionSource.collectIsFocusedAsState()
+
                             val date = Date(uiState.selectedDueDate)
                             val formattedDate = dateFormat.format(date)
                             val formattedTime = timeFormat.format(date)
 
-                            LaunchedEffect(isFocused) {
-                                if (isFocused) {
-                                    viewModel.showAddingDueDateDialog()
+                            LaunchedEffect(isDateFocused) {
+                                if (isDateFocused) {
+                                    viewModel.showDatePickerDialog()
+                                }
+                            }
+
+                            LaunchedEffect(isTimeFocused) {
+                                if (isTimeFocused) {
+                                    viewModel.showTimePickerDialog()
                                 }
                             }
 
@@ -322,7 +334,7 @@ fun CreateQuestScreen(
                                         contentDescription = null
                                     )
                                 },
-                                interactionSource = interactionSource
+                                interactionSource = dateInteractionSource
                             )
 
                             AppOutlinedTextField(
@@ -340,7 +352,7 @@ fun CreateQuestScreen(
                                         contentDescription = null
                                     )
                                 },
-                                interactionSource = interactionSource
+                                interactionSource = timeInteractionSource
                             )
                         }
                     }
@@ -363,7 +375,7 @@ fun CreateQuestScreen(
                                         onClick = {
                                             viewModel.removeReminder(index)
                                         },
-                                        label = { Text(dateFormat.format(Date(triggerTime))) },
+                                        label = { Text(dateTimeFormat.format(Date(triggerTime))) },
                                         leadingIcon = {
                                             Icon(
                                                 painter = painterResource(R.drawable.ic_notifications_outlined),
@@ -483,7 +495,8 @@ fun CreateQuestScreen(
                                             )
                                             .fillMaxWidth()
                                     ) {
-                                        val interactionSource = remember { MutableInteractionSource() }
+                                        val interactionSource =
+                                            remember { MutableInteractionSource() }
 
                                         BasicTextField(
                                             value = subTask.text,
@@ -493,7 +506,9 @@ fun CreateQuestScreen(
                                             modifier = Modifier
                                                 .weight(1f)
                                                 .focusRequester(subTaskFocusRequester),
-                                            textStyle = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                                            textStyle = MaterialTheme.typography.titleMedium.copy(
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            ),
                                             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
                                             singleLine = true,
                                             maxLines = 1,
@@ -589,24 +604,41 @@ fun CreateQuestScreen(
                 DueDateInfoDialog(onDismiss = { viewModel.hideDueDateInfoDialog() })
             }
 
-            if (uiState.isAddingDueDate) {
+            val initialDateTimeMillis = uiState.selectedDueDate.takeIf { it != 0L }
+
+            if (uiState.isDatePickerDialogVisible) {
                 SetDueDateDialog(
-                    onConfirm = { dueDateTimestamp ->
-                        viewModel.setDueDate(dueDateTimestamp)
-                        viewModel.hideAddingDueDateDialog()
+                    onConfirm = { timestamp ->
+                        viewModel.setDueDate(timestamp)
                         focusManager.clearFocus()
                     },
                     onDismiss = {
-                        viewModel.hideAddingDueDateDialog()
+                        viewModel.hideDatePickerDialog()
                         focusManager.clearFocus()
                     },
-                    addingDateTimeState = uiState.addingDateTimeState,
-                    onDateTimeStateChange = { viewModel.updateReminderState(it) },
                     onRemoveDueDate = {
                         viewModel.removeDueDate()
-                        viewModel.hideAddingDueDateDialog()
                         focusManager.clearFocus()
-                    }
+                    },
+                    initialSelectedDateTimeMillis = initialDateTimeMillis
+                )
+            }
+
+            if (uiState.isTimePickerDialogVisible) {
+                SetDueTimeDialog(
+                    onConfirm = { timestamp ->
+                        viewModel.setDueDate(timestamp)
+                        focusManager.clearFocus()
+                    },
+                    onDismiss = {
+                        viewModel.hideTimePickerDialog()
+                        focusManager.clearFocus()
+                    },
+                    onRemoveDueDate = {
+                        viewModel.removeDueDate()
+                        focusManager.clearFocus()
+                    },
+                    initialSelectedDateTimeMillis = initialDateTimeMillis
                 )
             }
 

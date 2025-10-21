@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdUseCase
@@ -26,10 +27,13 @@ class EditQuestViewModel @Inject constructor(
             title = "",
             notes = null,
             difficulty = Difficulty.EASY,
-            dueDate = null,
+            dueDate = 0,
             categoryId = null,
 
-            subTasks = emptyList()
+            subTasks = emptyList(),
+
+            dueDateDialogVisible = false,
+            addingDateTimeState = AddingDateTimeState.NONE
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -46,7 +50,7 @@ class EditQuestViewModel @Inject constructor(
                             title = questEntity.title,
                             notes = questEntity.notes,
                             difficulty = questEntity.difficulty,
-                            dueDate = questEntity.dueDate,
+                            dueDate = questEntity.dueDate?.toInstant()?.toEpochMilli()?: 0L,
                             categoryId = questEntity.categoryId
                         )
                     }
@@ -67,6 +71,16 @@ class EditQuestViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(title = event.value)
                 }
+            }
+
+            is EditQuestUiEvent.OnNotesChanged -> {
+                _uiState.update {
+                    it.copy(notes = event.value)
+                }
+            }
+
+            is EditQuestUiEvent.ShowAddingDueDateDialog -> {
+
             }
 
             else -> Unit

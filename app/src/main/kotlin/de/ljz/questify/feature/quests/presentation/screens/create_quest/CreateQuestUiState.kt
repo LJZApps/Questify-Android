@@ -14,7 +14,8 @@ data class CreateQuestUiState(
     val notificationTriggerTimes: List<Long>,
     val addingDateTimeState: AddingDateTimeState,
     val isDueDateInfoDialogVisible: Boolean,
-    val isAddingDueDate: Boolean,
+    val isDatePickerDialogVisible: Boolean,
+    val isTimePickerDialogVisible: Boolean,
     val isSelectCategoryDialogVisible: Boolean,
     val subTasks: List<SubQuestModel>
 )

@@ -10,15 +10,16 @@ data class QuestDetailUiState(
 
     val questId: Int,
 
-    val editQuestState: EditQuestState
+    val questState: QuestState
 )
 
-data class EditQuestState(
+data class QuestState(
     val title: String,
     val description: String,
     val difficulty: Int,
     val notificationTriggerTimes: List<Long>,
     val selectedDueDate: Long,
+    val done: Boolean
 )
 
 sealed class DialogState {

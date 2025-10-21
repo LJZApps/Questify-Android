@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -126,6 +127,18 @@ private fun SettingsHelpScreen(
                 },
                 onClick = {
                     onUiEvent.invoke(SettingsHelpUiEvent.SendFeedback)
+                }
+            )
+
+            ExpressiveSettingsMenuLink(
+                title = "Neuigkeiten",
+                subtitle = "Neues in diesem Release",
+                icon = {
+                    Icon(Icons.Outlined.NewReleases, contentDescription = null)
+                },
+                onClick = {
+                    // TODO
+//                    onUiEvent.invoke(SettingsHelpUiEvent.SendFeedback)
                 }
             )
 

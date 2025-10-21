@@ -19,6 +19,7 @@ import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepositor
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,9 +36,11 @@ class QuestDetailViewModel @Inject constructor(
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
     private val questCategoryRepository: QuestCategoryRepository,
+
+    private val completeQuestUseCase: CompleteQuestUseCase,
     private val deleteQuestUseCase: DeleteQuestUseCase,
 
-    private val addQuestCategoryUseCase: AddQuestCategoryUseCase
+    private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = QuestDetailUiState(
@@ -49,12 +52,13 @@ class QuestDetailViewModel @Inject constructor(
 
             questId = 0,
 
-            editQuestState = EditQuestState(
+            questState = QuestState(
                 title = "",
                 description = "",
                 difficulty = 0,
                 notificationTriggerTimes = emptyList(),
-                selectedDueDate = 0
+                selectedDueDate = 0,
+                done = false
             )
         )
     )
@@ -92,12 +96,13 @@ class QuestDetailViewModel @Inject constructor(
                         _selectedCategory.value = questCategoryEntity
 
                         _uiState.value = _uiState.value.copy(
-                            editQuestState = _uiState.value.editQuestState.copy(
+                            questState = _uiState.value.questState.copy(
                                 title = questEntity.quest.title,
                                 description = questEntity.quest.notes ?: "",
                                 difficulty = questEntity.quest.difficulty.ordinal,
                                 notificationTriggerTimes = notifications,
-                                selectedDueDate = questEntity.quest.dueDate?.time ?: 0L
+                                selectedDueDate = questEntity.quest.dueDate?.time ?: 0L,
+                                done = questEntity.quest.done
                             ),
                             questId = questId
                         )
@@ -135,7 +140,7 @@ class QuestDetailViewModel @Inject constructor(
             }
             questNotificationRepository.removeNotifications(questId)
 
-            _uiState.value.editQuestState.notificationTriggerTimes.forEach { notificationTriggerTime ->
+            _uiState.value.questState.notificationTriggerTimes.forEach { notificationTriggerTime ->
                 val questNotification = QuestNotificationEntity(
                     questId = questId,
                     notifyAt = Date(notificationTriggerTime)
@@ -146,10 +151,10 @@ class QuestDetailViewModel @Inject constructor(
 
             questRepository.updateQuest(
                 id = questId,
-                title = _uiState.value.editQuestState.title,
-                description = _uiState.value.editQuestState.description.trimToNull(),
-                difficulty = Difficulty.fromIndex(_uiState.value.editQuestState.difficulty),
-                dueDate = if (_uiState.value.editQuestState.selectedDueDate.toInt() == 0) null else Date(_uiState.value.editQuestState.selectedDueDate),
+                title = _uiState.value.questState.title,
+                description = _uiState.value.questState.description.trimToNull(),
+                difficulty = Difficulty.fromIndex(_uiState.value.questState.difficulty),
+                dueDate = if (_uiState.value.questState.selectedDueDate.toInt() == 0) null else Date(_uiState.value.questState.selectedDueDate),
                 categoryId = _selectedCategory.value?.id
             )
 
@@ -202,11 +207,11 @@ class QuestDetailViewModel @Inject constructor(
 
     fun removeReminder(index: Int) {
         val updatedTimes =
-            _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
+            _uiState.value.questState.notificationTriggerTimes.toMutableList().apply {
                 removeAt(index)
             }
         _uiState.value = _uiState.value.copy(
-            editQuestState = _uiState.value.editQuestState.copy(
+            questState = _uiState.value.questState.copy(
                 notificationTriggerTimes = updatedTimes
             )
         )
@@ -214,11 +219,11 @@ class QuestDetailViewModel @Inject constructor(
 
     fun addReminder(timestamp: Long) {
         val updatedTimes =
-            _uiState.value.editQuestState.notificationTriggerTimes.toMutableList().apply {
+            _uiState.value.questState.notificationTriggerTimes.toMutableList().apply {
                 add(timestamp)
             }
         _uiState.value = _uiState.value.copy(
-            editQuestState = _uiState.value.editQuestState.copy(
+            questState = _uiState.value.questState.copy(
                 notificationTriggerTimes = updatedTimes
             )
         )
@@ -234,7 +239,7 @@ class QuestDetailViewModel @Inject constructor(
     fun setDueDate(timestamp: Long) {
         updateUiState {
             copy(
-                editQuestState = editQuestState.copy(
+                questState = questState.copy(
                     selectedDueDate = timestamp
                 )
             )
@@ -272,10 +277,10 @@ class QuestDetailViewModel @Inject constructor(
     }
 
     fun updateTitle(title: String) =
-        updateUiState { copy(editQuestState = editQuestState.copy(title = title)) }
+        updateUiState { copy(questState = questState.copy(title = title)) }
 
     fun updateDescription(description: String) =
-        updateUiState { copy(editQuestState = editQuestState.copy(description = description)) }
+        updateUiState { copy(questState = questState.copy(description = description)) }
 
     fun showSelectCategoryDialog() = updateUiState { copy(dialogState = DialogState.SelectCategory) }
     fun hideSelectCategoryDialog() = updateUiState { copy(dialogState = DialogState.None) }
@@ -295,7 +300,7 @@ class QuestDetailViewModel @Inject constructor(
     }
 
     fun updateDifficulty(difficulty: Int) =
-        updateUiState { copy(editQuestState = editQuestState.copy(difficulty = difficulty)) }
+        updateUiState { copy(questState = questState.copy(difficulty = difficulty)) }
 
     fun showDeleteConfirmationDialog() =
         updateUiState { copy(dialogState = DialogState.DeleteConfirmation) }

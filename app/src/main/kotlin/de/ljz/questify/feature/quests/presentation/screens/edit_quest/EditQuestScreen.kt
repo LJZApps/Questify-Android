@@ -1,12 +1,16 @@
 package de.ljz.questify.feature.quests.presentation.screens.edit_quest
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -22,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,8 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -39,6 +49,9 @@ import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun EditQuestScreen(
@@ -66,6 +79,18 @@ private fun EditQuestScreen(
     onUiEvent: (EditQuestUiEvent) -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
+    val dateFormat = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val dateTimeFormat = SimpleDateFormat("dd. MMM yyy HH:mm", Locale.getDefault())
+    val difficultyOptions = listOf(
+        stringResource(R.string.difficulty_easy),
+        stringResource(R.string.difficulty_medium),
+        stringResource(R.string.difficulty_hard),
+    )
+
+    val haptic = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
 
     Scaffold(
         modifier = Modifier.imePadding(),
@@ -127,7 +152,6 @@ private fun EditQuestScreen(
                             },
                             onClick = {
                                 dropdownExpanded = false
-//                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
                             }
                         )
 
@@ -146,7 +170,6 @@ private fun EditQuestScreen(
                             },
                             onClick = {
                                 dropdownExpanded = false
-//                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
                             },
                             colors = MenuDefaults.itemColors(
                                 textColor = MaterialTheme.colorScheme.error,
@@ -186,7 +209,9 @@ private fun EditQuestScreen(
                         onValueChange = {
                             onUiEvent(EditQuestUiEvent.OnTitleChanged(value = it))
                         },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                        ,
                         placeholder = {
                             Text(
                                 text = "Gib den Titel deiner Quest ein..."
@@ -194,8 +219,12 @@ private fun EditQuestScreen(
                         },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Sentences
+                            capitalization = KeyboardCapitalization.Sentences,
+                            imeAction = ImeAction.Next
                         ),
+                        keyboardActions = KeyboardActions {
+                            focusManager.moveFocus(FocusDirection.Next)
+                        }
                     )
                 }
 
@@ -211,15 +240,79 @@ private fun EditQuestScreen(
                     AppOutlinedTextField(
                         value = uiState.notes?: "",
                         onValueChange = {
-//                            viewModel.updateDescription(it)
+                            onUiEvent(EditQuestUiEvent.OnNotesChanged(value = it))
                         },
                         placeholder = { Text("Füge hier detaillierte Notizen hinzu...") },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 3,
+                        maxLines = 3,
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences
                         ),
                     )
+                }
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Fälligkeitsdatum & Zeit",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
+                        val date = Date(uiState.dueDate)
+                        val formattedDate = dateFormat.format(date)
+                        val formattedTime = timeFormat.format(date)
+
+                        LaunchedEffect(isFocused) {
+                            if (isFocused) {
+                                onUiEvent(EditQuestUiEvent.ShowAddingDueDateDialog)
+                            }
+                        }
+
+                        AppOutlinedTextField(
+                            value = if (uiState.dueDate == 0L) "" else formattedDate,
+                            onValueChange = {},
+                            modifier = Modifier.weight(2f),
+                            placeholder = {
+                                Text(text = "Datum")
+                            },
+                            singleLine = true,
+                            readOnly = true,
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_calendar_today_filled),
+                                    contentDescription = null
+                                )
+                            },
+                            interactionSource = interactionSource
+                        )
+
+                        AppOutlinedTextField(
+                            value = if (uiState.dueDate == 0L) "" else formattedTime,
+                            onValueChange = {},
+                            modifier = Modifier.weight(1f),
+                            placeholder = {
+                                Text(text = "Zeit")
+                            },
+                            singleLine = true,
+                            readOnly = true,
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_schedule_outlined),
+                                    contentDescription = null
+                                )
+                            },
+                            interactionSource = interactionSource
+                        )
+                    }
                 }
             }
         }

@@ -12,11 +12,11 @@ import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 import de.ljz.questify.feature.quests.data.models.descriptors.SubQuestModel
-import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.AddSubQuestsUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,10 +30,10 @@ import javax.inject.Inject
 class CreateQuestViewModel @Inject constructor(
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
-    private val questCategoryRepository: QuestCategoryRepository,
     savedStateHandle: SavedStateHandle,
 
     private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
+    private val getAllQuestCategoriesUseCase: GetAllQuestCategoriesUseCase,
 
     private val addSubQuestsUseCase: AddSubQuestsUseCase
 ) : ViewModel() {
@@ -44,13 +44,14 @@ class CreateQuestViewModel @Inject constructor(
             difficulty = 0,
             isAddingReminder = false,
             selectedTime = 0,
-            selectedDueDate = 0,
+            selectedDueDate = 0L,
             isAlertManagerInfoVisible = false,
             notificationTriggerTimes = emptyList(),
             addingDateTimeState = AddingDateTimeState.NONE,
             isDueDateInfoDialogVisible = false,
             isSelectCategoryDialogVisible = false,
-            isAddingDueDate = false,
+            isDatePickerDialogVisible = false,
+            isTimePickerDialogVisible = false,
             subTasks = emptyList()
         )
     )
@@ -71,7 +72,7 @@ class CreateQuestViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                questCategoryRepository.getAllQuestCategories()
+                getAllQuestCategoriesUseCase.invoke()
                     .collectLatest { questCategoryEntities ->
                         _categories.value = questCategoryEntities
 
@@ -185,7 +186,9 @@ class CreateQuestViewModel @Inject constructor(
     fun setDueDate(timestamp: Long) {
         updateUiState {
             copy(
-                selectedDueDate = timestamp
+                selectedDueDate = timestamp,
+                isDatePickerDialogVisible = false,
+                isTimePickerDialogVisible = false
             )
         }
     }
@@ -193,7 +196,9 @@ class CreateQuestViewModel @Inject constructor(
     fun removeDueDate() {
         updateUiState {
             copy(
-                selectedDueDate = 0
+                selectedDueDate = 0,
+                isDatePickerDialogVisible = false,
+                isTimePickerDialogVisible = false
             )
         }
     }
@@ -232,18 +237,9 @@ class CreateQuestViewModel @Inject constructor(
     fun hideSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = false) }
 
     fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
-    fun showAddingDueDateDialog() = updateUiState {
-        copy(
-            isAddingDueDate = true,
-            addingDateTimeState = AddingDateTimeState.DATE
-        )
-    }
-
-    fun hideAddingDueDateDialog() = updateUiState {
-        copy(
-            isAddingDueDate = false,
-            addingDateTimeState = AddingDateTimeState.NONE
-        )
-    }
+    fun showDatePickerDialog() = updateUiState { copy(isDatePickerDialogVisible = true) }
+    fun hideDatePickerDialog() = updateUiState { copy(isDatePickerDialogVisible = false) }
+    fun showTimePickerDialog() = updateUiState { copy(isTimePickerDialogVisible = true) }
+    fun hideTimePickerDialog() = updateUiState { copy(isTimePickerDialogVisible = false) }
 
 }

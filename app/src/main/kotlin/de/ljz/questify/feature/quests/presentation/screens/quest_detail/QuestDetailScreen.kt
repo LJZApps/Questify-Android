@@ -70,7 +70,6 @@ import de.ljz.questify.feature.quests.presentation.components.EpicIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
-import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -86,7 +85,7 @@ fun QuestDetailScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val selectedCategory = viewModel.selectedCategory.collectAsStateWithLifecycle().value
     val categories = viewModel.categories.collectAsStateWithLifecycle().value
-    val editQuestState = uiState.editQuestState
+    val editQuestState = uiState.questState
     val focusManager = LocalFocusManager.current
 
     val scope = rememberCoroutineScope()
@@ -163,7 +162,7 @@ fun QuestDetailScreen(
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 //                        viewModel.createQuest()
                     },
-                    enabled = true,
+                    enabled = uiState.questState.done,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
@@ -487,7 +486,7 @@ fun QuestDetailScreen(
             }
 
             if (uiState.dialogState == DialogState.SetDueDate) {
-                SetDueDateDialog(
+                /*SetDueDateDialog(
                     onConfirm = { dueDateTimestamp ->
                         viewModel.setDueDate(dueDateTimestamp)
                         viewModel.hideDueDateSelectionDialog()
@@ -502,7 +501,7 @@ fun QuestDetailScreen(
                     onRemoveDueDate = {
                         viewModel.setDueDate(0)
                     }
-                )
+                )*/
             }
 
             if (uiState.dialogState == DialogState.SelectCategory) {

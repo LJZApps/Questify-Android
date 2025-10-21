@@ -1,13 +1,9 @@
 package de.ljz.questify.feature.quests.presentation.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
@@ -15,31 +11,15 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppTextButton
-import de.ljz.questify.core.utils.AddingDateTimeState
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -48,23 +28,22 @@ fun SetDueDateDialog(
     onConfirm: (Long) -> Unit,
     onDismiss: () -> Unit,
     onRemoveDueDate: () -> Unit,
-    addingDateTimeState: AddingDateTimeState = AddingDateTimeState.NONE,
-    onDateTimeStateChange: (AddingDateTimeState) -> Unit
+    initialSelectedDateTimeMillis: Long?
 ) {
     val currentTime = Calendar.getInstance()
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = true
-    )
+    val initialMillis = initialSelectedDateTimeMillis ?: currentTime.timeInMillis
+
+    if (initialSelectedDateTimeMillis == null) {
+        currentTime.timeInMillis = initialMillis
+    }
+
     val datePickerState = rememberDatePickerState(
         initialDisplayMode = DisplayMode.Picker,
-        initialSelectedDateMillis = currentTime.timeInMillis,
+        initialSelectedDateMillis = initialMillis,
         selectableDates = object : SelectableDates {
+            // Erlaube Auswahl ab heute (Mitternacht)
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 val isSelectableTime = Calendar.getInstance()
-
-                // Setze Stunden, Minuten, Sekunden und Millisekunden auf 0, um nur das Datum zu vergleichen
                 isSelectableTime.set(Calendar.HOUR_OF_DAY, 0)
                 isSelectableTime.set(Calendar.MINUTE, 0)
                 isSelectableTime.set(Calendar.SECOND, 0)
@@ -74,143 +53,60 @@ fun SetDueDateDialog(
         }
     )
 
-    val combinedDateTime = remember { mutableStateOf(currentTime.timeInMillis) }
-
-    // Update combinedDateTime whenever the date or time changes
-    LaunchedEffect(
-        datePickerState.selectedDateMillis,
-        timePickerState.hour,
-        timePickerState.minute
-    ) {
-        val selectedDate = datePickerState.selectedDateMillis
-        if (selectedDate != null) {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = selectedDate
-            calendar.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-            calendar.set(Calendar.MINUTE, timePickerState.minute)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-
-            combinedDateTime.value = calendar.timeInMillis
-        }
-    }
-
-    val showTimeInput = remember { mutableStateOf(false) }
-
-    when (addingDateTimeState) {
-        AddingDateTimeState.NONE -> null
-        AddingDateTimeState.DATE -> {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp)
             ) {
-                DatePickerDialog(
-                    onDismissRequest = onDismiss,
-                    confirmButton = {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(start = 4.dp)
-                        ) {
-                            AppTextButton(
-                                onClick = onRemoveDueDate,
-                            ) {
-                                Text(
-                                    text = "Fälligkeit entfernen"
-                                )
-                            }
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(2.dp)
-                            ) {
-                                AppTextButton(
-                                    onClick = onDismiss,
-                                ) {
-                                    Text(stringResource(R.string.cancel))
-                                }
-
-                                AppTextButton(
-                                    onClick = { onDateTimeStateChange(AddingDateTimeState.TIME) },
-                                ) {
-                                    Text(stringResource(R.string.next))
-                                }
-                            }
-                        }
-                    }
+                AppTextButton(
+                    onClick = onRemoveDueDate,
                 ) {
-                    DatePicker(
-                        state = datePickerState,
-                        modifier = Modifier.verticalScroll(rememberScrollState())
-                    )
+                    Text("Fälligkeit entfernen")
                 }
-            }
-        }
 
-        AddingDateTimeState.TIME -> {
-            Dialog(
-                onDismissRequest = onDismiss
-            ) {
-                Surface(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.surfaceContainerHigh
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    AppTextButton(
+                        onClick = onDismiss,
                     ) {
-                        Text(
-                            text = stringResource(R.string.create_reminder_dialog_title),
-                            modifier = Modifier
-                                .padding(bottom = 12.dp)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        if (showTimeInput.value) {
-                            TimeInput(timePickerState)
-                        } else {
-                            TimePicker(timePickerState)
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row {
-                                IconButton(
-                                    onClick = {
-                                        showTimeInput.value = !showTimeInput.value
-                                    },
-                                ) {
-                                    Icon(
-                                        if (showTimeInput.value)
-                                            painterResource(R.drawable.ic_keyboard_hide_outlined)
-                                        else
-                                            painterResource(R.drawable.ic_keyboard_outlined)
-                                        ,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
+                        Text(stringResource(R.string.cancel))
+                    }
 
-                            Row {
-                                TextButton(
-                                    onClick = { onDateTimeStateChange(AddingDateTimeState.DATE) }
-                                ) {
-                                    Text(stringResource(R.string.back))
+                    AppTextButton(
+                        onClick = {
+                            datePickerState.selectedDateMillis?.let { selectedMillis ->
+                                val initialCal = Calendar.getInstance().apply {
+                                    timeInMillis = initialMillis
                                 }
-                                Spacer(modifier = Modifier.width(2.dp))
-                                TextButton(
-                                    onClick = { onConfirm(combinedDateTime.value) }
-                                ) {
-                                    Text(stringResource(R.string.save))
+
+                                val selectedCal = Calendar.getInstance().apply {
+                                    timeInMillis = selectedMillis
+
+                                    set(Calendar.HOUR_OF_DAY, initialCal.get(Calendar.HOUR_OF_DAY))
+                                    set(Calendar.MINUTE, initialCal.get(Calendar.MINUTE))
+                                    set(Calendar.SECOND, 0)
+                                    set(Calendar.MILLISECOND, 0)
                                 }
-                            }
-                        }
+                                onConfirm(selectedCal.timeInMillis)
+                            } ?: onDismiss()
+                        },
+                    ) {
+                        Text(stringResource(R.string.save))
                     }
                 }
             }
         }
+    ) {
+        DatePicker(
+            state = datePickerState,
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        )
     }
+
 
 }
