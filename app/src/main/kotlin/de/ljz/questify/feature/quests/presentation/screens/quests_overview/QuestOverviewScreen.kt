@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -109,10 +111,6 @@ fun QuestOverviewScreen(
                     onNavigateToEditQuestScreen(event.id)
                 }
 
-                is QuestOverviewUiEvent.PerformHapticFeedback -> {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                }
-
                 else -> {
                     viewModel.onUiEvent(event = event)
                 }
@@ -133,6 +131,10 @@ private fun QuestOverviewScreen(
     val questDoneDialogState = uiState.questDoneDialogState
     val allQuestPageState = uiState.allQuestPageState
 
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
+
     val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
     val staticAllTab = QuestCategoryEntity(id = -1, text = stringResource(R.string.quest_overview_screen_tab_default_text))
@@ -143,9 +145,29 @@ private fun QuestOverviewScreen(
 
     var desiredPageIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
-    val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
+    val initialPage = desiredPageIndex.coerceIn(0, (allTabs.size - 1).coerceAtLeast(0))
+
+    val pagerState = rememberPagerState(
+        initialPage = initialPage,
+        pageCount = { allTabs.size }
+    )
+
+    LaunchedEffect(pagerState.currentPage) {
+        desiredPageIndex = pagerState.currentPage
+    }
+
+    val requesters = remember(allTabs.size) {
+        List(allTabs.size) {
+            BringIntoViewRequester()
+        }
+    }
+
+    LaunchedEffect(pagerState.currentPage) {
+        scope.launch {
+            requesters[pagerState.currentPage].bringIntoView()
+        }
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     var dropdownExpanded by remember { mutableStateOf(false) }
@@ -186,7 +208,7 @@ private fun QuestOverviewScreen(
                     }
                 },
                 actions = {
-                    BasicPlainTooltip(
+                    /*BasicPlainTooltip(
                         text = "Suche",
                         position = TooltipAnchorPosition.Below
                     ) {
@@ -200,7 +222,7 @@ private fun QuestOverviewScreen(
                                 contentDescription = null
                             )
                         }
-                    }
+                    }*/
 
                     BasicPlainTooltip(
                         text = "Weitere Optionen",
@@ -264,6 +286,8 @@ private fun QuestOverviewScreen(
             ) {
                 FloatingActionButton(
                     onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
                         onUiEvent(
                             QuestOverviewUiEvent.OnNavigateToCreateQuestScreen(
                                 categoryId = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
@@ -283,18 +307,6 @@ private fun QuestOverviewScreen(
         },
         content = { innerPadding ->
             key(allTabs.map { it.id }) {
-                val scrollState = rememberScrollState()
-                val initialPage = desiredPageIndex.coerceIn(0, (allTabs.size - 1).coerceAtLeast(0))
-
-                val pagerState = rememberPagerState(
-                    initialPage = initialPage,
-                    pageCount = { allTabs.size }
-                )
-
-                LaunchedEffect(pagerState.currentPage) {
-                    desiredPageIndex = pagerState.currentPage
-                }
-
                 Column(
                     modifier = Modifier.padding(innerPadding)
                 ) {
@@ -306,10 +318,12 @@ private fun QuestOverviewScreen(
                     ) {
                         allTabs.forEachIndexed { index, tab ->
                             FilterChip(
+                                modifier = Modifier.bringIntoViewRequester(requesters[index]),
                                 selected = pagerState.currentPage == index,
                                 onClick = {
                                     scope.launch {
-                                        scrollState.animateScrollTo(index)
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
                                         pagerState.animateScrollToPage(index)
                                     }
                                 },
@@ -323,6 +337,7 @@ private fun QuestOverviewScreen(
 
                         AssistChip(
                             onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
                             },
                             label = {
