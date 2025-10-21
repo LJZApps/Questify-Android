@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -45,7 +44,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -131,11 +129,8 @@ private fun QuestOverviewScreen(
     val questDoneDialogState = uiState.questDoneDialogState
     val allQuestPageState = uiState.allQuestPageState
 
-    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
-
-    val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
 
     val staticAllTab = QuestCategoryEntity(id = -1, text = stringResource(R.string.quest_overview_screen_tab_default_text))
 
@@ -208,22 +203,6 @@ private fun QuestOverviewScreen(
                     }
                 },
                 actions = {
-                    /*BasicPlainTooltip(
-                        text = "Suche",
-                        position = TooltipAnchorPosition.Below
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_search),
-                                contentDescription = null
-                            )
-                        }
-                    }*/
-
                     BasicPlainTooltip(
                         text = "Weitere Optionen",
                         position = TooltipAnchorPosition.Below
