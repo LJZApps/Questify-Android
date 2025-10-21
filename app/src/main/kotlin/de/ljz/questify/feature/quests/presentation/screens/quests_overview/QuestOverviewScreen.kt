@@ -35,7 +35,6 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -132,7 +131,10 @@ private fun QuestOverviewScreen(
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
 
-    val staticAllTab = QuestCategoryEntity(id = -1, text = stringResource(R.string.quest_overview_screen_tab_default_text))
+    val staticAllTab = QuestCategoryEntity(
+        id = -1,
+        text = stringResource(R.string.quest_overview_screen_tab_default_text)
+    )
 
     val allTabs = remember(categories) {
         listOf(staticAllTab) + categories
@@ -285,96 +287,95 @@ private fun QuestOverviewScreen(
             }
         },
         content = { innerPadding ->
-            key(allTabs.map { it.id }) {
-                Column(
-                    modifier = Modifier.padding(innerPadding)
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState)
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .horizontalScroll(scrollState)
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        allTabs.forEachIndexed { index, tab ->
-                            FilterChip(
-                                modifier = Modifier.bringIntoViewRequester(requesters[index]),
-                                selected = pagerState.currentPage == index,
-                                onClick = {
-                                    scope.launch {
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
-                                label = {
-                                    Text(
-                                        text = tab.text
-                                    )
-                                }
-                            )
-                        }
-
-                        AssistChip(
+                    allTabs.forEachIndexed { index, tab ->
+                        FilterChip(
+                            modifier = Modifier.bringIntoViewRequester(requesters[index]),
+                            selected = pagerState.currentPage == index,
                             onClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
+                                scope.launch {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
+                                    pagerState.animateScrollToPage(index)
+                                }
                             },
                             label = {
                                 Text(
-                                    text = stringResource(R.string.quest_overview_screen_new_list_tab_title)
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_add),
-                                    contentDescription = null,
+                                    text = tab.text
                                 )
                             }
                         )
                     }
 
-                    HorizontalPager(
-                        state = pagerState,
-                        key = { pageIndex ->
-                            allTabs.getOrNull(pageIndex)?.id ?: "temp_page_$pageIndex"
+                    AssistChip(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
+                        },
+                        label = {
+                            Text(
+                                text = stringResource(R.string.quest_overview_screen_new_list_tab_title)
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add),
+                                contentDescription = null,
+                            )
                         }
-                    ) { pageIndex ->
-                        if (pageIndex == 0) {
-                            AllQuestsPage(
-                                state = uiState.allQuestPageState,
-                                onEditQuest = {
-                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToEditQuestScreen(it))
-                                },
-                                onQuestChecked = { quest ->
-                                    onUiEvent(
-                                        QuestOverviewUiEvent.OnQuestChecked(
-                                            questEntity = quest
-                                        )
+                    )
+                }
+
+                HorizontalPager(
+                    state = pagerState,
+                    key = { pageIndex ->
+                        allTabs.getOrNull(pageIndex)?.id ?: "temp_page_$pageIndex"
+                    }
+                ) { pageIndex ->
+                    if (pageIndex == 0) {
+                        AllQuestsPage(
+                            state = uiState.allQuestPageState,
+                            onEditQuest = {
+                                onUiEvent(QuestOverviewUiEvent.OnNavigateToEditQuestScreen(it))
+                            },
+                            onQuestChecked = { quest ->
+                                onUiEvent(
+                                    QuestOverviewUiEvent.OnQuestChecked(
+                                        questEntity = quest
                                     )
+                                )
+                            },
+                            onQuestClicked = { id ->
+                                onUiEvent(
+                                    QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(entryId = id)
+                                )
+                            },
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } else {
+                        val categoryIndex = pageIndex - 1
+                        if (categoryIndex < categories.size) {
+                            val category = categories[categoryIndex]
+
+                            QuestsForCategoryPage(
+                                categoryId = category.id,
+                                onNavigateToQuestDetailScreen = {
+                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(it))
                                 },
-                                onQuestClicked = { id ->
-                                    onUiEvent(
-                                        QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(entryId = id)
-                                    )
+                                onQuestDone = {
+                                    onUiEvent(QuestOverviewUiEvent.OnQuestChecked(it))
                                 },
                                 modifier = Modifier.fillMaxSize()
                             )
-                        } else {
-                            val categoryIndex = pageIndex - 1
-                            if (categoryIndex < categories.size) {
-                                val category = categories[categoryIndex]
-
-                                QuestsForCategoryPage(
-                                    categoryId = category.id,
-                                    onNavigateToQuestDetailScreen = {
-                                        onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(it))
-                                    },
-                                    onQuestDone = {
-                                        onUiEvent(QuestOverviewUiEvent.OnQuestChecked(it))
-                                    },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
                         }
                     }
                 }
@@ -450,7 +451,7 @@ private fun QuestOverviewScreen(
                     dismissButtonText = stringResource(R.string.cancel),
                     confirmationButtonText = stringResource(R.string.save),
                     initialInputFocussed = true,
-                    initialValue = selectedCategoryForUpdating?.text?: ""
+                    initialValue = selectedCategoryForUpdating?.text ?: ""
                 )
 
             }
