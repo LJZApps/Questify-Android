@@ -40,18 +40,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
 import kotlinx.coroutines.flow.collectLatest
 
-/**
- * Die Composable-Funktion für den Berechtigungs-Screen.
- *
- * Diese Funktion ist zustandslos und wird vollständig vom [PermissionsViewModel] gesteuert.
- * Sie ist verantwortlich für die Darstellung der UI und das Starten der Berechtigungs-Launcher.
- */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionsScreen(

@@ -1,7 +1,6 @@
 package de.ljz.questify.core.di
 
 import android.content.Context
-import com.skydoves.sandwich.retrofit.adapters.ApiResponseCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -49,7 +48,6 @@ object NetworkModule {
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .build()
     }
 

@@ -131,20 +131,8 @@ val roomVersion by extra("2.6.1")
 val ktorVersion by extra("2.2.1")
 
 dependencies {
-    // Post Hog
-    implementation(libs.posthog.android)
-
     // Lottie
     implementation(libs.lottie)
-
-    // KvColorPalette
-    implementation(libs.kvcolorpalette.android)
-
-    // Play Integrity
-    implementation(libs.integrity)
-
-    implementation(libs.billing)
-    implementation(libs.billing.ktx)
 
     // FONT
     implementation(libs.androidx.ui.text.google.fonts)
@@ -167,12 +155,6 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
 
-    // Compose Color Picker
-    implementation(libs.compose.colorpicker)
-
-    // Dynamic Material You
-    implementation(libs.material.kolor)
-
     // Gampose https://github.com/ezlifeSol/gampose
     //implementation(libs.gampose)
 
@@ -191,71 +173,59 @@ dependencies {
 
     implementation(project.dependencies.platform("androidx.compose:compose-bom:2025.10.00"))
     implementation(project.dependencies.platform("com.google.firebase:firebase-bom:34.1.0"))
-    implementation(libs.androidx.runtime)
-
-    implementation(libs.firebase.ai)
 
     implementation(platform(libs.sentry.bom))
 
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.core.android)
     implementation(libs.androidx.datastore.preferences.core)
-    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.room.guava)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.rxjava2)
-    implementation(libs.androidx.room.rxjava3)
-    implementation(libs.composeSettings.ui)
-    implementation(libs.composeSettings.ui.extended)
+
     implementation(libs.converter.moshi)
+
     implementation(libs.firebase.analytics)
-//    implementation(libs.firebase.crashlytics)
-    implementation(libs.gson)
-    implementation(libs.kotlin.stdlib.jdk8)
+
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.logging.interceptor)
-    implementation(libs.material)
+
     implementation(libs.material3)
     implementation(libs.material3.window.size)
+
     implementation(libs.moshi.adapters)
     implementation(libs.moshi.kotlin)
+
     implementation(libs.okhttp)
+
     implementation(libs.retrofit)
-    implementation(libs.sandwich)
-    implementation(libs.sandwich.retrofit)
-    implementation(libs.sandwich.retrofit.serialization)
-    implementation(libs.sandwich.ktor)
+
     implementation(libs.sentry.android)
     implementation(libs.sentry.compose.android)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
+
     implementation(libs.androidx.core.splashscreen)
+
     implementation(libs.kotlin.metadata.jvm)
 
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui)
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
     implementation("io.ktor:ktor-client-logging:$ktorVersion")
     implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
-
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }
 
 sentry {

@@ -49,7 +49,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField

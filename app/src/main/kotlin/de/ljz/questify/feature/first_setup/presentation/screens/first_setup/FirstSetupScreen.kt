@@ -38,7 +38,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.QuickSettingPage

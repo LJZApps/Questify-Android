@@ -4,15 +4,15 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 val MIGRATION_8_9 = object : Migration(8, 9) {
-    override fun migrate(database: SupportSQLiteDatabase) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         // Logik für die Migration:
         // Setze alle Quests, die vorher die Schwierigkeit 'NONE' hatten, auf 'EASY'.
-        database.execSQL(
+        db.execSQL(
             "UPDATE quest_entity SET difficulty = 'EASY' WHERE difficulty = 'NONE'"
         )
 
         // Setze alle Quests, die vorher die Schwierigkeit 'EPIC' hatten, auf 'HARD'.
-        database.execSQL(
+        db.execSQL(
             "UPDATE quest_entity SET difficulty = 'HARD' WHERE difficulty = 'EPIC'"
         )
     }
