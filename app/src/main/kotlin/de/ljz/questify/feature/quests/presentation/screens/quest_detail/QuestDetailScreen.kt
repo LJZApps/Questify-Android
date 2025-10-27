@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,7 +52,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -65,9 +65,8 @@ import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.utils.MaxWidth
-import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
-import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
+import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -78,8 +77,6 @@ fun QuestDetailScreen(
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-    val categories = viewModel.categories.collectAsStateWithLifecycle().value
-    val focusManager = LocalFocusManager.current
 
     val haptic = LocalHapticFeedback.current
 
@@ -87,6 +84,7 @@ fun QuestDetailScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0.dp),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
@@ -127,43 +125,52 @@ fun QuestDetailScreen(
 
             val isButtonEnabled = !isQuestAlreadyDone && allSubQuestsDone
 
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shadowElevation = 4.dp
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .imePadding()
+            if (!isQuestAlreadyDone) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shadowElevation = 4.dp
                 ) {
-                    HorizontalDivider()
-                    if (hasSubQuests && !allSubQuestsDone && !isQuestAlreadyDone) {
-                        Text(
-                            text = "Erledige zuerst alle Unteraufgaben.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-
-                    Button(
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        },
-                        enabled = isButtonEnabled,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .navigationBarsPadding()
+                            .imePadding()
                     ) {
-                        Text(text = "Quest abschließen")
+                        HorizontalDivider()
+
+                        if (hasSubQuests && !allSubQuestsDone) {
+                            Text(
+                                text = "Erledige zuerst alle Unteraufgaben.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 8.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
+                                uiState.questEntity?.let { questEntity ->
+                                    viewModel.completeQuest(questEntity)
+                                }
+                            },
+                            enabled = isButtonEnabled,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(text = "Quest abschließen")
+                        }
+
                     }
                 }
             }
+
         },
         content = { innerPadding ->
             Column(
@@ -172,7 +179,8 @@ fun QuestDetailScreen(
                     .verticalScroll(rememberScrollState())
                     .imePadding()
                     .fillMaxSize()
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = 16.dp)
+                    .navigationBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
@@ -333,13 +341,16 @@ fun QuestDetailScreen(
                                                     .clickable(
                                                         enabled = !subQuestEntity.isDone
                                                     ) {
+                                                        haptic.performHapticFeedback(
+                                                            HapticFeedbackType.LongPress
+                                                        )
+
                                                         viewModel.checkSubQuest(
                                                             id = subQuestEntity.id,
                                                             checked = !subQuestEntity.isDone
                                                         )
                                                     }
-                                                    .padding(all = 8.dp)
-                                                ,
+                                                    .padding(all = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically,
                                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                                             ) {
@@ -349,6 +360,10 @@ fun QuestDetailScreen(
                                                     Checkbox(
                                                         checked = subQuestEntity.isDone,
                                                         onCheckedChange = {
+                                                            haptic.performHapticFeedback(
+                                                                HapticFeedbackType.LongPress
+                                                            )
+
                                                             viewModel.checkSubQuest(
                                                                 id = subQuestEntity.id,
                                                                 checked = !subQuestEntity.isDone
@@ -432,7 +447,9 @@ fun QuestDetailScreen(
 
                                                 notifications.forEach { notification ->
                                                     Row(
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                                        horizontalArrangement = Arrangement.spacedBy(
+                                                            8.dp
+                                                        ),
                                                         verticalAlignment = Alignment.CenterVertically
                                                     ) {
                                                         Icon(
@@ -454,13 +471,15 @@ fun QuestDetailScreen(
                                             }
                                         }
 
-                                    TextButton(
-                                        onClick = {
+                                    if (!questState.done) {
+                                        TextButton(
+                                            onClick = {
 
-                                        },
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Text(text = "Erinnerungen verwalten")
+                                            },
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text(text = "Erinnerungen verwalten")
+                                        }
                                     }
                                 }
                             }
@@ -507,317 +526,10 @@ fun QuestDetailScreen(
                             }
                         }
                     }
-
-                    /*
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_title),
-                            contentDescription = null,
-                        )
-
-                        TextField(
-                            value = editQuestState.title,
-                            onValueChange = {
-                                viewModel.updateTitle(it)
-                            },
-                            label = { Text("Titel") },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(
-                                capitalization = KeyboardCapitalization.Sentences
-                            )
-                        )
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_notes),
-                            contentDescription = null,
-                        )
-
-                        TextField(
-                            value = editQuestState.description,
-                            onValueChange = {
-                                viewModel.updateDescription(it)
-                            },
-                            label = { Text("Notizen") },
-                            modifier = Modifier.fillMaxWidth(),
-                            minLines = 2,
-                            keyboardOptions = KeyboardOptions(
-                                capitalization = KeyboardCapitalization.Sentences
-                            )
-                        )
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "Schwierigkeit",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                        ) {
-                            // Beispiel: unterschiedliche Gewichte pro Button
-                            val modifiers = List(options.size) { Modifier.weight(1f) }
-
-                            options.forEachIndexed { index, label ->
-                                ToggleButton(
-                                    checked = editQuestState.difficulty == index,
-                                    onCheckedChange = {
-                                        haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
-                                        viewModel.updateDifficulty(index)
-                                    },
-                                    modifier = modifiers[index].semantics {
-                                        role = Role.RadioButton
-                                    },
-                                    shapes = when (index) {
-                                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                                    },
-                                ) {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                                    ) {
-                                        val tint = if (editQuestState.difficulty == index)
-                                            MaterialTheme.colorScheme.onPrimary
-                                        else
-                                            MaterialTheme.colorScheme.onSurfaceVariant
-
-                                        when (index) {
-                                            0 -> EasyIcon(tint = tint)
-                                            1 -> MediumIcon(tint = tint)
-                                            2 -> HardIcon(tint = tint)
-                                            3 -> EpicIcon(tint = tint)
-                                        }
-
-                                        Text(label)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "Liste",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val interactionSource = remember { MutableInteractionSource() }
-                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
-
-                            LaunchedEffect(isFocused) {
-                                if (isFocused) {
-                                    viewModel.showSelectCategoryDialog()
-                                }
-                            }
-
-                            Icon(
-                                painter = painterResource(R.drawable.ic_label_outlined),
-                                contentDescription = null,
-                            )
-
-                            TextField(
-                                value = selectedCategory?.text ?: "",
-                                onValueChange = {},
-                                label = { Text("Liste") },
-                                modifier = Modifier.fillMaxWidth(),
-                                singleLine = true,
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(
-                                        painter = if (isFocused)
-                                            painterResource(R.drawable.ic_keyboard_arrow_up)
-                                        else
-                                            painterResource(R.drawable.ic_keyboard_arrow_down),
-                                        contentDescription = null
-                                    )
-                                },
-                                interactionSource = interactionSource
-                            )
-                        }
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "Zeitplanung",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val interactionSource = remember { MutableInteractionSource() }
-                            val isFocused: Boolean by interactionSource.collectIsFocusedAsState()
-                            val date = Date(editQuestState.selectedDueDate)
-                            val formattedDate = dateFormat.format(date)
-
-                            LaunchedEffect(isFocused) {
-                                if (isFocused) {
-                                    viewModel.showDueDateSelectionDialog()
-                                }
-                            }
-
-                            Icon(
-                                painter = painterResource(R.drawable.ic_schedule_outlined),
-                                contentDescription = null,
-                            )
-
-                            TextField(
-                                value = if (editQuestState.selectedDueDate.toInt() == 0) "" else formattedDate,
-                                onValueChange = {},
-                                label = { Text("Fälligkeit") },
-                                modifier = Modifier.weight(1f),
-                                singleLine = true,
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(
-                                        painter = if (isFocused)
-                                            painterResource(R.drawable.ic_keyboard_arrow_up)
-                                        else
-                                            painterResource(R.drawable.ic_keyboard_arrow_down),
-                                        contentDescription = null
-                                    )
-                                },
-                                interactionSource = interactionSource
-                            )
-
-                            if (editQuestState.selectedDueDate.toInt() != 0) {
-                                FilledTonalIconButton(
-                                    onClick = {
-                                        viewModel.setDueDate(0)
-                                    },
-                                    colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                                    )
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_remove),
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Erinnerungen",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
-                            Row(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-                                    .clickable {
-                                        viewModel.showCreateReminderDialog()
-                                    }
-                                    .padding(horizontal = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_add),
-                                    contentDescription = "Erinnerung hinzufügen",
-                                    modifier = Modifier.size(18.dp)
-                                )
-
-                                Text("Hinzufügen")
-                            }
-
-                        }
-
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            editQuestState.notificationTriggerTimes.sorted()
-                                .forEachIndexed { index, triggerTime ->
-                                    FilterChip(
-                                        selected = false,
-                                        onClick = {
-                                            viewModel.removeReminder(index)
-                                        },
-                                        label = { Text(dateFormat.format(Date(triggerTime))) },
-                                        leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(R.drawable.ic_notifications_filled),
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .size(18.dp)
-                                            )
-                                        },
-                                        colors = FilterChipDefaults.elevatedFilterChipColors()
-                                    )
-                                }
-                        }
-                    }*/
                 }
             }
 
             // Dialogs
-            if (uiState.dialogState == DialogState.CreateReminder) {
-                CreateReminderDialog(
-                    onDismiss = viewModel::hideCreateReminderDialog,
-                    onConfirm = { timestamp ->
-                        viewModel.addReminder(timestamp)
-                        viewModel.hideCreateReminderDialog()
-                    },
-                    addingDateTimeState = uiState.addingReminderDateTimeState,
-                    onReminderStateChange = { viewModel.updateReminderState(it) }
-                )
-            }
-
-            if (uiState.dialogState == DialogState.SelectCategory) {
-                SelectCategoryBottomSheet(
-                    categories = categories,
-                    onCategorySelect = { category ->
-                        viewModel.selectCategory(category)
-                        viewModel.hideSelectCategoryDialog()
-                        focusManager.clearFocus()
-                    },
-                    onDismiss = {
-                        viewModel.hideSelectCategoryDialog()
-                        focusManager.clearFocus()
-                    },
-                    onCreateCategory = { text ->
-                        viewModel.addQuestCategory(text)
-                    }
-                )
-            }
-
             if (uiState.dialogState == DialogState.DeleteConfirmation) {
                 DeleteConfirmationDialog(
                     onConfirm = {
@@ -834,22 +546,16 @@ fun QuestDetailScreen(
                         viewModel.hideDeleteConfirmationDialog()
                     }
                 )
-                /*ConfirmationBottomSheet(
-                    onDismissRequest = {
+            }
 
-                    },
-                    onConfirm = {
-
-                    },
-                    title = "Quest löschen?",
-                    confirmationButtonText = stringResource(R.string.delete),
-                    confirmationButtonColors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError
-                    ),
-                    dismissButtonText = stringResource(R.string.cancel),
-                    text = stringResource(R.string.delete_confirmation_dialog_description),
-                )*/
+            if (uiState.dialogState ==  DialogState.QuestDone) {
+                QuestDoneDialog(
+                    state = uiState.questDoneDialogState,
+                    onDismiss = {
+                        viewModel.hideDeleteConfirmationDialog()
+//                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    }
+                )
             }
         },
         snackbarHost = {

@@ -13,18 +13,22 @@ import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CheckSubQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
+import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestDoneDialogState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,6 +45,8 @@ class QuestDetailViewModel @Inject constructor(
     private val checkSubQuestUseCase: CheckSubQuestUseCase,
 
     private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
+
+    private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = QuestDetailUiState(
@@ -49,6 +55,8 @@ class QuestDetailViewModel @Inject constructor(
             isEditingQuest = false,
 
             dialogState = DialogState.None,
+
+            questEntity = null,
 
             questId = 0,
 
@@ -60,6 +68,12 @@ class QuestDetailViewModel @Inject constructor(
                 selectedDueDate = 0,
                 done = false,
                 subQuests = emptyList()
+            ),
+            questDoneDialogState = QuestDoneDialogState(
+                questName = "",
+                xp = 0,
+                points = 0,
+                newLevel = 0
             )
         )
     )
@@ -106,7 +120,8 @@ class QuestDetailViewModel @Inject constructor(
                                 done = questEntity.quest.done,
                                 subQuests = questEntity.subTasks
                             ),
-                            questId = questId
+                            questId = questId,
+                            questEntity = questEntity.quest
                         )
                     }
                 }
@@ -117,6 +132,30 @@ class QuestDetailViewModel @Inject constructor(
                     .collectLatest { questCategoryEntities ->
                         _categories.value = questCategoryEntities
                     }
+            }
+        }
+    }
+
+    fun completeQuest(questEntity: QuestEntity) {
+        viewModelScope.launch {
+            launch {
+                val result = completeQuestUseCase.invoke(questEntity)
+
+                _uiState.update {
+                    it.copy(
+                        dialogState = DialogState.QuestDone,
+                        questDoneDialogState = it.questDoneDialogState.copy(
+                            xp = result.earnedXp,
+                            points = result.earnedPoints,
+                            newLevel = if (result.didLevelUp) result.newLevel else 0,
+                            questName = questEntity.title
+                        )
+                    )
+                }
+            }
+
+            launch {
+                cancelQuestNotificationsUseCase.invoke(questEntity.id)
             }
         }
     }
