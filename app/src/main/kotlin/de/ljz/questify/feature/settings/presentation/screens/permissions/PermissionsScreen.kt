@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -43,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.buttons.AppButton
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -109,7 +109,7 @@ fun PermissionsScreen(
         },
         bottomBar = {
             if (!canNavigateBack) {
-                AppButton(
+                Button(
                     onClick = { restartApp(context) },
                     enabled = uiState.permissionItems.all { it.isGranted },
                     modifier = Modifier
@@ -188,7 +188,7 @@ private fun PermissionCard(permissionItem: PermissionItem) {
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else {
-                    AppButton(
+                    Button(
                         onClick = permissionItem.requestAction,
                     ) {
                         Text(stringResource(R.string.permissions_screen_button_grant))

@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -67,9 +69,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
-import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
@@ -194,7 +194,7 @@ fun CreateQuestScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                AppButton(
+                Button(
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         viewModel.createQuest()
@@ -237,7 +237,7 @@ fun CreateQuestScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
 
-                        AppOutlinedTextField(
+                        OutlinedTextField(
                             value = uiState.title,
                             onValueChange = {
                                 viewModel.updateTitle(it)
@@ -270,7 +270,7 @@ fun CreateQuestScreen(
                             style = MaterialTheme.typography.titleMedium
                         )
 
-                        AppOutlinedTextField(
+                        OutlinedTextField(
                             value = uiState.description,
                             onValueChange = {
                                 viewModel.updateDescription(it)
@@ -319,7 +319,7 @@ fun CreateQuestScreen(
                                 }
                             }
 
-                            AppOutlinedTextField(
+                            OutlinedTextField(
                                 value = if (uiState.selectedDueDate.toInt() == 0) "" else formattedDate,
                                 onValueChange = {},
                                 modifier = Modifier.weight(2f),
@@ -337,7 +337,7 @@ fun CreateQuestScreen(
                                 interactionSource = dateInteractionSource
                             )
 
-                            AppOutlinedTextField(
+                            OutlinedTextField(
                                 value = if (uiState.selectedDueDate == 0L) "" else formattedTime,
                                 onValueChange = {},
                                 modifier = Modifier.weight(1f),
@@ -393,7 +393,7 @@ fun CreateQuestScreen(
                             onClick = {
                                 viewModel.showCreateReminderDialog()
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -547,12 +547,13 @@ fun CreateQuestScreen(
 
                                         IconButton(
                                             onClick = {
-                                                viewModel.removeSubtask(index)
-                                                if (uiState.subTasks.count() > 0) {
+                                                if ((uiState.subTasks.count() -1) > 0) {
                                                     subTaskFocusManager.moveFocus(FocusDirection.Previous)
                                                 } else {
                                                     subTaskFocusManager.clearFocus()
                                                 }
+
+                                                viewModel.removeSubtask(index)
                                             }
                                         ) {
                                             Icon(
@@ -569,7 +570,7 @@ fun CreateQuestScreen(
                             onClick = {
                                 viewModel.addSubTask()
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,

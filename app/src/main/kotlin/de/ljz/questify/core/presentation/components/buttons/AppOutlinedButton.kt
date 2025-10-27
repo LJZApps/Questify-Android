@@ -2,7 +2,6 @@ package de.ljz.questify.core.presentation.components.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +21,6 @@ fun AppOutlinedButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        shape = RoundedCornerShape(6.dp),
         modifier = modifier,
         colors = colors,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),

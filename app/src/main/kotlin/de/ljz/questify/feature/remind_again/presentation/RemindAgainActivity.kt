@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -40,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.buttons.AppButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
@@ -212,7 +212,7 @@ fun RemindAgainPopUp(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    AppButton(
+                    Button(
                         onClick = {
                             val timeInMillis = if (isCustomTimeSelected) {
                                 customTime.toLongOrDefault(0).times(60 * 1000)
