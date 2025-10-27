@@ -25,7 +25,6 @@ class AppViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val appSettingsRepository: AppSettingsRepository
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 

@@ -39,18 +39,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.IntroductionPage
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.QuickSettingPage
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.sub_pages.UserSetupPage
-import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FirstSetupScreen(
     viewModel: FirstSetupViewModel = hiltViewModel(),
-    navController: NavController
+    onNavigateBack: () -> Unit,
+    onNavigateToMainScreen: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val userSetupPageUiState = uiState.userSetupPageUiState
@@ -77,7 +76,7 @@ fun FirstSetupScreen(
             if (pagerState.currentPage > 0) {
                 pagerState.animateScrollToPage(pagerState.currentPage - 1)
             } else {
-                navController.popBackStack()
+                onNavigateBack()
             }
         }
     }
@@ -171,11 +170,7 @@ fun FirstSetupScreen(
                                 viewModel.setSetupDone("")
                             }
 
-                            navController.navigate(MainRoute) {
-                                popUpTo<MainRoute> {
-                                    inclusive = true
-                                }
-                            }
+                            onNavigateToMainScreen()
                         }
                     }
                 },

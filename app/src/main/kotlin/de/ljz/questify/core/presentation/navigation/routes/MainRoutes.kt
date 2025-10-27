@@ -7,13 +7,37 @@ import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.Firs
 import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupScreen
 import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainScreen
+import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
+import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
+import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 
 fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
     composable<FirstSetupRoute> {
-        FirstSetupScreen(navController = navController)
+        FirstSetupScreen(
+            onNavigateBack = {
+                navController.navigateUp()
+            },
+            onNavigateToMainScreen = {
+                navController.navigate(MainRoute)
+            }
+        )
     }
 
     composable<MainRoute> {
-        MainScreen(mainNavController = navController)
+        MainScreen(
+            onNavigateToSettingsPermissionScreen = { backNavigationEnabled ->
+                navController.navigate(SettingsPermissionRoute(backNavigationEnabled = backNavigationEnabled))
+            },
+            onNavigateToSettingsScreen = {
+                navController.navigate(SettingsMainRoute)
+            },
+            onNavigateToCreateQuestScreen = { selectedList ->
+                navController.navigate(
+                    CreateQuestRoute(
+                        selectedCategoryIndex = selectedList
+                    )
+                )
+            }
+        )
     }
 }

@@ -13,7 +13,11 @@ import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDet
 
 fun NavGraphBuilder.questRoutes(navController: NavHostController) {
     composable<CreateQuestRoute> {
-        CreateQuestScreen(mainNavController = navController)
+        CreateQuestScreen(
+            onNavigateBack = {
+                navController.navigateUp()
+            }
+        )
     }
 
     composable<QuestDetailRoute>(

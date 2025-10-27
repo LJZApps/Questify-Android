@@ -67,7 +67,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
@@ -87,8 +86,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CreateQuestScreen(
-    mainNavController: NavHostController,
-    viewModel: CreateQuestViewModel = hiltViewModel()
+    viewModel: CreateQuestViewModel = hiltViewModel(),
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val questCreationSucceeded by viewModel.questCreationSucceeded.collectAsStateWithLifecycle()
@@ -112,7 +111,7 @@ fun CreateQuestScreen(
 
     LaunchedEffect(questCreationSucceeded) {
         if (questCreationSucceeded) {
-            mainNavController.navigateUp()
+            onNavigateBack()
         }
     }
 
@@ -136,7 +135,7 @@ fun CreateQuestScreen(
                         text = "Zurück",
                     ) {
                         IconButton(
-                            onClick = { mainNavController.navigateUp() },
+                            onClick = { onNavigateBack() },
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_arrow_back),

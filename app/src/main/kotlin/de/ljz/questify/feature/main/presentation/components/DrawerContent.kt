@@ -59,8 +59,9 @@ import kotlinx.coroutines.launch
 fun DrawerContent(
     uiState: MainUiState,
     navController: NavHostController,
-    mainNavController: NavHostController,
-    drawerState: DrawerState
+//    mainNavController: NavHostController,
+    drawerState: DrawerState,
+    onNavigateToSettingsScreen: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -126,7 +127,7 @@ fun DrawerContent(
                         scope.launch {
                             drawerState.close()
                         }
-                        mainNavController.navigate(SettingsMainRoute)
+                        onNavigateToSettingsScreen()
                     }
                 ) {
                     Row(

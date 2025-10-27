@@ -26,7 +26,7 @@ fun NavGraphBuilder.settingRoutes(
         val arguments = backStackEntry.toRoute<SettingsPermissionRoute>()
         PermissionsScreen(
             mainNavController = navController,
-            canNavigateBack = arguments.canNavigateBack
+            canNavigateBack = arguments.backNavigationEnabled
         )
     }
 

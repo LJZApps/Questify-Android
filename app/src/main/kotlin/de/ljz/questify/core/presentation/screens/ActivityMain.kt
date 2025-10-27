@@ -10,6 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -80,6 +82,66 @@ class ActivityMain : AppCompatActivity() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         val navController = rememberNavController()
+                        val backStack = remember {
+                            mutableStateListOf(if (isSetupDone) MainRoute else FirstSetupRoute)
+                        }
+
+                        /*NavDisplay(
+                            backStack = backStack,
+                            onBack = { backStack.removeLastOrNull() },
+                            entryProvider = { key ->
+                                when (key) {
+                                    is MainRoute -> NavEntry(key) {
+                                        MainScreen(
+                                            onNavigateToSettingsPermissionScreen = { backNavigationEnabled ->
+                                                backStack.add(
+                                                    SettingsPermissionRoute(
+                                                        backNavigationEnabled = backNavigationEnabled
+                                                    )
+                                                )
+                                            },
+                                            onNavigateToSettingsScreen = {
+
+                                            },
+                                            onNavigateToCreateQuestScreen = { selectedCategory ->
+                                                backStack.add(
+                                                    CreateQuestRoute(
+                                                        selectedCategoryIndex = selectedCategory
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    }
+
+                                    is FirstSetupRoute -> NavEntry(key) {
+                                        FirstSetupScreen(
+                                            onNavigateBack = {
+                                                backStack.removeLastOrNull()
+                                            },
+                                            onNavigateToMainScreen = {
+                                                backStack.add(MainRoute)
+
+                                                backStack.remove(FirstSetupRoute)
+                                            }
+                                        )
+                                    }
+
+                                    is CreateQuestRoute -> NavEntry(key) {
+                                        CreateQuestScreen(
+                                            onNavigateBack = {
+                                                backStack.removeLastOrNull()
+                                            }
+                                        )
+                                    }
+
+                                    else -> {
+                                        NavEntry(key) {
+                                            Text("Fuck. Nix gefunden.")
+                                        }
+                                    }
+                                }
+                            }
+                        )*/
 
                         NavHost(
                             navController = navController,

@@ -12,7 +12,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -23,28 +22,24 @@ import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.utils.isAlarmPermissionGranted
 import de.ljz.questify.core.utils.isNotificationPermissionGranted
 import de.ljz.questify.core.utils.isOverlayPermissionGranted
-import de.ljz.questify.feature.habits.presentation.screens.create_habit.CreateHabitRoute
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsScreen
 import de.ljz.questify.feature.main.presentation.components.DrawerContent
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsRoute
-import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsScreen
-import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
-import de.ljz.questify.feature.quests.presentation.screens.edit_quest.EditQuestRoute
-import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestOverviewScreen
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewRoute
 import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewScreen
-import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 import io.sentry.compose.SentryTraced
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun MainScreen(
-    mainNavController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel = hiltViewModel(),
+    onNavigateToSettingsPermissionScreen: (Boolean) -> Unit,
+    onNavigateToSettingsScreen: () -> Unit,
+    onNavigateToCreateQuestScreen: (Int?) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
@@ -56,15 +51,12 @@ fun MainScreen(
                 isAlarmPermissionGranted(context)
     }
 
-    /*if (PostHog.isFeatureEnabled("new_rpg_system")) {
-        Toast.makeText(context, "Neues RPG-System ist aktiviert. Viel spaß!", Toast.LENGTH_LONG).show()
-    }*/
-
     LaunchedEffect(allPermissionsGranted) {
         if (!allPermissionsGranted) {
-            mainNavController.navigate(SettingsPermissionRoute(canNavigateBack = false)) {
+            onNavigateToSettingsPermissionScreen(false)
+            /*mainNavController.navigate(SettingsPermissionRoute(canNavigateBack = false)) {
                 popUpTo(mainNavController.graph.startDestinationId) { inclusive = true }
-            }
+            }*/
         }
     }
 
@@ -81,8 +73,8 @@ fun MainScreen(
                     DrawerContent(
                         uiState = uiState,
                         navController = homeNavHostController,
-                        mainNavController = mainNavController,
-                        drawerState = drawerState
+                        drawerState = drawerState,
+                        onNavigateToSettingsScreen = onNavigateToSettingsScreen
                     )
                 }
             ) {
@@ -97,18 +89,10 @@ fun MainScreen(
                     composable<QuestsRoute> {
                         QuestOverviewScreen(
                             onNavigateToQuestDetailScreen = {
-                                mainNavController.navigate(QuestDetailRoute(id = it))
+//                                mainNavController.navigate(QuestDetailRoute(id = it))
                             },
-                            onNavigateToCreateQuestScreen = {
-                                mainNavController.navigate(
-                                    CreateQuestRoute(
-                                        selectedCategoryIndex = it
-                                    )
-                                )
-                            },
-                            onNavigateToEditQuestScreen = {
-                                mainNavController.navigate(EditQuestRoute(id = it))
-                            },
+                            onNavigateToCreateQuestScreen = onNavigateToCreateQuestScreen,
+                            onNavigateToEditQuestScreen = {},
                             onToggleDrawer = {
                                 scope.launch {
                                     drawerState.apply {
@@ -122,7 +106,7 @@ fun MainScreen(
                     composable<HabitsRoute> {
                         HabitsScreen(
                             onNavigateToCreateHabitScreen = {
-                                mainNavController.navigate(CreateHabitRoute)
+//                                mainNavController.navigate(CreateHabitRoute)
                             },
                             onToggleDrawer = {
                                 scope.launch {
@@ -147,10 +131,10 @@ fun MainScreen(
                     }
 
                     composable<StatsRoute> {
-                        StatsScreen(
+                        /*StatsScreen(
                             drawerState = drawerState,
                             navController = mainNavController
-                        )
+                        )*/
                     }
                 }
             }
