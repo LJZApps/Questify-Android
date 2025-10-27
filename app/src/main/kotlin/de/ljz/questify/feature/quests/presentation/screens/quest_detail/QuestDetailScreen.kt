@@ -23,6 +23,7 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -55,6 +56,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -328,7 +330,9 @@ fun QuestDetailScreen(
                                                     .fillMaxWidth()
                                                     .padding(vertical = 4.dp)
                                                     .clip(RoundedCornerShape(8.dp))
-                                                    .clickable {
+                                                    .clickable(
+                                                        enabled = !subQuestEntity.isDone
+                                                    ) {
                                                         viewModel.checkSubQuest(
                                                             id = subQuestEntity.id,
                                                             checked = !subQuestEntity.isDone
@@ -350,12 +354,17 @@ fun QuestDetailScreen(
                                                                 checked = !subQuestEntity.isDone
                                                             )
                                                         },
+                                                        colors = CheckboxDefaults.colors(
+                                                            disabledCheckedColor = MaterialTheme.colorScheme.primary
+                                                        ),
+                                                        enabled = !subQuestEntity.isDone
                                                     )
                                                 }
 
                                                 Text(
                                                     text = subQuestEntity.text,
-                                                    modifier = Modifier.weight(1f)
+                                                    modifier = Modifier.weight(1f),
+                                                    textDecoration = if (subQuestEntity.isDone) TextDecoration.LineThrough else null
                                                 )
                                             }
                                         }
