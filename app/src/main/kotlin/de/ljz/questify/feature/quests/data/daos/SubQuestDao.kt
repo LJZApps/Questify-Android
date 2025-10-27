@@ -15,4 +15,7 @@ interface SubQuestDao {
 
     @Query("DELETE FROM sub_quest_entity WHERE id = :id")
     suspend fun deleteSubQuest(id: Int)
+
+    @Query("UPDATE sub_quest_entity SET is_done = :checked WHERE id = :id")
+    suspend fun checkSubQuest(id: Int, checked: Boolean)
 }

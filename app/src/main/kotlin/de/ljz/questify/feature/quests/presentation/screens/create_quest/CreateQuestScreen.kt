@@ -180,7 +180,6 @@ fun CreateQuestScreen(
                             onClick = {
                                 dropdownExpanded = false
                                 viewModel.showSelectCategoryDialog()
-//                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
                             }
                         )
                     }

@@ -1,6 +1,8 @@
 package de.ljz.questify.feature.quests.presentation.screens.quest_detail
 
 import de.ljz.questify.core.utils.AddingDateTimeState
+import de.ljz.questify.core.utils.Difficulty
+import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 
 data class QuestDetailUiState(
     val dialogState: DialogState,
@@ -16,10 +18,11 @@ data class QuestDetailUiState(
 data class QuestState(
     val title: String,
     val description: String,
-    val difficulty: Int,
+    val difficulty: Difficulty,
     val notificationTriggerTimes: List<Long>,
     val selectedDueDate: Long,
-    val done: Boolean
+    val done: Boolean,
+    val subQuests: List<SubQuestEntity>
 )
 
 sealed class DialogState {

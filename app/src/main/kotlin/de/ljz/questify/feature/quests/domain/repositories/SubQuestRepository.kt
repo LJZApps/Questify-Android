@@ -8,4 +8,6 @@ interface SubQuestRepository {
     suspend fun addSubQuests(subQuests: List<SubQuestEntity>)
 
     suspend fun deleteSubQuest(id: Int)
+
+    suspend fun checkSubQuest(id: Int, checked: Boolean)
 }

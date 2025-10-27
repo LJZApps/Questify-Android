@@ -57,6 +57,7 @@ import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.bottom_sheets.InputBottomSheet
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
+import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
@@ -422,17 +423,14 @@ private fun QuestOverviewScreen(
             }
 
             if (uiState.dialogState == DialogState.CreateCategory) {
-                InputBottomSheet(
-                    onDismissRequest = {
-                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
-                    },
+                CreateCategoryDialog(
                     onConfirm = { value ->
                         onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = value))
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
-                    title = stringResource(R.string.create_category_dialog_title),
-                    confirmationButtonText = stringResource(R.string.save),
-                    dismissButtonText = stringResource(R.string.cancel),
+                    onDismiss = {
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    },
                     initialInputFocussed = true
                 )
             }

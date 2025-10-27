@@ -39,7 +39,10 @@ fun MainScreen(
     viewModel: MainViewModel = hiltViewModel(),
     onNavigateToSettingsPermissionScreen: (Boolean) -> Unit,
     onNavigateToSettingsScreen: () -> Unit,
-    onNavigateToCreateQuestScreen: (Int?) -> Unit
+    onNavigateToCreateQuestScreen: (Int?) -> Unit,
+    onNavigateToQuestDetailScreen: (Int) -> Unit,
+    onNavigateToEditQuestScreen: (Int) -> Unit,
+    onNavigateToCreateHabitScreen: () -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
@@ -88,11 +91,13 @@ fun MainScreen(
                 ) {
                     composable<QuestsRoute> {
                         QuestOverviewScreen(
-                            onNavigateToQuestDetailScreen = {
-//                                mainNavController.navigate(QuestDetailRoute(id = it))
+                            onNavigateToQuestDetailScreen = { id ->
+                                onNavigateToQuestDetailScreen(id)
                             },
                             onNavigateToCreateQuestScreen = onNavigateToCreateQuestScreen,
-                            onNavigateToEditQuestScreen = {},
+                            onNavigateToEditQuestScreen = { id ->
+                                onNavigateToEditQuestScreen(id)
+                            },
                             onToggleDrawer = {
                                 scope.launch {
                                     drawerState.apply {
@@ -106,7 +111,7 @@ fun MainScreen(
                     composable<HabitsRoute> {
                         HabitsScreen(
                             onNavigateToCreateHabitScreen = {
-//                                mainNavController.navigate(CreateHabitRoute)
+                                onNavigateToCreateHabitScreen()
                             },
                             onToggleDrawer = {
                                 scope.launch {
