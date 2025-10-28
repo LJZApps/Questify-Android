@@ -109,7 +109,7 @@ fun AllQuestsPage(
             Button(
                 onClick = onCreateNewQuestButtonClicked
             ) {
-                Text("Erstelle jetzt deine erste Quest!")
+                Text("Jetzt eine Quest erstellen")
             }
             Spacer(modifier = Modifier.weight(1f))
         }
