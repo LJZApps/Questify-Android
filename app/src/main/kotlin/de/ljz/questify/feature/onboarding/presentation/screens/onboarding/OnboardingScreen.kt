@@ -1,6 +1,10 @@
 package de.ljz.questify.feature.onboarding.presentation.screens.onboarding
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -21,18 +28,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.ljz.questify.R
+import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.StartQuestifyPage
+import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.TutorialQuestsPage
+import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.TutorialRewardsPage
+import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.WelcomePage
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(
@@ -57,46 +68,86 @@ private fun OnboardingScreen(
     uiState: OnboardingUiState,
     onUiEvent: (OnboardingUiEvent) -> Unit
 ) {
+    val pagerState = rememberPagerState { 4 }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = {
-            Surface(
-                shadowElevation = 4.dp,
-                modifier = Modifier.fillMaxWidth()
+            AnimatedVisibility(
+                visible = (pagerState.pageCount - 1) != pagerState.currentPage,
+                enter = slideInVertically(
+                    initialOffsetY = { it }
+                ),
+                exit = slideOutVertically(
+                    targetOffsetY = { it }
+                )
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
+                Surface(
+                    shadowElevation = 4.dp,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    HorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                    Button(
-                        onClick = {
-                            onUiEvent(OnboardingUiEvent.OnNextPage)
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(horizontal = 24.dp)
-                            .padding(top = 8.dp)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .navigationBarsPadding(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Weiter")
+                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
 
-                            Icon(
-                                painter = painterResource(R.drawable.ic_keyboard_arrow_right),
-                                contentDescription = null
-                            )
+                        Row(
+                            Modifier
+                                .wrapContentHeight()
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            repeat(pagerState.pageCount) { iteration ->
+                                val color =
+                                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                Box(
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .size(8.dp)
+                                        .clickable {
+                                            scope.launch {
+                                                pagerState.animateScrollToPage(iteration)
+                                            }
+                                        }
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 24.dp)
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(text = "Weiter")
+
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_keyboard_arrow_right),
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     ) { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -108,39 +159,12 @@ private fun OnboardingScreen(
                         )
                     )
                 ),
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(color = MaterialTheme.colorScheme.primary)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.app_icon_transparent),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(128.dp)
-                    )
-                }
-
-                Text(
-                    text = "Willkommen bei Questify!",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 36.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Text(
-                    text = "Verwandle deine Aufgaben in spannende Quests und steigere deine Produktivität. Lass uns Aufgaben zum Vergnügen machen!",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
+        ) { page ->
+            when (page) {
+                0 -> WelcomePage()
+                1 -> TutorialQuestsPage()
+                2 -> TutorialRewardsPage()
+                3 -> StartQuestifyPage()
             }
         }
     }
