@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ fun AllQuestsPage(
     onEditQuest: (Int) -> Unit,
     onQuestChecked: (QuestEntity) -> Unit,
     onQuestClicked: (Int) -> Unit,
+    onCreateNewQuestButtonClicked: () -> Unit
 ) {
     val quests = state.quests
         .filter { quest -> state.showCompleted || !quest.quest.done }
@@ -103,6 +105,12 @@ fun AllQuestsPage(
                     .size(64.dp)
             )
             Text(stringResource(R.string.all_quests_page_empty))
+
+            Button(
+                onClick = onCreateNewQuestButtonClicked
+            ) {
+                Text("Erstelle jetzt deine erste Quest!")
+            }
             Spacer(modifier = Modifier.weight(1f))
         }
     }

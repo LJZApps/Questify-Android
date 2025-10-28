@@ -1,7 +1,9 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,13 +16,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,10 +43,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -55,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.bottom_sheets.InputBottomSheet
+import de.ljz.questify.core.presentation.components.chips.ListChip
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
@@ -131,6 +134,7 @@ private fun QuestOverviewScreen(
 
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val staticAllTab = QuestCategoryEntity(
         id = -1,
@@ -238,7 +242,7 @@ private fun QuestOverviewScreen(
                             }
                         )
 
-                        DropdownMenuItem(
+                        /*DropdownMenuItem(
                             text = { Text(stringResource(R.string.quest_overview_screen_dropdown_manage_list_title)) },
                             leadingIcon = {
                                 Icon(
@@ -250,7 +254,7 @@ private fun QuestOverviewScreen(
                                 dropdownExpanded = false
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.ManageCategoriesBottomSheet))
                             }
-                        )
+                        )*/
                     }
                 },
                 title = {
@@ -299,34 +303,84 @@ private fun QuestOverviewScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     allTabs.forEachIndexed { index, tab ->
-                        FilterChip(
-                            modifier = Modifier.bringIntoViewRequester(requesters[index]),
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                scope.launch {
+                        var chipDropdownExpanded by remember { mutableStateOf(false) }
+                        val interactionSource = remember { MutableInteractionSource() }
+
+                        Box(
+                            modifier = Modifier
+                                .bringIntoViewRequester(requesters[index]),
+                        ) {
+                            ListChip(
+                                selected = pagerState.currentPage == index,
+                                interactionSource = interactionSource,
+                                onClick = {
+                                    scope.launch {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                onLongClick = {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
-                                    pagerState.animateScrollToPage(index)
+                                    chipDropdownExpanded = true
+                                },
+                                label = {
+                                    Text(
+                                        text = tab.text
+                                    )
                                 }
-                            },
-                            label = {
-                                Text(
-                                    text = tab.text
+                            )
+
+                            DropdownMenu(
+                                expanded = chipDropdownExpanded,
+                                onDismissRequest = { chipDropdownExpanded = false },
+                                offset = DpOffset(x = 0.dp, y = 8.dp)
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.manage_categories_bottom_sheet_dropdown_rename_title)) },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_edit_filled),
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        chipDropdownExpanded = false
+                                        onUiEvent(QuestOverviewUiEvent.ShowUpdateCategoryDialog(tab))
+                                    }
+                                )
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(R.string.manage_categories_bottom_sheet_dropdown_delete_title),
+                                            color = MaterialTheme.colorScheme.error
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_delete_filled),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                    },
+                                    onClick = {
+                                        chipDropdownExpanded = false
+                                        onUiEvent.invoke(QuestOverviewUiEvent.DeleteQuestCategory(tab))
+                                    }
                                 )
                             }
-                        )
+                        }
                     }
 
-                    AssistChip(
+                    ListChip(
+                        selected = false,
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
                         },
-                        label = {
-                            Text(
-                                text = stringResource(R.string.quest_overview_screen_new_list_tab_title)
-                            )
-                        },
+                        label = {},
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(R.drawable.ic_add),
@@ -358,6 +412,15 @@ private fun QuestOverviewScreen(
                             onQuestClicked = { id ->
                                 onUiEvent(
                                     QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(entryId = id)
+                                )
+                            },
+                            onCreateNewQuestButtonClicked = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
+                                onUiEvent(
+                                    QuestOverviewUiEvent.OnNavigateToCreateQuestScreen(
+                                        categoryId = if ((desiredPageIndex - 1) < 0) null else (desiredPageIndex - 1)
+                                    )
                                 )
                             },
                             modifier = Modifier.fillMaxSize()
