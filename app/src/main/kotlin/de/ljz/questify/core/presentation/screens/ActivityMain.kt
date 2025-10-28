@@ -31,7 +31,6 @@ import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
 import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.worker.QuestNotificationWorker
-import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingRoute
 import io.sentry.android.core.SentryAndroid
@@ -84,7 +83,7 @@ class ActivityMain : AppCompatActivity() {
                     ) {
                         val navController = rememberNavController()
                         val backStack = remember {
-                            mutableStateListOf(if (isSetupDone) MainRoute else FirstSetupRoute)
+                            mutableStateListOf(if (isSetupDone) MainRoute else OnboardingRoute)
                         }
 
                         /*NavDisplay(
@@ -146,8 +145,8 @@ class ActivityMain : AppCompatActivity() {
 
                         NavHost(
                             navController = navController,
-//                            startDestination = if (isSetupDone) MainRoute else FirstSetupRoute,
-                            startDestination = OnboardingRoute,
+                            startDestination = if (isSetupDone) MainRoute else OnboardingRoute,
+//                            startDestination = OnboardingRoute,
                             enterTransition = { scaleIntoContainer() },
                             exitTransition = {
                                 scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)

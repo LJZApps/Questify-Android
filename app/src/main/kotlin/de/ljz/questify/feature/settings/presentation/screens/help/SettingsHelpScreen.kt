@@ -11,7 +11,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,7 +29,7 @@ import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
-import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupRoute
+import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingRoute
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -46,7 +45,7 @@ fun SettingsHelpScreen(
                 is SettingsHelpUiEvent.NavigateUp -> mainNavController.navigateUp()
 
                 is SettingsHelpUiEvent.ShowOnboarding -> {
-                    mainNavController.navigate(FirstSetupRoute)
+                    mainNavController.navigate(OnboardingRoute)
                 }
 
                 is SettingsHelpUiEvent.Navigate -> {
@@ -130,7 +129,7 @@ private fun SettingsHelpScreen(
                 }
             )
 
-            ExpressiveSettingsMenuLink(
+            /*ExpressiveSettingsMenuLink(
                 title = "Neuigkeiten",
                 subtitle = "Neues in diesem Release",
                 icon = {
@@ -140,7 +139,7 @@ private fun SettingsHelpScreen(
                     // TODO
 //                    onUiEvent.invoke(SettingsHelpUiEvent.SendFeedback)
                 }
-            )
+            )*/
 
             ExpressiveSettingsMenuLink(
                 title = stringResource(R.string.settings_help_screen_show_onboarding_title),

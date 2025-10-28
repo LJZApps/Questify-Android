@@ -7,8 +7,9 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.feature.profile.domain.repositories.AppUserRepository
-import de.ljz.questify.feature.settings.domain.repositories.AppSettingsRepository
+import de.ljz.questify.core.domain.use_cases.SetOnboardingDoneUseCase
+import de.ljz.questify.feature.profile.domain.use_cases.GetAppUserUseCase
+import de.ljz.questify.feature.profile.domain.use_cases.SaveProfileUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -22,8 +23,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FirstSetupViewModel @Inject constructor(
-    private val appSettingsRepository: AppSettingsRepository,
-    private val appUserRepository: AppUserRepository
+    private val setOnboardingDoneUseCase: SetOnboardingDoneUseCase,
+
+    private val getAppUserUseCase: GetAppUserUseCase,
+    private val saveProfileUseCase: SaveProfileUseCase
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(
         value = FirstSetupUiState(
@@ -41,7 +44,7 @@ class FirstSetupViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                appUserRepository.getAppUser().collectLatest { appUser ->
+                getAppUserUseCase.invoke().collectLatest { appUser ->
                     _uiState.update { currentState ->
                         currentState.copy(
                             userSetupPageUiState = currentState.userSetupPageUiState.copy(
@@ -59,7 +62,7 @@ class FirstSetupViewModel @Inject constructor(
     fun setSetupDone(profilePicture: String) {
         viewModelScope.launch {
             launch {
-                appUserRepository.saveProfile(
+                saveProfileUseCase.invoke(
                     displayName = _uiState.value.userSetupPageUiState.displayName,
                     aboutMe = _uiState.value.userSetupPageUiState.aboutMe,
                     imageUri = profilePicture
@@ -67,7 +70,7 @@ class FirstSetupViewModel @Inject constructor(
             }
 
             launch {
-                appSettingsRepository.setOnboardingDone()
+                setOnboardingDoneUseCase.invoke()
             }
         }
     }

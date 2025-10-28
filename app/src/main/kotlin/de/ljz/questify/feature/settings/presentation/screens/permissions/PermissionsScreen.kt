@@ -115,7 +115,7 @@ fun PermissionsScreen(
                     enabled = uiState.permissionItems.all { it.isGranted },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                         .navigationBarsPadding()
                 ) {
                     Text(text = stringResource(R.string.permissions_screen_restart_app))

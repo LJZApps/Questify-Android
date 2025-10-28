@@ -1,10 +1,7 @@
 package de.ljz.questify.feature.onboarding.presentation.screens.onboarding
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +18,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,16 +25,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import de.ljz.questify.R
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.StartQuestifyPage
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.TutorialQuestsPage
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.pages.TutorialRewardsPage
@@ -57,6 +50,12 @@ fun OnboardingScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
+                is OnboardingUiEvent.OnOnboardingFinished -> {
+                    onNavigateToMainScreen()
+
+                    viewModel.onUiEvent(event)
+                }
+
                 else -> viewModel.onUiEvent(event)
             }
         }
@@ -74,71 +73,54 @@ private fun OnboardingScreen(
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         bottomBar = {
-            AnimatedVisibility(
-                visible = (pagerState.pageCount - 1) != pagerState.currentPage,
-                enter = slideInVertically(
-                    initialOffsetY = { it }
-                ),
-                exit = slideOutVertically(
-                    targetOffsetY = { it }
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize()
             ) {
-                Surface(
-                    shadowElevation = 4.dp,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .navigationBarsPadding(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                if ((pagerState.pageCount - 1) != pagerState.currentPage) {
+                    Surface(
+                        shadowElevation = 4.dp,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
-
-                        Row(
-                            Modifier
-                                .wrapContentHeight()
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            repeat(pagerState.pageCount) { iteration ->
-                                val color =
-                                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                                Box(
-                                    modifier = Modifier
-                                        .padding(2.dp)
-                                        .clip(CircleShape)
-                                        .background(color)
-                                        .size(8.dp)
-                                        .clickable {
-                                            scope.launch {
-                                                pagerState.animateScrollToPage(iteration)
-                                            }
-                                        }
-                                )
-                            }
-                        }
-
-                        Button(
-                            onClick = {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                                }
-                            },
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 24.dp)
+                                .navigationBarsPadding(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
+                            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                Modifier
+                                    .wrapContentHeight()
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                repeat(pagerState.pageCount) { iteration ->
+                                    val color =
+                                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(2.dp)
+                                            .clip(CircleShape)
+                                            .background(color)
+                                            .size(8.dp)
+                                    )
+                                }
+                            }
+
+                            Button(
+                                onClick = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp)
                             ) {
                                 Text(text = "Weiter")
-
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_keyboard_arrow_right),
-                                    contentDescription = null
-                                )
                             }
                         }
                     }
@@ -159,6 +141,7 @@ private fun OnboardingScreen(
                         )
                     )
                 ),
+            userScrollEnabled = false
         ) { page ->
             when (page) {
                 0 -> WelcomePage()
