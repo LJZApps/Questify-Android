@@ -23,7 +23,9 @@ fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
                 navController.navigateUp()
             },
             onNavigateToMainScreen = {
-                navController.navigate(MainRoute)
+                navController.navigate(MainRoute) {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
             }
         )
     }
@@ -34,7 +36,9 @@ fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
                 navController.navigateUp()
             },
             onNavigateToMainScreen = {
-                navController.navigate(MainRoute)
+                navController.navigate(MainRoute) {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
             }
         )
     }
@@ -42,7 +46,9 @@ fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
     composable<MainRoute> {
         MainScreen(
             onNavigateToSettingsPermissionScreen = { backNavigationEnabled ->
-                navController.navigate(SettingsPermissionRoute(backNavigationEnabled = backNavigationEnabled))
+                navController.navigate(SettingsPermissionRoute(backNavigationEnabled = backNavigationEnabled)) {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
             },
             onNavigateToSettingsScreen = {
                 navController.navigate(SettingsMainRoute)

@@ -28,7 +28,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -99,7 +98,7 @@ private fun OnboardingScreen(
                             ) {
                                 repeat(pagerState.pageCount) { iteration ->
                                     val color =
-                                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                        if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHighest
                                     Box(
                                         modifier = Modifier
                                             .padding(2.dp)
@@ -147,7 +146,11 @@ private fun OnboardingScreen(
                 0 -> WelcomePage()
                 1 -> TutorialQuestsPage()
                 2 -> TutorialRewardsPage()
-                3 -> StartQuestifyPage()
+                3 -> StartQuestifyPage(
+                    onOnboardingFinished = {
+                        onUiEvent(OnboardingUiEvent.OnOnboardingFinished)
+                    }
+                )
             }
         }
     }

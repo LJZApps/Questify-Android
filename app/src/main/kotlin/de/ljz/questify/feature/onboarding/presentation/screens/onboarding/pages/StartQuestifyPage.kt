@@ -25,7 +25,8 @@ import de.ljz.questify.R
 
 @Composable
 fun StartQuestifyPage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOnboardingFinished: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -75,7 +76,7 @@ fun StartQuestifyPage(
 
         Button(
             onClick = {
-
+                onOnboardingFinished()
             },
             modifier = Modifier
                 .fillMaxWidth()
