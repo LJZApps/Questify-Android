@@ -59,7 +59,6 @@ import kotlinx.coroutines.launch
 fun DrawerContent(
     uiState: MainUiState,
     navController: NavHostController,
-//    mainNavController: NavHostController,
     drawerState: DrawerState,
     onNavigateToSettingsScreen: () -> Unit
 ) {
@@ -79,17 +78,20 @@ fun DrawerContent(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_habits_title),
                     icon = painterResource(R.drawable.ic_eco_outlined),
+                    featureEnabled = false,
                     route = HabitsRoute
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_routines_title),
                     icon = painterResource(R.drawable.ic_event_repeat_outlined),
                     route = RoutinesOverviewRoute,
+                    featureEnabled = false
                 ),
             )
         ),
         NavigationCategory(
             title = stringResource(R.string.drawer_content_achievements_title),
+            featuresEnabled = false,
             items = listOf(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_stats_title),
