@@ -3,8 +3,6 @@ package de.ljz.questify.core.presentation.navigation.routes
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupRoute
-import de.ljz.questify.feature.first_setup.presentation.screens.first_setup.FirstSetupScreen
 import de.ljz.questify.feature.habits.presentation.screens.create_habit.CreateHabitRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainScreen
@@ -20,19 +18,6 @@ fun NavGraphBuilder.mainRoutes(navController: NavHostController) {
     composable<OnboardingRoute> {
         OnboardingScreen(
             onNavigateUp = {
-                navController.navigateUp()
-            },
-            onNavigateToMainScreen = {
-                navController.navigate(MainRoute) {
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                }
-            }
-        )
-    }
-
-    composable<FirstSetupRoute> {
-        FirstSetupScreen(
-            onNavigateBack = {
                 navController.navigateUp()
             },
             onNavigateToMainScreen = {
