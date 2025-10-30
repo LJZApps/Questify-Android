@@ -234,7 +234,7 @@
     <string name="update_category_dialog_title">Liste bearbeiten</string>
     <string name="text_field_name_of_list">Name der Liste</string>
     <string name="manage_categories_bottom_sheet_empty">Du hast noch keine Listen erstellt.</string>
-    <string name="manage_categories_bottom_sheet_dropdown_rename_title">Umbenennen</string>
+    <string name="manage_categories_bottom_sheet_dropdown_rename_title">Bearbeiten</string>
     <string name="manage_categories_bottom_sheet_dropdown_delete_title">Löschen</string>
     <string name="create_category_dialog_title">Liste erstellen</string>
     <string name="create_quest_screen_lists_title_empty">Keine Liste ausgewählt</string>

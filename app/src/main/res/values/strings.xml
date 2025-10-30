@@ -233,7 +233,7 @@
     <string name="update_category_dialog_title">Edit list</string>
     <string name="text_field_name_of_list">Name of the list</string>
     <string name="manage_categories_bottom_sheet_empty">You haven\'t created any lists yet.</string>
-    <string name="manage_categories_bottom_sheet_dropdown_rename_title">Rename</string>
+    <string name="manage_categories_bottom_sheet_dropdown_rename_title">Edit</string>
     <string name="manage_categories_bottom_sheet_dropdown_delete_title">Delete</string>
     <string name="create_category_dialog_title">Create list</string>
     <string name="create_quest_screen_lists_title_empty">No list selected</string>

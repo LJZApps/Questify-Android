@@ -15,12 +15,14 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import de.ljz.questify.R
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun DeleteConfirmationDialog(
+fun DeleteQuestCategoryDialog(
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    questCategoryEntity: QuestCategoryEntity
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -36,7 +38,7 @@ fun DeleteConfirmationDialog(
                     contentColor = MaterialTheme.colorScheme.error,
                 )
             ) {
-                Text(text = "Quest löschen")
+                Text(text = "Liste löschen")
             }
         },
         dismissButton = {
@@ -50,10 +52,15 @@ fun DeleteConfirmationDialog(
         },
         title = {
             Text(
-                text = stringResource(R.string.delete_confirmation_dialog_title),
+                text = "\"${questCategoryEntity.text}\" löschen?",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start
             )
         },
+        text = {
+            Text(
+                text = "Deine Quests in dieser Liste werden nicht gelöscht."
+            )
+        }
     )
 }

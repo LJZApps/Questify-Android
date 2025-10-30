@@ -1,12 +1,12 @@
 package de.ljz.questify.feature.quests.presentation.screens.quests_overview
 
 import de.ljz.questify.core.utils.SortingDirections
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.relations.QuestWithSubQuests
 
 data class QuestOverviewUIState(
     val dialogState: DialogState,
     val allQuestPageState: AllQuestPageState,
-    val questDoneDialogState: QuestDoneDialogState,
 )
 
 data class AllQuestPageState(
@@ -25,8 +25,8 @@ data class QuestDoneDialogState(
 sealed class DialogState {
     object None : DialogState()
     object SortingBottomSheet : DialogState()
-    object QuestDone : DialogState()
+    data class QuestDone(val questDoneDialogState: QuestDoneDialogState) : DialogState()
     object CreateCategory : DialogState()
-    object UpdateCategory : DialogState()
-    object ManageCategoriesBottomSheet : DialogState()
+    data class UpdateCategory(val questCategoryEntity: QuestCategoryEntity) : DialogState()
+    data class DeleteCategory(val questCategoryEntity: QuestCategoryEntity) : DialogState()
 }

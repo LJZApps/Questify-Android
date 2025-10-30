@@ -60,11 +60,11 @@ import de.ljz.questify.core.presentation.components.chips.ListChip
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.DeleteQuestCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.RenameCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
-import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
 import de.ljz.questify.feature.quests.presentation.sheets.QuestSortingBottomSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -83,16 +83,11 @@ fun QuestOverviewScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
-    val selectedCategoryForUpdating by viewModel.selectedCategoryForUpdating.collectAsStateWithLifecycle()
     val effectFlow = viewModel.effect
-
-    val scope = rememberCoroutineScope()
-    val haptic = LocalHapticFeedback.current
 
     QuestOverviewScreen(
         uiState = uiState,
         categories = categories,
-        selectedCategoryForUpdating = selectedCategoryForUpdating,
         effectFlow = effectFlow,
         onUiEvent = { event ->
             when (event) {
@@ -125,11 +120,9 @@ fun QuestOverviewScreen(
 private fun QuestOverviewScreen(
     uiState: QuestOverviewUIState,
     categories: List<QuestCategoryEntity>,
-    selectedCategoryForUpdating: QuestCategoryEntity? = null,
     effectFlow: Flow<QuestOverviewUiEffect>,
     onUiEvent: (QuestOverviewUiEvent) -> Unit
 ) {
-    val questDoneDialogState = uiState.questDoneDialogState
     val allQuestPageState = uiState.allQuestPageState
 
     val haptic = LocalHapticFeedback.current
@@ -181,7 +174,10 @@ private fun QuestOverviewScreen(
             effectFlow.collect { effect ->
                 when (effect) {
                     is QuestOverviewUiEffect.ShowSnackbar -> {
-                        snackbarHostState.showSnackbar(effect.message)
+                        snackbarHostState.showSnackbar(
+                            message = effect.message,
+                            withDismissAction = effect.withDismissAction
+                        )
                     }
                 }
             }
@@ -241,20 +237,6 @@ private fun QuestOverviewScreen(
                                 onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.SortingBottomSheet))
                             }
                         )
-
-                        /*DropdownMenuItem(
-                            text = { Text(stringResource(R.string.quest_overview_screen_dropdown_manage_list_title)) },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_label_filled),
-                                    contentDescription = null
-                                )
-                            },
-                            onClick = {
-                                dropdownExpanded = false
-                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.ManageCategoriesBottomSheet))
-                            }
-                        )*/
                     }
                 },
                 title = {
@@ -347,7 +329,11 @@ private fun QuestOverviewScreen(
                                     },
                                     onClick = {
                                         chipDropdownExpanded = false
-                                        onUiEvent(QuestOverviewUiEvent.ShowUpdateCategoryDialog(tab))
+                                        onUiEvent(
+                                            QuestOverviewUiEvent.ShowUpdateCategoryDialog(
+                                                questCategoryEntity = tab
+                                            )
+                                        )
                                     }
                                 )
 
@@ -367,7 +353,12 @@ private fun QuestOverviewScreen(
                                     },
                                     onClick = {
                                         chipDropdownExpanded = false
-                                        onUiEvent.invoke(QuestOverviewUiEvent.DeleteQuestCategory(tab))
+
+                                        onUiEvent(
+                                            QuestOverviewUiEvent.ShowDialog(
+                                                DialogState.DeleteCategory(tab)
+                                            )
+                                        )
                                     }
                                 )
                             }
@@ -445,7 +436,8 @@ private fun QuestOverviewScreen(
                 }
             }
 
-            if (uiState.dialogState == DialogState.QuestDone) {
+            if (uiState.dialogState is DialogState.QuestDone) {
+                val questDoneDialogState = uiState.dialogState.questDoneDialogState
                 QuestDoneDialog(
                     state = questDoneDialogState,
                     onDismiss = {
@@ -454,7 +446,7 @@ private fun QuestOverviewScreen(
                 )
             }
 
-            if (uiState.dialogState == DialogState.SortingBottomSheet) {
+            if (uiState.dialogState is DialogState.SortingBottomSheet) {
                 QuestSortingBottomSheet(
                     onDismiss = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
@@ -470,22 +462,7 @@ private fun QuestOverviewScreen(
                 )
             }
 
-            if (uiState.dialogState == DialogState.ManageCategoriesBottomSheet) {
-                ManageCategoryBottomSheet(
-                    categories = categories,
-                    onCategoryRenameRequest = {
-                        onUiEvent(QuestOverviewUiEvent.ShowUpdateCategoryDialog(it))
-                    },
-                    onCategoryRemove = {
-                        onUiEvent.invoke(QuestOverviewUiEvent.DeleteQuestCategory(it))
-                    },
-                    onDismiss = {
-                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
-                    }
-                )
-            }
-
-            if (uiState.dialogState == DialogState.CreateCategory) {
+            if (uiState.dialogState is DialogState.CreateCategory) {
                 CreateCategoryDialog(
                     onConfirm = { value ->
                         onUiEvent(QuestOverviewUiEvent.AddQuestCategory(value = value))
@@ -498,23 +475,45 @@ private fun QuestOverviewScreen(
                 )
             }
 
-            if (uiState.dialogState == DialogState.UpdateCategory) {
+            if (uiState.dialogState is DialogState.UpdateCategory) {
                 RenameCategoryDialog(
                     onDismiss = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     onConfirm = { value ->
-                        onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = value))
+                        onUiEvent(
+                            QuestOverviewUiEvent.UpdateQuestCategory(
+                                questCategoryEntity = uiState.dialogState.questCategoryEntity,
+                                value = value
+                            )
+                        )
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     initialInputFocussed = true,
-                    initialValue = selectedCategoryForUpdating?.text ?: ""
+                    initialValue = uiState.dialogState.questCategoryEntity.text
+                )
+            }
+
+            if (uiState.dialogState is DialogState.DeleteCategory) {
+                DeleteQuestCategoryDialog(
+                    onConfirm = {
+                        onUiEvent(
+                            QuestOverviewUiEvent.DeleteQuestCategory(
+                                questCategoryEntity = uiState.dialogState.questCategoryEntity
+                            )
+                        )
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    },
+                    onDismiss = {
+                        onUiEvent(QuestOverviewUiEvent.CloseDialog)
+                    },
+                    questCategoryEntity = uiState.dialogState.questCategoryEntity
                 )
             }
         },
         snackbarHost = {
             SnackbarHost(
-                hostState = snackbarHostState
+                hostState = snackbarHostState,
             )
         }
     )

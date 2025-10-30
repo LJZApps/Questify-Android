@@ -34,7 +34,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +57,8 @@ fun QuestDoneDialog(
     state: QuestDoneDialogState,
     onDismiss: () -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
+
     val fadeIn = remember { Animatable(0f) }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.completed))
 
@@ -123,7 +127,10 @@ fun QuestDoneDialog(
                 }
 
                 Button(
-                    onClick = onDismiss,
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onDismiss()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(

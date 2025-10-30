@@ -23,7 +23,10 @@ sealed interface QuestOverviewUiEvent {
 
     data class AddQuestCategory(val value: String): QuestOverviewUiEvent
     data class DeleteQuestCategory(val questCategoryEntity: QuestCategoryEntity) : QuestOverviewUiEvent
-    data class UpdateQuestCategory(val value: String) : QuestOverviewUiEvent
+    data class UpdateQuestCategory(
+        val questCategoryEntity: QuestCategoryEntity,
+        val value: String
+    ) : QuestOverviewUiEvent
 
     data class UpdateQuestSortingDirection(val sortingDirections: SortingDirections) : QuestOverviewUiEvent
     data class UpdateShowCompletedQuests(val value: Boolean) : QuestOverviewUiEvent

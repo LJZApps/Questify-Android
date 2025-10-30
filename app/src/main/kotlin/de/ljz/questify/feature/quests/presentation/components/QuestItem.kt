@@ -20,6 +20,8 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,6 +42,8 @@ fun QuestItem(
     onCheckButtonClicked: () -> Unit,
     onClick: () -> Unit,
 ) {
+    val haptic = LocalHapticFeedback.current
+
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth(),
@@ -131,20 +135,6 @@ fun QuestItem(
                     }
                 }
 
-                /*Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_timer_outlined),
-                        contentDescription = null
-                    )
-
-                    Text(
-                        text = "2h 30m"
-                    )
-                }*/
-
                 Badge(
                     containerColor = when (questWithSubQuests.quest.difficulty) {
                         Difficulty.EASY -> MaterialTheme.colorScheme.surfaceContainerLow
@@ -211,7 +201,10 @@ fun QuestItem(
                     position = TooltipAnchorPosition.Above
                 ) {
                     FilledIconButton(
-                        onClick = onCheckButtonClicked
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onCheckButtonClicked()
+                        }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_check_circle_outlined),

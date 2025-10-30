@@ -50,12 +50,6 @@ class QuestOverviewViewModel @Inject constructor(
                 quests = emptyList(),
                 sortingDirections = SortingDirections.ASCENDING,
                 showCompleted = false
-            ),
-            questDoneDialogState = QuestDoneDialogState(
-                questName = "",
-                xp = 0,
-                points = 0,
-                newLevel = 0
             )
         )
     )
@@ -63,10 +57,6 @@ class QuestOverviewViewModel @Inject constructor(
 
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
-
-    private val _selectedCategoryForUpdating = MutableStateFlow<QuestCategoryEntity?>(null)
-    val selectedCategoryForUpdating: StateFlow<QuestCategoryEntity?> =
-        _selectedCategoryForUpdating.asStateFlow()
 
     private val _effect = Channel<QuestOverviewUiEffect>()
     val effect = _effect.receiveAsFlow()
@@ -116,12 +106,13 @@ class QuestOverviewViewModel @Inject constructor(
 
                         _uiState.update {
                             it.copy(
-                                dialogState = DialogState.QuestDone,
-                                questDoneDialogState = it.questDoneDialogState.copy(
-                                    xp = result.earnedXp,
-                                    points = result.earnedPoints,
-                                    newLevel = if (result.didLevelUp) result.newLevel else 0,
-                                    questName = event.questEntity.title
+                                dialogState = DialogState.QuestDone(
+                                    questDoneDialogState = QuestDoneDialogState(
+                                        xp = result.earnedXp,
+                                        points = result.earnedPoints,
+                                        newLevel = if (result.didLevelUp) result.newLevel else 0,
+                                        questName = event.questEntity.title
+                                    )
                                 )
                             )
                         }
@@ -148,24 +139,18 @@ class QuestOverviewViewModel @Inject constructor(
             is QuestOverviewUiEvent.CloseQuestDoneDialog -> {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        dialogState = DialogState.None,
-                        questDoneDialogState = currentState.questDoneDialogState.copy(
-                            xp = 0,
-                            points = 0,
-                            newLevel = 0,
-                            questName = ""
-                        )
+                        dialogState = DialogState.None
                     )
                 }
             }
 
             is QuestOverviewUiEvent.ShowUpdateCategoryDialog -> {
                 _uiState.update {
-                    it.copy(dialogState = DialogState.UpdateCategory)
-                }
-
-                _selectedCategoryForUpdating.update {
-                    event.questCategoryEntity
+                    it.copy(
+                        dialogState = DialogState.UpdateCategory(
+                            questCategoryEntity = event.questCategoryEntity
+                        )
+                    )
                 }
             }
 
@@ -179,18 +164,22 @@ class QuestOverviewViewModel @Inject constructor(
             is QuestOverviewUiEvent.DeleteQuestCategory -> {
                 viewModelScope.launch {
                     deleteQuestCategoryUseCase.invoke(event.questCategoryEntity.id)
-                    sendEffect(QuestOverviewUiEffect.ShowSnackbar("Liste gelöscht"))
+
+                    sendEffect(
+                        QuestOverviewUiEffect.ShowSnackbar(
+                            message = "Liste \"${event.questCategoryEntity.text}\" gelöscht",
+                            withDismissAction = true
+                        )
+                    )
                 }
             }
 
             is QuestOverviewUiEvent.UpdateQuestCategory -> {
                 viewModelScope.launch {
-                    _selectedCategoryForUpdating.value?.let { selectedCategory ->
-                        updateQuestCategoryUseCase.invoke(
-                            id = selectedCategory.id,
-                            value = event.value.trim()
-                        )
-                    }
+                    updateQuestCategoryUseCase.invoke(
+                        id = event.questCategoryEntity.id,
+                        value = event.value.trim()
+                    )
                 }
             }
 
