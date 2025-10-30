@@ -82,7 +82,7 @@ fun ListChip(
             }
 
             CompositionLocalProvider(
-                LocalTextStyle provides TextStyle(
+                value = LocalTextStyle provides TextStyle(
                     fontWeight = FontWeight(500),
                     fontSize = 14.sp,
                     lineHeight = 20.sp
