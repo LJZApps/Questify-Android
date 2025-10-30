@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
-import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,9 +25,10 @@ class EditQuestViewModel @Inject constructor(
         value = EditQuestUiState(
             title = "",
             notes = null,
-            difficulty = Difficulty.EASY,
+            difficulty = 0,
             dueDate = 0,
             categoryId = null,
+            notificationTriggerTimes = emptyList(),
 
             subTasks = emptyList(),
 
@@ -44,14 +44,19 @@ class EditQuestViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getQuestByIdUseCase.invoke(questId).let { questWithSubQuests ->
+                val notifications = questWithSubQuests.notifications
+                    .filter { !it.notified }
+                    .map { it.notifyAt.time }
+
                 questWithSubQuests.quest.let { questEntity ->
                     _uiState.update {
                         it.copy(
                             title = questEntity.title,
                             notes = questEntity.notes,
-                            difficulty = questEntity.difficulty,
+                            difficulty = questEntity.difficulty.ordinal,
                             dueDate = questEntity.dueDate?.toInstant()?.toEpochMilli()?: 0L,
-                            categoryId = questEntity.categoryId
+                            categoryId = questEntity.categoryId,
+                            notificationTriggerTimes = notifications
                         )
                     }
                 }

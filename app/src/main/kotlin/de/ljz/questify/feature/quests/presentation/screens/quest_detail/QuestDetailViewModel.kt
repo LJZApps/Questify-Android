@@ -86,7 +86,6 @@ class QuestDetailViewModel @Inject constructor(
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
 
     private val _selectedCategory = MutableStateFlow<QuestCategoryEntity?>(null)
-    val selectedCategory: StateFlow<QuestCategoryEntity?> = _selectedCategory.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -96,14 +95,13 @@ class QuestDetailViewModel @Inject constructor(
                 questFlow.collectLatest { quest ->
                     // Do not remove "?" for null safety - YES it can be null
                     quest?.let { questEntity ->
-                        questEntity.copy(
+                        /*questEntity.copy(
                             quest = questEntity.quest.copy(
                                 done = true
                             )
-                        )
-                        val notificationEntities =
-                            questNotificationRepository.getNotificationsByQuestId(questEntity.quest.id)
-                        val notifications = notificationEntities
+                        )*/
+
+                        val notifications = questEntity.notifications
                             .filter { !it.notified }
                             .map { it.notifyAt.time }
 

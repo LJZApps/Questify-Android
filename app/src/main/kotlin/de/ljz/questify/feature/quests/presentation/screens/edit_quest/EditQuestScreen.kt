@@ -4,26 +4,41 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,19 +51,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import de.ljz.questify.R
+import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import de.ljz.questify.core.presentation.components.buttons.AppTextButton
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
+import de.ljz.questify.feature.quests.presentation.components.EasyIcon
+import de.ljz.questify.feature.quests.presentation.components.HardIcon
+import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -72,7 +99,7 @@ fun EditQuestScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun EditQuestScreen(
     uiState: EditQuestUiState,
@@ -94,6 +121,7 @@ private fun EditQuestScreen(
 
     Scaffold(
         modifier = Modifier.imePadding(),
+        contentWindowInsets = WindowInsets(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
@@ -116,7 +144,7 @@ private fun EditQuestScreen(
                 actions = {
                     AppTextButton(
                         onClick = {
-
+                            // TODO
                         }
                     ) {
                         Text("Speichern")
@@ -186,7 +214,7 @@ private fun EditQuestScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
+                .navigationBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
@@ -286,7 +314,7 @@ private fun EditQuestScreen(
                             }
                         }
 
-                        AppOutlinedTextField(
+                        OutlinedTextField(
                             value = if (uiState.dueDate == 0L) "" else formattedDate,
                             onValueChange = {},
                             modifier = Modifier.weight(2f),
@@ -304,7 +332,7 @@ private fun EditQuestScreen(
                             interactionSource = dateInteractionSource
                         )
 
-                        AppOutlinedTextField(
+                        OutlinedTextField(
                             value = if (uiState.dueDate == 0L) "" else formattedTime,
                             onValueChange = {},
                             modifier = Modifier.weight(1f),
@@ -325,6 +353,234 @@ private fun EditQuestScreen(
                 }
 
 
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Erinnerungen",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        uiState.notificationTriggerTimes.sorted()
+                            .forEachIndexed { index, triggerTime ->
+                                FilterChip(
+                                    selected = false,
+                                    onClick = {
+//                                        viewModel.removeReminder(index)
+                                    },
+                                    label = { Text(dateTimeFormat.format(Date(triggerTime))) },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_notifications_outlined),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                        )
+                                    },
+                                    colors = FilterChipDefaults.elevatedFilterChipColors()
+                                )
+                            }
+                    }
+
+                    AppOutlinedButton(
+                        onClick = {
+//                            viewModel.showCreateReminderDialog()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add),
+                                contentDescription = null
+                            )
+
+                            Text("Erinnerung hinzufügen")
+                        }
+                    }
+                }
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Schwierigkeit",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                    ) {
+                        val modifiers = List(difficultyOptions.size) { Modifier.weight(1f) }
+
+                        difficultyOptions.forEachIndexed { index, label ->
+                            ToggleButton(
+                                checked = uiState.difficulty == index,
+                                onCheckedChange = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+//                                    viewModel.updateDifficulty(index) TODO
+                                },
+                                modifier = modifiers[index].semantics {
+                                    role = Role.RadioButton
+                                },
+                                shapes = when (index) {
+                                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                    difficultyOptions.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                                },
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    val tint = if (uiState.difficulty == index)
+                                        MaterialTheme.colorScheme.onPrimary
+                                    else
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+
+                                    when (index) {
+                                        0 -> EasyIcon(tint = tint)
+                                        1 -> MediumIcon(tint = tint)
+                                        2 -> HardIcon(tint = tint)
+                                    }
+
+                                    Text(label)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Unteraufgaben",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        uiState.subTasks.forEachIndexed { index, subTask ->
+                            val subTaskFocusManager = LocalFocusManager.current
+                            val subTaskFocusRequester = remember { FocusRequester() }
+
+                            LaunchedEffect(index) {
+                                subTaskFocusRequester.requestFocus()
+                            }
+
+                            OutlinedCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = 16.dp,
+                                            vertical = 8.dp
+                                        )
+                                        .fillMaxWidth()
+                                ) {
+                                    val interactionSource =
+                                        remember { MutableInteractionSource() }
+
+                                    BasicTextField(
+                                        value = subTask.text,
+                                        onValueChange = {
+//                                            viewModel.updateSubtask(index, it)
+                                        },
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .focusRequester(subTaskFocusRequester),
+                                        textStyle = MaterialTheme.typography.titleMedium.copy(
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        ),
+                                        cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurfaceVariant),
+                                        singleLine = true,
+                                        maxLines = 1,
+                                        keyboardOptions = KeyboardOptions(
+                                            imeAction = ImeAction.Next,
+                                            capitalization = KeyboardCapitalization.Sentences
+                                        ),
+                                        keyboardActions = KeyboardActions {
+//                                            viewModel.addSubTask()
+                                        },
+                                        decorationBox = @Composable { innerTextField ->
+                                            TextFieldDefaults.DecorationBox(
+                                                value = subTask.text,
+                                                enabled = true,
+                                                innerTextField = innerTextField,
+                                                singleLine = true,
+                                                visualTransformation = VisualTransformation.None,
+                                                colors = TextFieldDefaults.colors(
+                                                    focusedIndicatorColor = Color.Transparent,
+                                                    unfocusedIndicatorColor = Color.Transparent,
+                                                    disabledIndicatorColor = Color.Transparent,
+                                                    focusedContainerColor = Color.Transparent,
+                                                    unfocusedContainerColor = Color.Transparent,
+                                                    disabledContainerColor = Color.Transparent,
+                                                ),
+                                                interactionSource = interactionSource,
+                                                placeholder = {
+                                                    Text(
+                                                        text = "Text hier eingeben"
+                                                    )
+                                                },
+                                                contentPadding = PaddingValues(0.dp)
+                                            )
+                                        }
+                                    )
+
+                                    IconButton(
+                                        onClick = {
+                                            if ((uiState.subTasks.count() -1) > 0) {
+                                                subTaskFocusManager.moveFocus(FocusDirection.Previous)
+                                            } else {
+                                                subTaskFocusManager.clearFocus()
+                                            }
+
+//                                            viewModel.removeSubtask(index)
+                                        }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_delete_outlined),
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    AppOutlinedButton(
+                        onClick = {
+//                            viewModel.addSubTask()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add),
+                                contentDescription = null
+                            )
+
+                            Text("Unteraufgabe hinzufügen")
+                        }
+                    }
+                }
             }
         }
     }

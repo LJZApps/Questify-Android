@@ -19,7 +19,7 @@ plugins {
 
     id("androidx.room")
 
-    id("io.sentry.android.gradle") version "5.12.0"
+    id("io.sentry.android.gradle") version "5.12.1"
 }
 
 room {

@@ -69,6 +69,8 @@ fun QuestItem(
                         .copy(
                             fontWeight = FontWeight.Bold
                         ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 questWithSubQuests.quest.notes?.let {
