@@ -94,7 +94,7 @@ fun RenameCategoryDialog(
                 onClick = {
                     onConfirm(textFieldState.text.toString())
                 },
-                enabled = textFieldState.text.toString().trim().isNotEmpty()
+                enabled = textFieldState.text.toString().trim().isNotEmpty() && textFieldState.text.toString().trim().lowercase() != initialValue.trim().lowercase()
             ) {
                 Text(
                     text = stringResource(R.string.save)
