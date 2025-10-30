@@ -24,7 +24,6 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
@@ -338,9 +337,7 @@ fun QuestDetailScreen(
                                                     .fillMaxWidth()
                                                     .padding(vertical = 4.dp)
                                                     .clip(RoundedCornerShape(8.dp))
-                                                    .clickable(
-                                                        enabled = !subQuestEntity.isDone
-                                                    ) {
+                                                    .clickable{
                                                         haptic.performHapticFeedback(
                                                             HapticFeedbackType.LongPress
                                                         )
@@ -368,11 +365,7 @@ fun QuestDetailScreen(
                                                                 id = subQuestEntity.id,
                                                                 checked = !subQuestEntity.isDone
                                                             )
-                                                        },
-                                                        colors = CheckboxDefaults.colors(
-                                                            disabledCheckedColor = MaterialTheme.colorScheme.primary
-                                                        ),
-                                                        enabled = !subQuestEntity.isDone
+                                                        }
                                                     )
                                                 }
 

@@ -471,9 +471,9 @@ private fun EditQuestScreen(
                             val subTaskFocusManager = LocalFocusManager.current
                             val subTaskFocusRequester = remember { FocusRequester() }
 
-                            LaunchedEffect(index) {
+                            /*LaunchedEffect(index) {
                                 subTaskFocusRequester.requestFocus()
-                            }
+                            }*/
 
                             OutlinedCard(
                                 modifier = Modifier.fillMaxWidth(),
