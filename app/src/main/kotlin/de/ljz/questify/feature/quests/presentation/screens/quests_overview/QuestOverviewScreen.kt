@@ -56,12 +56,12 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
-import de.ljz.questify.core.presentation.components.bottom_sheets.InputBottomSheet
 import de.ljz.questify.core.presentation.components.chips.ListChip
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.RenameCategoryDialog
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
 import de.ljz.questify.feature.quests.presentation.sheets.ManageCategoryBottomSheet
@@ -499,22 +499,17 @@ private fun QuestOverviewScreen(
             }
 
             if (uiState.dialogState == DialogState.UpdateCategory) {
-                InputBottomSheet(
-                    onDismissRequest = {
+                RenameCategoryDialog(
+                    onDismiss = {
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
                     onConfirm = { value ->
                         onUiEvent(QuestOverviewUiEvent.UpdateQuestCategory(value = value))
                         onUiEvent(QuestOverviewUiEvent.CloseDialog)
                     },
-                    title = stringResource(R.string.update_category_dialog_title),
-                    icon = painterResource(R.drawable.ic_edit_outlined),
-                    dismissButtonText = stringResource(R.string.cancel),
-                    confirmationButtonText = stringResource(R.string.save),
                     initialInputFocussed = true,
                     initialValue = selectedCategoryForUpdating?.text ?: ""
                 )
-
             }
         },
         snackbarHost = {

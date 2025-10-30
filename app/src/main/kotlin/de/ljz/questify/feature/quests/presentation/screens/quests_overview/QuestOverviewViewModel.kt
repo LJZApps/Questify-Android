@@ -171,7 +171,7 @@ class QuestOverviewViewModel @Inject constructor(
 
             is QuestOverviewUiEvent.AddQuestCategory -> {
                 viewModelScope.launch {
-                    val questCategory = QuestCategoryEntity(text = event.value)
+                    val questCategory = QuestCategoryEntity(text = event.value.trim())
                     addQuestCategoryUseCase.invoke(questCategory)
                 }
             }
@@ -188,7 +188,7 @@ class QuestOverviewViewModel @Inject constructor(
                     _selectedCategoryForUpdating.value?.let { selectedCategory ->
                         updateQuestCategoryUseCase.invoke(
                             id = selectedCategory.id,
-                            value = event.value
+                            value = event.value.trim()
                         )
                     }
                 }
