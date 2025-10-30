@@ -25,8 +25,9 @@ data class QuestDoneDialogState(
 sealed class DialogState {
     object None : DialogState()
     object SortingBottomSheet : DialogState()
-    data class QuestDone(val questDoneDialogState: QuestDoneDialogState) : DialogState()
     object CreateCategory : DialogState()
+
+    data class QuestDone(val questDoneDialogState: QuestDoneDialogState) : DialogState()
     data class UpdateCategory(val questCategoryEntity: QuestCategoryEntity) : DialogState()
     data class DeleteCategory(val questCategoryEntity: QuestCategoryEntity) : DialogState()
 }

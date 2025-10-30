@@ -365,20 +365,25 @@ private fun QuestOverviewScreen(
                         }
                     }
 
-                    ListChip(
-                        selected = false,
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
-                        },
-                        label = {},
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_add),
-                                contentDescription = null,
-                            )
-                        }
-                    )
+                    BasicPlainTooltip(
+                        text = "Neue Liste erstellen",
+                        position = TooltipAnchorPosition.Below
+                    ) {
+                        ListChip(
+                            selected = false,
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onUiEvent(QuestOverviewUiEvent.ShowDialog(DialogState.CreateCategory))
+                            },
+                            label = {},
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_add),
+                                    contentDescription = null,
+                                )
+                            }
+                        )
+                    }
                 }
 
                 HorizontalPager(
