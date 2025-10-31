@@ -120,7 +120,11 @@ fun QuestSortingBottomSheet(
             ExpressiveSettingsSection {
                 ExpressiveSettingsSwitch(
                     state = showCompletedQuests,
-                    onCheckedChange = onShowCompletedQuestsChanged,
+                    onCheckedChange = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+
+                        onShowCompletedQuestsChanged(it)
+                    },
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.ic_check_circle_filled),

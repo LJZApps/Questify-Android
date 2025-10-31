@@ -2,7 +2,6 @@ package de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.ljz.questify.R
+import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.relations.QuestWithSubQuests
 import de.ljz.questify.feature.quests.presentation.components.QuestItem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -43,22 +43,34 @@ fun QuestsForCategoryPage(
             factory.create(categoryId)
         }
     ),
-    onNavigateToQuestDetailScreen: (Int) -> Unit,
-    onQuestDone: (QuestEntity) -> Unit,
+    onQuestClicked: (Int) -> Unit,
+    onQuestChecked: (QuestEntity) -> Unit,
+    onEditQuestClicked: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val questList = uiState.quests
+        .filter { (quest, subTasks, notifications) -> uiState.showCompleted || !quest.done }
+        .sortedWith(
+            comparator = compareBy<QuestWithSubQuests> {
+                it.quest.id
+            }
+                .let {
+                    if (uiState.sortingDirections == SortingDirections.DESCENDING) {
+                        it.reversed()
+                    } else {
+                        it
+                    }
+                }
+        )
 
-    if (uiState.isLoading) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            LoadingIndicator()
-        }
-    } else if (uiState.quests.isEmpty()) {
+    if (questList.isEmpty()) {
         Column(
             modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
+
             Icon(
                 painter = painterResource(R.drawable.ic_label_off_outlined),
                 contentDescription = null,
@@ -71,9 +83,11 @@ fun QuestsForCategoryPage(
                     .padding(16.dp)
                     .size(64.dp)
             )
+
             Text(
                 text = stringResource(R.string.quests_for_category_page_empty)
             )
+
             Spacer(modifier = Modifier.weight(1f))
         }
     } else {
@@ -84,20 +98,21 @@ fun QuestsForCategoryPage(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             itemsIndexed(
-                items = uiState.quests,
+                items = questList,
                 key = { _, questWithSubQuests -> questWithSubQuests.quest.id }
             ) { index, questWithSubQuests ->
                 QuestItem(
                     questWithSubQuests = questWithSubQuests,
                     onCheckButtonClicked = {
-                        onQuestDone(questWithSubQuests.quest)
+                        onQuestChecked(questWithSubQuests.quest)
                     },
                     onEditButtonClicked = {
-
+                        onEditQuestClicked(questWithSubQuests.quest.id)
                     },
                     onClick = {
-                        onNavigateToQuestDetailScreen(questWithSubQuests.quest.id)
-                    }
+                        onQuestClicked(questWithSubQuests.quest.id)
+                    },
+                    modifier = Modifier.animateItem()
                 )
             }
         }

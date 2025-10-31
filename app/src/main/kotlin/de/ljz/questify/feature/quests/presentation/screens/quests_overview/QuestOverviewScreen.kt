@@ -395,7 +395,7 @@ private fun QuestOverviewScreen(
                     if (pageIndex == 0) {
                         AllQuestsPage(
                             state = uiState.allQuestPageState,
-                            onEditQuest = {
+                            onEditQuestClicked = {
                                 onUiEvent(QuestOverviewUiEvent.OnNavigateToEditQuestScreen(it))
                             },
                             onQuestChecked = { quest ->
@@ -428,11 +428,14 @@ private fun QuestOverviewScreen(
 
                             QuestsForCategoryPage(
                                 categoryId = category.id,
-                                onNavigateToQuestDetailScreen = {
+                                onQuestClicked = {
                                     onUiEvent(QuestOverviewUiEvent.OnNavigateToQuestDetailScreen(it))
                                 },
-                                onQuestDone = {
+                                onQuestChecked = {
                                     onUiEvent(QuestOverviewUiEvent.OnQuestChecked(it))
+                                },
+                                onEditQuestClicked = {
+                                    onUiEvent(QuestOverviewUiEvent.OnNavigateToEditQuestScreen(it))
                                 },
                                 modifier = Modifier.fillMaxSize()
                             )

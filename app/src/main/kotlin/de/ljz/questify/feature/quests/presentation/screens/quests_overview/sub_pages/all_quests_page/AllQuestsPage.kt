@@ -42,17 +42,24 @@ import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQu
 fun AllQuestsPage(
     modifier: Modifier = Modifier,
     state: AllQuestPageState,
-    onEditQuest: (Int) -> Unit,
+    onEditQuestClicked: (Int) -> Unit,
     onQuestChecked: (QuestEntity) -> Unit,
     onQuestClicked: (Int) -> Unit,
     onCreateNewQuestButtonClicked: () -> Unit
 ) {
     val quests = state.quests
         .filter { quest -> state.showCompleted || !quest.quest.done }
-        .sortedWith(compareBy<QuestWithSubQuests> {
-            it.quest.id
-        }
-            .let { if (state.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it })
+        .sortedWith(
+            comparator = compareBy<QuestWithSubQuests> {
+                it.quest.id
+            }
+                .let {
+                    if (state.sortingDirections == SortingDirections.DESCENDING)
+                        it.reversed()
+                    else
+                        it
+                }
+        )
 
     if (quests.isNotEmpty()) {
         LazyColumn(
@@ -70,17 +77,19 @@ fun AllQuestsPage(
                         onQuestChecked(quest.quest)
                     },
                     onEditButtonClicked = {
-                        onEditQuest(quest.quest.id)
+                        onEditQuestClicked(quest.quest.id)
                     },
                     onClick = {
                         onQuestClicked(quest.quest.id)
-                    }
+                    },
+                    modifier = Modifier.animateItem()
                 )
             }
 
             item {
                 Spacer(
-                    modifier = Modifier.navigationBarsPadding()
+                    modifier = Modifier
+                        .navigationBarsPadding()
                         .height(0.dp)
                 )
             }
