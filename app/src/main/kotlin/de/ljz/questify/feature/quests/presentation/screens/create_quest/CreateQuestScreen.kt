@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,6 +54,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
@@ -109,6 +111,8 @@ fun CreateQuestScreen(
         stringResource(R.string.difficulty_hard),
     )
 
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     LaunchedEffect(questCreationSucceeded) {
         if (questCreationSucceeded) {
             onNavigateBack()
@@ -122,6 +126,7 @@ fun CreateQuestScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
+                scrollBehavior = scrollBehavior,
                 title = {
                     Text(
                         text = stringResource(
@@ -216,6 +221,7 @@ fun CreateQuestScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally

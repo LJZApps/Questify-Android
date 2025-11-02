@@ -19,3 +19,7 @@ data class CreateQuestUiState(
     val isSelectCategoryDialogVisible: Boolean,
     val subTasks: List<SubQuestModel>
 )
+
+sealed class DialogState {
+    object None : DialogState()
+}
