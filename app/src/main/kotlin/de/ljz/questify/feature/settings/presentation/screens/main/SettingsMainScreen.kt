@@ -116,7 +116,8 @@ fun SettingsMainScreen(
             }
 
             ExpressiveSettingsSection(
-                title = "Einstellungen"
+                title = "Einstellungen",
+//                subtitle = "Diese Funktionen sind noch in der Entwicklung. Es könnten unerwartete Fehler auftreten."
             ) {
                 /*ExpressiveSettingsMenuLink(
                     title =  stringResource(R.string.settings_main_screen_features_title) ,
@@ -135,6 +136,15 @@ fun SettingsMainScreen(
                         mainNavController.navigate(SettingsAppearanceRoute)
                     }
                 )
+
+                /*ExpressiveSettingsMenuLink(
+                    title = "Experimente",
+                    subtitle = "Teste neue Funktionen vor allen anderen",
+                    icon = { Icon(painter = painterResource(R.drawable.ic_experiment_outlined), contentDescription = null) },
+                    onClick = {
+//                        mainNavController.navigate(SettingsAppearanceRoute)
+                    }
+                )*/
 
                 ExpressiveSettingsMenuLink(
                     title = stringResource(R.string.settings_main_screen_help_title),
