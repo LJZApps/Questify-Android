@@ -17,10 +17,12 @@ import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.AddSubQuestsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -52,8 +54,8 @@ class CreateQuestViewModel @Inject constructor(
     )
     val uiState: StateFlow<CreateQuestUiState> = _uiState.asStateFlow()
 
-    private val _questCreationSucceeded = MutableStateFlow(false)
-    val questCreationSucceeded = _questCreationSucceeded.asStateFlow()
+    private val _uiEffects = Channel<CreateQuestUiEffect>()
+    val uiEffects = _uiEffects.receiveAsFlow()
 
     private val createQuestRoute = savedStateHandle.toRoute<CreateQuestRoute>()
     val selectedCategoryIndex = createQuestRoute.selectedCategoryIndex
@@ -114,7 +116,7 @@ class CreateQuestViewModel @Inject constructor(
 
                     addSubQuestsUseCase.invoke(subQuestEntities = subQuestEntities)
 
-                    _questCreationSucceeded.update { true }
+                    _uiEffects.send(CreateQuestUiEffect.OnNavigateUp)
                 }
             }
 

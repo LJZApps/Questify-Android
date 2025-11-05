@@ -11,7 +11,7 @@
     <string name="difficulty_hard">Hard</string>
     <string name="difficulty_epic">Epic</string>
     <string name="get_started_intro">Ready to make each day your own personal quest?</string>
-    <string name="get_started_lets_go">Yes, let's start!</string>
+    <string name="get_started_lets_go">Yes, let\'s start!</string>
     <string name="quest_screen_top_bar_title">Your Quests</string>
     <string name="quest_screen_bottom_nav_all_quests">Quests</string>
     <string name="quest_screen_bottom_nav_dailies">Dailies</string>
@@ -49,7 +49,7 @@
     <string name="create_quest_screen_general">General</string>
     <string name="create_quest_screen_details">Details</string>
     <string name="create_quest_screen_trophies">Trophies</string>
-    <string name="changelog_bottom_sheet_title">What's new</string>
+    <string name="changelog_bottom_sheet_title">What\'s new</string>
     <string name="changelog_bottom_sheet_version">Version %1$s</string>
     <string name="changelog_bottom_sheet_new_features">New features:</string>
     <string name="changelog_bottom_sheet_changes">Changes:</string>
@@ -62,9 +62,9 @@
     <string name="create_reminder_dialog_title">Select time</string>
     <string name="create_reminder_dialog_add_reminder">Add reminder</string>
     <string name="feature_not_available_title">This feature is not yet integrated.</string>
-    <string name="placeholder_title">Oops! There's nothing here yet.</string>
+    <string name="placeholder_title">Oops! There\'s nothing here yet.</string>
     <string name="changelog_component_title">App updated to version %1$s!</string>
-    <string name="changelog_component_view_changelog">Click here to see what's new.</string>
+    <string name="changelog_component_view_changelog">Click here to see what\'s new.</string>
     <string name="changelog_component_no_changelog">There is no changelog for this version.</string>
     <string name="stats_component_title">Level %1$s</string>
     <string name="stats_component_until_next_level">%1$s XP until level %2$s</string>

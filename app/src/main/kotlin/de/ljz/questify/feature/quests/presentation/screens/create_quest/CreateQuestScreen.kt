@@ -92,13 +92,19 @@ fun CreateQuestScreen(
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val questCreationSucceeded by viewModel.questCreationSucceeded.collectAsStateWithLifecycle()
     val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.uiEffects.collect { effect ->
+            when (effect) {
+                is CreateQuestUiEffect.OnNavigateUp -> onNavigateBack()
+            }
+        }
+    }
+
     CreateQuestScreen(
         uiState = uiState,
-        questCreationSucceeded = questCreationSucceeded,
         selectedCategory = selectedCategory,
         categories = categories,
         onUiEvent = { event ->
@@ -117,7 +123,6 @@ fun CreateQuestScreen(
 @Composable
 private fun CreateQuestScreen(
     uiState: CreateQuestUiState,
-    questCreationSucceeded: Boolean,
     selectedCategory: QuestCategoryEntity?,
     categories: List<QuestCategoryEntity>,
     onUiEvent: (CreateQuestUiEvent) -> Unit
@@ -138,12 +143,6 @@ private fun CreateQuestScreen(
     )
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
-    LaunchedEffect(questCreationSucceeded) {
-        if (questCreationSucceeded) {
-            onUiEvent(CreateQuestUiEvent.OnNavigateUp)
-        }
-    }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()

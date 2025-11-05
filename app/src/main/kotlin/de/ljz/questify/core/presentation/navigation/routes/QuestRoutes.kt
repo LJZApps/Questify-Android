@@ -25,7 +25,11 @@ fun NavGraphBuilder.questRoutes(navController: NavHostController) {
             navDeepLink<QuestDetailRoute>(basePath = "questify://quest_detail")
         ),
     ) { backStackEntry ->
-        QuestDetailScreen(navController = navController)
+        QuestDetailScreen(
+            onNavigateUp = {
+                navController.navigateUp()
+            }
+        )
     }
 
     composable<EditQuestRoute> {

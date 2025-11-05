@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -60,7 +61,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.core.utils.MaxWidth
@@ -73,7 +73,7 @@ import java.util.Locale
 @Composable
 fun QuestDetailScreen(
     viewModel: QuestDetailViewModel = hiltViewModel(),
-    navController: NavHostController
+    onNavigateUp: () -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
@@ -82,6 +82,14 @@ fun QuestDetailScreen(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(Unit) {
+        viewModel.uiEffects.collect { effect ->
+            when (effect) {
+                is QuestDetailUiEffect.OnNavigateUp -> onNavigateUp()
+            }
+        }
+    }
+
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp),
         topBar = {
@@ -89,7 +97,7 @@ fun QuestDetailScreen(
                 title = {},
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() }
+                        onClick = { onNavigateUp() }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back),
@@ -526,14 +534,7 @@ fun QuestDetailScreen(
             if (uiState.dialogState == DialogState.DeleteConfirmation) {
                 DeleteConfirmationDialog(
                     onConfirm = {
-                        viewModel.deleteQuest(
-                            uiState.questId,
-                            context,
-                            onSuccess = {
-                                viewModel.hideDeleteConfirmationDialog()
-                                navController.navigateUp()
-                            }
-                        )
+                        viewModel.deleteQuest(uiState.questId)
                     },
                     onDismiss = {
                         viewModel.hideDeleteConfirmationDialog()

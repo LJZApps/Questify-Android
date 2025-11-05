@@ -196,8 +196,6 @@
     <string name="quest_sorting_due_date">Fälligkeitsdatum</string>
     <string name="quest_sorting_quest_complete">Quest fertig</string>
     <string name="sorting_direction_ascending">Aufsteigend</string>
-
-    <!-- Neue Strings für verbesserte Quest-Erstellungs-UI -->
     <string name="quest_title_header">Quest-Titel</string>
     <string name="difficulty_none_description">Keine Schwierigkeit festgelegt</string>
     <string name="difficulty_easy_description">Einfache Aufgaben, die nicht viel Aufwand erfordern</string>
@@ -245,4 +243,7 @@
     <string name="drawer_content_achievements_title">Erfolge</string>
     <string name="drawer_content_stats_title">Statistiken</string>
     <string name="drawer_content_leaderboard_title">Bestenliste</string>
+    <string name="drawer_content_questify_title">Questify</string>
+    <string name="drawer_content_profile_picture_content_description">Profilbild</string>
+    <string name="drawer_content_settings_title">Einstellungen</string>
 </resources>

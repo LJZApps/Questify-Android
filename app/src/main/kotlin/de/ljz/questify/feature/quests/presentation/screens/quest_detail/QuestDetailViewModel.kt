@@ -1,32 +1,29 @@
 package de.ljz.questify.feature.quests.presentation.screens.quest_detail
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
-import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CheckSubQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdAsFlowUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetQuestCategoryByIdUseCase
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestDoneDialogState
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,12 +31,13 @@ import javax.inject.Inject
 @HiltViewModel
 class QuestDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val questRepository: QuestRepository,
-    private val questNotificationRepository: QuestNotificationRepository,
-    private val questCategoryRepository: QuestCategoryRepository,
 
+    private val getQuestByIdAsFlowUseCase: GetQuestByIdAsFlowUseCase,
     private val completeQuestUseCase: CompleteQuestUseCase,
     private val deleteQuestUseCase: DeleteQuestUseCase,
+
+    private val getAllQuestCategoriesUseCase: GetAllQuestCategoriesUseCase,
+    private val getQuestCategoryByIdUseCase: GetQuestCategoryByIdUseCase,
 
     private val checkSubQuestUseCase: CheckSubQuestUseCase,
 
@@ -76,6 +74,9 @@ class QuestDetailViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
+    private val _uiEffects = Channel<QuestDetailUiEffect>()
+    val uiEffects = _uiEffects.receiveAsFlow()
+
     private val questDetailRoute = savedStateHandle.toRoute<QuestDetailRoute>()
     val questId = questDetailRoute.id
 
@@ -87,43 +88,40 @@ class QuestDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                val questFlow = questRepository.getQuestByIdFlow(questId)
+                val questFlow = getQuestByIdAsFlowUseCase.invoke(questId)
 
                 questFlow.collectLatest { quest ->
-                    // Do not remove "?" for null safety - YES it can be null
-                    quest?.let { questEntity ->
-                        /*questEntity.copy(
-                            quest = questEntity.quest.copy(
-                                done = true
-                            )
-                        )*/
-
-                        val notifications = questEntity.notifications
+                    if (quest == null) {
+                        _uiEffects.send(QuestDetailUiEffect.OnNavigateUp)
+                    } else {
+                        val notifications = quest.notifications
                             .filter { !it.notified }
                             .map { it.notifyAt.time }
 
-                        val questCategoryEntity = questCategoryRepository.getQuestCategoryById(questEntity.quest.categoryId ?: 0).firstOrNull()
+                        val questCategoryEntity = getQuestCategoryByIdUseCase.invoke(
+                            quest.quest.categoryId ?: 0
+                        ).firstOrNull()
                         _selectedCategory.value = questCategoryEntity
 
                         _uiState.value = _uiState.value.copy(
                             questState = _uiState.value.questState.copy(
-                                title = questEntity.quest.title,
-                                description = questEntity.quest.notes ?: "",
-                                difficulty = questEntity.quest.difficulty,
+                                title = quest.quest.title,
+                                description = quest.quest.notes ?: "",
+                                difficulty = quest.quest.difficulty,
                                 notificationTriggerTimes = notifications,
-                                selectedDueDate = questEntity.quest.dueDate?.time ?: 0L,
-                                done = questEntity.quest.done,
-                                subQuests = questEntity.subTasks
+                                selectedDueDate = quest.quest.dueDate?.time ?: 0L,
+                                done = quest.quest.done,
+                                subQuests = quest.subTasks
                             ),
                             questId = questId,
-                            questEntity = questEntity.quest
+                            questEntity = quest.quest
                         )
                     }
                 }
             }
 
             launch {
-                questCategoryRepository.getAllQuestCategories()
+                getAllQuestCategoriesUseCase()
                     .collectLatest { questCategoryEntities ->
                         _categories.value = questCategoryEntities
                     }
@@ -164,32 +162,13 @@ class QuestDetailViewModel @Inject constructor(
         }
     }
 
-    fun deleteQuest(questId: Int, context: Context, onSuccess: () -> Unit) {
+    fun deleteQuest(questId: Int) {
         viewModelScope.launch {
-            val notifications = questNotificationRepository.getNotificationsByQuestId(questId)
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            cancelQuestNotificationsUseCase.invoke(id = questId)
 
-            notifications.forEach { notification ->
-                val intent = Intent(context, QuestNotificationReceiver::class.java)
+            deleteQuestUseCase.invoke(questId = questId)
 
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    notification.id,
-                    intent,
-                    PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-
-                if (pendingIntent != null) {
-                    alarmManager.cancel(pendingIntent)
-                }
-            }
-
-            deleteQuestUseCase.invoke(
-                questId = questId
-            )
-            questNotificationRepository.removeNotifications(questId)
-
-            onSuccess.invoke()
+            _uiEffects.send(QuestDetailUiEffect.OnNavigateUp)
         }
     }
 
