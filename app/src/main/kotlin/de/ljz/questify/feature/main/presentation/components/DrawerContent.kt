@@ -149,7 +149,7 @@ fun DrawerContent(
                             },
                             overlineContent = {
                                 Text(
-                                    text = "Questify"
+                                    text = stringResource(id = R.string.drawer_content_questify_title)
                                 )
                             },
                             leadingContent = {
@@ -163,7 +163,7 @@ fun DrawerContent(
                                     if (uiState.userProfilePicture.isNotEmpty()) {
                                         AsyncImage(
                                             model = uiState.userProfilePicture,
-                                            contentDescription = "Profilbild",
+                                            contentDescription = stringResource(id = R.string.drawer_content_profile_picture_content_description),
                                             modifier = Modifier
                                                 .size(40.dp),
                                             contentScale = ContentScale.Crop
@@ -171,7 +171,7 @@ fun DrawerContent(
                                     } else {
                                         Icon(
                                             imageVector = Icons.Default.Person,
-                                            contentDescription = "Profilbild",
+                                            contentDescription = stringResource(id = R.string.drawer_content_profile_picture_content_description),
                                             modifier = Modifier
                                                 .size(40.dp)
                                                 .padding(5.dp),
@@ -254,7 +254,7 @@ fun DrawerContent(
             )
 
             NavigationDrawerItem(
-                label = { Text(text = "Einstellungen") },
+                label = { Text(text = stringResource(id = R.string.drawer_content_settings_title)) },
                 icon = {
                     Icon(
                         imageVector = Icons.Outlined.Settings,

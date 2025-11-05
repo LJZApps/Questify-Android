@@ -18,9 +18,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.ljz.questify.R
 
 @Composable
 fun DifficultyIconContainer(content: @Composable BoxScope.() -> Unit) {
@@ -133,19 +135,35 @@ fun DifficultyIconsPreview() {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             EasyIcon()
-            Text("Easy", fontSize = 10.sp, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                stringResource(id = R.string.difficulty_easy), 
+                fontSize = 10.sp, 
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             MediumIcon()
-            Text("Medium", fontSize = 10.sp, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                stringResource(id = R.string.difficulty_medium), 
+                fontSize = 10.sp, 
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             HardIcon()
-            Text("Hard", fontSize = 10.sp, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                stringResource(id = R.string.difficulty_hard), 
+                fontSize = 10.sp, 
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             EpicIcon()
-            Text("Epic", fontSize = 10.sp, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                stringResource(id = R.string.difficulty_epic), 
+                fontSize = 10.sp, 
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }
