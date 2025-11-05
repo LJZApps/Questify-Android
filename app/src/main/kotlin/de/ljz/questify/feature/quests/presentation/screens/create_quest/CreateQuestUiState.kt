@@ -7,16 +7,11 @@ data class CreateQuestUiState(
     val title: String,
     val description: String,
     val difficulty: Int,
-    val isAddingReminder: Boolean, // DONE
+    val dialogState: DialogState,
     val selectedTime: Long,
     val selectedDueDate: Long,
-    val isAlertManagerInfoVisible: Boolean, // DEPRECATED
     val notificationTriggerTimes: List<Long>,
     val addingDateTimeState: AddingDateTimeState,
-    val isDueDateInfoDialogVisible: Boolean, // DEPRECATED
-    val isDatePickerDialogVisible: Boolean, // DONE
-    val isTimePickerDialogVisible: Boolean, // DONE
-    val isSelectCategoryDialogVisible: Boolean, // DONE
     val subTasks: List<SubQuestModel>
 )
 

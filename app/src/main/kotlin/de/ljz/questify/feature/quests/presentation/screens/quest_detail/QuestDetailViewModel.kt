@@ -17,7 +17,6 @@ import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestCategoryRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
-import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CheckSubQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CompleteQuestUseCase
@@ -44,14 +43,12 @@ class QuestDetailViewModel @Inject constructor(
 
     private val checkSubQuestUseCase: CheckSubQuestUseCase,
 
-    private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
-
     private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         value = QuestDetailUiState(
-            addingDueDateTimeState = AddingDateTimeState.NONE,
-            addingReminderDateTimeState = AddingDateTimeState.NONE,
+            addingDueDateTimeState = AddingDateTimeState.DATE,
+            addingReminderDateTimeState = AddingDateTimeState.DATE,
             isEditingQuest = false,
 
             dialogState = DialogState.None,
@@ -158,16 +155,6 @@ class QuestDetailViewModel @Inject constructor(
         }
     }
 
-    fun addQuestCategory(text: String) {
-        viewModelScope.launch {
-            addQuestCategoryUseCase.invoke(
-                questCategoryEntity = QuestCategoryEntity(
-                    text = text
-                )
-            )
-        }
-    }
-
     fun checkSubQuest(id: Int, checked: Boolean) {
         viewModelScope.launch {
             checkSubQuestUseCase.invoke(
@@ -175,10 +162,6 @@ class QuestDetailViewModel @Inject constructor(
                 checked = checked
             )
         }
-    }
-
-    fun selectCategory(category: QuestCategoryEntity) {
-        _selectedCategory.value = category
     }
 
     fun deleteQuest(questId: Int, context: Context, onSuccess: () -> Unit) {
@@ -210,43 +193,9 @@ class QuestDetailViewModel @Inject constructor(
         }
     }
 
-    fun addReminder(timestamp: Long) {
-        val updatedTimes =
-            _uiState.value.questState.notificationTriggerTimes.toMutableList().apply {
-                add(timestamp)
-            }
-        _uiState.value = _uiState.value.copy(
-            questState = _uiState.value.questState.copy(
-                notificationTriggerTimes = updatedTimes
-            )
-        )
-
-        updateUiState {
-            copy(
-                dialogState = DialogState.CreateReminder,
-                addingReminderDateTimeState = AddingDateTimeState.DATE
-            )
-        }
-    }
-
-    fun updateReminderState(reminderState: AddingDateTimeState) {
-        updateUiState {
-            copy(addingReminderDateTimeState = reminderState)
-        }
-    }
-
     private fun updateUiState(update: QuestDetailUiState.() -> QuestDetailUiState) {
         _uiState.value = _uiState.value.update()
     }
-
-
-    fun hideCreateReminderDialog() = updateUiState {
-        copy(
-            dialogState = DialogState.None,
-            addingReminderDateTimeState = AddingDateTimeState.NONE
-        )
-    }
-    fun hideSelectCategoryDialog() = updateUiState { copy(dialogState = DialogState.None) }
 
     fun showDeleteConfirmationDialog() =
         updateUiState { copy(dialogState = DialogState.DeleteConfirmation) }

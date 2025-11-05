@@ -42,16 +42,11 @@ class CreateQuestViewModel @Inject constructor(
             title = "",
             description = "",
             difficulty = 0,
-            isAddingReminder = false,
+            dialogState = DialogState.None,
             selectedTime = 0,
             selectedDueDate = 0L,
-            isAlertManagerInfoVisible = false,
             notificationTriggerTimes = emptyList(),
-            addingDateTimeState = AddingDateTimeState.NONE,
-            isDueDateInfoDialogVisible = false,
-            isSelectCategoryDialogVisible = false,
-            isDatePickerDialogVisible = false,
-            isTimePickerDialogVisible = false,
+            addingDateTimeState = AddingDateTimeState.DATE,
             subTasks = emptyList()
         )
     )
@@ -86,169 +81,160 @@ class CreateQuestViewModel @Inject constructor(
         }
     }
 
-    fun createQuest() {
-        val quest = QuestEntity(
-            title = _uiState.value.title,
-            notes = _uiState.value.description.ifEmpty { null },
-            difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
-            createdAt = Date(),
-            dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate),
-            categoryId = _selectedCategory.value?.id
-        )
-
-        viewModelScope.launch {
-            val questId = questRepository.addMainQuest(quest)
-
-            _uiState.value.notificationTriggerTimes.forEach { notificationTriggerTime ->
-                val questNotification = QuestNotificationEntity(
-                    questId = questId.toInt(),
-                    notifyAt = Date(notificationTriggerTime)
+    fun onUiEvent(event: CreateQuestUiEvent) {
+        when (event) {
+            is CreateQuestUiEvent.OnCreateQuest -> {
+                val quest = QuestEntity(
+                    title = _uiState.value.title,
+                    notes = _uiState.value.description.ifEmpty { null },
+                    difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
+                    createdAt = Date(),
+                    dueDate = if (_uiState.value.selectedDueDate.toInt() == 0) null else Date(_uiState.value.selectedDueDate),
+                    categoryId = _selectedCategory.value?.id
                 )
 
-                questNotificationRepository.addQuestNotification(questNotification)
-            }
+                viewModelScope.launch {
+                    val questId = questRepository.addMainQuest(quest)
 
-            val subQuestEntities = _uiState.value.subTasks.map { subTask ->
-                SubQuestEntity(
-                    text = subTask.text,
-                    questId = questId
-                )
-            }
+                    _uiState.value.notificationTriggerTimes.forEach { notificationTriggerTime ->
+                        val questNotification = QuestNotificationEntity(
+                            questId = questId.toInt(),
+                            notifyAt = Date(notificationTriggerTime)
+                        )
 
-            addSubQuestsUseCase.invoke(subQuestEntities = subQuestEntities)
+                        questNotificationRepository.addQuestNotification(questNotification)
+                    }
 
-            _questCreationSucceeded.update { true }
-        }
-    }
+                    val subQuestEntities = _uiState.value.subTasks.map { subTask ->
+                        SubQuestEntity(
+                            text = subTask.text,
+                            questId = questId
+                        )
+                    }
 
-    fun addQuestCategory(text: String) {
-        viewModelScope.launch {
-            addQuestCategoryUseCase.invoke(
-                questCategoryEntity = QuestCategoryEntity(
-                    text = text
-                )
-            )
-        }
-    }
+                    addSubQuestsUseCase.invoke(subQuestEntities = subQuestEntities)
 
-    fun selectCategory(category: QuestCategoryEntity) {
-        _selectedCategory.value = category
-    }
-
-    fun removeReminder(index: Int) {
-        val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
-            removeAt(index)
-        }
-        _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
-    }
-
-    fun addReminder(timestamp: Long) {
-        val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
-            add(timestamp)
-        }
-        _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
-
-        updateUiState {
-            copy(
-                isAddingReminder = true,
-                addingDateTimeState = AddingDateTimeState.DATE
-            )
-        }
-    }
-
-    fun addSubTask() {
-        _uiState.update {
-            it.copy(
-                subTasks = _uiState.value.subTasks + SubQuestModel(text = "")
-            )
-        }
-    }
-
-    fun updateSubtask(index: Int, text: String) {
-        _uiState.update { state ->
-            state.copy(
-                subTasks = state.subTasks.mapIndexed { i, subTask ->
-                    if (i == index) subTask.copy(text = text) else subTask
+                    _questCreationSucceeded.update { true }
                 }
-            )
+            }
+
+            is CreateQuestUiEvent.OnTitleUpdated -> {
+                _uiState.update {
+                    it.copy(title = event.value)
+                }
+            }
+
+            is CreateQuestUiEvent.OnDescriptionUpdated -> {
+                _uiState.update {
+                    it.copy(description = event.value)
+                }
+            }
+
+            is CreateQuestUiEvent.OnDifficultyUpdated -> {
+                _uiState.update {
+                    it.copy(difficulty = event.value)
+                }
+            }
+
+            is CreateQuestUiEvent.OnShowDialog -> {
+                _uiState.update {
+                    it.copy(dialogState = event.dialogState)
+                }
+            }
+
+            is CreateQuestUiEvent.OnCloseDialog -> {
+                _uiState.update {
+                    it.copy(dialogState = DialogState.None)
+                }
+            }
+
+            is CreateQuestUiEvent.OnCreateQuestCategory -> {
+                viewModelScope.launch {
+                    addQuestCategoryUseCase.invoke(
+                        questCategoryEntity = QuestCategoryEntity(
+                            text = event.value
+                        )
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnSelectQuestCategory -> {
+                _selectedCategory.value = event.questCategoryEntity
+            }
+
+            is CreateQuestUiEvent.OnRemoveReminder -> {
+                val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
+                    removeAt(event.index)
+                }
+                _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
+            }
+
+            is CreateQuestUiEvent.OnCreateReminder -> {
+                val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
+                    add(event.timestamp)
+                }
+                _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
+
+                _uiState.update {
+                    it.copy(
+                        addingDateTimeState = AddingDateTimeState.DATE
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnCreateSubQuest -> {
+                _uiState.update {
+                    it.copy(
+                        subTasks = _uiState.value.subTasks + SubQuestModel(text = "")
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnUpdateSubQuest -> {
+                _uiState.update { state ->
+                    state.copy(
+                        subTasks = state.subTasks.mapIndexed { i, subTask ->
+                            if (i == event.index) subTask.copy(text = event.value) else subTask
+                        }
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnRemoveSubQuest -> {
+                _uiState.update { state ->
+                    state.copy(
+                        subTasks = state.subTasks.filterIndexed { i, _ -> i != event.index }
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnSetDueDate -> {
+                _uiState.update {
+                    it.copy(
+                        selectedDueDate = event.timestamp,
+                        dialogState = DialogState.None
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnRemoveDueDate -> {
+                _uiState.update {
+                    it.copy(
+                        selectedDueDate = 0L,
+                        dialogState = DialogState.None
+                    )
+                }
+            }
+
+            is CreateQuestUiEvent.OnUpdateReminderState -> {
+                _uiState.update {
+                    it.copy(
+                        addingDateTimeState = event.value
+                    )
+                }
+            }
+
+            else -> Unit
         }
     }
-
-    fun removeSubtask(index: Int) {
-        _uiState.update { state ->
-            state.copy(
-                subTasks = state.subTasks.filterIndexed { i, _ -> i != index }
-            )
-        }
-    }
-
-
-    fun setDueDate(timestamp: Long) {
-        updateUiState {
-            copy(
-                selectedDueDate = timestamp,
-                isDatePickerDialogVisible = false,
-                isTimePickerDialogVisible = false
-            )
-        }
-    }
-
-    fun removeDueDate() {
-        updateUiState {
-            copy(
-                selectedDueDate = 0,
-                isDatePickerDialogVisible = false,
-                isTimePickerDialogVisible = false
-            )
-        }
-    }
-
-    fun updateReminderState(reminderState: AddingDateTimeState) {
-        updateUiState {
-            copy(addingDateTimeState = reminderState)
-        }
-    }
-
-    private fun updateUiState(update: CreateQuestUiState.() -> CreateQuestUiState) {
-        _uiState.value = _uiState.value.update()
-    }
-
-    fun showCreateReminderDialog() = updateUiState {
-        copy(
-            isAddingReminder = true,
-            addingDateTimeState = AddingDateTimeState.DATE
-        )
-    }
-
-    fun hideCreateReminderDialog() = updateUiState {
-        copy(
-            isAddingReminder = false,
-            addingDateTimeState = AddingDateTimeState.NONE
-        )
-    }
-
-    // Title
-    fun updateTitle(title: String) = updateUiState { copy(title = title) }
-
-    // Description / Notes
-    fun updateDescription(description: String) = updateUiState { copy(description = description) }
-
-    // Difficulty
-    fun updateDifficulty(difficulty: Int) = updateUiState { copy(difficulty = difficulty) }
-
-    // Category dialog
-    fun showSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = true) }
-    fun hideSelectCategoryDialog() = updateUiState { copy(isSelectCategoryDialogVisible = false) }
-
-    // Due date info dialog
-    fun hideDueDateInfoDialog() = updateUiState { copy(isDueDateInfoDialogVisible = false) }
-
-    // Due date picker dialog
-    fun showDatePickerDialog() = updateUiState { copy(isDatePickerDialogVisible = true) }
-    fun hideDatePickerDialog() = updateUiState { copy(isDatePickerDialogVisible = false) }
-
-    // Due time picker dialog
-    fun showTimePickerDialog() = updateUiState { copy(isTimePickerDialogVisible = true) }
-    fun hideTimePickerDialog() = updateUiState { copy(isTimePickerDialogVisible = false) }
-
 }

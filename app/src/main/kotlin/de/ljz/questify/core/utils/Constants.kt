@@ -51,7 +51,6 @@ sealed class ReminderTime(val minutes: Int) {
 }
 
 enum class AddingDateTimeState {
-    NONE,
     DATE,
     TIME;
 }

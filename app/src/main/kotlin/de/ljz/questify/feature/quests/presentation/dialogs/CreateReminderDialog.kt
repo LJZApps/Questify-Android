@@ -47,7 +47,7 @@ import java.util.Calendar
 fun CreateReminderDialog(
     onConfirm: (Long) -> Unit,
     onDismiss: () -> Unit,
-    addingDateTimeState: AddingDateTimeState = AddingDateTimeState.NONE,
+    addingDateTimeState: AddingDateTimeState = AddingDateTimeState.DATE,
     onReminderStateChange: (AddingDateTimeState) -> Unit
 ) {
     val currentTime = Calendar.getInstance()
@@ -102,7 +102,6 @@ fun CreateReminderDialog(
     cal.set(Calendar.SECOND, 0)
 
     when (addingDateTimeState) {
-        AddingDateTimeState.NONE -> null
         AddingDateTimeState.DATE -> {
             Column(
                 modifier = Modifier.padding(16.dp),

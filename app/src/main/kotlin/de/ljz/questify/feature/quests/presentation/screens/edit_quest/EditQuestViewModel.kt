@@ -33,7 +33,7 @@ class EditQuestViewModel @Inject constructor(
             subTasks = emptyList(),
 
             dueDateDialogVisible = false,
-            addingDateTimeState = AddingDateTimeState.NONE
+            addingDateTimeState = AddingDateTimeState.DATE
         )
     )
     val uiState = _uiState.asStateFlow()
