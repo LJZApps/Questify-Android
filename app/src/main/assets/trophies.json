@@ -1,0 +1,16 @@
+[
+    {
+        "id": "FIRST_QUEST",
+        "name": "The First Step",
+        "description": "Complete your very first Quest",
+        "icon_res_id_name": "star",
+        "is_secret": false,
+        "conditions": [
+            {
+                "stat_key": "totalQuestsCompleted",
+                "operator": "GTE",
+                "target_value": 1
+            }
+        ]
+    }
+]
