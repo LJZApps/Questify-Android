@@ -303,9 +303,11 @@ private fun QuestOverviewScreen(
                                     }
                                 },
                                 onLongClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    if (tab.id != -1) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 
-                                    chipDropdownExpanded = true
+                                        chipDropdownExpanded = true
+                                    }
                                 },
                                 label = {
                                     Text(
