@@ -43,7 +43,8 @@ import de.ljz.questify.feature.quests.data.models.SubQuestEntity
         AutoMigration(from = 4, to = 5, spec = QuestTaskAutoMigration::class),
         AutoMigration(from = 5, to = 6, spec = RemoveQuestTaskAutoMigration::class),
         AutoMigration(from = 6, to = 7),
-        AutoMigration(from = 7, to = 8)
+        AutoMigration(from = 7, to = 8),
+        AutoMigration(from = 8, to = 9)
     ]
 )
 @TypeConverters(
