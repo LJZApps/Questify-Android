@@ -15,6 +15,10 @@ class QuestRepositoryImpl @Inject constructor(
         return questDao.upsert(quest)
     }
 
+    override suspend fun upsertQuest(quest: QuestEntity) {
+        questDao.upsert(quest)
+    }
+
     override suspend fun setQuestDone(id: Int, done: Boolean) {
         questDao.setQuestDone(id, done)
     }

@@ -6,13 +6,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
+import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
+import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.AddSubQuestsUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteSubQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.UpsertQuestUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,12 +25,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class EditQuestViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 
+    private val upsertQuestUseCase: UpsertQuestUseCase,
     private val getQuestByIdUseCase: GetQuestByIdUseCase,
     private val deleteQuestUseCase: DeleteQuestUseCase,
 
@@ -35,6 +41,8 @@ class EditQuestViewModel @Inject constructor(
 
     private val addSubQuestsUseCase: AddSubQuestsUseCase,
     private val deleteSubQuestUseCase: DeleteSubQuestUseCase,
+
+    private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         value = EditQuestUiState(
@@ -59,6 +67,8 @@ class EditQuestViewModel @Inject constructor(
     private val editQuestRoute = savedStateHandle.toRoute<EditQuestRoute>()
     val questId = editQuestRoute.id
 
+    private var _copiedQuestEntity: QuestEntity? = null
+
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
 
@@ -81,6 +91,8 @@ class EditQuestViewModel @Inject constructor(
                         .map { it.notifyAt.time }
 
                     questWithSubQuests.quest.let { questEntity ->
+                        _copiedQuestEntity = questEntity
+
                         _uiState.update {
                             it.copy(
                                 title = questEntity.title,
@@ -107,7 +119,31 @@ class EditQuestViewModel @Inject constructor(
     fun onUiEvent(event: EditQuestUiEvent) {
         when (event) {
             is EditQuestUiEvent.OnSaveQuest -> {
-                // TODO
+                viewModelScope.launch {
+                    _copiedQuestEntity?.let { copiedQuestEntity ->
+                        val updatedQuestEntity = copiedQuestEntity.copy(
+                            title = _uiState.value.title,
+                            notes = _uiState.value.notes,
+                            difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
+                            dueDate = if (_uiState.value.dueDate.toInt() == 0) null else Date(_uiState.value.dueDate),
+                            categoryId = _selectedCategory.value?.id
+                        )
+
+                        upsertQuestUseCase.invoke(updatedQuestEntity)
+
+                        _uiEffects.send(EditQuestUiEffect.OnNavigateUp)
+                    }
+                }
+            }
+
+            is EditQuestUiEvent.OnDeleteQuest -> {
+                viewModelScope.launch {
+                    cancelQuestNotificationsUseCase.invoke(id = questId)
+
+                    deleteQuestUseCase.invoke(questId = questId)
+
+                    _uiEffects.send(EditQuestUiEffect.OnNavigateUp)
+                }
             }
 
             is EditQuestUiEvent.OnTitleUpdated -> {

@@ -52,7 +52,7 @@ fun DeleteQuestCategoryDialog(
         },
         title = {
             Text(
-                text = "\"${questCategoryEntity.text}\" löschen?",
+                text = "${questCategoryEntity.text} löschen?",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start
             )

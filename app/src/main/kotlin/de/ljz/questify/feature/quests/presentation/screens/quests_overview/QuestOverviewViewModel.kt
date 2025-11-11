@@ -167,7 +167,7 @@ class QuestOverviewViewModel @Inject constructor(
 
                     sendEffect(
                         QuestOverviewUiEffect.ShowSnackbar(
-                            message = "Liste \"${event.questCategoryEntity.text}\" gelöscht",
+                            message = "${event.questCategoryEntity.text} gelöscht",
                             withDismissAction = true
                         )
                     )

@@ -9,6 +9,8 @@ import java.util.Date
 interface QuestRepository {
     suspend fun addMainQuest(quest: QuestEntity): Long
 
+    suspend fun upsertQuest(quest: QuestEntity)
+
     suspend fun setQuestDone(id: Int, done: Boolean)
 
     suspend fun updateQuest(quest: QuestEntity)

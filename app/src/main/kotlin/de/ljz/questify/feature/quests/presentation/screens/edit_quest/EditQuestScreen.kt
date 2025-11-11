@@ -78,6 +78,7 @@ import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.DeleteConfirmationDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.SetDueTimeDialog
 import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
@@ -93,6 +94,14 @@ fun EditQuestScreen(
     val uiState by viewModel.uiState.collectAsState()
     val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEffects.collect { effect ->
+            when (effect) {
+                is EditQuestUiEffect.OnNavigateUp -> onNavigateUp()
+            }
+        }
+    }
 
     EditQuestScreen(
         uiState = uiState,
@@ -602,6 +611,17 @@ private fun EditQuestScreen(
                         }
                     }
                 }
+            }
+
+            if (uiState.dialogState is DialogState.DeletionConfirmation) {
+                DeleteConfirmationDialog(
+                    onConfirm = {
+                        onUiEvent(EditQuestUiEvent.OnDeleteQuest)
+                    },
+                    onDismiss = {
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                    }
+                )
             }
 
             if (uiState.dialogState is DialogState.AddReminder) {
