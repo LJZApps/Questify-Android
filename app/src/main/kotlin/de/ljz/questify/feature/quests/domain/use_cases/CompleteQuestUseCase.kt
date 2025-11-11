@@ -2,6 +2,7 @@ package de.ljz.questify.feature.quests.domain.use_cases
 
 import de.ljz.questify.core.utils.calculateXpForNextLevel
 import de.ljz.questify.feature.player_stats.domain.repositories.PlayerStatsRepository
+import de.ljz.questify.feature.player_stats.domain.use_cases.UpdatePlayerStatsUseCase
 import de.ljz.questify.feature.quests.data.models.QuestCompletionResult
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
@@ -11,7 +12,9 @@ import javax.inject.Inject
 
 class CompleteQuestUseCase @Inject constructor(
     private val questRepository: QuestRepository,
-    private val playerStatsRepository: PlayerStatsRepository
+    private val playerStatsRepository: PlayerStatsRepository,
+
+    private val updatePlayerStatsUseCase: UpdatePlayerStatsUseCase
 ) {
 
     suspend operator fun invoke(quest: QuestEntity): QuestCompletionResult {
@@ -46,7 +49,7 @@ class CompleteQuestUseCase @Inject constructor(
             level = newLevel,
             points = currentStats.points + rewardPoints
         )
-        playerStatsRepository.updatePlayerStats(newStats)
+        updatePlayerStatsUseCase.invoke(newStats)
 
         return QuestCompletionResult(
             earnedXp = rewardXp,
