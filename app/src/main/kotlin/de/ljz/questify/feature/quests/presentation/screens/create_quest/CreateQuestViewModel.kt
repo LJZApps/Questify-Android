@@ -58,7 +58,7 @@ class CreateQuestViewModel @Inject constructor(
     val uiEffects = _uiEffects.receiveAsFlow()
 
     private val createQuestRoute = savedStateHandle.toRoute<CreateQuestRoute>()
-    val selectedCategoryIndex = createQuestRoute.selectedCategoryIndex
+    private val selectedCategoryIndex = createQuestRoute.selectedCategoryIndex
 
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
@@ -175,10 +175,10 @@ class CreateQuestViewModel @Inject constructor(
                 val updatedTimes = _uiState.value.notificationTriggerTimes.toMutableList().apply {
                     add(event.timestamp)
                 }
-                _uiState.value = _uiState.value.copy(notificationTriggerTimes = updatedTimes)
 
                 _uiState.update {
                     it.copy(
+                        notificationTriggerTimes = updatedTimes,
                         addingDateTimeState = AddingDateTimeState.DATE
                     )
                 }

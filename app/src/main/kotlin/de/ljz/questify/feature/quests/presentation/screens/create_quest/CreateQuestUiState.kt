@@ -10,6 +10,7 @@ data class CreateQuestUiState(
     val dialogState: DialogState,
     val selectedTime: Long,
     val selectedDueDate: Long,
+
     val notificationTriggerTimes: List<Long>,
     val addingDateTimeState: AddingDateTimeState,
     val subTasks: List<SubQuestModel>

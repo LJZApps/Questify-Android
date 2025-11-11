@@ -5,14 +5,23 @@ import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 
 data class EditQuestUiState(
     val title: String,
-    val notes: String?,
+    val notes: String,
     val difficulty: Int,
     val dueDate: Long,
     val categoryId: Int?,
-    val notificationTriggerTimes: List<Long>,
 
+    val notificationTriggerTimes: List<Long>,
     val subTasks: List<SubQuestEntity>,
 
-    val dueDateDialogVisible: Boolean,
-    val addingDateTimeState: AddingDateTimeState
+    val addingDateTimeState: AddingDateTimeState,
+    val dialogState: DialogState
 )
+
+sealed class DialogState {
+    object None : DialogState()
+    object DeletionConfirmation : DialogState()
+    object AddReminder : DialogState()
+    object SelectCategorySheet : DialogState()
+    object DatePicker : DialogState()
+    object TimePicker : DialogState()
+}

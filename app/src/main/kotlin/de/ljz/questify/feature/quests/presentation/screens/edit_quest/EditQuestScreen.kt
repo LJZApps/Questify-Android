@@ -67,15 +67,20 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.buttons.AppOutlinedButton
 import de.ljz.questify.core.presentation.components.buttons.AppTextButton
-import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
 import de.ljz.questify.core.utils.MaxWidth
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.components.EasyIcon
 import de.ljz.questify.feature.quests.presentation.components.HardIcon
 import de.ljz.questify.feature.quests.presentation.components.MediumIcon
+import de.ljz.questify.feature.quests.presentation.dialogs.CreateReminderDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.SetDueDateDialog
+import de.ljz.questify.feature.quests.presentation.dialogs.SetDueTimeDialog
+import de.ljz.questify.feature.quests.presentation.sheets.SelectCategoryBottomSheet
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -86,9 +91,13 @@ fun EditQuestScreen(
     onNavigateUp: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
 
     EditQuestScreen(
         uiState = uiState,
+        selectedCategory = selectedCategory,
+        categories = categories,
         onUiEvent = { event ->
             when (event) {
                 is EditQuestUiEvent.OnNavigateUp -> onNavigateUp()
@@ -103,9 +112,16 @@ fun EditQuestScreen(
 @Composable
 private fun EditQuestScreen(
     uiState: EditQuestUiState,
+    selectedCategory: QuestCategoryEntity?,
+    categories: List<QuestCategoryEntity>,
     onUiEvent: (EditQuestUiEvent) -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
+
+    val haptic = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+
     val dateFormat = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     val dateTimeFormat = SimpleDateFormat("dd. MMM yyy HH:mm", Locale.getDefault())
@@ -114,10 +130,6 @@ private fun EditQuestScreen(
         stringResource(R.string.difficulty_medium),
         stringResource(R.string.difficulty_hard),
     )
-
-    val haptic = LocalHapticFeedback.current
-    val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
 
     Scaffold(
         modifier = Modifier.imePadding(),
@@ -144,7 +156,7 @@ private fun EditQuestScreen(
                 actions = {
                     AppTextButton(
                         onClick = {
-                            // TODO
+                            onUiEvent(EditQuestUiEvent.OnSaveQuest)
                         }
                     ) {
                         Text("Speichern")
@@ -171,7 +183,11 @@ private fun EditQuestScreen(
                         onDismissRequest = { dropdownExpanded = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Liste") },
+                            text = {
+                                Text(
+                                    text = selectedCategory?.text ?: "Liste"
+                                )
+                            },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_label_filled),
@@ -180,6 +196,8 @@ private fun EditQuestScreen(
                             },
                             onClick = {
                                 dropdownExpanded = false
+
+                                onUiEvent(EditQuestUiEvent.OnShowDialog(DialogState.SelectCategorySheet))
                             }
                         )
 
@@ -194,10 +212,12 @@ private fun EditQuestScreen(
                                     painter = painterResource(R.drawable.ic_delete_filled),
                                     contentDescription = null,
 
-                                )
+                                    )
                             },
                             onClick = {
                                 dropdownExpanded = false
+
+                                onUiEvent(EditQuestUiEvent.OnShowDialog(DialogState.DeletionConfirmation))
                             },
                             colors = MenuDefaults.itemColors(
                                 textColor = MaterialTheme.colorScheme.error,
@@ -232,14 +252,13 @@ private fun EditQuestScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
 
-                    AppOutlinedTextField(
+                    OutlinedTextField(
                         value = uiState.title,
                         onValueChange = {
-                            onUiEvent(EditQuestUiEvent.OnTitleChanged(value = it))
+                            onUiEvent(EditQuestUiEvent.OnTitleUpdated(value = it))
                         },
                         modifier = Modifier
-                            .fillMaxWidth()
-                        ,
+                            .fillMaxWidth(),
                         placeholder = {
                             Text(
                                 text = "Gib den Titel deiner Quest ein..."
@@ -265,10 +284,10 @@ private fun EditQuestScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
 
-                    AppOutlinedTextField(
-                        value = uiState.notes?: "",
+                    OutlinedTextField(
+                        value = uiState.notes,
                         onValueChange = {
-                            onUiEvent(EditQuestUiEvent.OnNotesChanged(value = it))
+                            onUiEvent(EditQuestUiEvent.OnDescriptionUpdated(value = it))
                         },
                         placeholder = { Text("Füge hier detaillierte Notizen hinzu...") },
                         modifier = Modifier.fillMaxWidth(),
@@ -296,7 +315,7 @@ private fun EditQuestScreen(
                         val dateInteractionSource = remember { MutableInteractionSource() }
                         val isDateFocused: Boolean by dateInteractionSource.collectIsFocusedAsState()
                         val timeInteractionSource = remember { MutableInteractionSource() }
-                        val isTimeFocused : Boolean by timeInteractionSource.collectIsFocusedAsState()
+                        val isTimeFocused: Boolean by timeInteractionSource.collectIsFocusedAsState()
 
                         val date = Date(uiState.dueDate)
                         val formattedDate = dateFormat.format(date)
@@ -304,13 +323,13 @@ private fun EditQuestScreen(
 
                         LaunchedEffect(isDateFocused) {
                             if (isDateFocused) {
-//                                viewModel.showDatePickerDialog()
+                                onUiEvent(EditQuestUiEvent.OnShowDialog(DialogState.DatePicker))
                             }
                         }
 
                         LaunchedEffect(isTimeFocused) {
                             if (isTimeFocused) {
-//                                viewModel.showTimePickerDialog()
+                                onUiEvent(EditQuestUiEvent.OnShowDialog(DialogState.TimePicker))
                             }
                         }
 
@@ -369,7 +388,7 @@ private fun EditQuestScreen(
                                 FilterChip(
                                     selected = false,
                                     onClick = {
-//                                        viewModel.removeReminder(index)
+                                        onUiEvent(EditQuestUiEvent.OnRemoveReminder(index = index))
                                     },
                                     label = { Text(dateTimeFormat.format(Date(triggerTime))) },
                                     leadingIcon = {
@@ -387,7 +406,7 @@ private fun EditQuestScreen(
 
                     AppOutlinedButton(
                         onClick = {
-//                            viewModel.showCreateReminderDialog()
+                            onUiEvent(EditQuestUiEvent.OnShowDialog(DialogState.AddReminder))
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
@@ -423,7 +442,8 @@ private fun EditQuestScreen(
                                 checked = uiState.difficulty == index,
                                 onCheckedChange = {
                                     haptic.performHapticFeedback(HapticFeedbackType.KeyboardTap)
-//                                    viewModel.updateDifficulty(index) TODO
+
+                                    onUiEvent(EditQuestUiEvent.OnDifficultyUpdated(value = index))
                                 },
                                 modifier = modifiers[index].semantics {
                                     role = Role.RadioButton
@@ -471,10 +491,6 @@ private fun EditQuestScreen(
                             val subTaskFocusManager = LocalFocusManager.current
                             val subTaskFocusRequester = remember { FocusRequester() }
 
-                            /*LaunchedEffect(index) {
-                                subTaskFocusRequester.requestFocus()
-                            }*/
-
                             OutlinedCard(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = CardDefaults.outlinedCardColors(
@@ -497,7 +513,12 @@ private fun EditQuestScreen(
                                     BasicTextField(
                                         value = subTask.text,
                                         onValueChange = {
-//                                            viewModel.updateSubtask(index, it)
+                                            onUiEvent(
+                                                EditQuestUiEvent.OnUpdateSubQuest(
+                                                    index = index,
+                                                    value = it
+                                                )
+                                            )
                                         },
                                         modifier = Modifier
                                             .weight(1f)
@@ -513,7 +534,7 @@ private fun EditQuestScreen(
                                             capitalization = KeyboardCapitalization.Sentences
                                         ),
                                         keyboardActions = KeyboardActions {
-//                                            viewModel.addSubTask()
+                                            onUiEvent(EditQuestUiEvent.OnCreateSubQuest)
                                         },
                                         decorationBox = @Composable { innerTextField ->
                                             TextFieldDefaults.DecorationBox(
@@ -543,13 +564,13 @@ private fun EditQuestScreen(
 
                                     IconButton(
                                         onClick = {
-                                            if ((uiState.subTasks.count() -1) > 0) {
+                                            if ((uiState.subTasks.count() - 1) > 0) {
                                                 subTaskFocusManager.moveFocus(FocusDirection.Previous)
                                             } else {
                                                 subTaskFocusManager.clearFocus()
                                             }
 
-//                                            viewModel.removeSubtask(index)
+                                            onUiEvent(EditQuestUiEvent.OnRemoveSubQuest(index))
                                         }
                                     ) {
                                         Icon(
@@ -564,7 +585,7 @@ private fun EditQuestScreen(
 
                     AppOutlinedButton(
                         onClick = {
-//                            viewModel.addSubTask()
+                            onUiEvent(EditQuestUiEvent.OnCreateSubQuest)
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
@@ -581,6 +602,78 @@ private fun EditQuestScreen(
                         }
                     }
                 }
+            }
+
+            if (uiState.dialogState is DialogState.AddReminder) {
+                CreateReminderDialog(
+                    onDismiss = {
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                    },
+                    onConfirm = { timestamp ->
+                        onUiEvent(EditQuestUiEvent.OnCreateReminder(timestamp = timestamp))
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                    },
+                    addingDateTimeState = uiState.addingDateTimeState,
+                    onReminderStateChange = {
+                        onUiEvent(EditQuestUiEvent.OnUpdateReminderState(it))
+                    }
+                )
+            }
+
+            val initialDateTimeMillis = uiState.dueDate.takeIf { it != 0L }
+
+            if (uiState.dialogState is DialogState.DatePicker) {
+                SetDueDateDialog(
+                    onConfirm = { timestamp ->
+                        onUiEvent(EditQuestUiEvent.OnSetDueDate(timestamp = timestamp))
+                        focusManager.clearFocus()
+                    },
+                    onDismiss = {
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                        focusManager.clearFocus()
+                    },
+                    onRemoveDueDate = {
+                        onUiEvent(EditQuestUiEvent.OnRemoveDueDate)
+                        focusManager.clearFocus()
+                    },
+                    initialSelectedDateTimeMillis = initialDateTimeMillis
+                )
+            }
+
+            if (uiState.dialogState is DialogState.TimePicker) {
+                SetDueTimeDialog(
+                    onConfirm = { timestamp ->
+                        onUiEvent(EditQuestUiEvent.OnSetDueDate(timestamp = timestamp))
+                        focusManager.clearFocus()
+                    },
+                    onDismiss = {
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                        focusManager.clearFocus()
+                    },
+                    onRemoveDueDate = {
+                        onUiEvent(EditQuestUiEvent.OnRemoveDueDate)
+                        focusManager.clearFocus()
+                    },
+                    initialSelectedDateTimeMillis = initialDateTimeMillis
+                )
+            }
+
+            if (uiState.dialogState is DialogState.SelectCategorySheet) {
+                SelectCategoryBottomSheet(
+                    categories = categories,
+                    onCategorySelect = { category ->
+                        onUiEvent(EditQuestUiEvent.OnSelectQuestCategory(category))
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                        focusManager.clearFocus()
+                    },
+                    onDismiss = {
+                        onUiEvent(EditQuestUiEvent.OnCloseDialog)
+                        focusManager.clearFocus()
+                    },
+                    onCreateCategory = { text ->
+                        onUiEvent(EditQuestUiEvent.OnCreateQuestCategory(value = text))
+                    }
+                )
             }
         }
     }
