@@ -4,19 +4,19 @@
   <p align="center">
     <b>Transform Your Daily Tasks into Epic Adventures</b>
     <br />
-    <a href="https://github.com/yourusername/Questify/issues/new?assignees=&labels=bug&template=bug_report.md&title=">Report a Bug</a>
+    <a href="https://github.com/LJZApps/Questify-Android/issues/new?assignees=&labels=bug&template=bug_report.md&title=">Report a Bug</a>
     ·
-    <a href="https://github.com/yourusername/Questify/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=">Request a Feature</a>
+    <a href="https://github.com/LJZApps/Questify-Android/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=">Request a Feature</a>
   </p>
 
   <p align="center">
-    <a href="https://github.com/yourusername/Questify/blob/main/LICENSE">
+    <a href="https://github.com/LJZApps/Questify-Android/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/yourusername/Questify?style=for-the-badge" alt="License">
     </a>
-    <a href="https://github.com/yourusername/Questify/stargazers">
+    <a href="https://github.com/LJZApps/Questify-Android/stargazers">
       <img src="https://img.shields.io/github/stars/yourusername/Questify?style=for-the-badge" alt="Stargazers">
     </a>
-    <a href="https://github.com/yourusername/Questify/network/members">
+    <a href="https://github.com/LJZApps/Questify-Android/network/members">
       <img src="https://img.shields.io/github/forks/yourusername/Questify?style=for-the-badge" alt="Forks">
     </a>
   </p>
@@ -55,7 +55,7 @@ Follow these instructions to get a local copy of Questify up and running on your
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/Questify.git
+   git clone https://github.com/LJZApps/Questify-Android.git
    cd Questify
    ```
 
@@ -106,4 +106,4 @@ This project is licensed under the terms of the MIT License. See the [LICENSE](L
 
 Your Name - [your.email@example.com](mailto:your.email@example.com)
 
-Project Link: [https://github.com/yourusername/Questify](https://github.com/yourusername/Questify)
+Project Link: [https://github.com/LJZApps/Questify-Android](https://github.com/LJZApps/Questify-Android)
