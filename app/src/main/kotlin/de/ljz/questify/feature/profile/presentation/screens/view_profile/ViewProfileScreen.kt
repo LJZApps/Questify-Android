@@ -35,20 +35,39 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.feature.profile.presentation.screens.edit_profile.EditProfileRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ViewProfileScreen(
-    navController: NavHostController,
-    viewModel: ViewProfileViewModel = hiltViewModel()
+    viewModel: ViewProfileViewModel = hiltViewModel(),
+    onNavigateUp: () -> Unit,
+    onNavigateToEditProfileScreen: () -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
+    ViewProfileScreen(
+        uiState = uiState,
+        onUiEvent = { event ->
+            when (event) {
+                is ViewProfileUiEvent.OnNavigateUp -> onNavigateUp()
+
+                is ViewProfileUiEvent.OnNavigateToEditProfileScreen -> onNavigateToEditProfileScreen()
+
+                else -> viewModel.onUiEvent(event)
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ViewProfileScreen(
+    uiState: ViewProfileUiState,
+    onUiEvent: (ViewProfileUiEvent) -> Unit
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -61,7 +80,7 @@ fun ViewProfileScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            navController.navigate(EditProfileRoute)
+                            onUiEvent(ViewProfileUiEvent.OnNavigateToEditProfileScreen)
                         },
                     ) {
                         Icon(
@@ -73,7 +92,7 @@ fun ViewProfileScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigateUp()
+                            onUiEvent(ViewProfileUiEvent.OnNavigateUp)
                         },
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)

@@ -41,4 +41,10 @@ class ViewProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun onUiEvent(event: ViewProfileUiEvent) {
+        when (event) {
+            else -> Unit
+        }
+    }
 }

@@ -10,7 +10,14 @@ import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewPro
 
 fun NavGraphBuilder.profileRoutes(navController: NavHostController) {
     composable<ViewProfileRoute> {
-        ViewProfileScreen(navController = navController)
+        ViewProfileScreen(
+            onNavigateUp = {
+                navController.navigateUp()
+            },
+            onNavigateToEditProfileScreen = {
+                navController.navigate(EditProfileRoute)
+            }
+        )
     }
 
     composable<EditProfileRoute> {
