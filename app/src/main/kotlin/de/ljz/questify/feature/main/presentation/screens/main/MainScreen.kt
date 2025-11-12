@@ -15,9 +15,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
-import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
-import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.utils.isAlarmPermissionGranted
 import de.ljz.questify.core.utils.isNotificationPermissionGranted
@@ -84,10 +81,10 @@ fun MainScreen(
                 NavHost(
                     navController = homeNavHostController,
                     startDestination = QuestsRoute,
-                    enterTransition = { scaleIntoContainer() },
+                    /*enterTransition = { scaleIntoContainer() },
                     exitTransition = { scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS) },
                     popEnterTransition = { scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS) },
-                    popExitTransition = { scaleOutOfContainer() }
+                    popExitTransition = { scaleOutOfContainer() }*/
                 ) {
                     composable<QuestsRoute> {
                         QuestOverviewScreen(

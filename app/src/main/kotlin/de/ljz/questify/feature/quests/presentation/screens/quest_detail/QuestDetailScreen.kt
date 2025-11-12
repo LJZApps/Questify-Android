@@ -72,7 +72,10 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun QuestDetailScreen(
-    viewModel: QuestDetailViewModel = hiltViewModel(),
+    questId: Int,
+    viewModel: QuestDetailViewModel = hiltViewModel<QuestDetailViewModel, QuestDetailViewModel.Factory> { factory ->
+        factory.create(id = questId)
+    },
     onNavigateUp: () -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value

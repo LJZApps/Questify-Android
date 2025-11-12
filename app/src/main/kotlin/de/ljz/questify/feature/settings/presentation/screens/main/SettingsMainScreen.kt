@@ -33,20 +33,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
-import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
-import de.ljz.questify.feature.settings.presentation.screens.appearance.SettingsAppearanceRoute
-import de.ljz.questify.feature.settings.presentation.screens.help.SettingsHelpRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsMainScreen(
-    mainNavController: NavHostController,
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel(),
+    onNavigateUp: () -> Unit,
+    onNavigateToViewProfileScreen: () -> Unit,
+    onNavigateToSettingsAppearanceScreen: () -> Unit,
+    onNavigateToSettingsHelpScreen: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -61,7 +60,7 @@ fun SettingsMainScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { mainNavController.navigateUp() },
+                        onClick = { onNavigateUp() },
                     ) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                     }
@@ -110,7 +109,7 @@ fun SettingsMainScreen(
                         }
                     },
                     onClick = {
-                        mainNavController.navigate(ViewProfileRoute)
+                        onNavigateToViewProfileScreen()
                     }
                 )
             }
@@ -133,7 +132,7 @@ fun SettingsMainScreen(
                     subtitle = stringResource(R.string.settings_main_screen_appearance_description),
                     icon = { Icon(Icons.Outlined.ColorLens, contentDescription = null) },
                     onClick = {
-                        mainNavController.navigate(SettingsAppearanceRoute)
+                        onNavigateToSettingsAppearanceScreen()
                     }
                 )
 
@@ -151,7 +150,7 @@ fun SettingsMainScreen(
                     subtitle = stringResource(R.string.settings_main_screen_help_description),
                     icon = { Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = null) },
                     onClick = {
-                        mainNavController.navigate(SettingsHelpRoute)
+                        onNavigateToSettingsHelpScreen()
                     }
                 )
             }

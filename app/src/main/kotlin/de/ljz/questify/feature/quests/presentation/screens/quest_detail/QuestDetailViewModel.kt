@@ -1,9 +1,10 @@
 package de.ljz.questify.feature.quests.presentation.screens.quest_detail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
@@ -26,11 +27,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class QuestDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = QuestDetailViewModel.Factory::class)
+class QuestDetailViewModel @AssistedInject constructor(
+    @Assisted private val id: Int,
 
     private val getQuestByIdAsFlowUseCase: GetQuestByIdAsFlowUseCase,
     private val completeQuestUseCase: CompleteQuestUseCase,
@@ -43,6 +43,12 @@ class QuestDetailViewModel @Inject constructor(
 
     private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(id: Int): QuestDetailViewModel
+    }
+
     private val _uiState = MutableStateFlow(
         value = QuestDetailUiState(
             addingDueDateTimeState = AddingDateTimeState.DATE,
@@ -77,9 +83,6 @@ class QuestDetailViewModel @Inject constructor(
     private val _uiEffects = Channel<QuestDetailUiEffect>()
     val uiEffects = _uiEffects.receiveAsFlow()
 
-    private val questDetailRoute = savedStateHandle.toRoute<QuestDetailRoute>()
-    val questId = questDetailRoute.id
-
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
 
@@ -88,7 +91,7 @@ class QuestDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                val questFlow = getQuestByIdAsFlowUseCase.invoke(questId)
+                val questFlow = getQuestByIdAsFlowUseCase.invoke(id = id)
 
                 questFlow.collectLatest { quest ->
                     if (quest == null) {
@@ -113,7 +116,7 @@ class QuestDetailViewModel @Inject constructor(
                                 done = quest.quest.done,
                                 subQuests = quest.subTasks
                             ),
-                            questId = questId,
+                            questId = id,
                             questEntity = quest.quest
                         )
                     }
@@ -168,7 +171,7 @@ class QuestDetailViewModel @Inject constructor(
 
             deleteQuestUseCase.invoke(questId = questId)
 
-            _uiEffects.send(QuestDetailUiEffect.OnNavigateUp)
+//            _uiEffects.send(QuestDetailUiEffect.OnNavigateUp)
         }
     }
 

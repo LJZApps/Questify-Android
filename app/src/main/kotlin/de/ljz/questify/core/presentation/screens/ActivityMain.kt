@@ -10,29 +10,37 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import de.ljz.questify.core.presentation.navigation.AppNavKey
 import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
-import de.ljz.questify.core.presentation.navigation.routes.habitRoutes
-import de.ljz.questify.core.presentation.navigation.routes.mainRoutes
-import de.ljz.questify.core.presentation.navigation.routes.profileRoutes
-import de.ljz.questify.core.presentation.navigation.routes.questRoutes
-import de.ljz.questify.core.presentation.navigation.routes.settingRoutes
-import de.ljz.questify.core.presentation.navigation.scaleIntoContainer
-import de.ljz.questify.core.presentation.navigation.scaleOutOfContainer
+import de.ljz.questify.core.presentation.navigation.scaleContentTransform
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.worker.QuestNotificationWorker
+import de.ljz.questify.feature.habits.presentation.screens.create_habit.CreateHabitRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
+import de.ljz.questify.feature.main.presentation.screens.main.MainScreen
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingRoute
+import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingScreen
+import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
+import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestScreen
+import de.ljz.questify.feature.quests.presentation.screens.edit_quest.EditQuestRoute
+import de.ljz.questify.feature.quests.presentation.screens.edit_quest.EditQuestScreen
+import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
+import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailScreen
+import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
+import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainScreen
+import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 import io.sentry.android.core.SentryAndroid
 import java.util.concurrent.TimeUnit
 
@@ -81,101 +89,104 @@ class ActivityMain : AppCompatActivity() {
                     Surface(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        val navController = rememberNavController()
-                        val backStack = remember {
-                            mutableStateListOf(if (isSetupDone) MainRoute else OnboardingRoute)
-                        }
+                        val startKey: AppNavKey = if (isSetupDone) MainRoute else OnboardingRoute
+                        val backStack = rememberNavBackStack(startKey)
 
-                        /*NavDisplay(
+                        NavDisplay(
+                            entryDecorators = listOf(
+                                rememberSaveableStateHolderNavEntryDecorator(),
+                                rememberViewModelStoreNavEntryDecorator()
+                            ),
                             backStack = backStack,
-                            onBack = { backStack.removeLastOrNull() },
-                            entryProvider = { key ->
-                                when (key) {
-                                    is MainRoute -> NavEntry(key) {
-                                        MainScreen(
-                                            onNavigateToSettingsPermissionScreen = { backNavigationEnabled ->
-                                                backStack.add(
-                                                    SettingsPermissionRoute(
-                                                        backNavigationEnabled = backNavigationEnabled
-                                                    )
+                            entryProvider = entryProvider {
+                                entry<MainRoute> { key ->
+                                    MainScreen(
+                                        onNavigateToSettingsPermissionScreen = { backNavigationEnabled ->
+                                            backStack.clear()
+                                            backStack.add(SettingsPermissionRoute(backNavigationEnabled = backNavigationEnabled))
+                                        },
+                                        onNavigateToSettingsScreen = {
+                                            backStack.add(SettingsMainRoute)
+//                                                navController.navigate(SettingsMainRoute)
+                                        },
+                                        onNavigateToCreateQuestScreen = { selectedList ->
+                                            backStack.add(
+                                                CreateQuestRoute(
+                                                    selectedCategoryIndex = selectedList
                                                 )
-                                            },
-                                            onNavigateToSettingsScreen = {
-
-                                            },
-                                            onNavigateToCreateQuestScreen = { selectedCategory ->
-                                                backStack.add(
-                                                    CreateQuestRoute(
-                                                        selectedCategoryIndex = selectedCategory
-                                                    )
+                                            )
+                                        },
+                                        onNavigateToEditQuestScreen = { id ->
+                                            backStack.add(
+                                                EditQuestRoute(
+                                                    id = id
                                                 )
-                                            }
-                                        )
-                                    }
-
-                                    is FirstSetupRoute -> NavEntry(key) {
-                                        FirstSetupScreen(
-                                            onNavigateBack = {
-                                                backStack.removeLastOrNull()
-                                            },
-                                            onNavigateToMainScreen = {
-                                                backStack.add(MainRoute)
-
-                                                backStack.remove(FirstSetupRoute)
-                                            }
-                                        )
-                                    }
-
-                                    is CreateQuestRoute -> NavEntry(key) {
-                                        CreateQuestScreen(
-                                            onNavigateBack = {
-                                                backStack.removeLastOrNull()
-                                            }
-                                        )
-                                    }
-
-                                    else -> {
-                                        NavEntry(key) {
-                                            Text("Fuck. Nix gefunden.")
+                                            )
+                                        },
+                                        onNavigateToQuestDetailScreen = { id ->
+                                            backStack.add(
+                                                QuestDetailRoute(
+                                                    id = id
+                                                )
+                                            )
+                                        },
+                                        onNavigateToCreateHabitScreen = {
+                                            backStack.add(CreateHabitRoute)
                                         }
-                                    }
+                                    )
                                 }
+
+                                entry<OnboardingRoute> {
+                                    OnboardingScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        },
+                                        onNavigateToMainScreen = {
+                                            backStack.clear()
+                                            backStack.add(MainRoute)
+                                        }
+                                    )
+                                }
+
+                                entry<CreateQuestRoute> {
+                                    CreateQuestScreen(
+                                        onNavigateBack = {
+                                            backStack.removeLastOrNull()
+                                        }
+                                    )
+                                }
+
+                                entry<QuestDetailRoute> { key ->
+                                    QuestDetailScreen(
+                                        questId = key.id,
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        }
+                                    )
+                                }
+
+                                entry<EditQuestRoute> {
+                                    EditQuestScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        }
+                                    )
+                                }
+
+                                entry<SettingsMainRoute> {
+                                    SettingsMainScreen(mainNavController = navController)
+                                }
+                            },
+                            transitionSpec = {
+                                scaleContentTransform(ScaleTransitionDirection.INWARDS)
+                            },
+                            popTransitionSpec = {
+                                scaleContentTransform(ScaleTransitionDirection.OUTWARDS)
+                            },
+                            predictivePopTransitionSpec = {
+                                scaleContentTransform(ScaleTransitionDirection.OUTWARDS)
                             }
-                        )*/
-
-                        NavHost(
-                            navController = navController,
-                            startDestination = if (isSetupDone) MainRoute else OnboardingRoute,
-//                            startDestination = OnboardingRoute,
-                            enterTransition = { scaleIntoContainer() },
-                            exitTransition = {
-                                scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS)
-                            },
-                            popEnterTransition = {
-                                scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS)
-                            },
-                            popExitTransition = { scaleOutOfContainer() }
-                        ) {
-                            mainRoutes(
-                                navController = navController
-                            )
-
-                            settingRoutes(
-                                navController = navController
-                            )
-
-                            profileRoutes(
-                                navController = navController
-                            )
-
-                            questRoutes(
-                                navController = navController
-                            )
-
-                            habitRoutes(
-                                navController = navController
-                            )
-                        }
+                        )
                     }
                 }
             }

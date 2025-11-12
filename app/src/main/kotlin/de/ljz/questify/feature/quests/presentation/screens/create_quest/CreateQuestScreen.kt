@@ -88,6 +88,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CreateQuestScreen(
+//    selectedCategoryIndex: Int,
     viewModel: CreateQuestViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit
 ) {
