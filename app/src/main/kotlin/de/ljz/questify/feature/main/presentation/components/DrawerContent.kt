@@ -69,14 +69,14 @@ fun DrawerContent(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_habits_title),
                     icon = painterResource(R.drawable.ic_eco_outlined),
-                    featureEnabled = true,
+                    featureEnabled = false,
                     route = HabitsRoute
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_routines_title),
                     icon = painterResource(R.drawable.ic_event_repeat_outlined),
                     route = RoutinesOverviewRoute,
-                    featureEnabled = true
+                    featureEnabled = false
                 ),
             )
         ),
