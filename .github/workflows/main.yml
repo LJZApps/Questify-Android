@@ -39,6 +39,23 @@ jobs:
         with:
           gradle-version: wrapper
 
+      - name: Create local.properties file
+        run: |
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
+          echo "STORE_FILE=$GITHUB_WORKSPACE/keystore/release.keystore" >> local.properties
+          echo "STORE_PASSWORD=${{ secrets.STORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
+
+      - name: Create the keystore file from secret
+        run: |
+          mkdir -p keystore
+          echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
+
+      - name: Create google-services.json
+        run: |
+          echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
+
       - name: Build with Gradle (for CodeQL)
         run: ./gradlew assembleDebug --stacktrace --parallel
 
