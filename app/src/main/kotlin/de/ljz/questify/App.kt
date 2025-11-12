@@ -3,8 +3,13 @@ package de.ljz.questify
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
+import de.ljz.questify.core.worker.QuestNotificationWorker
+import io.sentry.android.core.SentryAndroid
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -21,5 +26,20 @@ class App : Application() {
             .build()
 
         WorkManager.Companion.initialize(this, config)
+
+        val workRequest =
+            PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
+                .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            uniqueWorkName = "QuestNotificationWorker",
+            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
+            request = workRequest
+        )
+
+        SentryAndroid.init(this) { options ->
+            options.dsn =
+                "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
+        }
     }
 }

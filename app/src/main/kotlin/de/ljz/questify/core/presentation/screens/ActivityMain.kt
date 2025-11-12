@@ -7,26 +7,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import de.ljz.questify.core.presentation.navigation.AppNavKey
 import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
 import de.ljz.questify.core.presentation.navigation.scaleContentTransform
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
-import de.ljz.questify.core.worker.QuestNotificationWorker
 import de.ljz.questify.feature.habits.presentation.screens.create_habit.CreateHabitRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainScreen
@@ -50,8 +44,6 @@ import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRo
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainScreen
 import de.ljz.questify.feature.settings.presentation.screens.permissions.PermissionsScreen
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
-import io.sentry.android.core.SentryAndroid
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
@@ -70,26 +62,6 @@ class ActivityMain : AppCompatActivity() {
             val appUiState by vm.uiState.collectAsState()
             val isSetupDone = appUiState.isSetupDone
             val isAppReadyState by vm.isAppReady.collectAsState()
-            val context = LocalContext.current
-
-            LaunchedEffect(Unit) {
-                vm.createNotificationChannel(context = context)
-            }
-
-            val workRequest =
-                PeriodicWorkRequestBuilder<QuestNotificationWorker>(15, TimeUnit.MINUTES)
-                    .build()
-
-            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                uniqueWorkName = "QuestNotificationWorker",
-                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.UPDATE,
-                request = workRequest
-            )
-
-            SentryAndroid.init(this) { options ->
-                options.dsn =
-                    "https://d98d827f0a668a55c6d7db8c070174e7@o4507245189267456.ingest.de.sentry.io/4507328037191760"
-            }
 
             if (isAppReadyState) {
                 splashScreen.setKeepOnScreenCondition { false }
