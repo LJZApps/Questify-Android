@@ -88,8 +88,10 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CreateQuestScreen(
-//    selectedCategoryIndex: Int,
-    viewModel: CreateQuestViewModel = hiltViewModel(),
+    selectedCategoryIndex: Int? = null,
+    viewModel: CreateQuestViewModel = hiltViewModel<CreateQuestViewModel, CreateQuestViewModel.Factory> { factory ->
+        factory.create(selectedCategoryIndex = selectedCategoryIndex)
+    },
     onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

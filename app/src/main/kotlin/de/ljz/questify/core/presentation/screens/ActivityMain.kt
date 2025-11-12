@@ -108,11 +108,15 @@ class ActivityMain : AppCompatActivity() {
                             ),
                             backStack = backStack,
                             entryProvider = entryProvider {
-                                entry<MainRoute> { key ->
+                                entry<MainRoute> {
                                     MainScreen(
                                         onNavigateToSettingsPermissionScreen = { backNavigationEnabled ->
                                             backStack.clear()
-                                            backStack.add(SettingsPermissionRoute(backNavigationEnabled = backNavigationEnabled))
+                                            backStack.add(
+                                                SettingsPermissionRoute(
+                                                    backNavigationEnabled = backNavigationEnabled
+                                                )
+                                            )
                                         },
                                         onNavigateToSettingsScreen = {
                                             backStack.add(SettingsMainRoute)
@@ -156,8 +160,9 @@ class ActivityMain : AppCompatActivity() {
                                     )
                                 }
 
-                                entry<CreateQuestRoute> {
+                                entry<CreateQuestRoute> { key ->
                                     CreateQuestScreen(
+                                        selectedCategoryIndex = key.selectedCategoryIndex,
                                         onNavigateBack = {
                                             backStack.removeLastOrNull()
                                         }

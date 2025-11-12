@@ -1,9 +1,10 @@
 package de.ljz.questify.feature.quests.presentation.screens.create_quest
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
@@ -26,19 +27,25 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
-import javax.inject.Inject
 
-@HiltViewModel
-class CreateQuestViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = CreateQuestViewModel.Factory::class)
+class CreateQuestViewModel @AssistedInject constructor(
+    @Assisted private val selectedCategoryIndex: Int?,
+
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
-    savedStateHandle: SavedStateHandle,
 
     private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
     private val getAllQuestCategoriesUseCase: GetAllQuestCategoriesUseCase,
 
     private val addSubQuestsUseCase: AddSubQuestsUseCase
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(selectedCategoryIndex: Int?): CreateQuestViewModel
+    }
+
     private val _uiState = MutableStateFlow(
         value = CreateQuestUiState(
             title = "",
@@ -56,9 +63,6 @@ class CreateQuestViewModel @Inject constructor(
 
     private val _uiEffects = Channel<CreateQuestUiEffect>()
     val uiEffects = _uiEffects.receiveAsFlow()
-
-    private val createQuestRoute = savedStateHandle.toRoute<CreateQuestRoute>()
-    private val selectedCategoryIndex = createQuestRoute.selectedCategoryIndex
 
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
     val categories: StateFlow<List<QuestCategoryEntity>> = _categories.asStateFlow()
