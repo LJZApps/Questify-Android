@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialShapes
@@ -18,7 +18,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,31 +39,33 @@ import de.ljz.questify.feature.quests.presentation.components.QuestItem
 fun QuestsForCategoryPage(
     modifier: Modifier = Modifier,
     categoryId: Int,
-    viewModel: CategoryQuestViewModel = hiltViewModel(
-        key = "category_vm_$categoryId",
-        creationCallback = { factory: CategoryQuestViewModel.Factory ->
-            factory.create(categoryId)
-        }
-    ),
     onQuestClicked: (Int) -> Unit,
     onQuestChecked: (QuestEntity) -> Unit,
     onEditQuestClicked: (Int) -> Unit
 ) {
+    val viewModel: CategoryQuestViewModel = hiltViewModel<CategoryQuestViewModel, CategoryQuestViewModel.Factory>(
+        key = "category_vm_$categoryId"
+    ) { factory ->
+        factory.create(categoryId)
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val questList = uiState.quests
-        .filter { (quest, subTasks, notifications) -> uiState.showCompleted || !quest.done }
-        .sortedWith(
-            comparator = compareBy<QuestWithSubQuests> {
-                it.quest.id
-            }
-                .let {
-                    if (uiState.sortingDirections == SortingDirections.DESCENDING) {
-                        it.reversed()
-                    } else {
-                        it
-                    }
-                }
-        )
+
+    val questComparator by remember(uiState.sortingDirections) {
+        derivedStateOf {
+            compareBy<QuestWithSubQuests> { it.quest.id }
+                .let { if (uiState.sortingDirections == SortingDirections.DESCENDING) it.reversed() else it }
+        }
+    }
+
+    val questList by remember(uiState.quests, uiState.showCompleted, questComparator) {
+        derivedStateOf {
+            uiState.quests.asSequence()
+                .filter { uiState.showCompleted || !it.quest.done }
+                .sortedWith(questComparator)
+                .toList()
+        }
+    }
 
     if (questList.isEmpty()) {
         Column(
@@ -97,10 +101,10 @@ fun QuestsForCategoryPage(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            itemsIndexed(
+            items(
                 items = questList,
-                key = { _, questWithSubQuests -> questWithSubQuests.quest.id }
-            ) { index, questWithSubQuests ->
+                key = { it.quest.id }
+            ) { questWithSubQuests ->
                 QuestItem(
                     questWithSubQuests = questWithSubQuests,
                     onCheckButtonClicked = {
