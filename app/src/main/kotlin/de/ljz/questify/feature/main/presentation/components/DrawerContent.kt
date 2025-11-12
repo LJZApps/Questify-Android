@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +26,6 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,31 +36,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
-import de.ljz.questify.core.utils.getSerializedRouteName
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainUiState
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsRoute
 import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
 import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewRoute
-import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerContent(
     uiState: MainUiState,
-    navController: NavHostController,
+    backStack: NavBackStack<NavKey>,
     drawerState: DrawerState,
     onNavigateToSettingsScreen: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
 
     val features = listOf(
         NavigationCategory(
@@ -78,14 +69,14 @@ fun DrawerContent(
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_habits_title),
                     icon = painterResource(R.drawable.ic_eco_outlined),
-                    featureEnabled = false,
+                    featureEnabled = true,
                     route = HabitsRoute
                 ),
                 NavigationItem(
                     title = stringResource(R.string.drawer_content_routines_title),
                     icon = painterResource(R.drawable.ic_event_repeat_outlined),
                     route = RoutinesOverviewRoute,
-                    featureEnabled = false
+                    featureEnabled = true
                 ),
             )
         ),
@@ -135,7 +126,6 @@ fun DrawerContent(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
-//                        modifier = Modifier.padding(vertical = 4.dp)
                     ) {
                         ListItem(
                             headlineContent = {
@@ -220,19 +210,27 @@ fun DrawerContent(
                                         contentDescription = item.title
                                     )
                                 },
-                                selected = currentDestination?.route == getSerializedRouteName(item.route),
+                                selected = backStack.last() == item.route,
                                 onClick = {
                                     scope.launch {
                                         drawerState.close()
                                     }
-                                    if (currentDestination?.route != getSerializedRouteName(item.route)) navController.navigate(
-                                        item.route
-                                    ) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
+
+                                    val start = backStack.firstOrNull() ?: QuestsRoute
+
+                                    if (backStack.isEmpty()) {
+                                        backStack.add(start)
+                                    }
+
+                                    val existingIndex = backStack.indexOf(item.route)
+                                    if (existingIndex != -1) {
+                                        while (backStack.size > existingIndex + 1) {
+                                            backStack.removeLastOrNull()
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
+                                    } else {
+                                        if (backStack.lastOrNull() != item.route) {
+                                            backStack.add(item.route)
+                                        }
                                     }
                                 },
                                 badge = {
@@ -248,38 +246,6 @@ fun DrawerContent(
                     }
                 }
             }
-
-            Spacer(
-                modifier = Modifier.fillMaxHeight()
-            )
-
-            NavigationDrawerItem(
-                label = { Text(text = stringResource(id = R.string.drawer_content_settings_title)) },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        contentDescription = null
-                    )
-                },
-                selected = currentDestination?.route == getSerializedRouteName(SettingsMainRoute),
-                onClick = {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                    if (currentDestination?.route != getSerializedRouteName(SettingsMainRoute)) navController.navigate(
-                        SettingsMainRoute
-                    ) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                modifier = Modifier
-                    .padding(NavigationDrawerItemDefaults.ItemPadding)
-                    .padding(vertical = 4.dp)
-            )
         }
     }
 }

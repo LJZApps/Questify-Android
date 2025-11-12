@@ -12,9 +12,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import de.ljz.questify.core.presentation.navigation.ScaleTransitionDirection
+import de.ljz.questify.core.presentation.navigation.scaleContentTransform
 import de.ljz.questify.core.presentation.theme.QuestifyTheme
 import de.ljz.questify.core.utils.isAlarmPermissionGranted
 import de.ljz.questify.core.utils.isNotificationPermissionGranted
@@ -54,16 +58,13 @@ fun MainScreen(
     LaunchedEffect(allPermissionsGranted) {
         if (!allPermissionsGranted) {
             onNavigateToSettingsPermissionScreen(false)
-            /*mainNavController.navigate(SettingsPermissionRoute(canNavigateBack = false)) {
-                popUpTo(mainNavController.graph.startDestinationId) { inclusive = true }
-            }*/
         }
     }
 
     if (!allPermissionsGranted) return
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val homeNavHostController = rememberNavController()
+    val backStack = rememberNavBackStack(QuestsRoute)
 
     QuestifyTheme {
         SentryTraced(tag = "home_screen") {
@@ -72,73 +73,82 @@ fun MainScreen(
                 drawerContent = {
                     DrawerContent(
                         uiState = uiState,
-                        navController = homeNavHostController,
+                        backStack = backStack,
                         drawerState = drawerState,
                         onNavigateToSettingsScreen = onNavigateToSettingsScreen
                     )
                 }
             ) {
-                NavHost(
-                    navController = homeNavHostController,
-                    startDestination = QuestsRoute,
-                    /*enterTransition = { scaleIntoContainer() },
-                    exitTransition = { scaleOutOfContainer(direction = ScaleTransitionDirection.INWARDS) },
-                    popEnterTransition = { scaleIntoContainer(direction = ScaleTransitionDirection.OUTWARDS) },
-                    popExitTransition = { scaleOutOfContainer() }*/
-                ) {
-                    composable<QuestsRoute> {
-                        QuestOverviewScreen(
-                            onNavigateToQuestDetailScreen = { id ->
-                                onNavigateToQuestDetailScreen(id)
-                            },
-                            onNavigateToCreateQuestScreen = onNavigateToCreateQuestScreen,
-                            onNavigateToEditQuestScreen = { id ->
-                                onNavigateToEditQuestScreen(id)
-                            },
-                            onToggleDrawer = {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                NavDisplay(
+                    entryDecorators = listOf(
+                        rememberSaveableStateHolderNavEntryDecorator(),
+                        rememberViewModelStoreNavEntryDecorator()
+                    ),
+                    backStack = backStack,
+                    entryProvider = entryProvider {
+                        entry<QuestsRoute> {
+                            QuestOverviewScreen(
+                                onNavigateToQuestDetailScreen = { id ->
+                                    onNavigateToQuestDetailScreen(id)
+                                },
+                                onNavigateToCreateQuestScreen = onNavigateToCreateQuestScreen,
+                                onNavigateToEditQuestScreen = { id ->
+                                    onNavigateToEditQuestScreen(id)
+                                },
+                                onToggleDrawer = {
+                                    scope.launch {
+                                        drawerState.apply {
+                                            if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                        }
                                     }
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    composable<HabitsRoute> {
-                        HabitsScreen(
-                            onNavigateToCreateHabitScreen = {
-                                onNavigateToCreateHabitScreen()
-                            },
-                            onToggleDrawer = {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                        entry<HabitsRoute> {
+                            HabitsScreen(
+                                onNavigateToCreateHabitScreen = {
+                                    onNavigateToCreateHabitScreen()
+                                },
+                                onToggleDrawer = {
+                                    scope.launch {
+                                        drawerState.apply {
+                                            if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                        }
                                     }
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    composable<RoutinesOverviewRoute> {
-                        RoutinesOverviewScreen(
-                            onToggleDrawer = {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                        entry<RoutinesOverviewRoute> {
+                            RoutinesOverviewScreen(
+                                onToggleDrawer = {
+                                    scope.launch {
+                                        drawerState.apply {
+                                            if (drawerState.currentValue == DrawerValue.Closed) open() else close()
+                                        }
                                     }
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
 
-                    composable<StatsRoute> {
-                        /*StatsScreen(
-                            drawerState = drawerState,
-                            navController = mainNavController
-                        )*/
+                        entry<StatsRoute> {
+                            /*StatsScreen(
+                                drawerState = drawerState,
+                                navController = mainNavController
+                            )*/
+                        }
+                    },
+                    transitionSpec = {
+                        scaleContentTransform(ScaleTransitionDirection.INWARDS)
+                    },
+                    popTransitionSpec = {
+                        scaleContentTransform(ScaleTransitionDirection.OUTWARDS)
+                    },
+                    predictivePopTransitionSpec = {
+                        scaleContentTransform(ScaleTransitionDirection.OUTWARDS)
                     }
-                }
+                )
             }
         }
     }
