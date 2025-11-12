@@ -64,6 +64,7 @@ jobs:
 
   build:
     name: Build APKs
+    if: (github.event_name == 'push' && (github.ref_name == 'main' || startsWith(github.ref_name, 'release/'))) || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
