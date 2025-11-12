@@ -50,7 +50,7 @@ android {
         applicationId = "de.ljz.questify"
         minSdk = 30
         targetSdk = 36
-        versionCode = 26
+        versionCode = 27
         versionName = "0.12"
     }
 
