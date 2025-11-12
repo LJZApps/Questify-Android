@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Questify</string>
+    <string name="test_string" translatable="false">This is a test string.</string>
     <string name="top_bar_menu_connect_account">Connect account</string>
     <string name="top_bar_menu_settings">Settings</string>
     <string name="create_quest_top_bar_title">Create new Quest</string>

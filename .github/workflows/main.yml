@@ -4,15 +4,65 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
   pull_request:
     branches:
       - main
 
 jobs:
+  codeql-scan:
+    name: CodeQL Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java-kotlin
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: wrapper
+
+      - name: Create local.properties file
+        run: |
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
+          echo "STORE_FILE=$GITHUB_WORKSPACE/keystore/release.keystore" >> local.properties
+          echo "STORE_PASSWORD=${{ secrets.STORE_PASSWORD }}" >> local.properties
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
+
+      - name: Create the keystore file from secret
+        run: |
+          mkdir -p keystore
+          echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
+
+      - name: Create google-services.json
+        run: |
+          echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
+
+      - name: Build with Gradle (for CodeQL)
+        run: ./gradlew assembleDebug --stacktrace --parallel
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
   build:
     name: Build APKs
+    if: (github.event_name == 'push' && (github.ref_name == 'main' || startsWith(github.ref_name, 'release/')))
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +70,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: wrapper
 
@@ -60,13 +110,13 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload signed Release APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-apk
           path: app/build/outputs/apk/release/app-release.apk
 
       - name: Upload signed Release AAB
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: release-aab
           path: app/build/outputs/bundle/release/app-release.aab
@@ -102,7 +152,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download all workflow artifacts
         # Dieser Schritt lädt alle Artefakte des Builds herunter
