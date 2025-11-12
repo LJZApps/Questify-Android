@@ -1,97 +1,45 @@
 package de.ljz.questify.core.worker
 
-import android.app.AlarmManager
-import android.app.PendingIntent
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import de.ljz.questify.R
-import de.ljz.questify.core.receiver.QuestNotificationReceiver
-import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
-import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
-import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdUseCase
-import kotlinx.coroutines.flow.collectLatest
 
 @HiltWorker
 class QuestNotificationWorker @AssistedInject constructor(
     @Assisted private val context: Context,
-    @Assisted workerParams: WorkerParameters,
-    private val questNotificationRepository: QuestNotificationRepository,
-    private val getQuestByIdUseCase: GetQuestByIdUseCase
+    @Assisted workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val notifications = questNotificationRepository.getPendingNotifications()
+        val notificationId = inputData.getInt("notificationId", 0)
+        val title = inputData.getString("title") ?: return Result.failure()
+        val description = inputData.getString("description") ?: return Result.failure()
 
-        notifications.collectLatest { notificationsList ->
-            notificationsList.forEach { notification ->
-                val questWithSubQuests = getQuestByIdUseCase.invoke(notification.questId)
-                if (!notification.notified && !questWithSubQuests.quest.done)
-                    scheduleNotification(
-                        context = context,
-                        notification = notification
-                    )
-            }
-        }
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val channel = NotificationChannel(
+            "quest_notification_channel",
+            "Quest Notifications",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+
+        val notification = NotificationCompat.Builder(context, "quest_notification_channel")
+            .setContentTitle(title)
+            .setContentText(description)
+            .setSmallIcon(R.drawable.ic_notification)
+            .build()
+
+        notificationManager.notify(notificationId, notification)
 
         return Result.success()
-    }
-
-    private suspend fun scheduleNotification(context: Context, notification: QuestNotificationEntity) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val quest = getQuestByIdUseCase.invoke(notification.questId)
-
-        val intent = Intent(context, QuestNotificationReceiver::class.java).apply {
-            putExtra("notificationId", notification.id)
-            putExtra("questId", quest.quest.id)
-            putExtra("title", quest.quest.title)
-            putExtra("description", context.getString(R.string.quest_notification_title))
-        }
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            notification.id,
-            intent,
-            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        if (pendingIntent != null) {
-            if (notification.notifyAt.time != alarmManager.nextAlarmClock?.triggerTime) {
-                alarmManager.cancel(pendingIntent)
-            } else {
-                return
-            }
-        }
-
-        val newPendingIntent = PendingIntent.getBroadcast(
-            context,
-            notification.id,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setExact(
-                    AlarmManager.RTC_WAKEUP,
-                    notification.notifyAt.time,
-                    newPendingIntent
-                )
-            } else {
-                Log.d("ALARM_CHECK", "Exact alarm scheduling not permitted on this device.")
-            }
-        } else {
-            alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                notification.notifyAt.time,
-                newPendingIntent
-            )
-        }
     }
 }

@@ -13,6 +13,18 @@ import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 import de.ljz.questify.feature.quests.data.models.descriptors.SubQuestModel
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import de.ljz.questify.R
+import de.ljz.questify.core.utils.AddingDateTimeState
+import de.ljz.questify.core.utils.Difficulty
+import de.ljz.questify.core.worker.QuestNotificationWorker
+import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
+import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
+import de.ljz.questify.feature.quests.data.models.SubQuestEntity
+import de.ljz.questify.feature.quests.data.models.descriptors.SubQuestModel
 import de.ljz.questify.feature.quests.domain.repositories.QuestNotificationRepository
 import de.ljz.questify.feature.quests.domain.repositories.QuestRepository
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
@@ -27,6 +39,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = CreateQuestViewModel.Factory::class)
 class CreateQuestViewModel @AssistedInject constructor(
@@ -34,6 +48,7 @@ class CreateQuestViewModel @AssistedInject constructor(
 
     private val questRepository: QuestRepository,
     private val questNotificationRepository: QuestNotificationRepository,
+    private val workManager: WorkManager,
 
     private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
     private val getAllQuestCategoriesUseCase: GetAllQuestCategoriesUseCase,
@@ -108,7 +123,20 @@ class CreateQuestViewModel @AssistedInject constructor(
                             notifyAt = Date(notificationTriggerTime)
                         )
 
-                        questNotificationRepository.addQuestNotification(questNotification)
+                        val notificationId = questNotificationRepository.addQuestNotification(questNotification)
+
+                        val workRequest = OneTimeWorkRequestBuilder<QuestNotificationWorker>()
+                            .setInitialDelay(notificationTriggerTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+                            .setInputData(
+                                Data.Builder()
+                                    .putInt("notificationId", notificationId.toInt())
+                                    .putString("title", quest.title)
+                                    .putString("description", "A quest is due!")
+                                    .build()
+                            )
+                            .build()
+
+                        workManager.enqueue(workRequest)
                     }
 
                     val subQuestEntities = _uiState.value.subTasks.map { subTask ->
