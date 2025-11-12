@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
@@ -32,8 +31,8 @@ import de.ljz.questify.feature.settings.presentation.dialogs.ThemeBehaviorDialog
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsAppearanceScreen(
-    mainNavController: NavHostController,
-    viewModel: SettingsAppearanceViewModel = hiltViewModel()
+    viewModel: SettingsAppearanceViewModel = hiltViewModel(),
+    onNavigateUp: () -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
@@ -41,7 +40,7 @@ fun SettingsAppearanceScreen(
         uiState = uiState
     ) { event ->
         when (event) {
-            is SettingsAppearanceUiEvent.NavigateUp -> mainNavController.navigateUp()
+            is SettingsAppearanceUiEvent.NavigateUp -> onNavigateUp()
             else -> viewModel.onUiEvent(event)
         }
     }

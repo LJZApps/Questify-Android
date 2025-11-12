@@ -1,11 +1,11 @@
 package de.ljz.questify.feature.settings.presentation.screens.help
 
 sealed class SettingsHelpUiEvent {
-    data object NavigateUp : SettingsHelpUiEvent()
+    object NavigateUp : SettingsHelpUiEvent()
 
-    data class Navigate(val route: Any) : SettingsHelpUiEvent()
+    object ShowOnboarding : SettingsHelpUiEvent()
 
-    data object ShowOnboarding : SettingsHelpUiEvent()
+    object OnNavigateToSettingsPermissionRoute: SettingsHelpUiEvent()
 
-    data object SendFeedback : SettingsHelpUiEvent()
+    object SendFeedback : SettingsHelpUiEvent()
 }

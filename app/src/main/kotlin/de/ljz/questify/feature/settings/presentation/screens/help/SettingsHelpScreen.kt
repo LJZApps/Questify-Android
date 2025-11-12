@@ -24,32 +24,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.net.toUri
-import androidx.navigation.NavHostController
 import de.ljz.questify.BuildConfig
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsMenuLink
 import de.ljz.questify.core.presentation.components.expressive.settings.ExpressiveSettingsSection
-import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingRoute
-import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsHelpScreen(
-    mainNavController: NavHostController
+    onNavigateUp: () -> Unit,
+    onNavigateToOnboardingScreen: () -> Unit,
+    onNavigateToSettingsPermissionScreen: () -> Unit
 ) {
     val context = LocalActivity.current as Activity
 
     SettingsHelpScreen(
         onUiEvent = { event ->
             when (event) {
-                is SettingsHelpUiEvent.NavigateUp -> mainNavController.navigateUp()
+                is SettingsHelpUiEvent.NavigateUp -> onNavigateUp()
 
                 is SettingsHelpUiEvent.ShowOnboarding -> {
-                    mainNavController.navigate(OnboardingRoute)
+                    onNavigateToOnboardingScreen()
                 }
 
-                is SettingsHelpUiEvent.Navigate -> {
-                    mainNavController.navigate(event.route)
+                is SettingsHelpUiEvent.OnNavigateToSettingsPermissionRoute -> {
+                    onNavigateToSettingsPermissionScreen()
                 }
 
                 is SettingsHelpUiEvent.SendFeedback -> {
@@ -114,7 +113,7 @@ private fun SettingsHelpScreen(
                     Icon(Icons.Outlined.VerifiedUser, contentDescription = null)
                 },
                 onClick = {
-                    onUiEvent.invoke(SettingsHelpUiEvent.Navigate(SettingsPermissionRoute()))
+                    onUiEvent.invoke(SettingsHelpUiEvent.OnNavigateToSettingsPermissionRoute)
                 }
             )
 

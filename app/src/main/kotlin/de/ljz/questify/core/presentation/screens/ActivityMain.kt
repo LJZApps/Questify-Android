@@ -32,14 +32,23 @@ import de.ljz.questify.feature.main.presentation.screens.main.MainRoute
 import de.ljz.questify.feature.main.presentation.screens.main.MainScreen
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingRoute
 import de.ljz.questify.feature.onboarding.presentation.screens.onboarding.OnboardingScreen
+import de.ljz.questify.feature.profile.presentation.screens.edit_profile.EditProfileRoute
+import de.ljz.questify.feature.profile.presentation.screens.edit_profile.EditProfileScreen
+import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileRoute
+import de.ljz.questify.feature.profile.presentation.screens.view_profile.ViewProfileScreen
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.create_quest.CreateQuestScreen
 import de.ljz.questify.feature.quests.presentation.screens.edit_quest.EditQuestRoute
 import de.ljz.questify.feature.quests.presentation.screens.edit_quest.EditQuestScreen
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailRoute
 import de.ljz.questify.feature.quests.presentation.screens.quest_detail.QuestDetailScreen
+import de.ljz.questify.feature.settings.presentation.screens.appearance.SettingsAppearanceRoute
+import de.ljz.questify.feature.settings.presentation.screens.appearance.SettingsAppearanceScreen
+import de.ljz.questify.feature.settings.presentation.screens.help.SettingsHelpRoute
+import de.ljz.questify.feature.settings.presentation.screens.help.SettingsHelpScreen
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainRoute
 import de.ljz.questify.feature.settings.presentation.screens.main.SettingsMainScreen
+import de.ljz.questify.feature.settings.presentation.screens.permissions.PermissionsScreen
 import de.ljz.questify.feature.settings.presentation.screens.permissions.SettingsPermissionRoute
 import io.sentry.android.core.SentryAndroid
 import java.util.concurrent.TimeUnit
@@ -107,7 +116,6 @@ class ActivityMain : AppCompatActivity() {
                                         },
                                         onNavigateToSettingsScreen = {
                                             backStack.add(SettingsMainRoute)
-//                                                navController.navigate(SettingsMainRoute)
                                         },
                                         onNavigateToCreateQuestScreen = { selectedList ->
                                             backStack.add(
@@ -174,7 +182,70 @@ class ActivityMain : AppCompatActivity() {
                                 }
 
                                 entry<SettingsMainRoute> {
-                                    SettingsMainScreen(mainNavController = navController)
+                                    SettingsMainScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        },
+                                        onNavigateToViewProfileScreen = {
+                                            backStack.add(ViewProfileRoute)
+                                        },
+                                        onNavigateToSettingsAppearanceScreen = {
+                                            backStack.add(SettingsAppearanceRoute)
+                                        },
+                                        onNavigateToSettingsHelpScreen = {
+                                            backStack.add(SettingsHelpRoute)
+                                        }
+                                    )
+                                }
+
+                                entry<SettingsAppearanceRoute> {
+                                    SettingsAppearanceScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        }
+                                    )
+                                }
+
+                                entry<SettingsHelpRoute> {
+                                    SettingsHelpScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        },
+                                        onNavigateToOnboardingScreen = {
+                                            backStack.add(OnboardingRoute)
+                                        },
+                                        onNavigateToSettingsPermissionScreen = {
+                                            backStack.add(SettingsPermissionRoute())
+                                        }
+                                    )
+                                }
+
+                                entry<SettingsPermissionRoute> { key ->
+                                    PermissionsScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        },
+                                        canNavigateBack = key.backNavigationEnabled
+                                    )
+                                }
+
+                                entry<ViewProfileRoute> {
+                                    ViewProfileScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        },
+                                        onNavigateToEditProfileScreen = {
+                                            backStack.add(EditProfileRoute)
+                                        }
+                                    )
+                                }
+
+                                entry<EditProfileRoute> {
+                                    EditProfileScreen(
+                                        onNavigateUp = {
+                                            backStack.removeLastOrNull()
+                                        }
+                                    )
                                 }
                             },
                             transitionSpec = {

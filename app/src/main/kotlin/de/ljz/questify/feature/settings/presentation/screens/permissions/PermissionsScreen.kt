@@ -43,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import de.ljz.questify.R
 import kotlinx.coroutines.flow.collectLatest
 
@@ -51,17 +50,15 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun PermissionsScreen(
     viewModel: PermissionsViewModel = hiltViewModel(),
-    mainNavController: NavHostController,
-    canNavigateBack: Boolean = true
+    canNavigateBack: Boolean = true,
+    onNavigateUp: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    // Launcher für die verschiedenen Berechtigungsanfragen und Intents
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = {
-            // Nach der Anfrage den Status neu laden
             viewModel.loadPermissionData(context)
         }
     )
@@ -69,12 +66,10 @@ fun PermissionsScreen(
     val intentLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = {
-            // Nach Rückkehr aus den Einstellungen den Status neu laden
             viewModel.loadPermissionData(context)
         }
     )
 
-    // Beim ersten Start den Berechtigungsstatus laden
     LaunchedEffect(key1 = Unit) {
         viewModel.loadPermissionData(context)
 
@@ -98,7 +93,7 @@ fun PermissionsScreen(
                 },
                 navigationIcon = {
                     if (canNavigateBack) {
-                        IconButton(onClick = { mainNavController.navigateUp() }) {
+                        IconButton(onClick = { onNavigateUp() }) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = stringResource(R.string.back)

@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.text_fields.AppOutlinedTextField
@@ -54,8 +53,8 @@ import java.util.UUID
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun EditProfileScreen(
-    navController: NavHostController,
-    viewModel: EditProfileViewModel = hiltViewModel()
+    viewModel: EditProfileViewModel = hiltViewModel(),
+    onNavigateUp: () -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsState().value
 
@@ -63,7 +62,7 @@ fun EditProfileScreen(
         uiState = uiState,
         onUiEvent = { event ->
             when (event) {
-                is EditProfileUiEvent.NavigateUp -> navController.navigateUp()
+                is EditProfileUiEvent.NavigateUp -> onNavigateUp()
 
                 else -> viewModel.onUiEvent(event)
             }

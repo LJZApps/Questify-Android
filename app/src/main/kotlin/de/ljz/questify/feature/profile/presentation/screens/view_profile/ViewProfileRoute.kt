@@ -1,6 +1,7 @@
 package de.ljz.questify.feature.profile.presentation.screens.view_profile
 
+import de.ljz.questify.core.presentation.navigation.AppNavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-object ViewProfileRoute
+object ViewProfileRoute: AppNavKey
