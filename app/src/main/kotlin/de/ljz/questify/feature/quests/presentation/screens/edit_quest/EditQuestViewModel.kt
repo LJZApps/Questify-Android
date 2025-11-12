@@ -1,9 +1,10 @@
 package de.ljz.questify.feature.quests.presentation.screens.edit_quest
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
@@ -26,11 +27,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
-import javax.inject.Inject
 
-@HiltViewModel
-class EditQuestViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = EditQuestViewModel.Factory::class)
+class EditQuestViewModel @AssistedInject constructor(
+    @Assisted private val id: Int,
 
     private val upsertQuestUseCase: UpsertQuestUseCase,
     private val getQuestByIdUseCase: GetQuestByIdUseCase,
@@ -44,6 +44,12 @@ class EditQuestViewModel @Inject constructor(
 
     private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 ): ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(id: Int): EditQuestViewModel
+    }
+
     private val _uiState = MutableStateFlow(
         value = EditQuestUiState(
             title = "",
@@ -64,9 +70,6 @@ class EditQuestViewModel @Inject constructor(
     private val _uiEffects = Channel<EditQuestUiEffect>()
     val uiEffects = _uiEffects.receiveAsFlow()
 
-    private val editQuestRoute = savedStateHandle.toRoute<EditQuestRoute>()
-    val questId = editQuestRoute.id
-
     private var _copiedQuestEntity: QuestEntity? = null
 
     private val _categories = MutableStateFlow<List<QuestCategoryEntity>>(emptyList())
@@ -85,7 +88,7 @@ class EditQuestViewModel @Inject constructor(
             }
 
             launch {
-                getQuestByIdUseCase.invoke(questId).let { questWithSubQuests ->
+                getQuestByIdUseCase.invoke(id).let { questWithSubQuests ->
                     val notifications = questWithSubQuests.notifications
                         .filter { !it.notified }
                         .map { it.notifyAt.time }
@@ -138,9 +141,9 @@ class EditQuestViewModel @Inject constructor(
 
             is EditQuestUiEvent.OnDeleteQuest -> {
                 viewModelScope.launch {
-                    cancelQuestNotificationsUseCase.invoke(id = questId)
+                    cancelQuestNotificationsUseCase.invoke(id = id)
 
-                    deleteQuestUseCase.invoke(questId = questId)
+                    deleteQuestUseCase.invoke(questId = id)
 
                     _uiEffects.send(EditQuestUiEffect.OnNavigateUp)
                 }

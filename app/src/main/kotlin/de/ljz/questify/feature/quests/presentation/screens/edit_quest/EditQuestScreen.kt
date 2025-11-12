@@ -88,7 +88,10 @@ import java.util.Locale
 
 @Composable
 fun EditQuestScreen(
-    viewModel: EditQuestViewModel = hiltViewModel(),
+    id: Int,
+    viewModel: EditQuestViewModel = hiltViewModel<EditQuestViewModel, EditQuestViewModel.Factory> { factory ->
+        factory.create(id = id)
+    },
     onNavigateUp: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()

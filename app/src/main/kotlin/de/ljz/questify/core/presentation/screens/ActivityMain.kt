@@ -173,8 +173,9 @@ class ActivityMain : AppCompatActivity() {
                                     )
                                 }
 
-                                entry<EditQuestRoute> {
+                                entry<EditQuestRoute> { key ->
                                     EditQuestScreen(
+                                        id = key.id,
                                         onNavigateUp = {
                                             backStack.removeLastOrNull()
                                         }
