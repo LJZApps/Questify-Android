@@ -4,11 +4,10 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.compose.compiler) apply false
-
-    id("com.android.library") version "8.13.1" apply false
-    id("com.google.gms.google-services") version "4.4.4" apply false
-    kotlin("plugin.serialization") version "2.1.0" apply false
-    id("com.google.dagger.hilt.android") version "2.57.2" apply false
-    id("com.google.devtools.ksp") version "2.2.20-2.0.3" apply false
-    id("androidx.room") version "2.8.3" apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.dagger.hilt.android) apply false
+    alias(libs.plugins.devtools.ksp) apply false
+    alias(libs.plugins.androidx.room) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }

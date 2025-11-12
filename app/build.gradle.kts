@@ -7,18 +7,14 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-
-    id("com.google.devtools.ksp")
-//    id("com.google.firebase.crashlytics")
-    id("kotlin-parcelize")
-    id("com.google.gms.google-services")
-    id("kotlinx-serialization")
-    kotlin("plugin.serialization")
-    id("com.google.dagger.hilt.android")
-
-    id("androidx.room")
-
-    id("io.sentry.android.gradle") version "5.12.2"
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.sentry.android.gradle)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 room {
