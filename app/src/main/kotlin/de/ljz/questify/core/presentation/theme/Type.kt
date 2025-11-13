@@ -1,8 +1,11 @@
 package de.ljz.questify.core.presentation.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import de.ljz.questify.R
 
@@ -14,16 +17,19 @@ val provider = GoogleFont.Provider(
 
 val bodyFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Roboto Flex"),
-        fontProvider = provider,
+        resId = R.font.roboto_flex_variable,
+        weight = FontWeight.Normal,
     )
 )
 
+@OptIn(ExperimentalTextApi::class)
 val displayFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Roboto Flex"),
-        fontProvider = provider,
-    )
+        resId = R.font.roboto_flex_variable,
+        variationSettings = FontVariation.Settings(
+            FontVariation.weight(FontWeight.W800.weight),
+        )
+    ),
 )
 
 // Default Material 3 typography values

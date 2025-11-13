@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -32,6 +33,10 @@ fun ExpressiveSettingsSection(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium
+                        .copy(
+                            fontWeight = FontWeight(900)
+                        ),
+                    fontWeight = FontWeight(900),
                 )
             }
 
@@ -46,7 +51,7 @@ fun ExpressiveSettingsSection(
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(28.dp)),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             content()
         }
