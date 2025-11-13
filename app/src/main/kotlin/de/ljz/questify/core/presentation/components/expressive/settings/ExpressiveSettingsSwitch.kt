@@ -30,7 +30,7 @@ fun ExpressiveSettingsSwitch(
     ListItem(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(8.dp))
             .toggleable(
                 enabled = enabled,
                 value = state,
