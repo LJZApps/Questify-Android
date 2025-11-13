@@ -24,7 +24,7 @@ fun ExpressiveMenuItem(
     ListItem(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(8.dp))
             .clickable(enabled = onClick != null) {
                 onClick?.invoke()
             },

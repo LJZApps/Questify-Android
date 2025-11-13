@@ -31,13 +31,13 @@ fun ExpressiveMenuCategory(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp)),
+            .clip(RoundedCornerShape(28.dp)),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(4.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
         ) {
             Row(

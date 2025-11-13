@@ -45,7 +45,7 @@ fun ExpressiveSettingsSection(
 
         Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp)),
+                .clip(RoundedCornerShape(28.dp)),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             content()
