@@ -47,9 +47,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -58,7 +58,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import de.ljz.questify.R
 import de.ljz.questify.core.presentation.components.chips.ListChip
 import de.ljz.questify.core.presentation.components.tooltips.BasicPlainTooltip
-import de.ljz.questify.core.presentation.theme.displayFontFamily
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DeleteQuestCategoryDialog
@@ -243,9 +242,7 @@ private fun QuestOverviewScreen(
                 title = {
                     Text(
                         text = "Quests",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontFamily = displayFontFamily,
-                        lineHeight = 45.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             )

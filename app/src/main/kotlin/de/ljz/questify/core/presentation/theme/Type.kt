@@ -4,7 +4,6 @@ import androidx.compose.material3.Typography
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import de.ljz.questify.R
@@ -25,10 +24,7 @@ val bodyFontFamily = FontFamily(
 @OptIn(ExperimentalTextApi::class)
 val displayFontFamily = FontFamily(
     Font(
-        resId = R.font.roboto_flex_variable,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(FontWeight.W800.weight),
-        )
+        resId = R.font.roboto_flex_variable
     ),
 )
 
