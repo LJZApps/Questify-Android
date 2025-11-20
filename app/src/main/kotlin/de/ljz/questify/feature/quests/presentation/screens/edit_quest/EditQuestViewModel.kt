@@ -10,8 +10,10 @@ import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.models.QuestNotificationEntity
 import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.AddQuestNotificationUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.AddSubQuestsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
@@ -45,6 +47,7 @@ class EditQuestViewModel @AssistedInject constructor(
     private val addSubQuestsUseCase: AddSubQuestsUseCase,
     private val deleteSubQuestUseCase: DeleteSubQuestUseCase,
 
+    private val addQuestNotificationUseCase: AddQuestNotificationUseCase,
     private val cancelQuestNotificationsUseCase: CancelQuestNotificationsUseCase,
 ): ViewModel() {
 
@@ -81,13 +84,13 @@ class EditQuestViewModel @AssistedInject constructor(
     private val _selectedCategory = MutableStateFlow<QuestCategoryEntity?>(null)
     val selectedCategory: StateFlow<QuestCategoryEntity?> = _selectedCategory.asStateFlow()
 
+    private val _subQuestsToDelete = mutableListOf<Int>()
+
     init {
         viewModelScope.launch {
             launch {
                 getAllQuestCategoriesUseCase.invoke()
-                    .collectLatest { questCategoryEntities ->
-                        _categories.value = questCategoryEntities
-                    }
+                    .collectLatest { _categories.value = it }
             }
 
             launch {
@@ -147,6 +150,19 @@ class EditQuestViewModel @AssistedInject constructor(
                             upsertQuestUseCase.invoke(updatedQuestEntity)
 
                             addSubQuestsUseCase.invoke(_uiState.value.subTasks)
+
+                            _subQuestsToDelete.forEach { id ->
+                                deleteSubQuestUseCase(id)
+                            }
+
+                            _uiState.value.notificationTriggerTimes.forEach { notificationTriggerTime ->
+                                val questNotification = QuestNotificationEntity(
+                                    questId = id,
+                                    notifyAt = Date(notificationTriggerTime)
+                                )
+
+                                addQuestNotificationUseCase.invoke(questNotification)
+                            }
 
                             _uiEffects.send(EditQuestUiEffect.OnNavigateUp)
                         }
@@ -247,12 +263,14 @@ class EditQuestViewModel @AssistedInject constructor(
             }
 
             is EditQuestUiEvent.OnRemoveSubQuest -> {
-                viewModelScope.launch {
-                    _uiState.value.subTasks.mapIndexed { i, subTask ->
-                        if (i == event.index) {
-                            deleteSubQuestUseCase.invoke(subTask.id)
-                        }
+                val subTasks = _uiState.value.subTasks.toMutableList()
+                if (event.index in subTasks.indices) {
+                    val itemToRemove = subTasks[event.index]
+                    if (itemToRemove.id != 0) {
+                        _subQuestsToDelete.add(itemToRemove.id)
                     }
+                    subTasks.removeAt(event.index)
+                    _uiState.update { it.copy(subTasks = subTasks) }
                 }
             }
 
