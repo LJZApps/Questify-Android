@@ -10,12 +10,14 @@ import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity
 import de.ljz.questify.feature.quests.data.models.QuestEntity
+import de.ljz.questify.feature.quests.data.models.SubQuestEntity
 import de.ljz.questify.feature.quests.domain.use_cases.AddQuestCategoryUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.AddSubQuestsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.CancelQuestNotificationsUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.DeleteSubQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
+import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdAsFlowUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.UpsertQuestUseCase
 import kotlinx.coroutines.channels.Channel
@@ -34,6 +36,7 @@ class EditQuestViewModel @AssistedInject constructor(
 
     private val upsertQuestUseCase: UpsertQuestUseCase,
     private val getQuestByIdUseCase: GetQuestByIdUseCase,
+    private val getQuestByIdAsFlowUseCase: GetQuestByIdAsFlowUseCase,
     private val deleteQuestUseCase: DeleteQuestUseCase,
 
     private val addQuestCategoryUseCase: AddQuestCategoryUseCase,
@@ -107,10 +110,16 @@ class EditQuestViewModel @AssistedInject constructor(
                             )
                         }
                     }
+                }
+            }
 
-                    questWithSubQuests.subTasks.let { subQuestEntities ->
-                        _uiState.update {
-                            it.copy(subTasks = subQuestEntities)
+            launch {
+                getQuestByIdAsFlowUseCase.invoke(id).let { questWithSubQuestsFlow ->
+                    questWithSubQuestsFlow.collectLatest { questWithSubQuests ->
+                        questWithSubQuests?.subTasks.let { subQuestEntities ->
+                            _uiState.update {
+                                it.copy(subTasks = subQuestEntities?: emptyList())
+                            }
                         }
                     }
                 }
@@ -123,18 +132,24 @@ class EditQuestViewModel @AssistedInject constructor(
         when (event) {
             is EditQuestUiEvent.OnSaveQuest -> {
                 viewModelScope.launch {
-                    _copiedQuestEntity?.let { copiedQuestEntity ->
-                        val updatedQuestEntity = copiedQuestEntity.copy(
-                            title = _uiState.value.title,
-                            notes = _uiState.value.notes,
-                            difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
-                            dueDate = if (_uiState.value.dueDate.toInt() == 0) null else Date(_uiState.value.dueDate),
-                            categoryId = _selectedCategory.value?.id
-                        )
+                    launch {
+                        _copiedQuestEntity?.let { copiedQuestEntity ->
+                            val updatedQuestEntity = copiedQuestEntity.copy(
+                                title = _uiState.value.title,
+                                notes = _uiState.value.notes,
+                                difficulty = Difficulty.fromIndex(_uiState.value.difficulty),
+                                dueDate = if (_uiState.value.dueDate.toInt() == 0) null else Date(
+                                    _uiState.value.dueDate
+                                ),
+                                categoryId = _selectedCategory.value?.id
+                            )
 
-                        upsertQuestUseCase.invoke(updatedQuestEntity)
+                            upsertQuestUseCase.invoke(updatedQuestEntity)
 
-                        _uiEffects.send(EditQuestUiEffect.OnNavigateUp)
+                            addSubQuestsUseCase.invoke(_uiState.value.subTasks)
+
+                            _uiEffects.send(EditQuestUiEffect.OnNavigateUp)
+                        }
                     }
                 }
             }
@@ -209,6 +224,14 @@ class EditQuestViewModel @AssistedInject constructor(
                     it.copy(
                         notificationTriggerTimes = updatedTimes,
                         addingDateTimeState = AddingDateTimeState.DATE
+                    )
+                }
+            }
+
+            is EditQuestUiEvent.OnCreateSubQuest -> {
+                _uiState.update {
+                    it.copy(
+                        subTasks = _uiState.value.subTasks + SubQuestEntity(text = "", questId = id.toLong())
                     )
                 }
             }

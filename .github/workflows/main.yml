@@ -29,7 +29,7 @@ jobs:
           languages: java-kotlin
 
       - name: Setup JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -38,25 +38,25 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: wrapper
+          # CodeQL liest nur, schreiben ist hier meist nicht nötig/sinnvoll für den Cache
+          cache-read-only: true
 
-      - name: Create local.properties file
+      # VERBESSERUNG: Dummy-Werte statt echter Secrets.
+      # So exponieren wir keine sensiblen Daten im Analyse-Job.
+      - name: Create dummy local.properties
         run: |
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> local.properties
-          echo "STORE_FILE=$GITHUB_WORKSPACE/keystore/release.keystore" >> local.properties
-          echo "STORE_PASSWORD=${{ secrets.STORE_PASSWORD }}" >> local.properties
-          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
-          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
-
-      - name: Create the keystore file from secret
-        run: |
-          mkdir -p keystore
-          echo "${{ secrets.STORE_FILE }}" | base64 --decode > keystore/release.keystore
+          echo "SENTRY_AUTH_TOKEN=dummy" >> local.properties
+          echo "STORE_FILE=dummy" >> local.properties
+          echo "STORE_PASSWORD=dummy" >> local.properties
+          echo "KEY_ALIAS=dummy" >> local.properties
+          echo "KEY_PASSWORD=dummy" >> local.properties
 
       - name: Create google-services.json
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
 
       - name: Build with Gradle (for CodeQL)
+        # assembleDebug benötigt normalerweise kein Signing, daher klappt das mit Dummies
         run: ./gradlew assembleDebug --stacktrace --parallel
 
       - name: Perform CodeQL Analysis
@@ -75,6 +75,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: wrapper
+          cache-read-only: false
 
       - name: Create local.properties file
         run: |
@@ -93,47 +94,59 @@ jobs:
         run: |
           echo ${{ secrets.GOOGLE_SERVICES_JSON }} | base64 --decode > $GITHUB_WORKSPACE/app/google-services.json
 
-      - name: Build signed Release APK
-        # Nutzt --parallel, um Aufgaben gleichzeitig auszuführen
-        run: ./gradlew assembleRelease --stacktrace --parallel
+      - name: Build signed Release Artifacts
+        run: ./gradlew assembleRelease bundleRelease --stacktrace --parallel
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYSTORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Build signed Release AAB
-        # Nutzt --parallel, um Aufgaben gleichzeitig auszuführen
-        run: ./gradlew bundleRelease --stacktrace --parallel
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          KEYSTORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Rename Artifacts with Version Code
+        id: rename_artifacts
+        run: |
+          BUILD_TOOLS_VERSION=$(ls $ANDROID_HOME/build-tools | sort -V | tail -n 1)
+          AAPT="$ANDROID_HOME/build-tools/$BUILD_TOOLS_VERSION/aapt"
+          
+          echo "Using aapt from: $AAPT"
+          
+          # VersionCode extrahieren
+          VERSION_CODE=$($AAPT dump badging app/build/outputs/apk/release/app-release.apk | grep "package: name" | sed -e "s/.*versionCode='\([0-9]*\)'.*/\1/")
+          
+          echo "Detected Version Code: $VERSION_CODE"
+          
+          NEW_APK_NAME="questify-release-${VERSION_CODE}.apk"
+          NEW_AAB_NAME="questify-release-${VERSION_CODE}.aab"
+          
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/$NEW_APK_NAME
+          mv app/build/outputs/bundle/release/app-release.aab app/build/outputs/bundle/release/$NEW_AAB_NAME
+          
+          echo "APK_PATH=app/build/outputs/apk/release/$NEW_APK_NAME" >> $GITHUB_ENV
+          echo "AAB_PATH=app/build/outputs/bundle/release/$NEW_AAB_NAME" >> $GITHUB_ENV
 
       - name: Upload signed Release APK
         uses: actions/upload-artifact@v5
         with:
           name: release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: ${{ env.APK_PATH }}
 
       - name: Upload signed Release AAB
         uses: actions/upload-artifact@v5
         with:
           name: release-aab
-          path: app/build/outputs/bundle/release/app-release.aab
+          path: ${{ env.AAB_PATH }}
 
   release:
     name: Create GitHub Release
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
-    # Fügt die Berechtigung zum Erstellen von Releases hinzu
     permissions:
       contents: write
     steps:
       - name: Download all workflow artifacts
         uses: actions/download-artifact@v5
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
@@ -141,24 +154,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            release-apk/app-release.apk
-            release-aab/app-release.aab
+            release-apk/*.apk
+            release-aab/*.aab
 
   upload-to-play-store:
     name: Upload to Google Play Store
     needs: release
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
-    # Auch hier Berechtigungen hinzufügen, falls es bei anderen Schritten Probleme gibt
     permissions:
       contents: read
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
 
-      - name: Download all workflow artifacts
-        # Dieser Schritt lädt alle Artefakte des Builds herunter
+      # VERBESSERUNG: Nur das AAB herunterladen.
+      # Wir sparen uns den Download der APK, da der Play Store sie nicht braucht.
+      - name: Download AAB artifact
         uses: actions/download-artifact@v5
+        with:
+          name: release-aab
+          path: release-aab
 
       - name: Get tag name and determine track
         id: get_tag
@@ -179,7 +195,7 @@ jobs:
         with:
           serviceAccountJson: ${{ secrets.PLAY_STORE_API_KEY }}
           packageName: 'de.ljz.questify'
-          # Aktualisierter Pfad, da der Download in ein Unterverzeichnis geht
-          releaseFiles: 'release-aab/app-release.aab'
+          # Der Pfad entspricht jetzt dem Download-Pfad oben
+          releaseFiles: 'release-aab/*.aab'
           track: ${{ steps.get_tag.outputs.track }}
           whatsNewDirectory: fastlane/metadata/android/

@@ -46,12 +46,17 @@ android {
     }
 
     defaultConfig {
+        val major = 0
+        val minor = 11
+        val patch = 0
+
+        versionName = "$major.$minor.$patch"
+        versionCode = (major * 10000) + (minor * 100) + patch
+
         namespace = "de.ljz.questify"
         applicationId = "de.ljz.questify"
         minSdk = 30
         targetSdk = 36
-        versionCode = 27
-        versionName = "0.12"
     }
 
     compileOptions {
@@ -72,7 +77,6 @@ android {
         named("debug") {
             isDebuggable = true
             applicationIdSuffix = ".DEV"
-            versionNameSuffix = "-DEV"
 
             buildConfigField(
                 "String",
