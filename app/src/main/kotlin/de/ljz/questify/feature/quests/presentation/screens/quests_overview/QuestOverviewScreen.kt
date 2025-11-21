@@ -43,7 +43,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -127,8 +126,6 @@ private fun QuestOverviewScreen(
 
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
     val staticAllTab = QuestCategoryEntity(
         id = -1,
         text = stringResource(R.string.quest_overview_screen_tab_default_text)
