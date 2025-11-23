@@ -1,4 +1,4 @@
-package de.ljz.questify.feature.quests.presentation.screens.quests_overview
+package de.ljz.questify.feature.quests.presentation.screens.quest_overview
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -62,8 +62,8 @@ import de.ljz.questify.feature.quests.presentation.dialogs.CreateCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.DeleteQuestCategoryDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.QuestDoneDialog
 import de.ljz.questify.feature.quests.presentation.dialogs.RenameCategoryDialog
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page.AllQuestsPage
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.sub_pages.all_quests_page.AllQuestsPage
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.sub_pages.quest_for_category_page.QuestsForCategoryPage
 import de.ljz.questify.feature.quests.presentation.sheets.QuestSortingBottomSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

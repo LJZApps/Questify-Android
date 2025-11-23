@@ -4,7 +4,7 @@ import de.ljz.questify.core.utils.AddingDateTimeState
 import de.ljz.questify.core.utils.Difficulty
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.models.SubQuestEntity
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestDoneDialogState
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.QuestDoneDialogState
 
 data class QuestDetailUiState(
     val dialogState: DialogState,

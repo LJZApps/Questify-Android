@@ -1,4 +1,4 @@
-package de.ljz.questify.feature.quests.presentation.screens.quests_overview.sub_pages.all_quests_page
+package de.ljz.questify.feature.quests.presentation.screens.quest_overview.sub_pages.all_quests_page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +34,7 @@ import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestEntity
 import de.ljz.questify.feature.quests.data.relations.QuestWithSubQuests
 import de.ljz.questify.feature.quests.presentation.components.QuestItem
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.AllQuestPageState
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.AllQuestPageState
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,

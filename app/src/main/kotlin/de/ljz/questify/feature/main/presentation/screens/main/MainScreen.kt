@@ -27,8 +27,8 @@ import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsRoute
 import de.ljz.questify.feature.habits.presentation.screens.habits.HabitsScreen
 import de.ljz.questify.feature.main.presentation.components.DrawerContent
 import de.ljz.questify.feature.player_stats.presentation.screens.stats.StatsRoute
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestOverviewScreen
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestsRoute
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.QuestOverviewScreen
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.QuestsRoute
 import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewRoute
 import de.ljz.questify.feature.routines.presentation.screens.routines_overview.RoutinesOverviewScreen
 import io.sentry.compose.SentryTraced

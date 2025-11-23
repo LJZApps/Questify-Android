@@ -1,4 +1,4 @@
-package de.ljz.questify.feature.quests.presentation.screens.quests_overview
+package de.ljz.questify.feature.quests.presentation.screens.quest_overview
 
 import de.ljz.questify.core.utils.SortingDirections
 import de.ljz.questify.feature.quests.data.models.QuestCategoryEntity

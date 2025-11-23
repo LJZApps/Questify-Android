@@ -17,7 +17,7 @@ import de.ljz.questify.feature.quests.domain.use_cases.DeleteQuestUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetAllQuestCategoriesUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetQuestByIdAsFlowUseCase
 import de.ljz.questify.feature.quests.domain.use_cases.GetQuestCategoryByIdUseCase
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestDoneDialogState
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.QuestDoneDialogState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

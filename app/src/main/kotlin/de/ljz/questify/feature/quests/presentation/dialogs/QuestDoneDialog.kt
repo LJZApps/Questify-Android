@@ -48,7 +48,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import de.ljz.questify.R
-import de.ljz.questify.feature.quests.presentation.screens.quests_overview.QuestDoneDialogState
+import de.ljz.questify.feature.quests.presentation.screens.quest_overview.QuestDoneDialogState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
