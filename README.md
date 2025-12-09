@@ -23,6 +23,9 @@
 </div>
 
 ---
+> [!WARNING]
+> **This project is no longer maintained.** The app has been rebuilt in the new [KMP project](https://github.com/LJZApps/questify-kmp), which now includes the iOS app.
+
 
 ## About Questify
 
